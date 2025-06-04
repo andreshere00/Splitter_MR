@@ -1,0 +1,35 @@
+site_name: SplitterMR Docs
+theme:
+  name: material
+  logo: assets/splitter_mr_logo_white.svg
+  features:
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - Developer Guide: 
+    - Overview: api_reference.md
+    - Readers: reader.md
+    - Splitters: splitter.md
+
+extra_css:
+  - assets/extra.css
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_root_heading: false
+            show_root_full_path: false
+            heading_level: 5
+
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+      linenums: false
+      pygments_style: default
+  - toc:
+      permalink: true

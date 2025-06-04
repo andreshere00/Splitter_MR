@@ -1,0 +1,54 @@
+# Reader
+
+## Introduction
+
+The **Reader** component is designed to read files homogeneously which come from many different formats and extensions. All of these readers are implemented sharing the same parent class, `BaseReader`.
+
+## Which Reader should I use for my project?
+
+Each Reader component extracts document text in different ways. Therefore, choosing the most suitable Reader component depends on your use case.
+
+- If you want to preserve the original structure as much as possible, without any kind of markdown parsing, you can use the `VanillaReader` class.
+- In case that you have documents which have presented many tables in its structure or with many visual components (such as images), we strongly recommend to use `DoclingReader`. 
+- If you are looking to maximize efficiency or make conversions to markdown simpler, we recommend using the `MarkItDownReader` component.
+
+> 👀 Remember to visit the official repository and guides for these two last reader classes: **Docling [Developer guide](https://docling-project.github.io/docling/)** and **MarkItDown [GitHub repository](https://github.com/microsoft/markitdown/)**.
+
+Additionally, the file compatibility depending on the Reader class is given by the following table:
+
+| **Reader**         | **Unstructured files & PDFs**    | **MS Office suite files**         | **Tabular data**        | **Files with hierarchical schema**      | **Image files**                  | **Markdown conversion** |
+|--------------------|----------------------------------|-----------------------------------|-------------------------|----------------------------------------|----------------------------------|----------------------------------|
+| **`VanillaReader`**      | `txt`, `csv`                     | –                                 | `csv`, `tsv`, `parquet`| `json`, `yaml`, `html`, `xml`          || No |----------------------------------| –                                |
+| **`MarkItDownReader`**   | `txt`, `md`, `pdf`               | `docx`, `xlsx`, `pptx`            | `csv`, `tsv`                  | `json`, `html`, `xml`                  | `jpg`, `png`, `pneg`             | Yes |
+| **`DoclingReader`**      | `txt`, `md`, `pdf`                     | `docx`, `xlsx`, `pptx`            | –                 | `html`, `xhtml`                        | `png`, `jpeg`, `tiff`, `bmp`, `webp` | Yes |
+
+
+## Readers
+
+### BaseReader
+
+::: splitter_mr.reader.base_reader
+    handler: python
+    options:
+      members_order: source
+
+### VanillaReader
+
+::: splitter_mr.reader.readers.vanilla_reader
+    handler: python
+    options:
+      members_order: source
+
+### DoclingReader
+
+::: splitter_mr.reader.readers.docling_reader
+    handler: python
+    options:
+      members_order: source
+
+### MarkItDownReader
+
+::: splitter_mr.reader.readers.markitdown_reader
+    handler: python
+    options:
+      members_order: source
