@@ -1,0 +1,29 @@
+repos:
+  - repo: local
+    hooks:
+      - id: flake8
+        name: Check for code best-practices compliance
+        entry: make format
+        language: system
+        types: [python]
+      
+      - id: commit-message-check
+        name: Check Commit Message Structure
+        entry: uv run python scripts/validate_commit_msg.py
+        language: system
+        stages: [commit-msg]
+
+      - id: test-coverage-check
+        name: Ensure at least 70% test coverage
+        entry: bash scripts/validate_test.sh
+        language: system
+        pass_filenames: false
+        always_run: true
+        require_serial: true
+        stages: [pre-commit]
+
+      - id: update-docs
+        name: Ensure that the Home page from mkdocs is updated
+        entry: bash scripts/documentation.sh
+        language: system
+        stages: [pre-commit]
