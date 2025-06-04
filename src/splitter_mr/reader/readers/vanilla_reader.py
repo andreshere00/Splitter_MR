@@ -53,20 +53,25 @@ class VanillaReader(BaseReader):
                 - metadata (Optional[dict]): Additional metadata associated with the document.
 
         Notes:
-            - For .json, .html, .txt, .xml, .yaml/.yml, .csv, .tsv: the raw file content is returned
+            - For `.json`, `.html`, `.txt`, `.xml`, `.yaml`/`.yml`, `.csv`, `.tsv`: the raw file content is returned
                 as a string.
-            - For .parquet files, the content is loaded into a pandas DataFrame and returned as
+            - For `.parquet` files, the content is loaded into a pandas DataFrame and returned as
                 CSV-formatted text.
-            - This method requires the pandas library to be installed for reading .parquet files.
-            - For YAML support, ensure PyYAML is installed and imported.
             - If `document_id` is not provided, it will be set to None.
             - If `metadata` is not provided, an empty dictionary will be returned.
 
         Example:
             ```python
+            from splitter_mr.readers import VanillaReader
+
             reader = VanillaReader()
-            result = reader.read("/path/to/document.html")
+            result = reader.read(file_path = "data/test_1.pdf")
             print(result["text"])
+            ```
+            ```bash
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget purus non est porta
+            rutrum. Suspendisse euismod lectus laoreet sem pellentesque egestas et et sem.
+            Pellentesque ex felis, cursus ege...
             ```
         """
         ext = os.path.splitext(file_path)[-1].lower().lstrip(".")

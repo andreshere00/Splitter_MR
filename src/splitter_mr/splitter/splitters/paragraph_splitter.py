@@ -65,8 +65,8 @@ class ParagraphSplitter(BaseSplitter):
             output = splitter.split(reader_output)
             print(output["chunks"])
             ```
-            ```python
-            >>> ["Para 1.\n\nPara 2.", "2. Para 3."]
+            ```bash
+            ["Para 1.\n\nPara 2.", "2. Para 3."]
             ```
         """
         # Intialize variables

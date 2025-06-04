@@ -70,8 +70,8 @@ class RecursiveJSONSplitter(BaseSplitter):
             output = splitter.split(reader_output)
             print(output["chunks"])
             ```
-            ```python
-            >>> ['{"company": {"name": "TechCorp"}}', '{"employees": [{"name": "Alice"}, {"name": "Bob"}]}']
+            ```bash
+            ['{"company": {"name": "TechCorp"}}', '{"employees": [{"name": "Alice"}, {"name": "Bob"}]}']
             ```
         """
         # Initialize variables

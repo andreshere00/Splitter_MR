@@ -72,13 +72,8 @@ class WordSplitter(BaseSplitter):
             output = splitter.split(reader_output)
             print(output["chunks"])
             ```
-            ```python
-            >>> [
-            ... "The quick brown fox jumps",
-            ... "fox jumps over the lazy",
-            ... "over the lazy dog. Pack",
-            ... ...
-            ... ]
+            ```bash
+            ["The quick brown fox jumps", "fox jumps over the lazy", "over the lazy dog. Pack", ...]
             ```
         """
         # Initialize variables

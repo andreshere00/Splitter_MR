@@ -20,6 +20,10 @@ class HeaderSplitter(BaseSplitter):
             List of tuples with Markdown or HTML header tokens and their semantic names.
         chunk_size (int):
             Unused but present for compatibility with the BaseSplitter API.
+
+    Notes:
+        See [Langchain Docs on MarkdownHeaderTextSplitter](https://api.python.langchain.com/en/latest/markdown/langchain_text_splitters.markdown.MarkdownHeaderTextSplitter.html).
+        See [Langchain Docs on HTMLHeaderTextSplitter](https://python.langchain.com/api_reference/text_splitters/html/langchain_text_splitters.html.HTMLHeaderTextSplitter.html).
     """
 
     def __init__(
@@ -81,8 +85,8 @@ class HeaderSplitter(BaseSplitter):
             output = splitter.split(reader_output)
             print(output["chunks"][0])
             ```
-            ```python
-            >>> ["# Title \\n \\n", "## Subtitle\\nText..."]
+            ```bash
+            ["# Title \\n \\n", "## Subtitle\\nText..."]
             ```
         """
         # Initialize variables
