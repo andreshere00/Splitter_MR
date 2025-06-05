@@ -1,17 +1,31 @@
-name: Deploy MkDocs Documentation
+name: CI and Deploy MkDocs Documentation
 
 on:
   push:
     branches:
-      - main 
+      - main
+      - hotfix/MR-006_deploy-docs
 
 jobs:
-  deploy:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12' 
-      - run: pip install mkdocs mkdocs-material mkdocstrings[python]
+          python-version: '3.12'
+      - run: pip install -e .
+      - run: pip install pytest pytest-cov
+      - run: pytest --cov
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -e .
+      - run: pip install mkdocs mkdocs-material mkdocstrings[python] mkdocs-awesome-pages-plugin mkdocs-glightbox
       - run: mkdocs gh-deploy --force
