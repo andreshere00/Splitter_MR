@@ -14,9 +14,9 @@ Splitter MR can read data from multiples sources and files. For reading the file
 
 | **Reader**         | **Unstructured files & PDFs**    | **MS Office suite files**         | **Tabular data**        | **Files with hierarchical schema**      | **Image files**                  | **Markdown conversion** |
 |--------------------|----------------------------------|-----------------------------------|-------------------------|----------------------------------------|----------------------------------|----------------------------------|
-| **`VanillaReader**`      | `txt`, `csv`                     | –                                 | `csv`, `tsv`, `parquet`| `json`, `yaml`, `html`, `xml`          || No |----------------------------------| –                                |
-| **`MarkItDownReader**`   | `txt`, `md`, `pdf`               | `docx`, `xlsx`, `pptx`            | `csv`, `tsv`                  | `json`, `html`, `xml`                  | `jpg`, `png`, `pneg`             | Yes |
-| **`DoclingReader**`      | `txt`, `md`, `pdf`                     | `docx`, `xlsx`, `pptx`            | –                 | `html`, `xhtml`                        | `png`, `jpeg`, `tiff`, `bmp`, `webp` | Yes |
+| **Vanilla Reader**      | `txt`, `csv`                     | –                                 | `csv`, `tsv`, `parquet`| `json`, `yaml`, `html`, `xml`          || No |----------------------------------| –                                |
+| **MarkItDown Reader**   | `txt`, `md`, `pdf`               | `docx`, `xlsx`, `pptx`            | `csv`, `tsv`                  | `json`, `html`, `xml`                  | `jpg`, `png`, `pneg`             | Yes |
+| **Docling Reader**      | `txt`, `md`, `pdf`                     | `docx`, `xlsx`, `pptx`            | –                 | `html`, `xhtml`                        | `png`, `jpeg`, `tiff`, `bmp`, `webp` | Yes |
 
 ### Serveral splitting methods
 
