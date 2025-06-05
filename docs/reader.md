@@ -4,7 +4,7 @@
 
 The **Reader** component is designed to read files homogeneously which come from many different formats and extensions. All of these readers are implemented sharing the same parent class, `BaseReader`.
 
-## Which Reader should I use for my project?
+### Which Reader should I use for my project?
 
 Each Reader component extracts document text in different ways. Therefore, choosing the most suitable Reader component depends on your use case.
 
@@ -22,6 +22,19 @@ Additionally, the file compatibility depending on the Reader class is given by t
 | **`MarkItDownReader`**   | `txt`, `md`, `pdf`               | `docx`, `xlsx`, `pptx`            | `csv`, `tsv`                  | `json`, `html`, `xml`                  | `jpg`, `png`, `pneg`             | Yes |
 | **`DoclingReader`**      | `txt`, `md`, `pdf`                     | `docx`, `xlsx`, `pptx`            | –                 | `html`, `xhtml`                        | `png`, `jpeg`, `tiff`, `bmp`, `webp` | Yes |
 
+### Output format
+
+`ReaderOutput` is the object get from the `read` method, which is a dictionary with the following attributes:
+
+```python
+  text: Optional[str] = ""  # The extracted text
+  document_name: Optional[str] = None  # The base name of the file
+  document_path: str = ""  # The path to the document
+  document_id: Optional[str] = None  # The document identifier (given by default by an UUID)
+  conversion_method: Optional[str] = None  # The format in which the file has been converted (markdown, json, etc.)
+  ocr_method: Optional[str] = None  # The OCR method or VLM used to analyze images (TBD)
+  metadata: Optional[List[str]]  # The appended metadata, introduced by the user (TBD)
+```
 
 ## Readers
 

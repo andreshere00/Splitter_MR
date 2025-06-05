@@ -4,7 +4,7 @@
 
 The **Splitter** component implements the main functionality of this library. This component is designed to deliver classes (inherited from `BaseSplitter`) which supports to split a markdown text or a string following many different strategies. 
 
-Currently we have the following splitting strategies defined in the library:
+### Splitter strategies description
 
 | Splitting Technique       | Description                                                                                                                                                                                                                                                                                                                                                                                                   |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -20,6 +20,23 @@ Currently we have the following splitting strategies defined in the library:
 | **Semantic Splitter**     | Splits text into chunks based on semantic similarity, using an embedding model and a max tokens parameter. Useful for meaningful semantic groupings. <br> **Parameters:** `embedding_model` (model for embeddings), `max_tokens` (max tokens per chunk). <br> **Compatible with:** Text.                                                                                                                      |
 | **HTMLTagSplitter**       | Splits HTML content based on a specified tag, or automatically detects the most frequent and shallowest tag if not specified. Each chunk is a complete HTML fragment for that tag. <br> **Parameters:** `chunk_size` (max chars per chunk), `tag` (HTML tag to split on, optional). <br> **Compatible with:** HTML.                                                                                           |
 | **HeaderSplitter**        | Splits Markdown or HTML documents into chunks using header levels (e.g., `#`, `##`, or `<h1>`, `<h2>`). Uses configurable headers for chunking. <br> **Parameters:** `headers_to_split_on` (list of headers and semantic names), `chunk_size` (unused, for compatibility). <br> **Compatible with:** Markdown, HTML.
+
+### Output format
+
+The output object get from the `split` method for every Splitter is `SplitterOutput`, a dictionary with the following structure:
+
+```python
+chunks: List[str]
+chunk_id: List[str]
+document_name: Optional[str] = None
+document_path: str = ""
+document_id: Optional[str] = None
+conversion_method: Optional[str] = None
+ocr_method: Optional[str] = None
+split_method: str = ""
+split_params: Optional[Dict[str, Any]] = field(default_factory=dict)
+metadata: Optional[Dict[str, Any]] = field(default_factory=dict)
+```
 
 ## Splitters
 
