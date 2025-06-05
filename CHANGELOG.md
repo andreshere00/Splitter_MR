@@ -1,8 +1,32 @@
-# CHANGELOG.md
+# CHANGELOG
 
-## v0.1.0
+## v0.1.x
 
-### Functional features
+### v0.1.1
+
+Some bug fixes in HeaderSplitter and RecursiveCharacterSplitter, and documentation updates.
+
+#### Features
+
+There are no new features in this version.
+
+#### Fixes
+
+- `chunk_overlap` (between 0 and 1) was not working in the `split` method from `RecursiveCharacterSplitter`.
+- Some markdown code was not properly formatted in `README.md`.
+- Reformat examples from docstring documentation in every Reader and Splitter classes.
+- `HeaderSplitter` was not properly handling the headers in some `markdown` and `HTML` files.
+
+#### Documentation
+
+- Some examples have been provided in the documentation (`docs/`, and in the [documentation server](https://andreshere00.github.io/Splitter_MR/)).
+- New examples in docstrings.
+
+### v0.1.0
+
+First version of the project
+
+#### Functional features
 
 - Add first readers, `VanillaReader`: reader which reads the files and format them into a string.
   - `DoclingReader`: reader which uses the docling package to read the files.
@@ -14,7 +38,7 @@
 - Some data has been added for testing purposes.
 - A documentation server is deployed with up-to-date information.
 
-### Developer features
+#### Developer features
 
 - Update `pyproject.toml` project information.
 
