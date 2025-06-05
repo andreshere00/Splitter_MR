@@ -12,6 +12,7 @@ nav:
     - Readers: reader.md
     - Splitters: splitter.md
   - Examples: examples.md
+  - Changelog: CHANGELOG.md
 
 extra_css:
   - assets/extra.css

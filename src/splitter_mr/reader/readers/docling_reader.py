@@ -1,5 +1,6 @@
 import os
 import shutil
+import uuid
 
 from docling.document_converter import DocumentConverter
 
@@ -71,7 +72,7 @@ class DoclingReader(BaseReader):
             text=markdown_text,
             document_name=os.path.basename(file_path),
             document_path=file_path,
-            document_id=kwargs.get("document_id"),
+            document_id=kwargs.get("document_id") or str(uuid.uuid4()),
             conversion_method="markdown",
             ocr_method=kwargs.get("ocr_method"),
             metadata=kwargs.get("metadata"),
