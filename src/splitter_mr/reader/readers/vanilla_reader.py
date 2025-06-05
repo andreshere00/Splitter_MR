@@ -1,4 +1,5 @@
 import os
+import uuid
 from html.parser import HTMLParser
 from typing import Any, Dict
 
@@ -104,7 +105,7 @@ class VanillaReader(BaseReader):
             "text": text,
             "document_name": document_name,
             "document_path": document_path,
-            "document_id": kwargs.get("document_id"),
+            "document_id": kwargs.get("document_id") or str(uuid.uuid4()),
             "conversion_method": conversion_method,
             "ocr_method": None,
             "metadata": metadata,
