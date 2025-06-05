@@ -81,7 +81,8 @@ class VanillaReader(BaseReader):
         text = ""
 
         conversion_method = None
-        if ext in ("json", "html", "txt", "xml", "csv", "tsv"):
+
+        if ext in ("json", "html", "txt", "xml", "csv", "tsv", "md", "markdown"):
             with open(file_path, "r", encoding="utf-8") as f:
                 text = f.read()
         elif ext == "parquet":
