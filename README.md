@@ -10,7 +10,9 @@
 
 ### Different input formats
 
-Splitter MR can read data from multiples sources and files. For reading the files, it uses a component name `BaseReader`. This object allows you to read the files as a formatted string or converted into a markdown document. Currently, there are supported three readers: `VanillaReader`, and `MarkItDownReader` and `DoclingReader`. 
+Splitter MR can read data from multiples sources and files. To read the files, it uses the Reader components, which inherits from a Base abstract class, `BaseReader`. This object allows you to read the files as a properly formatted string, or convert the files into another format (such as `markdown` or `json`). 
+
+Currently, there are supported three readers: `VanillaReader`, and `MarkItDownReader` and `DoclingReader`. These are the differences between each Reader component:
 
 | **Reader**         | **Unstructured files & PDFs**    | **MS Office suite files**         | **Tabular data**        | **Files with hierarchical schema**      | **Image files**                  | **Markdown conversion** |
 |--------------------|----------------------------------|-----------------------------------|-------------------------|----------------------------------------|----------------------------------|----------------------------------|
@@ -41,7 +43,25 @@ Main splitting methods include:
 
 ### Output Format
 
-The output is a dictionary (or `JSON`) with the following structure:
+#### Reader
+
+The output object is `ReaderOutput`, a dictionary with the following structure:
+
+```python
+{
+  text: Optional[str] = ""  # The extracted text
+  document_name: Optional[str] = None  # The base name of the file
+  document_path: str = ""  # The path to the document
+  document_id: Optional[str] = None  # The document identifier (given by default by an UUID)
+  conversion_method: Optional[str] = None  # The format in which the file has been converted (markdown, json, etc.)
+  ocr_method: Optional[str] = None  # The OCR method or VLM used to analyze images (TBD)
+  metadata: Optional[List[str]]  # The appended metadata, introduced by the user (TBD)
+}
+```
+
+#### Splitter
+
+The output object is `SplitterOutput`, a dictionary with the following structure:
 
 ```python
 {
@@ -50,11 +70,11 @@ The output is a dictionary (or `JSON`) with the following structure:
   'document_name': Optional[str],  # The base name of the file.
   'document_path': str,  # The path to the document
   'document_id': Optional[str],  # The identifier for that document
-  'conversion_method': Optional[str],  # The method used to convert the file (i.e., markdown, json, etc.)
+  'conversion_method': Optional[str],  # The format in which the file has been converted (markdown, json, etc.)
   'ocr_method': Optional[str],  # The OCR method or VLM used to analyze images (TBD)
   'split_method': str,  # The splitting strategy used for chunking the document
   'split_params': Optional[Dict[str, Any]],  # The specific splitter parameters
-  'metadata': Optional[List[str]]  # The adjunted metadata introduced by the user (TBD)
+  'metadata': Optional[List[str]]  # The appended metadata, introduced by the user (TBD)
 }
 ```
 
@@ -66,9 +86,9 @@ The output is a dictionary (or `JSON`) with the following structure:
 
 - **Reading**
     - A **`BaseReader`** implementation reads the (optionally converted) file.
-    - Supported readers (e.g., **`VanillaReader`**, **`MarkItDownReader`**, **`DoclingReader`**) produce a ReaderOutput dictionary containing:
-        - **Text** content (often Markdown).
-        - Document **metadata** (name, path, ID, etc.).
+    - Supported readers (e.g., **`VanillaReader`**, **`MarkItDownReader`**, **`DoclingReader`**) produce a `ReaderOutput` dictionary containing:
+        - **Text** content (in `markdown`, `text`, `json` or another format).
+        - Document **metadata**.
         - **Conversion** method.
 - **Splitting**
     - A **`BaseSplitter`** implementation takes the **`ReaderOutput`** and divides the text into meaningful chunks for LLM or other downstream use.

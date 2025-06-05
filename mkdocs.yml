@@ -1,4 +1,4 @@
-site_name: SplitterMR Docs
+site_name: Splitter MR Docs
 theme:
   name: material
   logo: assets/splitter_mr_logo_white.svg
@@ -11,6 +11,7 @@ nav:
     - Overview: api_reference.md
     - Readers: reader.md
     - Splitters: splitter.md
+  - Examples: examples.md
 
 extra_css:
   - assets/extra.css
