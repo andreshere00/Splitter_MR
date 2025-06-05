@@ -96,6 +96,14 @@ class RecursiveCharacterSplitter(BaseSplitter):
         text = reader_output.get("text", "")
         chunk_size = self.chunk_size
 
+        # Determine overlap in characters
+        if isinstance(self.chunk_overlap, float) and 0 <= self.chunk_overlap < 1:
+            overlap = int(chunk_size * self.chunk_overlap)
+        else:
+            overlap = int(self.chunk_overlap)
+        if overlap >= chunk_size:
+            raise ValueError("chunk_overlap must be smaller than chunk_size")
+
         # Split text into sentences
         splitter = RecursiveCharacterTextSplitter(
             chunk_size=self.chunk_size,
