@@ -1,9 +1,6 @@
-import os
 from unittest.mock import MagicMock, patch
 
-import pytest
-
-from splitter_mr.reader.readers.docling_reader import DoclingReader
+from splitter_mr.reader import DoclingReader
 
 
 def test_docling_reader_reads_and_converts(tmp_path):
@@ -32,7 +29,7 @@ def test_docling_reader_reads_and_converts(tmp_path):
         assert result["document_name"] == "foo.pdf"
         assert result["document_path"] == str(file)
         assert result["document_id"] == "doc-42"
-        assert result["conversion_method"] == "docling"
+        assert result["conversion_method"] == "markdown"
         assert result["metadata"] == {"src": "test"}
 
 
@@ -81,6 +78,6 @@ def test_docling_reader_defaults(tmp_path):
         reader = DoclingReader()
         result = reader.read(str(file))
         assert result["document_name"] == "bar.docx"
-        assert result["conversion_method"] == "docling"
+        assert result["conversion_method"] == "markdown"
         assert "document_id" in result
         assert "metadata" in result

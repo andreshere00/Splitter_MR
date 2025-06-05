@@ -44,9 +44,16 @@ class MarkItDownReader(BaseReader):
 
         Example:
             ```python
+            from splitter_mr.readers import MarkItDownReader
+
             reader = MarkItDownReader()
-            result = reader.read("/path/to/document.pdf", conversion_method = "MarkItDown")
+            result = reader.read(file_path = "data/test_1.pdf")
             print(result["text"])
+            ```
+            ```bash
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget purus non est porta
+            rutrum. Suspendisse euismod lectus laoreet sem pellentesque egestas et et sem.
+            Pellentesque ex felis, cursus ege...
             ```
         """
 
@@ -60,7 +67,7 @@ class MarkItDownReader(BaseReader):
             document_name=os.path.basename(file_path),
             document_path=file_path,
             document_id=kwargs.get("document_id"),
-            conversion_method="markitdown",
+            conversion_method="markdown",
             ocr_method=kwargs.get("ocr_method"),
             metadata=kwargs.get("metadata"),
         ).to_dict()

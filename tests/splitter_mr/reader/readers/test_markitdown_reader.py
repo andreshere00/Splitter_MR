@@ -1,9 +1,6 @@
-import os
 from unittest.mock import MagicMock, patch
 
-import pytest
-
-from splitter_mr.reader.readers.markitdown_reader import MarkItDownReader
+from splitter_mr.reader import MarkItDownReader
 
 
 def test_markitdown_reader_reads_and_converts(tmp_path):
@@ -33,7 +30,7 @@ def test_markitdown_reader_reads_and_converts(tmp_path):
         assert result["document_name"] == "foo.pdf"
         assert result["document_path"] == str(test_file)
         assert result["document_id"] == "doc-1"
-        assert result["conversion_method"] == "markitdown"
+        assert result["conversion_method"] == "markdown"
         assert result["metadata"] == {"source": "unit test"}
 
 
@@ -52,7 +49,7 @@ def test_markitdown_reader_defaults(tmp_path):
         result = reader.read(str(test_file))
 
         assert result["document_name"] == "bar.docx"
-        assert result["conversion_method"] == "markitdown"
+        assert result["conversion_method"] == "markdown"
         assert result["ocr_method"] is None or "ocr_method" in result
         # Document id and metadata can be None if not provided
         assert "document_id" in result

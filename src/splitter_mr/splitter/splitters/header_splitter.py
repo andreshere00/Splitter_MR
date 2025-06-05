@@ -1,3 +1,4 @@
+import re
 from typing import Any, Dict, List, Optional, Tuple
 
 from bs4 import BeautifulSoup
@@ -9,105 +10,145 @@ from ..base_splitter import BaseSplitter
 
 class HeaderSplitter(BaseSplitter):
     """
-    HeaderSplitter splits a Markdown or HTML document into chunks using header levels.
+    Splits a Markdown or HTML document into chunks based on header levels.
 
-    This splitter uses Langchain's MarkdownHeaderTextSplitter or HTMLHeaderTextSplitter
-    depending on the file extension. You can configure which headers are used and their
-    semantic names (e.g., ("##", "Header 2")).
+    This splitter automatically adapts the provided list of semantic header names
+    (e.g., ["Header 1", "Header 2"]) into the appropriate header tokens for either
+    Markdown (e.g., "#", "##") or HTML (e.g., "h1", "h2"), depending on the document type.
+    It then uses Langchain's `MarkdownHeaderTextSplitter` or `HTMLHeaderTextSplitter`
+    under the hood.
 
     Args:
-        headers_to_split_on (List[Tuple[str, str]]):
-            List of tuples with Markdown or HTML header tokens and their semantic names.
-        chunk_size (int):
-            Unused but present for compatibility with the BaseSplitter API.
+        chunk_size (int, optional): Unused, kept for compatibility with BaseSplitter API.
+        headers_to_split_on (Optional[List[str]]):
+            List of semantic header names to split on. For example: ["Header 1", "Header 2", "Header 3"]
+
+    Notes:
+        - See [Langchain MarkdownHeaderTextSplitter](https://api.python.langchain.com/en/latest/markdown/langchain_text_splitters.markdown.MarkdownHeaderTextSplitter.html)
+        - See [Langchain HTMLHeaderTextSplitter](https://python.langchain.com/api_reference/text_splitters/html/langchain_text_splitters.html.HTMLHeaderTextSplitter.html)
     """
 
     def __init__(
         self,
         chunk_size: int = 1000,
-        headers_to_split_on: Optional[List[Tuple[str, str]]] = [
-            ("#", "Header 1"),
-            ("##", "Header 2"),
-            ("####", "Header 3"),
-        ],
+        headers_to_split_on: Optional[List[str]] = ["Header 1", "Header 2", "Header 3"],
     ):
+        """
+        Initializes a HeaderSplitter instance.
+
+        Args:
+            chunk_size (int, optional): Unused parameter. Present for API compatibility.
+            headers_to_split_on (Optional[List[str]]):
+                List of header names such as ["Header 1", "Header 2"]. Defaults to first three levels.
+        """
         super().__init__(chunk_size)
         self.headers_to_split_on = headers_to_split_on
 
+    @staticmethod
+    def _header_level(header: str) -> int:
+        """
+        Extracts the numeric level from a header name like "Header 2".
+
+        Args:
+            header (str): Semantic header name (e.g., "Header 2").
+
+        Returns:
+            int: The numeric level of the header (e.g., 2 for "Header 2").
+
+        Raises:
+            ValueError: If the header string is not in the expected format.
+        """
+        m = re.match(r"header\s*(\d+)", header.lower())
+        if not m:
+            raise ValueError(f"Invalid header: {header}")
+        return int(m.group(1))
+
+    def _make_tuples(self, filetype: str) -> List[Tuple[str, str]]:
+        """
+        Converts semantic header names into tuples for Markdown or HTML splitters.
+
+        Args:
+            filetype (str): "md" for Markdown, "html" for HTML.
+
+        Returns:
+            List[Tuple[str, str]]:
+                A list of tuples where the first element is the filetype-specific header
+                token (e.g., "#", "##", "h1", "h2"), and the second is the header's semantic name.
+
+        Raises:
+            ValueError: If filetype is unknown or headers are not in the expected format.
+        """
+        result = []
+        for header in self.headers_to_split_on:
+            level = self._header_level(header)
+            if filetype == "md":
+                token = "#" * level
+            elif filetype == "html":
+                token = f"h{level}"
+            else:
+                raise ValueError(f"Unknown filetype: {filetype}")
+            result.append((token, header))
+        return result
+
     def split(self, reader_output: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Splits the input document (Markdown or HTML) found in reader_output["text"] using
-            the configured headers.
+        Splits a document (Markdown or HTML) into chunks using the configured header levels.
 
         Args:
             reader_output (Dict[str, Any]):
-                Dictionary with the structure defined in the ReaderOutput schema.
-                Must contain a 'text' field (the Markdown or HTML to split) and may contain
-                document-level metadata fields such as 'document_name', 'document_path', etc.
+                Dictionary with a 'text' field containing the document content,
+                plus optional document-level metadata such as 'document_name' and 'document_path'.
 
         Returns:
-            Dict[str, Any]:
-                A dictionary matching the SplitterOutput schema with the following keys:
-                    - 'chunks': List[str], the resulting text chunks.
-                    - 'chunk_id': List[str], unique IDs for each chunk.
-                    - 'document_name': Optional[str], source document name.
-                    - 'document_path': str, source document path.
-                    - 'document_id': Optional[str], unique document identifier.
-                    - 'conversion_method': Optional[str], conversion method used.
-                    - 'ocr_method': Optional[str], OCR method used (if any).
-                    - 'split_method': str, the name of the split method ("header_splitter").
-                    - 'split_params': Dict[str, Any], parameters used for splitting.
-                    - 'metadata': Dict, document-level metadata dictionary.
+            Dict[str, Any]: Dictionary following the SplitterOutput schema with keys:
+                - 'chunks': List of chunked document strings.
+                - 'chunk_id': List of unique IDs for each chunk.
+                - 'document_name': Optional source document name.
+                - 'document_path': Source document path.
+                - 'document_id': Optional document identifier.
+                - 'conversion_method': Optional conversion method.
+                - 'ocr_method': Optional OCR method used.
+                - 'split_method': Name of the split method ("header_splitter").
+                - 'split_params': Parameters used for splitting.
+                - 'metadata': Document-level metadata dictionary.
 
         Raises:
-            ValueError: If 'text' is not present in reader_output or is empty.
-            TypeError: If 'text' comes from a non-compatible document type.
+            ValueError: If 'text' is missing from reader_output or is empty.
+            TypeError: If the document is not Markdown or HTML.
 
         Example:
             ```python
             from splitter_mr.splitter import HeaderSplitter
 
-            # This dictionary has been obtained as the output from a Reader object.
             reader_output = {
                 "text": "# Title\\n\\n## Subtitle\\nText...",
                 "document_name": "doc.md",
                 "document_path": "/path/doc.md"
             }
-            splitter = HeaderSplitter(
-                headers_to_split_on = [
-                    ("#", "Header 1"), ("##", "Header 2")
-                    ]
-                )
+            splitter = HeaderSplitter(headers_to_split_on=["Header 1", "Header 2"])
             output = splitter.split(reader_output)
-            print(output["chunks"][0])
-            ```
-            ```python
-            >>> ["# Title \\n \\n", "## Subtitle\\nText..."]
+            print(output["chunks"])
             ```
         """
-        # Initialize variables
-        markdown_text = reader_output.get("text", "")
+        text = reader_output.get("text", "")
+        if not text:
+            raise ValueError("reader_output must contain non-empty 'text' field.")
 
-        if bool(BeautifulSoup(markdown_text, "html.parser").find()):
-            try:
-                splitter = HTMLHeaderTextSplitter(
-                    headers_to_split_on=self.headers_to_split_on
-                )
-            except ValueError as e:
-                raise TypeError(
-                    "Incorrect Header selection for HTML splitter. Please ensure headers_to_split_on contains only HTML header tags like [('h1', 'Header 1'), ('h2', 'Header 2')], etc."  # noqa: E501
-                ) from e
+        # Detect file type and configure header tuples
+        if bool(BeautifulSoup(text, "html.parser").find()):
+            # HTML
+            tuples = self._make_tuples("html")
+            splitter = HTMLHeaderTextSplitter(
+                headers_to_split_on=tuples, return_each_element=True
+            )
         else:
-            try:
-                splitter = MarkdownHeaderTextSplitter(
-                    headers_to_split_on=self.headers_to_split_on
-                )
-            except ValueError as e:
-                raise ValueError(
-                    "Incorrect Header selection for Markdown Splitter. Please ensure headers_to_split_on contains only Markdown header tags like [('#', 'Header 1'), ('##', 'Header 2')], etc."  # noqa: E501
-                ) from e
+            # Markdown
+            tuples = self._make_tuples("md")
+            splitter = MarkdownHeaderTextSplitter(
+                headers_to_split_on=tuples, return_each_line=True
+            )
 
-        docs = splitter.split_text(markdown_text)
+        docs = splitter.split_text(text)
         chunks = [doc.page_content for doc in docs]
         chunk_ids = self._generate_chunk_ids(len(chunks))
         metadata = self._default_metadata()

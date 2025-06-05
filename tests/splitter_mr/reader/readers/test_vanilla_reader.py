@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from splitter_mr.reader.readers.vanilla_reader import VanillaReader
+from splitter_mr.reader import VanillaReader
 
 
 @pytest.fixture

@@ -67,6 +67,7 @@ class SentenceSplitter(BaseSplitter):
             from splitter_mr.splitter import SentenceSplitter
 
             # Example input: 7 sentences with varied punctuation
+            # This dictionary has been obtained as an output from a Reader class.
             reader_output = {
                 "text": (
                     "Hello world! How are you? I am fine. "
@@ -83,12 +84,10 @@ class SentenceSplitter(BaseSplitter):
             result = splitter.split(reader_output)
             print(result["chunks"])
             ```
-            ```python
-            >>> [
-            ... "Hello world! How are you? I am fine.",
-            ... "Testing sentence splitting. Short. End!",
-            ... "And another?"
-            ... ]
+            ```bash
+            ["Hello world! How are you? I am fine.",
+            "Testing sentence splitting. Short. End!",
+            "And another?", ...]
             ```
         """
         # Initialize variables
