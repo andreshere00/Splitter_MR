@@ -69,8 +69,8 @@ class CharacterSplitter(BaseSplitter):
             output = splitter.split(reader_output)
             print(output["chunks"])
             ```
-            ```python
-            >>> ["abcde", "defgh", "ghijk", ..., "yz"]
+            ```bash
+            ["abcde", "defgh", "ghijk", ..., "yz"]
             ```
         """
         # Initialize variables

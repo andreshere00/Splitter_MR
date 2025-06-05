@@ -18,7 +18,7 @@ class RecursiveCharacterSplitter(BaseSplitter):
             chunks.
         separators (Union[str, List[str]]): Character(s) to recursively split sentences.
 
-    ### Notes:
+    Notes:
         More info about the RecursiveCharacterTextSplitter:
         [Langchain Docs](https://python.langchain.com/docs/how_to/recursive_text_splitter/).
     """
@@ -88,10 +88,8 @@ class RecursiveCharacterSplitter(BaseSplitter):
             output = splitter.split(reader_output)
             print(output["chunks"])
             ```
-            ```python
-            >>> ['This is a long document. It will be', 
-            ... 'be recursively split into smaller chunks', 
-            ... ...]
+            ```bash
+            ['This is a long document. It will be', 'be recursively split into smaller chunks', ...]
             ```
         """
         # Initialize variables

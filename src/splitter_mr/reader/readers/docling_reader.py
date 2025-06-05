@@ -43,10 +43,16 @@ class DoclingReader(BaseReader):
 
         Example:
             ```python
-            from src.mr_splitter.reader.docling_reader import DoclingReader
+            from splitter_mr.readers import DoclingReader
+
             reader = DoclingReader()
-            result = reader.read("data/example.pdf")
+            result = reader.read(file_path = "data/test_1.pdf")
             print(result["text"])
+            ```
+            ```bash
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget purus non est porta
+            rutrum. Suspendisse euismod lectus laoreet sem pellentesque egestas et et sem.
+            Pellentesque ex felis, cursus ege...
             ```
         """
 
@@ -66,7 +72,7 @@ class DoclingReader(BaseReader):
             document_name=os.path.basename(file_path),
             document_path=file_path,
             document_id=kwargs.get("document_id"),
-            conversion_method="docling",
+            conversion_method="markdown",
             ocr_method=kwargs.get("ocr_method"),
             metadata=kwargs.get("metadata"),
         ).to_dict()

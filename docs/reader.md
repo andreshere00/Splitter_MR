@@ -32,6 +32,8 @@ Additionally, the file compatibility depending on the Reader class is given by t
     options:
       members_order: source
 
+> 📚 **Note:** file examples are extracted from  the`data` folder in the **GitHub** repository: [**link**](https://github.com/andreshere00/Splitter_MR/tree/main/data).
+
 ### VanillaReader
 
 ::: splitter_mr.reader.readers.vanilla_reader
@@ -41,12 +43,16 @@ Additionally, the file compatibility depending on the Reader class is given by t
 
 ### DoclingReader
 
+![Docling logo](./assets/docling_logo.png)
+
 ::: splitter_mr.reader.readers.docling_reader
     handler: python
     options:
       members_order: source
 
 ### MarkItDownReader
+
+![MarkItDown logo](./assets/markitdown_logo.png)
 
 ::: splitter_mr.reader.readers.markitdown_reader
     handler: python

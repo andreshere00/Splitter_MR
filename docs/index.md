@@ -14,9 +14,9 @@ Splitter MR can read data from multiples sources and files. For reading the file
 
 | **Reader**         | **Unstructured files & PDFs**    | **MS Office suite files**         | **Tabular data**        | **Files with hierarchical schema**      | **Image files**                  | **Markdown conversion** |
 |--------------------|----------------------------------|-----------------------------------|-------------------------|----------------------------------------|----------------------------------|----------------------------------|
-| **`VanillaReader**`      | `txt`, `csv`                     | –                                 | `csv`, `tsv`, `parquet`| `json`, `yaml`, `html`, `xml`          || No |----------------------------------| –                                |
-| **`MarkItDownReader**`   | `txt`, `md`, `pdf`               | `docx`, `xlsx`, `pptx`            | `csv`, `tsv`                  | `json`, `html`, `xml`                  | `jpg`, `png`, `pneg`             | Yes |
-| **`DoclingReader**`      | `txt`, `md`, `pdf`                     | `docx`, `xlsx`, `pptx`            | –                 | `html`, `xhtml`                        | `png`, `jpeg`, `tiff`, `bmp`, `webp` | Yes |
+| **Vanilla Reader**      | `txt`, `csv`                     | –                                 | `csv`, `tsv`, `parquet`| `json`, `yaml`, `html`, `xml`          || No |----------------------------------| –                                |
+| **MarkItDown Reader**   | `txt`, `md`, `pdf`               | `docx`, `xlsx`, `pptx`            | `csv`, `tsv`                  | `json`, `html`, `xml`                  | `jpg`, `png`, `pneg`             | Yes |
+| **Docling Reader**      | `txt`, `md`, `pdf`                     | `docx`, `xlsx`, `pptx`            | –                 | `html`, `xhtml`                        | `png`, `jpeg`, `tiff`, `bmp`, `webp` | Yes |
 
 ### Serveral splitting methods
 
@@ -41,24 +41,26 @@ Main splitting methods include:
 
 ### Output Format
 
-The output is a dictionary (or JSON) with the following structure:
+The output is a dictionary (or `JSON`) with the following structure:
 
 ```python
 {
-  'chunks': List[str],
-  'chunk_id': List[str],
-  'document_name': Optional[str],
-  'document_path': str,
-  'document_id': Optional[str],
-  'conversion_method': Optional[str],
-  'ocr_method': Optional[str],
-  'split_method': str,
-  'split_params': Optional[Dict[str, Any]],
-  'metadata': Optional[List[str]]
+  'chunks': List[str],  # The extracted chunks from the text
+  'chunk_id': List[str],  # The identifier for the chunks (given by default with uuid)
+  'document_name': Optional[str],  # The base name of the file.
+  'document_path': str,  # The path to the document
+  'document_id': Optional[str],  # The identifier for that document
+  'conversion_method': Optional[str],  # The method used to convert the file (i.e., markdown, json, etc.)
+  'ocr_method': Optional[str],  # The OCR method or VLM used to analyze images (TBD)
+  'split_method': str,  # The splitting strategy used for chunking the document
+  'split_params': Optional[Dict[str, Any]],  # The specific splitter parameters
+  'metadata': Optional[List[str]]  # The adjunted metadata introduced by the user (TBD)
 }
 ```
 
 ## Architecture
+
+![SplitterMR architecture diagram](./assets/architecture_splitter_mr.svg)
 
 **SplitterMR** is designed around a modular pipeline that processes files from raw data all the way to chunked, LLM-ready text.
 

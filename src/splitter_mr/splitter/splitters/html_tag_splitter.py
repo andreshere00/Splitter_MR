@@ -62,11 +62,11 @@ class HTMLTagSplitter(BaseSplitter):
             output = splitter.split(reader_output)
             print(output["chunks"])
             ```
-            ```python
-            >>> [
-            ... '<html><body><div>Chunk 1</div></body></html>',
-            ... '<html><body><div>Chunk 2</div></body></html>'
-            ... ]
+            ```bash
+            [
+            '<html><body><div>Chunk 1</div></body></html>',
+            '<html><body><div>Chunk 2</div></body></html>'
+            ]
             ```
         """
         html = reader_output.get("text", "")
