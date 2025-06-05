@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from splitter_mr.splitter.splitters.header_splitter import HeaderSplitter
+from splitter_mr.splitter import HeaderSplitter
 
 
 @pytest.fixture

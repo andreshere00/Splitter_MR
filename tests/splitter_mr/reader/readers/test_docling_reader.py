@@ -1,9 +1,6 @@
-import os
 from unittest.mock import MagicMock, patch
 
-import pytest
-
-from splitter_mr.reader.readers.docling_reader import DoclingReader
+from splitter_mr.reader import DoclingReader
 
 
 def test_docling_reader_reads_and_converts(tmp_path):

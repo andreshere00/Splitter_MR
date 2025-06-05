@@ -1,6 +1,6 @@
 import pytest
 
-from splitter_mr.reader.base_reader import BaseReader
+from splitter_mr.reader import BaseReader
 
 
 def test_base_reader_is_abstract():

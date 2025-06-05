@@ -2,7 +2,7 @@ import uuid
 
 import pytest
 
-from splitter_mr.splitter.base_splitter import BaseSplitter
+from splitter_mr.splitter import BaseSplitter
 
 
 def test_base_splitter_is_abstract():
