@@ -1,9 +1,6 @@
-import os
 from unittest.mock import MagicMock, patch
 
-import pytest
-
-from splitter_mr.reader.readers.markitdown_reader import MarkItDownReader
+from splitter_mr.reader import MarkItDownReader
 
 
 def test_markitdown_reader_reads_and_converts(tmp_path):
