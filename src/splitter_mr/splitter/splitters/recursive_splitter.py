@@ -126,7 +126,7 @@ class RecursiveCharacterSplitter(BaseSplitter):
             document_id=reader_output.get("document_id"),
             conversion_method=reader_output.get("conversion_method"),
             ocr_method=reader_output.get("ocr_method"),
-            split_method="sentence_splitter",
+            split_method="recursive_character_splitter",
             split_params={
                 "chunk_size": chunk_size,
                 "chunk_overlap": self.chunk_overlap,

@@ -45,7 +45,7 @@ def test_recursive_json_splitter_instantiates_and_calls_splitter(reader_output):
             '{"foo": {"bar": [3]}, "baz": "qux"}',
         ]
         assert "split_method" in result
-        assert result["split_method"] == "json_recursive_splitter"
+        assert result["split_method"] == "recursive_json_splitter"
         assert result["split_params"]["max_chunk_size"] == 100
         assert result["split_params"]["min_chunk_size"] == 10
         for field in [

@@ -37,7 +37,7 @@ def test_split_with_explicit_tag(reader_output):
         assert chunk.count("<div>") == 1
         assert chunk.count("<p>") == 1
     assert result["split_params"]["tag"] == "div"
-    assert result["split_method"] == "html_splitter"
+    assert result["split_method"] == "html_tag_splitter"
 
 
 def test_split_with_auto_tag(reader_output):
