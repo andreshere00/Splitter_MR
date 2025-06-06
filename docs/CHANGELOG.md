@@ -2,20 +2,28 @@
 
 ## v0.1.2
 
-### Bug fixes
+<<<<<<< HEAD
+### v0.1.2
 
-- An `uuid` was not generating by default for the `document_id` attribute of the `ReaderOutput` and `SplitterOutput` classes.
+#### Features
 
-### Documentation
+- Now `VanillaReader` can read from multiple sources: URL, text, file_path and dictionaries.
 
-- Add `CHANGELOG.md` to the documentation server.
+#### Fixes
 
-### Developer features
+- By default, the document_id was `None` instead of and `uuid` in `VanillaReader`. 
 
+#### Developer features
+
+- Extend CI/CD lifecycle.
 - Automate versioning for the Python project.
 - The project has been published to [PyPI.org](https://pypi.org/project/splitter-mr/). New versions will be deployed using CI/CD script.
 
-## v0.1.1
+#### Documentation
+
+- Update documentation in examples for the Documentation server.
+
+### v0.1.1
 
 Some bug fixes in HeaderSplitter and RecursiveCharacterSplitter, and documentation updates.
 
