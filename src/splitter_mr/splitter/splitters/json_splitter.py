@@ -97,7 +97,7 @@ class RecursiveJSONSplitter(BaseSplitter):
             document_id=reader_output.get("document_id"),
             conversion_method=reader_output.get("conversion_method"),
             ocr_method=reader_output.get("ocr_method"),
-            split_method="json_recursive_splitter",
+            split_method="recursive_json_splitter",
             split_params={
                 "max_chunk_size": self.chunk_size,
                 "min_chunk_size": self.min_chunk_size,
