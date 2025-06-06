@@ -43,9 +43,7 @@ def test_recursive_character_splitter_instantiates_and_calls_splitter(reader_out
         assert "chunks" in result
         assert result["chunks"] == ["Chunk 1", "Chunk 2"]
         assert "split_method" in result
-        assert (
-            result["split_method"] == "sentence_splitter"
-        )  # As per your implementation
+        assert result["split_method"] == "recursive_character_splitter"
         assert result["split_params"]["chunk_size"] == 10
         assert result["split_params"]["chunk_overlap"] == 2
         assert result["split_params"]["separators"] == ["."]

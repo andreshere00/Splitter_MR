@@ -1,6 +1,6 @@
 [project]
 name = "splitter-mr"
-version = "0.1.0"
+dynamic = ["version"]
 description = "A modular text splitting library."
 authors = [
     { name="Andrés Herencia", email="andresherencia2000@gmail.com" }
@@ -19,16 +19,21 @@ dependencies = [
 [tool.setuptools]
 package-dir = {"" = "src"}
 
+[tool.setuptools_scm]
+version_scheme = "guess-next-dev"
+local_scheme = "node-and-date"
+
 [tool.uv.sources]
 splitter-mr = { workspace = true }
 
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=61.0", "setuptools_scm[toml]>=7.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [dependency-groups]
 dev = [
     "black>=25.1.0",
+    "build>=1.2.2.post1",
     "coverage>=7.8.2",
     "flake8>=7.2.0",
     "isort>=6.0.1",
@@ -41,7 +46,9 @@ dev = [
     "pytest>=8.4.0",
     "pytest-cov>=6.1.1",
     "pyupgrade>=3.20.0",
+    "requests-mock>=1.12.1",
     "splitter-mr",
+    "twine>=6.1.0",
 ]
 
 [project.urls]

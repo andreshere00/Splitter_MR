@@ -101,18 +101,14 @@ The output object is `SplitterOutput`, a dictionary with the following structure
 Currently, the package can be installed executing the following instruction:
 
 ```python
-pip install -e .
+pip install splitter-mr
 ```
 
-We strongly recommend to install it using a python package management tool such as `uv`:
+We strongly recommend to install it using a python package management tool such as [`uv`](https://docs.astral.sh/uv/):
 
 ```python
-uv add .
+uv add splitter-mr
 ```
-
-In the next days, the package will be published to be publicly accessible using the by default [pypi.org](https://pypi.org/simple) package directory. 
-
-> Work-in-progress...
 
 ## How to use
 
