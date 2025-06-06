@@ -16,6 +16,10 @@
 
 - Extend CI/CD lifecycle
 
+#### Documentation
+
+- Update documentation in examples for the Documentation server.
+
 ### v0.1.1
 
 Some bug fixes in HeaderSplitter and RecursiveCharacterSplitter, and documentation updates.
