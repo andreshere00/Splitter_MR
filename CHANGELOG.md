@@ -2,6 +2,20 @@
 
 ## v0.1.x
 
+### v0.1.2
+
+#### Features
+
+- Now `VanillaReader` can read from multiple sources: URL, text, file_path and dictionaries.
+
+#### Fixes
+
+- By default, the document_id was `None` instead of and `uuid` in `VanillaReader`. 
+
+#### Developer features
+
+- Extend CI/CD lifecycle
+
 ### v0.1.1
 
 Some bug fixes in HeaderSplitter and RecursiveCharacterSplitter, and documentation updates.

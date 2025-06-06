@@ -41,6 +41,7 @@ dev = [
     "pytest>=8.4.0",
     "pytest-cov>=6.1.1",
     "pyupgrade>=3.20.0",
+    "requests-mock>=1.12.1",
     "splitter-mr",
 ]
 
