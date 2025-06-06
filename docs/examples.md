@@ -2,7 +2,7 @@
 
 ## Read a basic document and chunk it with a Recursive Character Splitter
 
-We will use as an example the first chapter of the book "El ingenioso hidalgo Don Quijote de La Mancha". The text of reference can be extracted from the [GitHub project](https://github.com/andreshere00/Splitter_MR), in the directory `data/text_1.txt`.
+We will use as an example the first chapter of the book "El ingenioso hidalgo Don Quijote de La Mancha". The text of reference can be extracted from the [GitHub project](https://github.com/andreshere00/Splitter_MR).
 
 ### 1. Read the text using a Reader component.
 
@@ -19,7 +19,8 @@ reader = VanillaReader()
 To read the file, we only need to call the `read` method from this class, which is inherited from the `BaseReader` class (see [documentation](./reader.md)).
 
 ```python
-reader_output = reader.read(file_path = 'data/test_1.txt')
+url = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/test_1.txt"
+reader_output = reader.read(file_url = url)
 ```
 
 The result is a `ReaderOutput` object, which has the following structure:
@@ -99,6 +100,7 @@ for idx, chunk in enumerate(splitter_output["chunks"]):
 ```bash
 ======================================== Chunk 1 ========================================
 Capítulo Primero
+
 Que trata de la condición y ejercicio del famoso hidalgo D. Quijote de la Mancha
 
 ======================================== Chunk 2 ========================================
@@ -115,7 +117,7 @@ ante la vuestra merced, para que la vuestra grandeza disponga de mí a su talant
 
 > 💡 **NOTE:** Remember that in case that we want to use custom separators or define another `chunk_size` or overlapping, we can do it when instantiating the class. 
 
-**And that's it!** This is as simple as it is shown in this tutorial. In next version, we will provide support to read files directly from an URL, and additionally, we will provide support to read the texts from a Python `str` variable.
+**And that's it!** This is as simple as it is shown in this tutorial.
 
 ### Complete script
 
@@ -127,7 +129,9 @@ from splitter_mr.splitter import RecursiveCharacterSplitter
 
 
 reader = VanillaReader()
-reader_output = reader.read(file_path = 'data/test_1.txt')
+
+url = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/test_1.txt"
+reader_output = reader.read(file_url = url)
 
 print(reader_output) # Visualize the ReaderOutput object
 print(reader_output['text']) # Get the text from the document
