@@ -21,7 +21,7 @@ package-dir = {"" = "src"}
 
 [tool.setuptools_scm]
 version_scheme = "guess-next-dev"
-local_scheme = "node-and-date"
+local_scheme = "no-local-version"
 
 [tool.uv.sources]
 splitter-mr = { workspace = true }
@@ -47,8 +47,10 @@ dev = [
     "pytest-cov>=6.1.1",
     "pyupgrade>=3.20.0",
     "requests-mock>=1.12.1",
+    "setuptools-scm[toml]>=8.3.1",
     "splitter-mr",
     "twine>=6.1.0",
+    "wheel>=0.45.1",
 ]
 
 [project.urls]
