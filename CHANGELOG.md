@@ -1,5 +1,19 @@
 # v0.1.x
 
+## v0.1.3
+
+### Features
+
+- Add a new splitting strategy: `RowColumnSplitter`.
+
+### Fixes
+
+- Change Readers to properly handle JSON files.
+
+### Documentation
+
+- Update documentation
+
 ## v0.1.2
 
 ### Features
