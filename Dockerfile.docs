@@ -1,0 +1,21 @@
+FROM python:3.12-slim
+
+# Install uv (for fast installs) and git if needed for plugins from git
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    build-essential \
+    git  && \
+    pip install --no-cache-dir uv
+
+# Define working directory
+WORKDIR /app
+
+# Copy the project
+COPY . .
+
+# Install dependencies
+RUN uv pip install --system --group dev
+
+# Default command to build docs (change to gh-deploy if you wish)
+CMD ["uv", "run", "mkdocs", "gh-deploy", "--force"]

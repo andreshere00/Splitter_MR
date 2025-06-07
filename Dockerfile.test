@@ -1,0 +1,25 @@
+FROM python:3.12-slim
+
+# Install build tools and uv
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    build-essential \
+    git \
+    && rm -rf /var/lib/apt/lists/* && \
+    pip install --upgrade pip && \
+    pip install uv
+
+# Define working directory
+WORKDIR /app
+
+# Copy the entire project
+COPY . .
+
+# Install dependencies
+RUN uv pip install --system --group dev
+
+# Make test script executable
+RUN chmod +x ./scripts/validate_test.sh
+
+# Default command
+CMD ["./scripts/validate_test.sh"]
