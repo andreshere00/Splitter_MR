@@ -1,0 +1,1022 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+        <link rel="next" href="api_reference/">
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Splitter MR Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="assets/extra.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#splitter-mr" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="Splitter MR Docs" class="md-header__button md-logo" aria-label="Splitter MR Docs" data-md-component="logo">
+      
+  <img src="assets/splitter_mr_logo_white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Splitter MR Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Home
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Splitter MR Docs" class="md-nav__button md-logo" aria-label="Splitter MR Docs" data-md-component="logo">
+      
+  <img src="assets/splitter_mr_logo_white.svg" alt="logo">
+
+    </a>
+    Splitter MR Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#different-input-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      Different input formats
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#serveral-splitting-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Serveral splitting methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output Format
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Output Format">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reader" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reader
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#splitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Splitter
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-install" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to install
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to use
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How to use">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#read-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Read files
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#split-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      Split text
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compatibility-with-vision-tools-for-image-processing-and-annotations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compatibility with vision tools for image processing and annotations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contact" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contact
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Developer Guide
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Developer Guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api_reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="reader/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Readers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Splitters
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Examples
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Changelog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    <span class="md-ellipsis">
+      Description
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#different-input-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      Different input formats
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#serveral-splitting-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Serveral splitting methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output Format
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Output Format">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reader" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reader
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#splitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Splitter
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-install" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to install
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to use
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How to use">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#read-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Read files
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#split-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      Split text
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compatibility-with-vision-tools-for-image-processing-and-annotations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compatibility with vision tools for image processing and annotations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contact" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contact
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="splitter-mr">Splitter MR<a class="headerlink" href="#splitter-mr" title="Permanent link">&para;</a></h1>
+<p><img src="./assets/splitter_mr_logo.svg" alt="SplitterMR logo" width="80%"/></p>
+<h2 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h2>
+<p><strong>SplitterMR</strong> is a library for chunking data into convenient text blocks compatible with your LLM applications.</p>
+<h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
+<h3 id="different-input-formats">Different input formats<a class="headerlink" href="#different-input-formats" title="Permanent link">&para;</a></h3>
+<p>Splitter MR can read data from multiples sources and files. To read the files, it uses the Reader components, which inherits from a Base abstract class, <code>BaseReader</code>. This object allows you to read the files as a properly formatted string, or convert the files into another format (such as <code>markdown</code> or <code>json</code>). </p>
+<p>Currently, there are supported three readers: <code>VanillaReader</code>, and <code>MarkItDownReader</code> and <code>DoclingReader</code>. These are the differences between each Reader component:</p>
+<table>
+<thead>
+<tr>
+<th><strong>Reader</strong></th>
+<th><strong>Unstructured files &amp; PDFs</strong></th>
+<th><strong>MS Office suite files</strong></th>
+<th><strong>Tabular data</strong></th>
+<th><strong>Files with hierarchical schema</strong></th>
+<th><strong>Image files</strong></th>
+<th><strong>Markdown conversion</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Vanilla Reader</strong></td>
+<td><code>txt</code>, <code>csv</code></td>
+<td>–</td>
+<td><code>csv</code>, <code>tsv</code>, <code>parquet</code></td>
+<td><code>json</code>, <code>yaml</code>, <code>html</code>, <code>xml</code></td>
+<td></td>
+<td>No</td>
+</tr>
+<tr>
+<td><strong>MarkItDown Reader</strong></td>
+<td><code>txt</code>, <code>md</code>, <code>pdf</code></td>
+<td><code>docx</code>, <code>xlsx</code>, <code>pptx</code></td>
+<td><code>csv</code>, <code>tsv</code></td>
+<td><code>json</code>, <code>html</code>, <code>xml</code></td>
+<td><code>jpg</code>, <code>png</code>, <code>pneg</code></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><strong>Docling Reader</strong></td>
+<td><code>txt</code>, <code>md</code>, <code>pdf</code></td>
+<td><code>docx</code>, <code>xlsx</code>, <code>pptx</code></td>
+<td>–</td>
+<td><code>html</code>, <code>xhtml</code></td>
+<td><code>png</code>, <code>jpeg</code>, <code>tiff</code>, <code>bmp</code>, <code>webp</code></td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="serveral-splitting-methods">Serveral splitting methods<a class="headerlink" href="#serveral-splitting-methods" title="Permanent link">&para;</a></h3>
+<p>Splitter_MR allows you to split the files on many different ways depending on your needs. </p>
+<p>Main splitting methods include:</p>
+<table>
+<thead>
+<tr>
+<th>Splitting Technique</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Character Splitter</strong></td>
+<td>Splits text into chunks based on a specified number of characters. Supports overlapping by character count or percentage. <br> <strong>Parameters:</strong> <code>chunk_size</code> (max chars per chunk), <code>chunk_overlap</code> (overlapping chars: int or %). <br> <strong>Compatible with:</strong> Text.</td>
+</tr>
+<tr>
+<td><strong>Word Splitter</strong></td>
+<td>Splits text into chunks based on a specified number of words. Supports overlapping by word count or percentage. <br> <strong>Parameters:</strong> <code>chunk_size</code> (max words per chunk), <code>chunk_overlap</code> (overlapping words: int or %). <br> <strong>Compatible with:</strong> Text.</td>
+</tr>
+<tr>
+<td><strong>Sentence Splitter</strong></td>
+<td>Splits text into chunks by a specified number of sentences. Allows overlap defined by a number or percentage of words from the end of the previous chunk. Customizable sentence separators (e.g., <code>.</code>, <code>!</code>, <code>?</code>). <br> <strong>Parameters:</strong> <code>chunk_size</code> (max sentences per chunk), <code>chunk_overlap</code> (overlapping words: int or %), <code>sentence_separators</code> (list of characters). <br> <strong>Compatible with:</strong> Text.</td>
+</tr>
+<tr>
+<td><strong>Paragraph Splitter</strong></td>
+<td>Splits text into chunks based on a specified number of paragraphs. Allows overlapping by word count or percentage, and customizable line breaks. <br> <strong>Parameters:</strong> <code>chunk_size</code> (max paragraphs per chunk), <code>chunk_overlap</code> (overlapping words: int or %), <code>line_break</code> (delimiter(s) for paragraphs). <br> <strong>Compatible with:</strong> Text.</td>
+</tr>
+<tr>
+<td><strong>Recursive Splitter</strong></td>
+<td>Recursively splits text based on a hierarchy of separators (e.g., paragraph, sentence, word, character) until chunks reach a target size. Tries to preserve semantic units as long as possible. <br> <strong>Parameters:</strong> <code>chunk_size</code> (max chars per chunk), <code>chunk_overlap</code> (overlapping chars), <code>separators</code> (list of characters to split on, e.g., <code>["\n\n", "\n", " ", ""]</code>). <br> <strong>Compatible with:</strong> Text.</td>
+</tr>
+<tr>
+<td><strong>Paged Splitter</strong></td>
+<td>Splits text by pages for documents that have page structure. Each chunk contains a specified number of pages, with optional word overlap. <br> <strong>Parameters:</strong> <code>num_pages</code> (pages per chunk), <code>chunk_overlap</code> (overlapping words). <br> <strong>Compatible with:</strong> Word, PDF, Excel, PowerPoint.</td>
+</tr>
+<tr>
+<td><strong>Row/Column Splitter</strong></td>
+<td>For tabular formats, splits data by a set number of rows or columns per chunk, with possible overlap. Row-based and column-based splitting are mutually exclusive. <br> <strong>Parameters:</strong> <code>num_rows</code>, <code>num_cols</code> (rows/columns per chunk), <code>overlap</code> (overlapping rows or columns). <br> <strong>Compatible with:</strong> Tabular formats (csv, tsv, parquet, flat json).</td>
+</tr>
+<tr>
+<td><strong>Schema Based Splitter</strong></td>
+<td>Splits hierarchical documents (XML, HTML) based on element tags or keys, preserving the schema/structure. Splitting can be done on a specified or inferred parent key/tag. <br> <strong>Parameters:</strong> <code>chunk_size</code> (approx. max chars per chunk), <code>key</code> (optional parent key or tag). <br> <strong>Compatible with:</strong> XML, HTML.</td>
+</tr>
+<tr>
+<td><strong>JSON Splitter</strong></td>
+<td>Recursively splits JSON documents into smaller sub-structures that preserve the original JSON schema. <br> <strong>Parameters:</strong> <code>max_chunk_size</code> (max chars per chunk), <code>min_chunk_size</code> (min chars per chunk). <br> <strong>Compatible with:</strong> JSON.</td>
+</tr>
+<tr>
+<td><strong>Semantic Splitter</strong></td>
+<td>Splits text into chunks based on semantic similarity, using an embedding model and a max tokens parameter. Useful for meaningful semantic groupings. <br> <strong>Parameters:</strong> <code>embedding_model</code> (model for embeddings), <code>max_tokens</code> (max tokens per chunk). <br> <strong>Compatible with:</strong> Text.</td>
+</tr>
+<tr>
+<td><strong>HTMLTagSplitter</strong></td>
+<td>Splits HTML content based on a specified tag, or automatically detects the most frequent and shallowest tag if not specified. Each chunk is a complete HTML fragment for that tag. <br> <strong>Parameters:</strong> <code>chunk_size</code> (max chars per chunk), <code>tag</code> (HTML tag to split on, optional). <br> <strong>Compatible with:</strong> HTML.</td>
+</tr>
+<tr>
+<td><strong>HeaderSplitter</strong></td>
+<td>Splits Markdown or HTML documents into chunks using header levels (e.g., <code>#</code>, <code>##</code>, or <code>&lt;h1&gt;</code>, <code>&lt;h2&gt;</code>). Uses configurable headers for chunking. <br> <strong>Parameters:</strong> <code>headers_to_split_on</code> (list of headers and semantic names), <code>chunk_size</code> (unused, for compatibility). <br> <strong>Compatible with:</strong> Markdown, HTML.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="output-format">Output Format<a class="headerlink" href="#output-format" title="Permanent link">&para;</a></h3>
+<h4 id="reader">Reader<a class="headerlink" href="#reader" title="Permanent link">&para;</a></h4>
+<p>The output object is <code>ReaderOutput</code>, a dictionary with the following structure:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+  <span class="n">text</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>  <span class="c1"># The extracted text</span>
+  <span class="n">document_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># The base name of the file</span>
+  <span class="n">document_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>  <span class="c1"># The path to the document</span>
+  <span class="n">document_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># The document identifier (given by default by an UUID)</span>
+  <span class="n">conversion_method</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># The format in which the file has been converted (markdown, json, etc.)</span>
+  <span class="n">ocr_method</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># The OCR method or VLM used to analyze images (TBD)</span>
+  <span class="n">metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>  <span class="c1"># The appended metadata, introduced by the user (TBD)</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="splitter">Splitter<a class="headerlink" href="#splitter" title="Permanent link">&para;</a></h4>
+<p>The output object is <code>SplitterOutput</code>, a dictionary with the following structure:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+  <span class="s1">&#39;chunks&#39;</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>  <span class="c1"># The extracted chunks from the text</span>
+  <span class="s1">&#39;chunk_id&#39;</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>  <span class="c1"># The identifier for the chunks (given by default with uuid)</span>
+  <span class="s1">&#39;document_name&#39;</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>  <span class="c1"># The base name of the file.</span>
+  <span class="s1">&#39;document_path&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>  <span class="c1"># The path to the document</span>
+  <span class="s1">&#39;document_id&#39;</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>  <span class="c1"># The identifier for that document</span>
+  <span class="s1">&#39;conversion_method&#39;</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>  <span class="c1"># The format in which the file has been converted (markdown, json, etc.)</span>
+  <span class="s1">&#39;ocr_method&#39;</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>  <span class="c1"># The OCR method or VLM used to analyze images (TBD)</span>
+  <span class="s1">&#39;split_method&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>  <span class="c1"># The splitting strategy used for chunking the document</span>
+  <span class="s1">&#39;split_params&#39;</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>  <span class="c1"># The specific splitter parameters</span>
+  <span class="s1">&#39;metadata&#39;</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>  <span class="c1"># The appended metadata, introduced by the user (TBD)</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<p><img alt="SplitterMR architecture diagram" src="assets/architecture_splitter_mr.svg" /></p>
+<p><strong>SplitterMR</strong> is designed around a modular pipeline that processes files from raw data all the way to chunked, LLM-ready text.</p>
+<ul>
+<li><strong>Reading</strong><ul>
+<li>A <strong><code>BaseReader</code></strong> implementation reads the (optionally converted) file.</li>
+<li>Supported readers (e.g., <strong><code>VanillaReader</code></strong>, <strong><code>MarkItDownReader</code></strong>, <strong><code>DoclingReader</code></strong>) produce a <code>ReaderOutput</code> dictionary containing:<ul>
+<li><strong>Text</strong> content (in <code>markdown</code>, <code>text</code>, <code>json</code> or another format).</li>
+<li>Document <strong>metadata</strong>.</li>
+<li><strong>Conversion</strong> method.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Splitting</strong><ul>
+<li>A <strong><code>BaseSplitter</code></strong> implementation takes the <strong><code>ReaderOutput</code></strong> and divides the text into meaningful chunks for LLM or other downstream use.</li>
+<li>Splitter classes (e.g., <strong><code>CharacterSplitter</code></strong>, <strong><code>SentenceSplitter</code></strong>, <strong><code>RecursiveSplitter</code></strong>, etc.) allow flexible chunking strategies with optional overlap and rich configuration.</li>
+</ul>
+</li>
+</ul>
+<p><strong>And that's it!</strong> Your data is now prepared to be used in several LLM applications.</p>
+<h2 id="how-to-install">How to install<a class="headerlink" href="#how-to-install" title="Permanent link">&para;</a></h2>
+<p>Currently, the package can be installed executing the following instruction:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">pip</span> <span class="n">install</span> <span class="n">splitter</span><span class="o">-</span><span class="n">mr</span>
+</code></pre></div>
+
+<p>We strongly recommend to install it using a python package management tool such as <a href="https://docs.astral.sh/uv/"><code>uv</code></a>:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">uv</span> <span class="n">add</span> <span class="n">splitter</span><span class="o">-</span><span class="n">mr</span>
+</code></pre></div>
+
+<h2 id="how-to-use">How to use<a class="headerlink" href="#how-to-use" title="Permanent link">&para;</a></h2>
+<h3 id="read-files">Read files<a class="headerlink" href="#read-files" title="Permanent link">&para;</a></h3>
+<p>Firstly, you need to instantiate an object from a BaseReader class, for example, <code>DoclingReader</code>.</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">DoclingReader</span>
+
+<span class="n">reader</span> <span class="o">=</span> <span class="n">DoclingReader</span><span class="p">()</span>
+</code></pre></div>
+
+<p>To read any file, provide the file path within the <code>read()</code> method. If you use <code>DoclingReader</code> or <code>MarkItDownReader</code>, your files will be automatically parsed to markdown text format. The result of this reader will be a <code>ReaderOutput</code> object, a dictionary with the following shape:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">reader_output</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file_path</span> <span class="o">=</span> <span class="s2">&quot;path/to/some/text.txt)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="o">{</span><span class="s1">&#39;text&#39;</span>:<span class="w"> </span><span class="s1">&#39;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sit amet ultricies orci. Nullam et tellus dui.&#39;</span>,<span class="w"> </span>
+<span class="s1">&#39;document_name&#39;</span>:<span class="w"> </span><span class="s1">&#39;text.txt&#39;</span>,<span class="w"> </span>
+<span class="s1">&#39;document_path&#39;</span>:<span class="w"> </span><span class="s1">&#39;path/to/some/text.txt&#39;</span>,<span class="w"> </span>
+<span class="s1">&#39;document_id&#39;</span>:<span class="w"> </span><span class="s1">&#39;47ccc8b1-7259-4c83-be03-60e9990aa5cd&#39;</span>,<span class="w"> </span>
+<span class="s1">&#39;conversion_method&#39;</span>:<span class="w"> </span><span class="s1">&#39;docling&#39;</span>,<span class="w"> </span>
+<span class="s1">&#39;ocr_method&#39;</span>:<span class="w"> </span>None,<span class="w"> </span>
+<span class="s1">&#39;metadata&#39;</span>:<span class="w"> </span><span class="o">{}</span>
+<span class="o">}</span>
+</code></pre></div>
+
+<h3 id="split-text">Split text<a class="headerlink" href="#split-text" title="Permanent link">&para;</a></h3>
+<p>To split the text, first import the class that implements your desired splitting strategy (e.g., by characters, recursively, by headers, etc.). Then, create an instance of this class and call its <code>split</code> method, which is defined in the <code>BaseSplitter</code> class.</p>
+<p>For example, we will split by characters with a maximum chunk size of 50, with an overlapping betwen chunks of 10 characters:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.splitter</span><span class="w"> </span><span class="kn">import</span> <span class="n">CharacterSplitter</span>
+
+<span class="n">char_splitter</span> <span class="o">=</span> <span class="n">CharacterSplitter</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">chunk_overlap</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">splitter_output</span> <span class="o">=</span> <span class="n">char_splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">splitter_output</span><span class="p">)</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="o">{</span>
+<span class="s1">&#39;chunks&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="s1">&#39;Lorem ipsum dolor sit amet, consectetur adipiscing&#39;</span>,<span class="w"> </span><span class="s1">&#39;adipiscing elit. Vestibulum sit amet ultricies orc&#39;</span>,<span class="w"> </span><span class="s1">&#39;ricies orci. Nullam et tellus dui&#39;</span><span class="o">]</span>,<span class="w"> </span>
+<span class="s1">&#39;chunk_id&#39;</span>:<span class="w"> </span><span class="o">[</span><span class="s1">&#39;357ee998-407a-4476-b09a-ab753a62de76&#39;</span>,<span class="w"> </span><span class="s1">&#39;487a8b7f-cbb3-4c79-99c8-02f51d5dac71&#39;</span>,<span class="w"> </span><span class="s1">&#39;257fa636-04f7-4802-9da2-a0841be4e75b&#39;</span><span class="o">]</span>,<span class="w"> </span>
+<span class="s1">&#39;document_name&#39;</span>:<span class="w"> </span><span class="s1">&#39;text.txt&#39;</span>,<span class="w"> </span>
+<span class="s1">&#39;document_path&#39;</span>:<span class="w"> </span><span class="s1">&#39;path/to/some/text.txt&#39;</span>,<span class="w"> </span>
+<span class="s1">&#39;document_id&#39;</span>:<span class="w"> </span><span class="s1">&#39;5a78e5a6-db00-4cfc-8fbd-b37eb7d699ff&#39;</span>,<span class="w"> </span>
+<span class="s1">&#39;conversion_method&#39;</span>:<span class="w"> </span><span class="s1">&#39;docling&#39;</span>,<span class="w"> </span>
+<span class="s1">&#39;ocr_method&#39;</span>:<span class="w"> </span>None,<span class="w"> </span>
+<span class="s1">&#39;split_method&#39;</span>:<span class="w"> </span><span class="s1">&#39;character_splitter&#39;</span>,<span class="w"> </span>
+<span class="s1">&#39;split_params&#39;</span>:<span class="w"> </span><span class="o">{</span><span class="s1">&#39;chunk_size&#39;</span>:<span class="w"> </span><span class="m">50</span>,<span class="w"> </span><span class="s1">&#39;chunk_overlap&#39;</span>:<span class="w"> </span><span class="m">10</span><span class="o">}</span>,<span class="w"> </span>
+<span class="s1">&#39;metadata&#39;</span>:<span class="w"> </span><span class="o">{}</span>
+<span class="o">}</span>
+</code></pre></div>
+
+<p>The returned dictionary is a <code>SplitterOutput</code> object, which provides all the information you need to further process your data. You can easily add custom metadata, and you have access to details such as the document name, path, and type. Each chunk is uniquely identified by an UUID, allowing for easy traceability throughout your LLM workflow.</p>
+<h3 id="compatibility-with-vision-tools-for-image-processing-and-annotations">Compatibility with vision tools for image processing and annotations<a class="headerlink" href="#compatibility-with-vision-tools-for-image-processing-and-annotations" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>Coming soon!</p>
+</blockquote>
+<h2 id="contact">Contact<a class="headerlink" href="#contact" title="Permanent link">&para;</a></h2>
+<p>If you want to collaborate, please, send me a mail to the following address: <a href="mailto:andresherencia2000@gmail.com">andresherencia2000@gmail.com</a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": ".", "features": ["content.code.copy"], "search": "assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>
