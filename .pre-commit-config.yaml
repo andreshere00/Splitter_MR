@@ -2,7 +2,7 @@ repos:
   - repo: local
     hooks:
       - id: flake8
-        name: Check for code best-practices compliance
+        name: Check code best-practices
         entry: make format
         language: system
         types: [python]
@@ -25,5 +25,12 @@ repos:
       - id: update-docs
         name: Ensure that the Home page from mkdocs is updated
         entry: bash scripts/documentation.sh
+        language: system
+        stages: [pre-commit]
+
+      - id: generate-requirements
+        name: Generate requirements.txt for compatibility with CI/CD
+        entry: bash
+        args: ["-c", "uv pip freeze > requirements.txt"]
         language: system
         stages: [pre-commit]
