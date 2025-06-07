@@ -10,7 +10,6 @@
 
 - By default, the document_id was `None` instead of and `uuid` in `VanillaReader`. 
 - Some name changes for `splitter_method` attribute in `SplitterOutput` method.
-- CI/CD now installs all the requirements prior to execute the builds.
 
 ### Developer features
 
