@@ -1,0 +1,26 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+
+# Directories
+assets/
+data/
+dist/
+notebooks/
+site/
+.github/
+.cache/
+*.log
+
+# Virtual environments
+.venv/
+.env/
+
+# Editor files
+.vscode/
+.idea/
+*.swp
