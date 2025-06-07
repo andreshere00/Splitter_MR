@@ -6,6 +6,7 @@ from .splitters import (
     ParagraphSplitter,
     RecursiveCharacterSplitter,
     RecursiveJSONSplitter,
+    RowColumnSplitter,
     SentenceSplitter,
     WordSplitter,
 )
@@ -20,4 +21,5 @@ __all__ = [
     RecursiveJSONSplitter,
     HTMLTagSplitter,
     HeaderSplitter,
+    RowColumnSplitter,
 ]

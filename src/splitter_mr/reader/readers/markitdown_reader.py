@@ -8,6 +8,7 @@ from ..base_reader import BaseReader
 
 
 class MarkItDownReader(BaseReader):
+    # TODO: Introduce a __init__ method, if needed
     def read(self, file_path: str, **kwargs) -> dict:
         """
         Reads a file and converts its contents to Markdown using MarkItDown, returning
@@ -61,6 +62,8 @@ class MarkItDownReader(BaseReader):
         # Read using Docling
         md = MarkItDown()
         markdown_text = md.convert(file_path).text_content
+        ext = os.path.splitext(file_path)[-1].lower().lstrip(".")
+        conversion_method = "json" if ext == "json" else "markdown"
 
         # Return output
         return ReaderOutput(
@@ -68,7 +71,7 @@ class MarkItDownReader(BaseReader):
             document_name=os.path.basename(file_path),
             document_path=file_path,
             document_id=kwargs.get("document_id") or str(uuid.uuid4()),
-            conversion_method="markdown",
+            conversion_method=conversion_method,
             ocr_method=kwargs.get("ocr_method"),
             metadata=kwargs.get("metadata"),
         ).to_dict()
