@@ -7,6 +7,7 @@ import pandas as pd
 import requests
 import yaml
 
+from ...schema.schemas import ReaderOutput
 from ..base_reader import BaseReader
 
 
@@ -268,12 +269,13 @@ class VanillaReader(BaseReader):
         document_id = kwargs.get("document_id") or str(uuid.uuid4())
         ocr_method = kwargs.get("ocr_method")
 
-        return {
-            "text": text,
-            "document_name": document_name,
-            "document_path": document_path,
-            "document_id": document_id,
-            "conversion_method": conversion_method,
-            "ocr_method": ocr_method,
-            "metadata": metadata,
-        }
+        return ReaderOutput(
+            text=text,
+            document_name=document_name,
+            document_path=document_path,
+            document_id=document_id,
+            conversion_method=conversion_method,
+            reader_method="vanilla",
+            ocr_method=ocr_method,
+            metadata=metadata,
+        )

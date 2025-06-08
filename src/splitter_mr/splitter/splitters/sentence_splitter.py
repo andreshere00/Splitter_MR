@@ -1,7 +1,7 @@
 import re
-from typing import Any, Dict, List, Union
+from typing import List, Union
 
-from ...schema.schemas import SplitterOutput
+from ...schema.schemas import ReaderOutput, SplitterOutput
 from ..base_splitter import BaseSplitter
 
 
@@ -29,7 +29,7 @@ class SentenceSplitter(BaseSplitter):
             separators if isinstance(separators, list) else [separators]
         )
 
-    def split(self, reader_output: Dict[str, Any]) -> Dict[str, Any]:
+    def split(self, reader_output: ReaderOutput) -> SplitterOutput:
         """
         Splits the input text from the `reader_output` dictionary into sentence-based chunks,
         allowing for overlap at the word level.
@@ -82,7 +82,7 @@ class SentenceSplitter(BaseSplitter):
             # Split into chunks of 3 sentences each, no overlap
             splitter = SentenceSplitter(chunk_size=3, chunk_overlap=0)
             result = splitter.split(reader_output)
-            print(result["chunks"])
+            print(result.chunks)
             ```
             ```bash
             ["Hello world! How are you? I am fine.",
@@ -91,7 +91,7 @@ class SentenceSplitter(BaseSplitter):
             ```
         """
         # Initialize variables
-        text = reader_output.get("text", "")
+        text = reader_output.text
         chunk_size = self.chunk_size
 
         # Split text into sentences
@@ -139,11 +139,11 @@ class SentenceSplitter(BaseSplitter):
         output = SplitterOutput(
             chunks=chunks,
             chunk_id=chunk_ids,
-            document_name=reader_output.get("document_name"),
-            document_path=reader_output.get("document_path", ""),
-            document_id=reader_output.get("document_id"),
-            conversion_method=reader_output.get("conversion_method"),
-            ocr_method=reader_output.get("ocr_method"),
+            document_name=reader_output.document_name,
+            document_path=reader_output.document_path,
+            document_id=reader_output.document_id,
+            conversion_method=reader_output.conversion_method,
+            ocr_method=reader_output.ocr_method,
             split_method="sentence_splitter",
             split_params={
                 "chunk_size": chunk_size,
@@ -152,4 +152,4 @@ class SentenceSplitter(BaseSplitter):
             },
             metadata=metadata,
         )
-        return output.__dict__
+        return output

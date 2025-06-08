@@ -8,10 +8,12 @@ theme:
 nav:
   - Home: index.md
   - Developer Guide: 
-    - Overview: api_reference.md
-    - Readers: reader.md
-    - Splitters: splitter.md
-  - Examples: examples.md
+    - Overview: api_reference/api_reference.md
+    - Readers: api_reference/reader.md
+    - Splitters: api_reference/splitter.md
+  - Examples:
+    - Overview: examples/examples.md
+    - RecursiveCharacterSplitter: examples/recursive_character_splitter.md
   - Changelog: CHANGELOG.md
 
 extra_css:

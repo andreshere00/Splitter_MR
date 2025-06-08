@@ -2,6 +2,7 @@ import uuid
 
 import pytest
 
+from splitter_mr.schema.schemas import SplitterOutput
 from splitter_mr.splitter import BaseSplitter
 
 
@@ -21,11 +22,25 @@ def test_base_splitter_subclass_must_implement_split():
 def test_base_splitter_minimal_concrete_subclass(tmp_path):
     class DummySplitter(BaseSplitter):
         def split(self, reader_output):
-            return {"chunks": ["a", "b"], "extra": "ok"}
+            # Return a SplitterOutput instance as expected by downstream code
+            return SplitterOutput(
+                chunks=["a", "b"],
+                chunk_id=self._generate_chunk_ids(2),
+                document_name="test",
+                document_path="path",
+                document_id="id",
+                conversion_method=None,
+                ocr_method=None,
+                split_method="dummy_splitter",
+                split_params={"chunk_size": self.chunk_size},
+                metadata={},
+            )
 
     s = DummySplitter(chunk_size=5)
+    # Provide a dummy ReaderOutput or dict as needed (only text used)
     result = s.split({"text": "abc"})
-    assert result["chunks"] == ["a", "b"]
+    assert hasattr(result, "chunks")
+    assert result.chunks == ["a", "b"]
     assert s.chunk_size == 5
 
 

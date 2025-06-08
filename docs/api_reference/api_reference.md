@@ -2,7 +2,7 @@
 
 Welcome to the **SplitterMR Python API** reference.
 
-![Splitter_MR architecture](./assets/architecture_splitter_mr.svg)
+![SplitterMR architecture diagram](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/assets/architecture_splitter_mr.svg)
 
 ## Documentation
 

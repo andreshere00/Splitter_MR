@@ -1,6 +1,6 @@
-from typing import Any, Dict, Union
+from typing import Union
 
-from ...schema.schemas import SplitterOutput
+from ...schema.schemas import ReaderOutput, SplitterOutput
 from ..base_splitter import BaseSplitter
 
 
@@ -24,7 +24,7 @@ class WordSplitter(BaseSplitter):
         super().__init__(chunk_size)
         self.chunk_overlap = chunk_overlap
 
-    def split(self, reader_output: Dict[str, Any]) -> Dict[str, Any]:
+    def split(self, reader_output: ReaderOutput) -> SplitterOutput:
         """
         Splits the input text from the reader_output dictionary into word-based chunks.
 
@@ -77,7 +77,7 @@ class WordSplitter(BaseSplitter):
             ```
         """
         # Initialize variables
-        text = reader_output.get("text", "")
+        text = reader_output.text
         chunk_size = self.chunk_size
 
         # Split text into words (using simple whitespace tokenization)
@@ -110,11 +110,11 @@ class WordSplitter(BaseSplitter):
         output = SplitterOutput(
             chunks=chunks,
             chunk_id=chunk_ids,
-            document_name=reader_output.get("document_name"),
-            document_path=reader_output.get("document_path", ""),
-            document_id=reader_output.get("document_id"),
-            conversion_method=reader_output.get("conversion_method"),
-            ocr_method=reader_output.get("ocr_method"),
+            document_name=reader_output.document_name,
+            document_path=reader_output.document_path,
+            document_id=reader_output.document_id,
+            conversion_method=reader_output.conversion_method,
+            ocr_method=reader_output.ocr_method,
             split_method="word_splitter",
             split_params={
                 "chunk_size": chunk_size,
@@ -122,4 +122,4 @@ class WordSplitter(BaseSplitter):
             },
             metadata=metadata,
         )
-        return output.__dict__
+        return output

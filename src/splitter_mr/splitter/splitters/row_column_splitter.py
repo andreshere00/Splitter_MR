@@ -5,7 +5,7 @@ from typing import Any, Dict, Union
 
 import pandas as pd
 
-from ...schema.schemas import SplitterOutput
+from ...schema.schemas import ReaderOutput, SplitterOutput
 from ..base_splitter import BaseSplitter
 
 
@@ -55,7 +55,7 @@ class RowColumnSplitter(BaseSplitter):
         if isinstance(chunk_overlap, float) and chunk_overlap >= 1:
             raise ValueError("chunk_overlap as float must be < 1")
 
-    def split(self, reader_output: Dict[str, Any]) -> Dict[str, Any]:
+    def split(self, reader_output: ReaderOutput) -> SplitterOutput:
         """
         Splits the input tabular data into multiple markdown table chunks according to the specified
         chunking strategy. Each output chunk is a complete markdown table with header, and will never
@@ -113,7 +113,7 @@ class RowColumnSplitter(BaseSplitter):
         """
         # Step 1. Parse the table depending on conversion_method
         df = self._load_tabular(reader_output)
-        orig_method = reader_output.get("conversion_method", "")
+        orig_method = reader_output.conversion_method
         col_names = df.columns.tolist()
 
         # Step 2. Split logic
@@ -201,11 +201,11 @@ class RowColumnSplitter(BaseSplitter):
         output = SplitterOutput(
             chunks=chunks,
             chunk_id=chunk_ids,
-            document_name=reader_output.get("document_name"),
-            document_path=reader_output.get("document_path", ""),
-            document_id=reader_output.get("document_id"),
-            conversion_method=reader_output.get("conversion_method"),
-            ocr_method=reader_output.get("ocr_method"),
+            document_name=reader_output.document_name,
+            document_path=reader_output.document_path,
+            document_id=reader_output.document_id,
+            conversion_method=reader_output.conversion_method,
+            ocr_method=reader_output.ocr_method,
             split_method="row_column_splitter",
             split_params={
                 "chunk_size": self.chunk_size,
@@ -215,7 +215,7 @@ class RowColumnSplitter(BaseSplitter):
             },
             metadata=meta_per_chunk,
         )
-        return output.__dict__
+        return output
 
     # Helper functions
 
@@ -255,11 +255,11 @@ class RowColumnSplitter(BaseSplitter):
         Raises:
             pandas.errors.ParserError: If the input table is malformed and cannot be parsed.
         """
-        text = reader_output.get("text", "")
+        text = reader_output.text
         # Return a void dataframe is a empty file is provided
         if not text or not text.strip():
             return pd.DataFrame()
-        method = reader_output.get("conversion_method", "")
+        method = reader_output.conversion_method
         if method == "markdown":
             return self._parse_markdown_table(text)
         elif method == "csv" or method == "txt":
