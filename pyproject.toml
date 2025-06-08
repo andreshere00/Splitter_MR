@@ -23,7 +23,7 @@ package-dir = {"" = "src"}
 
 [tool.setuptools_scm]
 version_scheme = "guess-next-dev"
-local_scheme = "node-and-date"
+local_scheme = "no-local-version"
 
 [tool.uv.sources]
 splitter-mr = { workspace = true }
