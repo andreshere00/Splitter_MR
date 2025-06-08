@@ -3,13 +3,15 @@ import uuid
 
 from markitdown import MarkItDown
 
-from ...schema.schemas import ReaderOutput
+from ...schema import ReaderOutput
 from ..base_reader import BaseReader
 
 
 class MarkItDownReader(BaseReader):
+
     # TODO: Introduce a __init__ method, if needed
-    def read(self, file_path: str, **kwargs) -> dict:
+
+    def read(self, file_path: str, **kwargs) -> ReaderOutput:
         """
         Reads a file and converts its contents to Markdown using MarkItDown, returning
         structured metadata.
@@ -50,7 +52,7 @@ class MarkItDownReader(BaseReader):
 
             reader = MarkItDownReader()
             result = reader.read(file_path = "data/test_1.pdf")
-            print(result["text"])
+            print(result.text)
             ```
             ```bash
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget purus non est porta
@@ -75,4 +77,4 @@ class MarkItDownReader(BaseReader):
             reader_method="markitdown",
             ocr_method=kwargs.get("ocr_method"),
             metadata=kwargs.get("metadata"),
-        ).to_dict()
+        )

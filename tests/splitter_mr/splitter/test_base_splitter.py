@@ -2,7 +2,7 @@ import uuid
 
 import pytest
 
-from splitter_mr.schema.schemas import SplitterOutput
+from splitter_mr.schema import SplitterOutput
 from splitter_mr.splitter import BaseSplitter
 
 
