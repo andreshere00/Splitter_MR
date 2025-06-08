@@ -99,6 +99,7 @@ class HTMLTagSplitter(BaseSplitter):
             document_path=reader_output.document_path,
             document_id=reader_output.document_id,
             conversion_method=reader_output.conversion_method,
+            reader_method=reader_output.reader_method,
             ocr_method=reader_output.ocr_method,
             split_method="html_tag_splitter",
             split_params={"chunk_size": self.chunk_size, "tag": tag},

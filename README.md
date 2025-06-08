@@ -139,10 +139,10 @@ print(reader_output)
 ```
 ```python
 ReaderOutput(
-    text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sit amet ultricies orci. Nullam et tellus dui...', 
-    document_name='test.txt', 
+    text='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sit amet ultricies orci. Nullam et tellus dui.', 
+    document_name='test.txt',
     document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/test.txt', 
-    document_id='0acd6289-1b77-450c-a20f-e9e5db207c1a', 
+    document_id='732b9530-3e41-4a1a-a4ea-1d9d6fe815d3', 
     conversion_method='txt', 
     reader_method='vanilla', 
     ocr_method=None, 
@@ -167,18 +167,18 @@ print(splitter_output)
 ```
 ```python
 SplitterOutput(
-    chunks=['Lorem ipsum dolor sit amet, consectetur adipiscing', 'adipiscing elit. Vestibulum sit amet ultricies orc', 'ricies orci. Nullam et tellus dui. Donec in enim i', ...], 
-    chunk_id=['c5ae65c6-722c-4673-b6ae-29ae7668e359', '89f5471b-8f15-4e4d-8849-ac274f94b799', '175b1c13-e218-4d99-a520-94eb425460ac', ...], 
+    chunks=['Lorem ipsum dolor sit amet, consectetur adipiscing', 'adipiscing elit. Vestibulum sit amet ultricies orc', 'ricies orci. Nullam et tellus dui.'], 
+    chunk_id=['db454a9b-32aa-4fdc-9aab-8770cae99882', 'e67b427c-4bb0-4f28-96c2-7785f070d1c1', '6206a89d-efd1-4586-8889-95590a14645b'], 
     document_name='test.txt', 
     document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/test.txt', 
-    document_id='5da3a2ce-2e81-4562-9cc4-e86f07354107', 
+    document_id='732b9530-3e41-4a1a-a4ea-1d9d6fe815d3', 
     conversion_method='txt', 
-    reader_method=None, 
+    reader_method='vanilla', 
     ocr_method=None, 
     split_method='character_splitter', 
-    split_params={'chunk_size': 50, 'chunk_overlap': 10}, 
-    metadata={}
-    )
+    split_params={'chunk_size': 50, 
+    'chunk_overlap': 10}, 
+    metadata={})
 ```
 
 The returned object is a `SplitterOutput` dataclass, which provides all the information you need to further process your data. You can easily add custom metadata, and you have access to details such as the document name, path, and type. Each chunk is uniquely identified by an UUID, allowing for easy traceability throughout your LLM workflow.
