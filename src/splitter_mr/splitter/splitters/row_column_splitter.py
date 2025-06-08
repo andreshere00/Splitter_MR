@@ -5,7 +5,7 @@ from typing import Any, Dict, Union
 
 import pandas as pd
 
-from ...schema.schemas import ReaderOutput, SplitterOutput
+from ...schema import ReaderOutput, SplitterOutput
 from ..base_splitter import BaseSplitter
 
 

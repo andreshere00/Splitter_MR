@@ -2,6 +2,8 @@ from unittest.mock import MagicMock, patch
 
 from splitter_mr.reader import MarkItDownReader
 
+# Test cases
+
 
 def test_markitdown_reader_reads_and_converts(tmp_path):
     # Create a dummy file to simulate input
@@ -25,13 +27,14 @@ def test_markitdown_reader_reads_and_converts(tmp_path):
         # Check MarkItDown is called with correct file
         mock_md.convert.assert_called_once_with(str(test_file))
 
-        # Validate returned dict structure
-        assert result["text"] == "# Converted Markdown!\nSome text."
-        assert result["document_name"] == "foo.pdf"
-        assert result["document_path"] == str(test_file)
-        assert result["document_id"] == "doc-1"
-        assert result["conversion_method"] == "markdown"
-        assert result["metadata"] == {"source": "unit test"}
+        # Validate returned object fields
+        assert result.text == "# Converted Markdown!\nSome text."
+        assert result.document_name == "foo.pdf"
+        assert result.document_path == str(test_file)
+        assert result.document_id == "doc-1"
+        assert result.conversion_method == "markdown"
+        assert result.metadata == {"source": "unit test"}
+        assert result.reader_method == "markitdown"
 
 
 def test_markitdown_reader_defaults(tmp_path):
@@ -48,9 +51,8 @@ def test_markitdown_reader_defaults(tmp_path):
         reader = MarkItDownReader()
         result = reader.read(str(test_file))
 
-        assert result["document_name"] == "bar.docx"
-        assert result["conversion_method"] == "markdown"
-        assert result["ocr_method"] is None or "ocr_method" in result
-        # Document id and metadata can be None if not provided
-        assert "document_id" in result
-        assert "metadata" in result
+        assert result.document_name == "bar.docx"
+        assert result.conversion_method == "markdown"
+        assert result.ocr_method is None
+        assert hasattr(result, "document_id")
+        assert hasattr(result, "metadata")

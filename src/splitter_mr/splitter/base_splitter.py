@@ -2,7 +2,7 @@ import uuid
 from abc import ABC, abstractmethod
 from typing import List
 
-from ..schema.schemas import ReaderOutput, SplitterOutput
+from ..schema import ReaderOutput, SplitterOutput
 
 
 class BaseSplitter(ABC):

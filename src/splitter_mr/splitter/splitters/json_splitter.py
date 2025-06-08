@@ -2,7 +2,7 @@ import json
 
 from langchain_text_splitters.json import RecursiveJsonSplitter
 
-from ...schema.schemas import ReaderOutput, SplitterOutput
+from ...schema import ReaderOutput, SplitterOutput
 from ..base_splitter import BaseSplitter
 
 

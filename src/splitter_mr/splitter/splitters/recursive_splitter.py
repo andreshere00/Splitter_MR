@@ -2,7 +2,7 @@ from typing import List, Union
 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-from ...schema.schemas import ReaderOutput, SplitterOutput
+from ...schema import ReaderOutput, SplitterOutput
 from ..base_splitter import BaseSplitter
 
 

@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from bs4 import BeautifulSoup
 
-from ...schema.schemas import ReaderOutput, SplitterOutput
+from ...schema import ReaderOutput, SplitterOutput
 from ..base_splitter import BaseSplitter
 
 

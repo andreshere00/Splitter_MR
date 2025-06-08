@@ -7,12 +7,12 @@
 **SplitterMR** is a library for chunking data into convenient text blocks compatible with your LLM applications.
 
 > [!IMPORTANT]
-> Breaking change!
+> **Breaking change!**
 > 
 > - All Readers now return `ReaderOutput` dataclass objects.
 > - All Splitters now return `SplitterOutput` dataclass objects.
 > 
-> You must access fields using **dot notation** (e.g., `result.text`, `result.chunks`), not dictionary keys.
+> You must access fields using **dot notation** (e.g., `result.text`, `result.chunks`), not as dictionary keys (`result['text']`, `result['chunks']`).
 
 ## Features
 
@@ -28,9 +28,9 @@ Currently, there are supported three readers: `VanillaReader`, and `MarkItDownRe
 | **`MarkItDownReader`**   | `txt`, `md`, `pdf`               | `docx`, `xlsx`, `pptx`            | `csv`, `tsv`                  | `json`, `html`, `xml`                  | `jpg`, `png`, `pneg`             | Yes |
 | **`DoclingReader`**      | `txt`, `md`, `pdf`                     | `docx`, `xlsx`, `pptx`            | –                 | `html`, `xhtml`                        | `png`, `jpeg`, `tiff`, `bmp`, `webp` | Yes |
 
-### Serveral splitting methods
+### Several splitting methods
 
-Splitter_MR allows you to split the files on many different ways depending on your needs. 
+SplitterMR allows you to split files in many different ways depending on your needs. 
 
 Main splitting methods include:
 
@@ -42,7 +42,7 @@ Main splitting methods include:
 | **Paragraph Splitter**    | Splits text into chunks based on a specified number of paragraphs. Allows overlapping by word count or percentage, and customizable line breaks. <br> **Parameters:** `chunk_size` (max paragraphs per chunk), `chunk_overlap` (overlapping words: int or %), `line_break` (delimiter(s) for paragraphs). <br> **Compatible with:** Text.                                                                     |
 | **Recursive Splitter**    | Recursively splits text based on a hierarchy of separators (e.g., paragraph, sentence, word, character) until chunks reach a target size. Tries to preserve semantic units as long as possible. <br> **Parameters:** `chunk_size` (max chars per chunk), `chunk_overlap` (overlapping chars), `separators` (list of characters to split on, e.g., `["\n\n", "\n", " ", ""]`). <br> **Compatible with:** Text. |
 | **Paged Splitter**        | Splits text by pages for documents that have page structure. Each chunk contains a specified number of pages, with optional word overlap. <br> **Parameters:** `num_pages` (pages per chunk), `chunk_overlap` (overlapping words). <br> **Compatible with:** Word, PDF, Excel, PowerPoint.                                                                                                                    |
-| **Row/Column Splitter**   | > For tabular formats, splits data by a set number of rows or columns per chunk, with possible overlap. Row-based and column-based splitting are mutually exclusive. <br> **Parameters:** `num_rows`, `num_cols` (rows/columns per chunk), `overlap` (overlapping rows or columns). <br> **Compatible with:** Tabular formats (csv, tsv, parquet, flat json).                                                   |
+| **Row/Column Splitter**   | For tabular formats, splits data by a set number of rows or columns per chunk, with possible overlap. Row-based and column-based splitting are mutually exclusive. <br> **Parameters:** `num_rows`, `num_cols` (rows/columns per chunk), `overlap` (overlapping rows or columns). <br> **Compatible with:** Tabular formats (csv, tsv, parquet, flat json).                                                   |
 | **Schema Based Splitter** | **WORK IN PROGRESS**. Splits hierarchical documents (XML, HTML) based on element tags or keys, preserving the schema/structure. Splitting can be done on a specified or inferred parent key/tag. <br> **Parameters:** `chunk_size` (approx. max chars per chunk), `key` (optional parent key or tag). <br> **Compatible with:** XML, HTML.                                                                                          |
 | **JSON Splitter**         | Recursively splits JSON documents into smaller sub-structures that preserve the original JSON schema. <br> **Parameters:** `max_chunk_size` (max chars per chunk), `min_chunk_size` (min chars per chunk). <br> **Compatible with:** JSON.                                                                                                                                                                    |
 | **Semantic Splitter**     | **WORK IN PROGRESS**. Splits text into chunks based on semantic similarity, using an embedding model and a max tokens parameter. Useful for meaningful semantic groupings. <br> **Parameters:** `embedding_model` (model for embeddings), `max_tokens` (max tokens per chunk). <br> **Compatible with:** Text.                                                                                                                      |
@@ -53,7 +53,7 @@ Main splitting methods include:
 
 #### Reader
 
-The output object is `ReaderOutput`, a dictionary with the following structure:
+The output object is a `ReaderOutput` dataclass, with the following attributes:
 
 ```python
 text: Optional[str] = ""  # The extracted text
@@ -68,7 +68,7 @@ metadata: Optional[List[str]]  # The appended metadata, introduced by the user (
 
 #### Splitter
 
-The output object is `SplitterOutput`, a dictionary with the following structure:
+The output object is a `SplitterOutput` dataclass, with the following attributes:
 
 ```python
 chunks: List[str],  # The extracted chunks from the text
@@ -110,46 +110,53 @@ Currently, the package can be installed executing the following instruction:
 pip install splitter-mr
 ```
 
-We strongly recommend to install it using a python package management tool such as [`uv`](https://docs.astral.sh/uv/):
+We strongly recommend installing it using a python package management tool such as [`uv`](https://docs.astral.sh/uv/):
 
 ```python
 uv add splitter-mr
 ```
 
+> [!NOTE]
+> Python 3.12 or greater is required to use this library.
+
 ## How to use
 
 ### Read files
 
-Firstly, you need to instantiate an object from a BaseReader class, for example, `DoclingReader`.
+Firstly, you need to instantiate an object from a BaseReader class, for example, `VanillaReader`.
 
 ```python
-from splitter_mr.reader import DoclingReader
+from splitter_mr.reader import VanillaReader
 
-reader = DoclingReader()
+reader = VanillaReader()
 ```
 
 To read any file, provide the file path within the `read()` method. If you use `DoclingReader` or `MarkItDownReader`, your files will be automatically parsed to markdown text format. The result of this reader will be a `ReaderOutput` object, a dictionary with the following shape:
 
 ```python 
-reader_output = reader.read(file_path = "path/to/some/text.txt)
+reader_output = reader.read('https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/test.txt')
 print(reader_output)
 ```
-```bash
-{'text': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sit amet ultricies orci. Nullam et tellus dui.', 
-'document_name': 'text.txt', 
-'document_path': 'path/to/some/text.txt', 
-'document_id': '47ccc8b1-7259-4c83-be03-60e9990aa5cd', 
-'conversion_method': 'docling', 
-'ocr_method': None, 
-'metadata': {}
-}
+```python
+ReaderOutput(
+    text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sit amet ultricies orci. Nullam et tellus dui...', 
+    document_name='test.txt', 
+    document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/test.txt', 
+    document_id='0acd6289-1b77-450c-a20f-e9e5db207c1a', 
+    conversion_method='txt', 
+    reader_method='vanilla', 
+    ocr_method=None, 
+    metadata={})
 ```
+
+> [!NOTE]
+> Note that you can read from an URL, a variable and from a `file_path`. See [Developer guide](https://andreshere00.github.io/Splitter_MR/api_reference/reader/).
 
 ### Split text
 
 To split the text, first import the class that implements your desired splitting strategy (e.g., by characters, recursively, by headers, etc.). Then, create an instance of this class and call its `split` method, which is defined in the `BaseSplitter` class.
 
-For example, we will split by characters with a maximum chunk size of 50, with an overlapping betwen chunks of 10 characters:
+For example, we will split by characters with a maximum chunk size of 50, with an overlap between chunks:
 
 ```python
 from splitter_mr.splitter import CharacterSplitter
@@ -158,26 +165,28 @@ char_splitter = CharacterSplitter(chunk_size=50, chunk_overlap = 10)
 splitter_output = char_splitter.split(reader_output)
 print(splitter_output)
 ```
-```bash
-{
-'chunks': ['Lorem ipsum dolor sit amet, consectetur adipiscing', 'adipiscing elit. Vestibulum sit amet ultricies orc', 'ricies orci. Nullam et tellus dui'], 
-'chunk_id': ['357ee998-407a-4476-b09a-ab753a62de76', '487a8b7f-cbb3-4c79-99c8-02f51d5dac71', '257fa636-04f7-4802-9da2-a0841be4e75b'], 
-'document_name': 'text.txt', 
-'document_path': 'path/to/some/text.txt', 
-'document_id': '5a78e5a6-db00-4cfc-8fbd-b37eb7d699ff', 
-'conversion_method': 'docling', 
-'ocr_method': None, 
-'split_method': 'character_splitter', 
-'split_params': {'chunk_size': 50, 'chunk_overlap': 10}, 
-'metadata': {}
-}
+```python
+SplitterOutput(
+    chunks=['Lorem ipsum dolor sit amet, consectetur adipiscing', 'adipiscing elit. Vestibulum sit amet ultricies orc', 'ricies orci. Nullam et tellus dui. Donec in enim i', ...], 
+    chunk_id=['c5ae65c6-722c-4673-b6ae-29ae7668e359', '89f5471b-8f15-4e4d-8849-ac274f94b799', '175b1c13-e218-4d99-a520-94eb425460ac', ...], 
+    document_name='test.txt', 
+    document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/test.txt', 
+    document_id='5da3a2ce-2e81-4562-9cc4-e86f07354107', 
+    conversion_method='txt', 
+    reader_method=None, 
+    ocr_method=None, 
+    split_method='character_splitter', 
+    split_params={'chunk_size': 50, 'chunk_overlap': 10}, 
+    metadata={}
+    )
 ```
 
-The returned dictionary is a `SplitterOutput` object, which provides all the information you need to further process your data. You can easily add custom metadata, and you have access to details such as the document name, path, and type. Each chunk is uniquely identified by an UUID, allowing for easy traceability throughout your LLM workflow.
+The returned object is a `SplitterOutput` dataclass, which provides all the information you need to further process your data. You can easily add custom metadata, and you have access to details such as the document name, path, and type. Each chunk is uniquely identified by an UUID, allowing for easy traceability throughout your LLM workflow.
 
 ### Compatibility with vision tools for image processing and annotations
 
-> Coming soon!
+> [!NOTE]
+> Image-based chunking and annotation is under development. Stay tuned!
 
 ## Contact
 

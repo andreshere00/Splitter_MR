@@ -2,6 +2,8 @@ from unittest.mock import MagicMock, patch
 
 from splitter_mr.reader import DoclingReader
 
+# Test cases
+
 
 def test_docling_reader_reads_and_converts(tmp_path):
     # Simulate a supported file type (e.g., PDF)
@@ -25,41 +27,39 @@ def test_docling_reader_reads_and_converts(tmp_path):
         mock_document.export_to_markdown.assert_called_once()
 
         # Validate returned dict
-        assert result["text"] == "# Heading\nSome text"
-        assert result["document_name"] == "foo.pdf"
-        assert result["document_path"] == str(file)
-        assert result["document_id"] == "doc-42"
-        assert result["conversion_method"] == "markdown"
-        assert result["metadata"] == {"src": "test"}
+        assert result.text == "# Heading\nSome text"
+        assert result.document_name == "foo.pdf"
+        assert result.document_path == str(file)
+        assert result.document_id == "doc-42"
+        assert result.conversion_method == "markdown"
+        assert result.metadata == {"src": "test"}
 
 
 def test_docling_reader_txt_to_md(tmp_path):
-    # Simulate reading a .txt file
+    # Simulate reading a .txt file (unsupported by DoclingReader)
     txt_file = tmp_path / "foo.txt"
     txt_file.write_text("plain text content")
-    md_file = tmp_path / "foo.md"
 
-    with (
-        patch(
-            "splitter_mr.reader.readers.docling_reader.DocumentConverter"
-        ) as MockConverter,
-        patch("shutil.copyfile") as mock_copyfile,
-    ):
-        mock_converter = MockConverter.return_value
-        mock_document = MagicMock()
-        mock_document.export_to_markdown.return_value = "## Dummy Markdown"
-        mock_converter.convert.return_value.document = mock_document
+    with patch(
+        "splitter_mr.reader.readers.docling_reader.VanillaReader"
+    ) as MockVanillaReader:
+        mock_vanilla = MockVanillaReader.return_value
+        # Simulate the ReaderOutput object returned
+        mock_reader_output = MagicMock(
+            document_name="foo.txt", text="plain text content", document_id="id-txt"
+        )
+        mock_vanilla.read.return_value = mock_reader_output
 
         reader = DoclingReader()
         result = reader.read(str(txt_file), document_id="id-txt")
 
-        # Should copy .txt to .md and call converter on .md
-        mock_copyfile.assert_called_once_with(str(txt_file), str(md_file))
-        mock_converter.convert.assert_called_once_with(str(md_file))
-        assert result["document_name"] == "foo.md"
-        assert result["document_path"].endswith(".md")
-        assert result["document_id"] == "id-txt"
-        assert result["text"] == "## Dummy Markdown"
+        # Should use VanillaReader for .txt
+        mock_vanilla.read.assert_called_once_with(
+            file_path=str(txt_file), document_id="id-txt"
+        )
+        assert result.document_name == "foo.txt"
+        assert result.text == "plain text content"
+        assert result.document_id == "id-txt"
 
 
 def test_docling_reader_defaults(tmp_path):
@@ -77,7 +77,7 @@ def test_docling_reader_defaults(tmp_path):
 
         reader = DoclingReader()
         result = reader.read(str(file))
-        assert result["document_name"] == "bar.docx"
-        assert result["conversion_method"] == "markdown"
-        assert "document_id" in result
-        assert "metadata" in result
+        assert result.document_name == "bar.docx"
+        assert result.conversion_method == "markdown"
+        assert hasattr(result, "document_id")
+        assert hasattr(result, "metadata")
