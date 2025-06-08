@@ -9,6 +9,7 @@ from ..base_reader import BaseReader
 
 
 class DoclingReader(BaseReader):
+    # TODO: Introduce a __init__ method, if needed
     def read(self, file_path: str, **kwargs) -> dict:
         """
         Reads and converts a document to Markdown format using the
@@ -56,12 +57,16 @@ class DoclingReader(BaseReader):
             Pellentesque ex felis, cursus ege...
             ```
         """
+        conversion_method = "markdown"
+        ext = os.path.splitext(file_path)[-1].lower().lstrip(".")
 
-        # Transform text files into md format for Docling reading compatiblity
-        if file_path.endswith(".txt"):
+        # In case that the extension is not compatible, convert to markdown directly
+        if ext in ("txt", "json"):
             file_md = str(os.path.splitext(file_path)[0]) + ".md"
             shutil.copyfile(file_path, file_md)
             file_path = file_md
+            if ext == "json":
+                conversion_method = "json"
 
         # Read using Docling
         reader = DocumentConverter()
@@ -73,7 +78,7 @@ class DoclingReader(BaseReader):
             document_name=os.path.basename(file_path),
             document_path=file_path,
             document_id=kwargs.get("document_id") or str(uuid.uuid4()),
-            conversion_method="markdown",
+            conversion_method=conversion_method,
             ocr_method=kwargs.get("ocr_method"),
             metadata=kwargs.get("metadata"),
         ).to_dict()

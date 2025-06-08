@@ -150,8 +150,15 @@ class VanillaReader(BaseReader):
                         yaml_text = f.read()
                     text = yaml.safe_load(yaml_text)
                     conversion_method = "json"
+                elif ext in ("xlsx", "xls"):
+                    text = str(
+                        pd.read_excel(document_source, engine="openpyxl").to_csv()
+                    )
+                    conversion_method = ext
                 else:
-                    raise ValueError(f"Unsupported file extension: {ext}")
+                    raise ValueError(
+                        f"Unsupported file extension: {ext}. Use another Reader component."
+                    )
 
             # (2) URL
             elif self.is_url(document_source):

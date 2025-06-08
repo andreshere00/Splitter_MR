@@ -119,7 +119,10 @@ def test_metadata_and_doc_id(tmp_path, reader):
 def test_unsupported_extension(tmp_path, reader):
     f = tmp_path / "foo.unsupported"
     f.write_text("should fail")
-    with pytest.raises(ValueError, match="Unsupported file extension"):
+    with pytest.raises(
+        ValueError,
+        match="Unsupported file extension: unsupported. Use another Reader component.",
+    ):
         reader.read(file_path=str(f))
 
 

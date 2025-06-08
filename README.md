@@ -1,6 +1,6 @@
 # Splitter MR
 
-<img src="./assets/splitter_mr_logo.svg" alt="SplitterMR logo" width="80%"/>
+<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/assets/splitter_mr_logo.svg" alt="SplitterMR logo" width="80%"/>
 
 ## Description
 
@@ -80,7 +80,7 @@ The output object is `SplitterOutput`, a dictionary with the following structure
 
 ## Architecture
 
-![SplitterMR architecture diagram](./assets/architecture_splitter_mr.svg)
+![SplitterMR architecture diagram](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/assets/architecture_splitter_mr.svg)
 
 **SplitterMR** is designed around a modular pipeline that processes files from raw data all the way to chunked, LLM-ready text.
 
@@ -176,3 +176,6 @@ The returned dictionary is a `SplitterOutput` object, which provides all the inf
 ## Contact
 
 If you want to collaborate, please, send me a mail to the following address: [andresherencia2000@gmail.com](mailto:andresherencia2000@gmail.com).
+
+- [Mi LinkedIn](https://linkedin.com/in/andres-herencia)
+- [PyPI package](https://pypi.org/project/splitter-mr/)
