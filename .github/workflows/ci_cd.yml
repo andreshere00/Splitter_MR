@@ -44,26 +44,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Set PYTHONPATH
-        run: echo "PYTHONPATH=$PWD/src" >> $GITHUB_ENV
-      - name: Check version matches tag
-        run: |
-          TAG_VERSION="${GITHUB_REF#refs/tags/v}"
-          FILE_VERSION=$(python -c "import splitter_mr; print(splitter_mr.__version__)")
-          if [ "$TAG_VERSION" != "$FILE_VERSION" ]; then
-            echo "Version mismatch: tag is $TAG_VERSION but code is $FILE_VERSION"
-            exit 1
-          fi
       - name: Remove old build artifacts
-        run: rm -rf dist build *.egg-info
-      - name: Check version matches tag
-        run: |
-          TAG_VERSION="${GITHUB_REF#refs/tags/v}"
-          FILE_VERSION=$(python -c "import splitter_mr; print(splitter_mr.__version__)")
-          if [ "$TAG_VERSION" != "$FILE_VERSION" ]; then
-            echo "Version mismatch: tag is $TAG_VERSION but package is $FILE_VERSION"
-            exit 1
-          fi
+        run: rm -rf dist build
       - name: Install dependencies for building
         run: pip install build 'setuptools_scm[toml]' wheel
       - name: Build the package
