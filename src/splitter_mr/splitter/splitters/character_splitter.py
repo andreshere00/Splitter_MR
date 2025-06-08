@@ -103,6 +103,7 @@ class CharacterSplitter(BaseSplitter):
             document_path=reader_output.document_path,
             document_id=reader_output.document_id,
             conversion_method=reader_output.conversion_method,
+            reader_method=reader_output.reader_method,
             ocr_method=reader_output.ocr_method,
             split_method="character_splitter",
             split_params={
