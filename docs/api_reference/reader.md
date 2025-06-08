@@ -12,10 +12,12 @@ Each Reader component extracts document text in different ways. Therefore, choos
 - In case that you have documents which have presented many tables in its structure or with many visual components (such as images), we strongly recommend to use `DoclingReader`. 
 - If you are looking to maximize efficiency or make conversions to markdown simpler, we recommend using the `MarkItDownReader` component.
 
-> [!NOTE]
-> 👀 Remember to visit the official repository and guides for these two last reader classes: 
-> - **Docling [Developer guide](https://docling-project.github.io/docling/)** 
-> - **MarkItDown [GitHub repository](https://github.com/microsoft/markitdown/)**.
+!!! note
+
+    Remember to visit the official repository and guides for these two last reader classes: 
+
+    - **Docling [Developer guide](https://docling-project.github.io/docling/)** 
+    - **MarkItDown [GitHub repository](https://github.com/microsoft/markitdown/)**.
 
 Additionally, the file compatibility depending on the Reader class is given by the following table:
 
@@ -60,7 +62,7 @@ metadata: Optional[List[str]]  # The appended metadata, introduced by the user (
 
 ### DoclingReader
 
-![Docling logo](./assets/docling_logo.png)
+![Docling logo](../assets/docling_logo.png)
 
 ::: splitter_mr.reader.readers.docling_reader
     handler: python
@@ -69,7 +71,7 @@ metadata: Optional[List[str]]  # The appended metadata, introduced by the user (
 
 ### MarkItDownReader
 
-![MarkItDown logo](./assets/markitdown_logo.png)
+![MarkItDown logo](../assets/markitdown_logo.png)
 
 ::: splitter_mr.reader.readers.markitdown_reader
     handler: python

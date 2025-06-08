@@ -4,7 +4,7 @@ from typing import List, Optional, Tuple
 from bs4 import BeautifulSoup
 from langchain_text_splitters import HTMLHeaderTextSplitter, MarkdownHeaderTextSplitter
 
-from ...schema.schemas import ReaderOutput, SplitterOutput
+from ...schema import ReaderOutput, SplitterOutput
 from ..base_splitter import BaseSplitter
 
 

@@ -1,16 +1,35 @@
 import os
-import shutil
 import uuid
 
 from docling.document_converter import DocumentConverter
 
-from ...schema.schemas import ReaderOutput
+from ...schema import ReaderOutput
 from ..base_reader import BaseReader
+from .vanilla_reader import VanillaReader
 
 
 class DoclingReader(BaseReader):
-    # TODO: Introduce a __init__ method, if needed
-    def read(self, file_path: str, **kwargs) -> dict:
+
+    SUPPORTED_EXTENSIONS = (
+        "pdf",
+        "docx",
+        "html",
+        "md",
+        "markdown",
+        "htm",
+        "pptx",
+        "xlsx",
+        "odt",
+        "rtf",
+        "jpg",
+        "jpeg",
+        "png",
+        "bmp",
+        "gif",
+        "tiff",
+    )
+
+    def read(self, file_path: str, **kwargs) -> ReaderOutput:
         """
         Reads and converts a document to Markdown format using the
         [Docling](https://github.com/docling-project/docling) library, supporting a wide range
@@ -49,7 +68,7 @@ class DoclingReader(BaseReader):
 
             reader = DoclingReader()
             result = reader.read(file_path = "data/test_1.pdf")
-            print(result["text"])
+            print(result.text)
             ```
             ```bash
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget purus non est porta
@@ -57,20 +76,19 @@ class DoclingReader(BaseReader):
             Pellentesque ex felis, cursus ege...
             ```
         """
-        conversion_method = "markdown"
         ext = os.path.splitext(file_path)[-1].lower().lstrip(".")
+        if ext not in self.SUPPORTED_EXTENSIONS:
+            print(
+                f"Warning: File extension not compatible: {ext}. Fallback to VanillaReader."
+            )
+            vanilla_reader = VanillaReader()
+            return vanilla_reader.read(file_path=file_path, **kwargs)
 
-        # In case that the extension is not compatible, convert to markdown directly
-        if ext in ("txt", "json"):
-            file_md = str(os.path.splitext(file_path)[0]) + ".md"
-            shutil.copyfile(file_path, file_md)
-            file_path = file_md
-            if ext == "json":
-                conversion_method = "json"
-
-        # Read using Docling
+        # Use Docling
         reader = DocumentConverter()
         markdown_text = reader.convert(file_path).document.export_to_markdown()
+
+        conversion_method = "markdown"
 
         # Return output
         return ReaderOutput(
@@ -82,4 +100,4 @@ class DoclingReader(BaseReader):
             reader_method="docling",
             ocr_method=kwargs.get("ocr_method"),
             metadata=kwargs.get("metadata"),
-        ).to_dict()
+        )

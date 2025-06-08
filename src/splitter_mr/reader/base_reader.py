@@ -3,7 +3,7 @@ import os
 from abc import ABC, abstractmethod
 from urllib.parse import urlparse
 
-from ..schema.schemas import ReaderOutput
+from ..schema import ReaderOutput
 
 
 class BaseReader(ABC):
@@ -32,8 +32,12 @@ class BaseReader(ABC):
             bool: True if the string is a valid file path to an existing file, False otherwise.
 
         Example:
-            >>> BaseReader.is_valid_file_path("/tmp/myfile.txt")
+            ```python
+            BaseReader.is_valid_file_path("/tmp/myfile.txt")
+            ```
+            ```bash
             True
+            ```
         """
         return os.path.isfile(path)
 
@@ -49,10 +53,18 @@ class BaseReader(ABC):
             bool: True if the string is a valid URL with HTTP or HTTPS scheme, False otherwise.
 
         Example:
-            >>> BaseReader.is_url("https://example.com")
+            ```python
+            BaseReader.is_url("https://example.com")
+            ```
+            ```bash
             True
-            >>> BaseReader.is_url("not_a_url")
+            ```
+            ```python
+            BaseReader.is_url("not_a_url")
+            ```
+            ```bash
             False
+            ```
         """
         try:
             result = urlparse(string)
@@ -77,12 +89,23 @@ class BaseReader(ABC):
             TypeError: If the provided object is neither a dict nor a string.
 
         Example:
-            >>> BaseReader.try_parse_json('{"a": 1}')
+            ```python
+            BaseReader.try_parse_json('{"a": 1}')
+            ```
+            ```bash
             {'a': 1}
-            >>> BaseReader.try_parse_json({'b': 2})
+            ```
+            ```python
+            BaseReader.try_parse_json({'b': 2})
+            ```
+            ```bash
             {'b': 2}
-            >>> BaseReader.try_parse_json('[not valid json]')
+            ```
+            ```python
+            BaseReader.try_parse_json('[not valid json]')
+            ```
             ValueError: String could not be parsed as JSON: ...
+            ```
         """
         if isinstance(obj, dict):
             return obj

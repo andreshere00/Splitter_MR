@@ -1,13 +1,13 @@
 import os
 import uuid
 from html.parser import HTMLParser
-from typing import Any, Dict
+from typing import Any
 
 import pandas as pd
 import requests
 import yaml
 
-from ...schema.schemas import ReaderOutput
+from ...schema import ReaderOutput
 from ..base_reader import BaseReader
 
 
@@ -31,7 +31,7 @@ class VanillaReader(BaseReader):
     Supported: .json, .html, .txt, .xml, .yaml/.yml, .csv, .tsv, .parquet
     """
 
-    def read(self, file_path: Any = None, **kwargs) -> Dict[str, Any]:
+    def read(self, file_path: Any = None, **kwargs) -> ReaderOutput:
         """
         Reads a document from various sources and returns its text content along with standardized metadata.
 
@@ -88,7 +88,7 @@ class VanillaReader(BaseReader):
             result = reader.read(json_document={"text": "Hello, world!"}) # Read from dict
             result = reader.read(text_document="Hello, world!") # Read from text
 
-            print(result["text"])
+            print(result.text)
             ```
             ```bash
             Hello, world!

@@ -4,10 +4,15 @@ import pytest
 
 from splitter_mr.reader import VanillaReader
 
+# Helpers
+
 
 @pytest.fixture
 def reader():
     return VanillaReader()
+
+
+# Test cases
 
 
 def test_read_txt(tmp_path, reader):

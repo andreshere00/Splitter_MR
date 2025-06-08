@@ -106,8 +106,6 @@ metadata: Optional[List[str]]  # The appended metadata, introduced by the user (
 
 ### RowColumnSplitter
 
-For tabular formats, splits data by a set number of rows or columns per chunk, with possible overlap. Row-based and column-based splitting are mutually exclusive.
-
 ::: splitter_mr.splitter.splitters.row_column_splitter
     handler: python
     options:

@@ -1,7 +1,7 @@
 import re
 from typing import List, Union
 
-from ...schema.schemas import ReaderOutput, SplitterOutput
+from ...schema import ReaderOutput, SplitterOutput
 from ..base_splitter import BaseSplitter
 
 
