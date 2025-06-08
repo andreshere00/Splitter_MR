@@ -14,14 +14,14 @@ class ReaderOutput:
     document_path: str = ""
     document_id: Optional[str] = None
     conversion_method: Optional[str] = None
+    reader_method: Optional[str] = None
     ocr_method: Optional[str] = None
-    metadata: Optional[List[str]] = field(default_factory=list)
+    conversion_method: Optional[str] = None
+    metadata: Optional[Dict[str, Any]] = field(default_factory=dict)
 
     def __post_init__(self):
         if not self.document_id:
             self.document_id = str(uuid.uuid4())
-        if self.metadata is None:
-            self.metadata = dict()
 
     def to_dict(self):
         return asdict(self)
@@ -39,6 +39,7 @@ class SplitterOutput:
     document_path: str = ""
     document_id: Optional[str] = None
     conversion_method: Optional[str] = None
+    reader_method: Optional[str] = None
     ocr_method: Optional[str] = None
     split_method: str = ""
     split_params: Optional[Dict[str, Any]] = field(default_factory=dict)

@@ -1,10 +1,10 @@
 import re
-from typing import Any, Dict, List, Optional, Tuple
+from typing import List, Optional, Tuple
 
 from bs4 import BeautifulSoup
 from langchain_text_splitters import HTMLHeaderTextSplitter, MarkdownHeaderTextSplitter
 
-from ...schema.schemas import SplitterOutput
+from ...schema.schemas import ReaderOutput, SplitterOutput
 from ..base_splitter import BaseSplitter
 
 
@@ -86,11 +86,11 @@ class HeaderSplitter(BaseSplitter):
             elif filetype == "html":
                 token = f"h{level}"
             else:
-                raise ValueError(f"Unknown filetype: {filetype}")
+                raise ValueError(f"Incompatible file extension: {filetype}")
             result.append((token, header))
         return result
 
-    def split(self, reader_output: Dict[str, Any]) -> Dict[str, Any]:
+    def split(self, reader_output: ReaderOutput) -> SplitterOutput:
         """
         Splits a document (Markdown or HTML) into chunks using the configured header levels.
 
@@ -130,7 +130,7 @@ class HeaderSplitter(BaseSplitter):
             print(output["chunks"])
             ```
         """
-        text = reader_output.get("text", "")
+        text = reader_output.text
         if not text:
             raise ValueError("reader_output must contain non-empty 'text' field.")
 
@@ -156,15 +156,15 @@ class HeaderSplitter(BaseSplitter):
         output = SplitterOutput(
             chunks=chunks,
             chunk_id=chunk_ids,
-            document_name=reader_output.get("document_name"),
-            document_path=reader_output.get("document_path", ""),
-            document_id=reader_output.get("document_id"),
-            conversion_method=reader_output.get("conversion_method"),
-            ocr_method=reader_output.get("ocr_method"),
+            document_name=reader_output.document_name,
+            document_path=reader_output.document_path,
+            document_id=reader_output.document_id,
+            conversion_method=reader_output.conversion_method,
+            ocr_method=reader_output.ocr_method,
             split_method="header_splitter",
             split_params={
                 "headers_to_split_on": self.headers_to_split_on,
             },
             metadata=metadata,
         )
-        return output.__dict__
+        return output

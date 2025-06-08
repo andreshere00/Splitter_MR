@@ -26,16 +26,17 @@ The **Splitter** component implements the main functionality of this library. Th
 The output object get from the `split` method for every Splitter is `SplitterOutput`, a dictionary with the following structure:
 
 ```python
-chunks: List[str]
-chunk_id: List[str]
-document_name: Optional[str] = None
-document_path: str = ""
-document_id: Optional[str] = None
-conversion_method: Optional[str] = None
-ocr_method: Optional[str] = None
-split_method: str = ""
-split_params: Optional[Dict[str, Any]] = field(default_factory=dict)
-metadata: Optional[Dict[str, Any]] = field(default_factory=dict)
+chunks: List[str],  # The extracted chunks from the text
+chunk_id: List[str],  # The identifier for the chunks (given by default with uuid)
+document_name: Optional[str],  # The base name of the file.
+document_path: str,  # The path to the document
+document_id: Optional[str],  # The identifier for that document
+conversion_method: Optional[str],  # The format in which the file has been converted (markdown, json, etc.)
+reader_method: Optional[str]  # The method used to read the file (markitdown, vanilla, etc.)
+ocr_method: Optional[str],  # The OCR method or VLM used to analyze images (TBD)
+split_method: str,  # The splitting strategy used for chunking the document
+split_params: Optional[Dict[str, Any]],  # The specific splitter parameters
+metadata: Optional[List[str]]  # The appended metadata, introduced by the user (TBD)
 ```
 
 ## Splitters

@@ -23,7 +23,7 @@ repos:
         stages: [pre-commit]
 
       - id: update-docs
-        name: Ensure that the Home page from mkdocs is updated
+        name: Ensure that documentation server is updated
         entry: bash scripts/documentation.sh
         language: system
         stages: [pre-commit]

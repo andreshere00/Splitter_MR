@@ -6,6 +6,14 @@
 
 **SplitterMR** is a library for chunking data into convenient text blocks compatible with your LLM applications.
 
+> [!IMPORTANT]
+> Breaking change!
+> 
+> - All Readers now return `ReaderOutput` dataclass objects.
+> - All Splitters now return `SplitterOutput` dataclass objects.
+> 
+> You must access fields using **dot notation** (e.g., `result.text`, `result.chunks`), not dictionary keys.
+
 ## Features
 
 ### Different input formats
@@ -16,9 +24,9 @@ Currently, there are supported three readers: `VanillaReader`, and `MarkItDownRe
 
 | **Reader**         | **Unstructured files & PDFs**    | **MS Office suite files**         | **Tabular data**        | **Files with hierarchical schema**      | **Image files**                  | **Markdown conversion** |
 |--------------------|----------------------------------|-----------------------------------|-------------------------|----------------------------------------|----------------------------------|----------------------------------|
-| **Vanilla Reader**      | `txt`, `csv`                     | –                                 | `csv`, `tsv`, `parquet`| `json`, `yaml`, `html`, `xml`          || No |----------------------------------| –                                |
-| **MarkItDown Reader**   | `txt`, `md`, `pdf`               | `docx`, `xlsx`, `pptx`            | `csv`, `tsv`                  | `json`, `html`, `xml`                  | `jpg`, `png`, `pneg`             | Yes |
-| **Docling Reader**      | `txt`, `md`, `pdf`                     | `docx`, `xlsx`, `pptx`            | –                 | `html`, `xhtml`                        | `png`, `jpeg`, `tiff`, `bmp`, `webp` | Yes |
+| **`VanillaReader`**      | `txt`, `md`                    | `xlsx`                                 | `csv`, `tsv`, `parquet`| `json`, `yaml`, `html`, `xml`          | - | No |----------------------------------| –                                |
+| **`MarkItDownReader`**   | `txt`, `md`, `pdf`               | `docx`, `xlsx`, `pptx`            | `csv`, `tsv`                  | `json`, `html`, `xml`                  | `jpg`, `png`, `pneg`             | Yes |
+| **`DoclingReader`**      | `txt`, `md`, `pdf`                     | `docx`, `xlsx`, `pptx`            | –                 | `html`, `xhtml`                        | `png`, `jpeg`, `tiff`, `bmp`, `webp` | Yes |
 
 ### Serveral splitting methods
 
@@ -34,10 +42,10 @@ Main splitting methods include:
 | **Paragraph Splitter**    | Splits text into chunks based on a specified number of paragraphs. Allows overlapping by word count or percentage, and customizable line breaks. <br> **Parameters:** `chunk_size` (max paragraphs per chunk), `chunk_overlap` (overlapping words: int or %), `line_break` (delimiter(s) for paragraphs). <br> **Compatible with:** Text.                                                                     |
 | **Recursive Splitter**    | Recursively splits text based on a hierarchy of separators (e.g., paragraph, sentence, word, character) until chunks reach a target size. Tries to preserve semantic units as long as possible. <br> **Parameters:** `chunk_size` (max chars per chunk), `chunk_overlap` (overlapping chars), `separators` (list of characters to split on, e.g., `["\n\n", "\n", " ", ""]`). <br> **Compatible with:** Text. |
 | **Paged Splitter**        | Splits text by pages for documents that have page structure. Each chunk contains a specified number of pages, with optional word overlap. <br> **Parameters:** `num_pages` (pages per chunk), `chunk_overlap` (overlapping words). <br> **Compatible with:** Word, PDF, Excel, PowerPoint.                                                                                                                    |
-| **Row/Column Splitter**   | For tabular formats, splits data by a set number of rows or columns per chunk, with possible overlap. Row-based and column-based splitting are mutually exclusive. <br> **Parameters:** `num_rows`, `num_cols` (rows/columns per chunk), `overlap` (overlapping rows or columns). <br> **Compatible with:** Tabular formats (csv, tsv, parquet, flat json).                                                   |
-| **Schema Based Splitter** | Splits hierarchical documents (XML, HTML) based on element tags or keys, preserving the schema/structure. Splitting can be done on a specified or inferred parent key/tag. <br> **Parameters:** `chunk_size` (approx. max chars per chunk), `key` (optional parent key or tag). <br> **Compatible with:** XML, HTML.                                                                                          |
+| **Row/Column Splitter**   | > For tabular formats, splits data by a set number of rows or columns per chunk, with possible overlap. Row-based and column-based splitting are mutually exclusive. <br> **Parameters:** `num_rows`, `num_cols` (rows/columns per chunk), `overlap` (overlapping rows or columns). <br> **Compatible with:** Tabular formats (csv, tsv, parquet, flat json).                                                   |
+| **Schema Based Splitter** | **WORK IN PROGRESS**. Splits hierarchical documents (XML, HTML) based on element tags or keys, preserving the schema/structure. Splitting can be done on a specified or inferred parent key/tag. <br> **Parameters:** `chunk_size` (approx. max chars per chunk), `key` (optional parent key or tag). <br> **Compatible with:** XML, HTML.                                                                                          |
 | **JSON Splitter**         | Recursively splits JSON documents into smaller sub-structures that preserve the original JSON schema. <br> **Parameters:** `max_chunk_size` (max chars per chunk), `min_chunk_size` (min chars per chunk). <br> **Compatible with:** JSON.                                                                                                                                                                    |
-| **Semantic Splitter**     | Splits text into chunks based on semantic similarity, using an embedding model and a max tokens parameter. Useful for meaningful semantic groupings. <br> **Parameters:** `embedding_model` (model for embeddings), `max_tokens` (max tokens per chunk). <br> **Compatible with:** Text.                                                                                                                      |
+| **Semantic Splitter**     | **WORK IN PROGRESS**. Splits text into chunks based on semantic similarity, using an embedding model and a max tokens parameter. Useful for meaningful semantic groupings. <br> **Parameters:** `embedding_model` (model for embeddings), `max_tokens` (max tokens per chunk). <br> **Compatible with:** Text.                                                                                                                      |
 | **HTMLTagSplitter**       | Splits HTML content based on a specified tag, or automatically detects the most frequent and shallowest tag if not specified. Each chunk is a complete HTML fragment for that tag. <br> **Parameters:** `chunk_size` (max chars per chunk), `tag` (HTML tag to split on, optional). <br> **Compatible with:** HTML.                                                                                           |
 | **HeaderSplitter**        | Splits Markdown or HTML documents into chunks using header levels (e.g., `#`, `##`, or `<h1>`, `<h2>`). Uses configurable headers for chunking. <br> **Parameters:** `headers_to_split_on` (list of headers and semantic names), `chunk_size` (unused, for compatibility). <br> **Compatible with:** Markdown, HTML.                                                                                          |
 
@@ -48,15 +56,14 @@ Main splitting methods include:
 The output object is `ReaderOutput`, a dictionary with the following structure:
 
 ```python
-{
-  text: Optional[str] = ""  # The extracted text
-  document_name: Optional[str] = None  # The base name of the file
-  document_path: str = ""  # The path to the document
-  document_id: Optional[str] = None  # The document identifier (given by default by an UUID)
-  conversion_method: Optional[str] = None  # The format in which the file has been converted (markdown, json, etc.)
-  ocr_method: Optional[str] = None  # The OCR method or VLM used to analyze images (TBD)
-  metadata: Optional[List[str]]  # The appended metadata, introduced by the user (TBD)
-}
+text: Optional[str] = ""  # The extracted text
+document_name: Optional[str] = None  # The base name of the file
+document_path: str = ""  # The path to the document
+document_id: Optional[str] = None  # The document identifier (given by default by an UUID)
+conversion_method: Optional[str] = None  # The format in which the file has been converted (markdown, json, etc.)
+reader_method: Optional[str]  # The method used to read the file (markitdown, vanilla, etc.)
+ocr_method: Optional[str] = None  # The OCR method or VLM used to analyze images (TBD)
+metadata: Optional[List[str]]  # The appended metadata, introduced by the user (TBD)
 ```
 
 #### Splitter
@@ -64,18 +71,17 @@ The output object is `ReaderOutput`, a dictionary with the following structure:
 The output object is `SplitterOutput`, a dictionary with the following structure:
 
 ```python
-{
-  'chunks': List[str],  # The extracted chunks from the text
-  'chunk_id': List[str],  # The identifier for the chunks (given by default with uuid)
-  'document_name': Optional[str],  # The base name of the file.
-  'document_path': str,  # The path to the document
-  'document_id': Optional[str],  # The identifier for that document
-  'conversion_method': Optional[str],  # The format in which the file has been converted (markdown, json, etc.)
-  'ocr_method': Optional[str],  # The OCR method or VLM used to analyze images (TBD)
-  'split_method': str,  # The splitting strategy used for chunking the document
-  'split_params': Optional[Dict[str, Any]],  # The specific splitter parameters
-  'metadata': Optional[List[str]]  # The appended metadata, introduced by the user (TBD)
-}
+chunks: List[str],  # The extracted chunks from the text
+chunk_id: List[str],  # The identifier for the chunks (given by default with uuid)
+document_name: Optional[str],  # The base name of the file.
+document_path: str,  # The path to the document
+document_id: Optional[str],  # The identifier for that document
+conversion_method: Optional[str],  # The format in which the file has been converted (markdown, json, etc.)
+reader_method: Optional[str]  # The method used to read the file (markitdown, vanilla, etc.)
+ocr_method: Optional[str],  # The OCR method or VLM used to analyze images (TBD)
+split_method: str,  # The splitting strategy used for chunking the document
+split_params: Optional[Dict[str, Any]],  # The specific splitter parameters
+metadata: Optional[List[str]]  # The appended metadata, introduced by the user (TBD)
 ```
 
 ## Architecture

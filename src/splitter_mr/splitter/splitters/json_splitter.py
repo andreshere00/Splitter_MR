@@ -1,9 +1,8 @@
 import json
-from typing import Any, Dict
 
 from langchain_text_splitters.json import RecursiveJsonSplitter
 
-from ...schema.schemas import SplitterOutput
+from ...schema.schemas import ReaderOutput, SplitterOutput
 from ..base_splitter import BaseSplitter
 
 
@@ -26,7 +25,7 @@ class RecursiveJSONSplitter(BaseSplitter):
         super().__init__(chunk_size)
         self.min_chunk_size = min_chunk_size
 
-    def split(self, reader_output: Dict[str, Any]) -> Dict[str, Any]:
+    def split(self, reader_output: ReaderOutput) -> SplitterOutput:
         """
         Splits the input JSON text from the reader_output dictionary into recursively chunked pieces,
         allowing for overlap by number or percentage of characters.
@@ -75,7 +74,7 @@ class RecursiveJSONSplitter(BaseSplitter):
             ```
         """
         # Initialize variables
-        text = json.loads(reader_output.get("text", ""))
+        text = json.loads(reader_output.text)
 
         # Split text into smaller JSON chunks
         splitter = RecursiveJsonSplitter(
@@ -92,11 +91,11 @@ class RecursiveJSONSplitter(BaseSplitter):
         output = SplitterOutput(
             chunks=chunks,
             chunk_id=chunk_ids,
-            document_name=reader_output.get("document_name"),
-            document_path=reader_output.get("document_path", ""),
-            document_id=reader_output.get("document_id"),
-            conversion_method=reader_output.get("conversion_method"),
-            ocr_method=reader_output.get("ocr_method"),
+            document_name=reader_output.document_name,
+            document_path=reader_output.document_path,
+            document_id=reader_output.document_id,
+            conversion_method=reader_output.conversion_method,
+            ocr_method=reader_output.ocr_method,
             split_method="recursive_json_splitter",
             split_params={
                 "max_chunk_size": self.chunk_size,
@@ -104,4 +103,4 @@ class RecursiveJSONSplitter(BaseSplitter):
             },
             metadata=metadata,
         )
-        return output.__dict__
+        return output

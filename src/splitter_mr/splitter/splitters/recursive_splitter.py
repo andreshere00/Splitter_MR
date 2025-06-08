@@ -1,8 +1,8 @@
-from typing import Any, Dict, List, Union
+from typing import List, Union
 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-from ...schema.schemas import SplitterOutput
+from ...schema.schemas import ReaderOutput, SplitterOutput
 from ..base_splitter import BaseSplitter
 
 
@@ -45,7 +45,7 @@ class RecursiveCharacterSplitter(BaseSplitter):
         self.chunk_overlap = chunk_overlap
         self.separators = separators if isinstance(separators, list) else [separators]
 
-    def split(self, reader_output: Dict[str, Any]) -> Dict[str, Any]:
+    def split(self, reader_output: ReaderOutput) -> SplitterOutput:
         """
         Splits the input text into character-based chunks using a recursive splitting strategy
         (via Langchain's `RecursiveCharacterTextSplitter`), supporting configurable separators,
@@ -93,7 +93,7 @@ class RecursiveCharacterSplitter(BaseSplitter):
             ```
         """
         # Initialize variables
-        text = reader_output.get("text", "")
+        text = reader_output.text
         chunk_size = self.chunk_size
 
         # Determine overlap in characters
@@ -121,11 +121,11 @@ class RecursiveCharacterSplitter(BaseSplitter):
         output = SplitterOutput(
             chunks=chunks,
             chunk_id=chunk_ids,
-            document_name=reader_output.get("document_name"),
-            document_path=reader_output.get("document_path", ""),
-            document_id=reader_output.get("document_id"),
-            conversion_method=reader_output.get("conversion_method"),
-            ocr_method=reader_output.get("ocr_method"),
+            document_name=reader_output.document_name,
+            document_path=reader_output.document_path,
+            document_id=reader_output.document_id,
+            conversion_method=reader_output.conversion_method,
+            ocr_method=reader_output.ocr_method,
             split_method="recursive_character_splitter",
             split_params={
                 "chunk_size": chunk_size,
@@ -134,4 +134,4 @@ class RecursiveCharacterSplitter(BaseSplitter):
             },
             metadata=metadata,
         )
-        return output.__dict__
+        return output

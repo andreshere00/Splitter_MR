@@ -1,3 +1,29 @@
+# v0.2.x
+
+## v0.2.0
+
+> [!IMPORTANT]
+> Breaking change!
+> 
+> - All Readers now return `ReaderOutput` dataclass objects.
+> - All Splitters now return `SplitterOutput` dataclass objects.
+> 
+> You must access fields using **dot notation** (e.g., `result.text`, `result.chunks`), not dictionary keys.
+
+### Features
+
+New splitting strategy: `RowColumnSplitter` for flexible splitting of tabular data.
+
+New reader_method attribute in output dataclasses.
+
+### Migration
+
+Update all code/tests to use attribute access for results from Readers and Splitters.
+
+Use `.to_dict()` on output if a dictionary is required.
+
+> Update any custom splitter/reader implementations to use the new output dataclasses.
+
 # v0.1.x
 
 ## v0.1.3
@@ -12,7 +38,7 @@
 
 ### Documentation
 
-- Update documentation
+- Update documentation.
 
 ## v0.1.2
 
