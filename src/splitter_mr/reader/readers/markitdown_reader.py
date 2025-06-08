@@ -72,6 +72,7 @@ class MarkItDownReader(BaseReader):
             document_path=file_path,
             document_id=kwargs.get("document_id") or str(uuid.uuid4()),
             conversion_method=conversion_method,
+            reader_method="markitdown",
             ocr_method=kwargs.get("ocr_method"),
             metadata=kwargs.get("metadata"),
         ).to_dict()

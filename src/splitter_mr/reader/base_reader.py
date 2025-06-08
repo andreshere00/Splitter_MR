@@ -3,6 +3,8 @@ import os
 from abc import ABC, abstractmethod
 from urllib.parse import urlparse
 
+from ..schema.schemas import ReaderOutput
+
 
 class BaseReader(ABC):
     """
@@ -92,7 +94,7 @@ class BaseReader(ABC):
         raise TypeError("Provided object is not a string or dictionary")
 
     @abstractmethod
-    def read(self, file_path: str, **kwargs) -> dict:
+    def read(self, file_path: str, **kwargs) -> ReaderOutput:
         """
         Reads input and returns a dictionary with its text content and standardized metadata.
 
@@ -135,7 +137,7 @@ class BaseReader(ABC):
                         "text": "example",
                         "document_name": "example.txt",
                         "document_path": file_path,
-                        "document_id": kwargs.get("document_id"),
+                        "document_id": kwargs.document_id,
                         "conversion_method": "custom",
                         "ocr_method": None,
                         "metadata": {}

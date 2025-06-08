@@ -15,10 +15,10 @@ def test_read_txt(tmp_path, reader):
     f.write_text("hello world\nnew line")
     result = reader.read(file_path=str(f))
 
-    assert result["text"] == "hello world\nnew line"
-    assert result["document_name"] == "foo.txt"
-    assert result["document_path"] == os.path.relpath(str(f))
-    assert result["conversion_method"] == "txt"
+    assert result.text == "hello world\nnew line"
+    assert result.document_name == "foo.txt"
+    assert result.document_path == os.path.relpath(str(f))
+    assert result.conversion_method == "txt"
 
 
 def test_read_txt_as_positional(tmp_path, reader):
@@ -26,9 +26,9 @@ def test_read_txt_as_positional(tmp_path, reader):
     f.write_text("positional arg")
     result = reader.read(str(f))
 
-    assert result["text"] == "positional arg"
-    assert result["document_name"] == "bar.txt"
-    assert result["document_path"] == os.path.relpath(str(f))
+    assert result.text == "positional arg"
+    assert result.document_name == "bar.txt"
+    assert result.document_path == os.path.relpath(str(f))
 
 
 def test_read_html(tmp_path, reader):
@@ -36,7 +36,7 @@ def test_read_html(tmp_path, reader):
     f.write_text("<html><body>hi</body></html>")
     result = reader.read(file_path=str(f))
 
-    assert "hi" in result["text"]
+    assert "hi" in result.text
 
 
 def test_read_json(tmp_path, reader):
@@ -44,24 +44,24 @@ def test_read_json(tmp_path, reader):
     f.write_text('{"a": 1, "b": 2}')
     result = reader.read(file_path=str(f))
 
-    assert isinstance(result["text"], str)
-    assert '"a": 1' in result["text"]
-    assert result["document_name"] == "foo.json"
+    assert isinstance(result.text, str)
+    assert '"a": 1' in result.text
+    assert result.document_name == "foo.json"
 
 
 def test_read_json_kwarg_dict(reader):
     data = {"hello": "world"}
     result = reader.read(json_document=data)
 
-    assert result["text"]["hello"] == "world"
-    assert result["conversion_method"] == "json"
+    assert result.text["hello"] == "world"
+    assert result.conversion_method == "json"
 
 
 def test_read_json_kwarg_str(reader):
     result = reader.read(json_document='{"z": 42}')
 
-    assert result["text"]["z"] == 42
-    assert result["conversion_method"] == "json"
+    assert result.text["z"] == 42
+    assert result.conversion_method == "json"
 
 
 def test_read_csv(tmp_path, reader):
@@ -70,7 +70,7 @@ def test_read_csv(tmp_path, reader):
     f.write_text(content)
     result = reader.read(file_path=str(f))
 
-    assert "x,y" in result["text"]
+    assert "x,y" in result.text
 
 
 def test_read_yaml(tmp_path, reader):
@@ -79,9 +79,9 @@ def test_read_yaml(tmp_path, reader):
     f.write_text(content)
     result = reader.read(file_path=str(f))
 
-    assert isinstance(result["text"], dict)
-    assert result["text"]["a"] == 1
-    assert result["conversion_method"] == "json"
+    assert isinstance(result.text, dict)
+    assert result.text["a"] == 1
+    assert result.conversion_method == "json"
 
 
 def test_read_yml(tmp_path, reader):
@@ -90,8 +90,8 @@ def test_read_yml(tmp_path, reader):
     f.write_text(content)
     result = reader.read(file_path=str(f))
 
-    assert isinstance(result["text"], dict)
-    assert result["text"]["hello"] == "world"
+    assert isinstance(result.text, dict)
+    assert result.text["hello"] == "world"
 
 
 def test_read_parquet(tmp_path, reader):
@@ -102,9 +102,9 @@ def test_read_parquet(tmp_path, reader):
     df.to_parquet(f)
     result = reader.read(file_path=str(f))
 
-    assert "a,b" in result["text"]
-    assert "1,3" in result["text"] or "2,4" in result["text"]
-    assert result["conversion_method"] == "csv"
+    assert "a,b" in result.text
+    assert "1,3" in result.text or "2,4" in result.text
+    assert result.conversion_method == "csv"
 
 
 def test_metadata_and_doc_id(tmp_path, reader):
@@ -112,8 +112,8 @@ def test_metadata_and_doc_id(tmp_path, reader):
     f.write_text("meta test")
     result = reader.read(file_path=str(f), document_id="id123", metadata={"x": 1})
 
-    assert result["document_id"] == "id123"
-    assert result["metadata"] == {"x": 1}
+    assert result.document_id == "id123"
+    assert result.metadata == {"x": 1}
 
 
 def test_unsupported_extension(tmp_path, reader):
@@ -129,8 +129,8 @@ def test_unsupported_extension(tmp_path, reader):
 def test_text_document_kwarg(reader):
     result = reader.read(text_document="plain text here")
 
-    assert result["text"] == "plain text here"
-    assert result["conversion_method"] == "txt"
+    assert result.text == "plain text here"
+    assert result.conversion_method == "txt"
 
 
 def test_file_path_auto_json(reader):
@@ -138,8 +138,8 @@ def test_file_path_auto_json(reader):
     json_str = '{"auto": "json"}'
     result = reader.read(file_path=json_str)
 
-    assert result["text"]["auto"] == "json"
-    assert result["conversion_method"] == "json"
+    assert result.text["auto"] == "json"
+    assert result.conversion_method == "json"
 
 
 def test_file_path_auto_yaml(reader):
@@ -147,8 +147,8 @@ def test_file_path_auto_yaml(reader):
     yaml_str = "foo: bar"
     result = reader.read(file_path=yaml_str)
 
-    assert result["text"]["foo"] == "bar"
-    assert result["conversion_method"] == "json"
+    assert result.text["foo"] == "bar"
+    assert result.conversion_method == "json"
 
 
 def test_file_path_auto_url(reader, requests_mock):
@@ -156,9 +156,9 @@ def test_file_path_auto_url(reader, requests_mock):
     requests_mock.get(url, text="file from url!")
     result = reader.read(file_path=url)
 
-    assert result["text"] == "file from url!"
-    assert result["document_path"] == url
-    assert result["conversion_method"] == "txt"
+    assert result.text == "file from url!"
+    assert result.document_path == url
+    assert result.conversion_method == "txt"
 
 
 def test_file_url_kwarg(reader, requests_mock):
@@ -166,9 +166,9 @@ def test_file_url_kwarg(reader, requests_mock):
     requests_mock.get(url, text="hello from url")
     result = reader.read(file_url=url)
 
-    assert result["text"] == "hello from url"
-    assert result["document_name"] == "data.txt"
-    assert result["document_path"] == url
+    assert result.text == "hello from url"
+    assert result.document_name == "data.txt"
+    assert result.document_path == url
 
 
 def test_json_document_invalid(reader):
@@ -179,12 +179,12 @@ def test_json_document_invalid(reader):
 def test_text_document_json_fallback(reader):
     result = reader.read(text_document='{"x":123}')
 
-    assert result["text"]["x"] == 123
-    assert result["conversion_method"] == "json"
+    assert result.text["x"] == 123
+    assert result.conversion_method == "json"
 
 
 def test_text_document_yaml_fallback(reader):
     result = reader.read(text_document="a: 42")
 
-    assert result["text"]["a"] == 42
-    assert result["conversion_method"] == "json"
+    assert result.text["a"] == 42
+    assert result.conversion_method == "json"

@@ -1,6 +1,8 @@
 import uuid
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List
+from typing import List
+
+from ..schema.schemas import ReaderOutput, SplitterOutput
 
 
 class BaseSplitter(ABC):
@@ -40,7 +42,7 @@ class BaseSplitter(ABC):
         self.chunk_size = chunk_size
 
     @abstractmethod
-    def split(self, reader_output: Dict[str, Any]) -> Dict[str, Any]:
+    def split(self, reader_output: ReaderOutput) -> SplitterOutput:
         """
         Abstract method to split input data into chunks.
 

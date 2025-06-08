@@ -2,19 +2,25 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from splitter_mr.schema.schemas import ReaderOutput
 from splitter_mr.splitter import RecursiveCharacterSplitter
+
+# Helpers
 
 
 @pytest.fixture
 def reader_output():
-    return {
-        "text": "A long test text that should be split recursively.",
-        "document_name": "sample.txt",
-        "document_path": "/tmp/sample.txt",
-        "document_id": "123",
-        "conversion_method": "text",
-        "ocr_method": None,
-    }
+    return ReaderOutput(
+        text="A long test text that should be split recursively.",
+        document_name="sample.txt",
+        document_path="/tmp/sample.txt",
+        document_id="123",
+        conversion_method="text",
+        ocr_method=None,
+    )
+
+
+# Tests cases
 
 
 def test_recursive_character_splitter_instantiates_and_calls_splitter(reader_output):
@@ -37,16 +43,16 @@ def test_recursive_character_splitter_instantiates_and_calls_splitter(reader_out
             chunk_size=10, chunk_overlap=2, separators=["."]
         )
         # Check method called
-        mock_splitter.create_documents.assert_called_once_with([reader_output["text"]])
+        mock_splitter.create_documents.assert_called_once_with([reader_output.text])
 
         # Check output structure
-        assert "chunks" in result
-        assert result["chunks"] == ["Chunk 1", "Chunk 2"]
-        assert "split_method" in result
-        assert result["split_method"] == "recursive_character_splitter"
-        assert result["split_params"]["chunk_size"] == 10
-        assert result["split_params"]["chunk_overlap"] == 2
-        assert result["split_params"]["separators"] == ["."]
+        assert hasattr(result, "chunks")
+        assert result.chunks == ["Chunk 1", "Chunk 2"]
+        assert hasattr(result, "split_method")
+        assert result.split_method == "recursive_character_splitter"
+        assert result.split_params["chunk_size"] == 10
+        assert result.split_params["chunk_overlap"] == 2
+        assert result.split_params["separators"] == ["."]
         for field in [
             "chunks",
             "chunk_id",
@@ -59,7 +65,7 @@ def test_recursive_character_splitter_instantiates_and_calls_splitter(reader_out
             "split_params",
             "metadata",
         ]:
-            assert field in result
+            assert hasattr(result, field)
 
 
 def test_empty_text():
@@ -72,6 +78,6 @@ def test_empty_text():
         splitter = RecursiveCharacterSplitter(
             chunk_size=10, chunk_overlap=0, separators=["."]
         )
-        reader_output = {"text": ""}
+        reader_output = ReaderOutput(text="")
         result = splitter.split(reader_output)
-        assert result["chunks"] == []
+        assert result.chunks == []

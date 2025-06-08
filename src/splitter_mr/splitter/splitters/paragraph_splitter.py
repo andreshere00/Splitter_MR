@@ -1,7 +1,7 @@
 import re
-from typing import Any, Dict, List, Union
+from typing import List, Union
 
-from ...schema.schemas import SplitterOutput
+from ...schema.schemas import ReaderOutput, SplitterOutput
 from ..base_splitter import BaseSplitter
 
 
@@ -27,7 +27,7 @@ class ParagraphSplitter(BaseSplitter):
         self.chunk_overlap = chunk_overlap
         self.line_break = line_break if isinstance(line_break, list) else [line_break]
 
-    def split(self, reader_output: Dict[str, Any]) -> Dict[str, Any]:
+    def split(self, reader_output: ReaderOutput) -> SplitterOutput:
         """
         Splits text in `reader_output['text']` into paragraph-based chunks, with optional word overlap.
 
@@ -70,7 +70,7 @@ class ParagraphSplitter(BaseSplitter):
             ```
         """
         # Intialize variables
-        text = reader_output.get("text", "")
+        text = reader_output.text
         line_breaks_pattern = "|".join(map(re.escape, self.line_break))
         paragraphs = [p for p in re.split(line_breaks_pattern, text) if p.strip()]
         num_paragraphs = len(paragraphs)
@@ -110,11 +110,11 @@ class ParagraphSplitter(BaseSplitter):
         output = SplitterOutput(
             chunks=chunks,
             chunk_id=chunk_ids,
-            document_name=reader_output.get("document_name"),
-            document_path=reader_output.get("document_path", ""),
-            document_id=reader_output.get("document_id"),
-            conversion_method=reader_output.get("conversion_method"),
-            ocr_method=reader_output.get("ocr_method"),
+            document_name=reader_output.document_name,
+            document_path=reader_output.document_path,
+            document_id=reader_output.document_id,
+            conversion_method=reader_output.conversion_method,
+            ocr_method=reader_output.ocr_method,
             split_method="paragraph_splitter",
             split_params={
                 "chunk_size": self.chunk_size,
@@ -123,4 +123,4 @@ class ParagraphSplitter(BaseSplitter):
             },
             metadata=metadata,
         )
-        return output.__dict__
+        return output

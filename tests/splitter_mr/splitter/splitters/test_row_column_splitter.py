@@ -1,27 +1,22 @@
 import pandas as pd
 import pytest
 
+from splitter_mr.schema.schemas import ReaderOutput
 from splitter_mr.splitter.splitters.row_column_splitter import RowColumnSplitter
-
-# Helper: minimal mock for SplitterOutput import (if not available in your test env)
-try:
-    from splitter_mr.schema.schemas import SplitterOutput
-except ImportError:
-    SplitterOutput = dict
 
 # Helpers
 
 
 def make_reader_output(text, method):
-    return {
-        "text": text,
-        "document_name": "test",
-        "document_path": "test",
-        "conversion_method": method,
-        "document_id": "doc1",
-        "ocr_method": None,
-        "metadata": {},
-    }
+    return ReaderOutput(
+        text=text,
+        document_name="test",
+        document_path="test",
+        conversion_method=method,
+        document_id="doc1",
+        ocr_method=None,
+        metadata={},
+    )
 
 
 def get_markdown_rows(df):
@@ -85,7 +80,7 @@ def test_json_tabular(num_rows, num_cols, overlap, expected_chunks):
         num_rows=num_rows, num_cols=num_cols, chunk_overlap=overlap
     )
     output = splitter.split(reader_output)
-    assert len(output["chunks"]) == expected_chunks
+    assert len(output.chunks) == expected_chunks
 
 
 def test_markdown_table():
@@ -100,8 +95,8 @@ def test_markdown_table():
     reader_output = make_reader_output(md_table, "markdown")
     splitter = RowColumnSplitter(num_rows=2)
     output = splitter.split(reader_output)
-    assert len(output["chunks"]) == 2
-    header = output["chunks"][0].splitlines()[0]
+    assert len(output.chunks) == 2
+    header = output.chunks[0].splitlines()[0]
     for col in ["id", "name", "amount", "Remark"]:
         assert col in header
 
@@ -117,8 +112,8 @@ def test_csv_split():
     reader_output = make_reader_output(csv_content, "csv")
     splitter = RowColumnSplitter(num_rows=2)
     output = splitter.split(reader_output)
-    assert len(output["chunks"]) == 2
-    header = output["chunks"][0].splitlines()[0]
+    assert len(output.chunks) == 2
+    header = output.chunks[0].splitlines()[0]
     for col in ["id", "name", "amount", "Remark"]:
         assert col in header
 
@@ -134,8 +129,8 @@ def test_tsv_split():
     reader_output = make_reader_output(tsv_content, "tsv")
     splitter = RowColumnSplitter(num_rows=3)
     output = splitter.split(reader_output)
-    assert len(output["chunks"]) == 2  # first 3, last 1 row
-    header = output["chunks"][0].splitlines()[0]
+    assert len(output.chunks) == 2  # first 3, last 1 row
+    header = output.chunks[0].splitlines()[0]
     for col in ["id", "name", "amount", "Remark"]:
         assert col in header
 
@@ -162,13 +157,13 @@ def test_chunk_size_only():
     splitter = RowColumnSplitter(chunk_size=60, num_rows=0, num_cols=0)
     reader_output = make_reader_output(md_table, "markdown")
     output = splitter.split(reader_output)
-    for chunk in output["chunks"]:
+    for chunk in output.chunks:
         header_line = chunk.strip().splitlines()[0]
         assert is_markdown_header_line(header_line, ["id", "name"])
         assert len(chunk) <= 60
     # Check data rows as before
     found_rows = set()
-    for chunk in output["chunks"]:
+    for chunk in output.chunks:
         for row in parse_data_rows_from_markdown(chunk):
             found_rows.add(row)
     expected = [("1", "A"), ("2", "B"), ("3", "C"), ("4", "D")]
@@ -189,13 +184,13 @@ def test_chunk_size_with_overlap():
     )
     reader_output = make_reader_output(md_table, "markdown")
     output = splitter.split(reader_output)
-    for chunk in output["chunks"]:
+    for chunk in output.chunks:
         print("\n" + str(chunk) + "\n")
         header_line = chunk.strip().splitlines()[0]
         assert is_markdown_header_line(header_line, ["id", "name"])
         assert len(chunk) <= 80
     # Parse data rows from each chunk
-    all_rows = [parse_data_rows_from_markdown(chunk) for chunk in output["chunks"]]
+    all_rows = [parse_data_rows_from_markdown(chunk) for chunk in output.chunks]
     # Check overlap: last row of chunk i == first row of chunk i+1
     for i in range(len(all_rows) - 1):
         assert all_rows[i][-1] == all_rows[i + 1][0]
@@ -211,8 +206,8 @@ def test_empty_input():
     reader_output = make_reader_output("", "markdown")
     output = splitter.split(reader_output)
     # Should return one chunk, possibly empty
-    assert len(output["chunks"]) == 0
-    assert output["chunks"] == []
+    assert len(output.chunks) == 0
+    assert output.chunks == []
 
 
 def test_missing_headers():
@@ -222,8 +217,8 @@ def test_missing_headers():
     reader_output = make_reader_output(md_table, "markdown")
     output = splitter.split(reader_output)
     # Pandas will treat first row as header
-    assert "1" in output["chunks"][0]
-    assert "A" in output["chunks"][0]
+    assert "1" in output.chunks[0]
+    assert "A" in output.chunks[0]
 
 
 def test_malformed_table():
@@ -245,9 +240,9 @@ def test_single_row():
     splitter = RowColumnSplitter(num_rows=1)
     reader_output = make_reader_output(md_table, "markdown")
     output = splitter.split(reader_output)
-    assert len(output["chunks"]) == 1
+    assert len(output.chunks) == 1
     for col in ["id", "name", "A"]:
-        assert col in output["chunks"][0]
+        assert col in output.chunks[0]
 
 
 def test_one_column():
@@ -255,6 +250,6 @@ def test_one_column():
     splitter = RowColumnSplitter(num_rows=1)
     reader_output = make_reader_output(md_table, "markdown")
     output = splitter.split(reader_output)
-    assert len(output["chunks"]) == 2
-    for chunk in output["chunks"]:
+    assert len(output.chunks) == 2
+    for chunk in output.chunks:
         assert "id" in chunk
