@@ -15,6 +15,7 @@ class RowColumnSplitter(BaseSplitter):
     into smaller tables based on rows, columns, or by total character size while preserving row integrity.
 
     This splitter supports several modes:
+
     - By rows: Split the table into chunks with a fixed number of rows, with optional overlapping rows between
         chunks.
     - By columns: Split the table into chunks by columns, with optional overlapping columns between chunks.
@@ -57,18 +58,8 @@ class RowColumnSplitter(BaseSplitter):
     def split(self, reader_output: Dict[str, Any]) -> Dict[str, Any]:
         """
         Splits the input tabular data into multiple markdown table chunks according to the specified
-        chunking strategy.
-
-        The input data is parsed into a pandas DataFrame based on its format. Depending on the
-        configuration, the splitter will:
-        - Chunk by rows (if num_rows > 0), with the specified overlap (chunk_overlap).
-        - Chunk by columns (if num_cols > 0), with the specified overlap (chunk_overlap).
-        - Chunk by character size (if neither num_rows nor num_cols is specified), creating markdown
-            tables where each chunk fits as many full rows as possible under chunk_size, with overlapping
-            rows as specified.
-
-        Each output chunk is a complete markdown table with header, and will never cut a row in half.
-        The overlap is always applied in terms of full rows or columns.
+        chunking strategy. Each output chunk is a complete markdown table with header, and will never
+        cut a row in half. The overlap is always applied in terms of full rows or columns.
 
         Args:
             reader_output (Dict[str, Any]):
@@ -98,15 +89,15 @@ class RowColumnSplitter(BaseSplitter):
         Example:
             ```python
             reader_output = {
-                "text": "| id | name |\n|----|------|\n| 1  | A    |\n| 2  | B    |\n| 3  | C    |\n",
+                "text": '| id | name |\\n|----|------|\\n| 1  | A    |\\n| 2  | B    |\\n| 3  | C    |',
                 "conversion_method": "markdown",
                 "document_name": "table.md",
                 "document_path": "/path/table.md",
             }
-            splitter = RowColumnSplitter(chunk_size=80, chunk_overlap=1)
+            splitter = RowColumnSplitter(chunk_size=80, chunk_overlap=20)
             output = splitter.split(reader_output)
             for chunk in output["chunks"]:
-                print("\n" + str(chunk) + "\n")
+                print("\\n" + str(chunk) + "\\n")
             ```
             ```bash
             | id   | name   |

@@ -103,15 +103,18 @@ metadata: Optional[Dict[str, Any]] = field(default_factory=dict)
     options:
       members_order: source
 
-### PagedSplitter
-
-Splits text by pages for documents that have page structure. Each chunk contains a specified number of pages, with optional word overlap.
-
-> Coming soon!
-
 ### RowColumnSplitter
 
 For tabular formats, splits data by a set number of rows or columns per chunk, with possible overlap. Row-based and column-based splitting are mutually exclusive.
+
+::: splitter_mr.splitter.splitters.row_column_splitter
+    handler: python
+    options:
+      members_order: source
+
+### PagedSplitter
+
+Splits text by pages for documents that have page structure. Each chunk contains a specified number of pages, with optional word overlap.
 
 > Coming soon!
 
