@@ -14,7 +14,7 @@ class SentenceSplitter(BaseSplitter):
     Args:
         chunk_size (int): Maximum number of sentences per chunk.
         chunk_overlap (Union[int, float]): Number or percentage of overlapping words between chunks.
-        sentence_separators (Union[str, List[str]]): Character(s) to split sentences.
+        separators (Union[str, List[str]]): Character(s) to split sentences.
     """
 
     def __init__(

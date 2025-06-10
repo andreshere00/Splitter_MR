@@ -1,5 +1,6 @@
 import os
 import uuid
+from typing import Any
 
 from docling.document_converter import DocumentConverter
 
@@ -29,7 +30,7 @@ class DoclingReader(BaseReader):
         "tiff",
     )
 
-    def read(self, file_path: str, **kwargs) -> ReaderOutput:
+    def read(self, file_path: str, **kwargs: Any) -> ReaderOutput:
         """
         Reads and converts a document to Markdown format using the
         [Docling](https://github.com/docling-project/docling) library, supporting a wide range

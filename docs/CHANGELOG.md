@@ -1,5 +1,16 @@
 # v0.2.x
 
+## v0.2.1
+
+### Features
+
+Implement `CodeSplitter`.
+
+### Fixes
+
+- Change `docstring` for `BaseSplitter` to update with current parameters.
+- Some minor warnings in documentations when deploying Mkdocs server.
+
 ## v0.2.0
 
 > [!IMPORTANT]
@@ -92,7 +103,7 @@ First version of the project
   - `MarkItDownReader`: reader which uses the markitdown package to read the files.
 - Add first splitters: `CharacterSplitter`, `RecursiveSplitter`, `WordSplitter`, `SentenceSplitter`, `ParagraphSplitter`, `HTMLTagSplitter`, `JSONSplitter`, `HeaderSplitter`: 
 - The package can be installed using pip.
-- Documentation ([README.md](./README.md)) has been updated.
+- `README.md` has been updated.
 - Tests cases for main functionalities are available.
 - Some data has been added for testing purposes.
 - A documentation server is deployed with up-to-date information.

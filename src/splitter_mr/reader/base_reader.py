@@ -1,6 +1,7 @@
 import json
 import os
 from abc import ABC, abstractmethod
+from typing import Any, Union
 from urllib.parse import urlparse
 
 from ..schema import ReaderOutput
@@ -73,7 +74,7 @@ class BaseReader(ABC):
             return False
 
     @staticmethod
-    def parse_json(obj):
+    def parse_json(obj: Union[dict, str]) -> dict:
         """
         Attempts to parse the provided object as JSON.
 
@@ -117,54 +118,42 @@ class BaseReader(ABC):
         raise TypeError("Provided object is not a string or dictionary")
 
     @abstractmethod
-    def read(self, file_path: str, **kwargs) -> ReaderOutput:
+    @abstractmethod
+    def read(self, file_path: str, **kwargs: Any) -> ReaderOutput:
         """
-        Reads input and returns a dictionary with its text content and standardized metadata.
-
-        This method should support reading from:
-            - File paths (if the string is a valid path)
-            - URLs (if the string is a valid HTTP/HTTPS URL)
-            - Raw string content (if the string is not a file or URL)
-            - JSON/dict input (if the input is a dictionary or a valid JSON string)
-
-        Implementations should extract the main text from the file or source, and populate
-        all metadata fields to enable downstream processing and traceability.
+        Reads input and returns a ReaderOutput with text content and standardized metadata.
 
         Args:
-            file_path (str | dict): Path to the input file, a URL, a raw string, or a dictionary.
-            **kwargs: Additional keyword arguments for implementation-specific options, such as:
-                - document_id (Optional[str]): Unique identifier for the document.
-                - conversion_method (Optional[str]): Method used for document conversion.
-                - ocr_method (Optional[str]): OCR method used, if any.
-                - metadata (Optional[dict]): Additional metadata as a dictionary.
+            file_path (str): Path to the input file, a URL, raw string, or dictionary.
+            **kwargs: Additional keyword arguments for implementation-specific options.
 
         Returns:
-            dict: Dictionary with the following keys:
-                - text (str): The extracted text content.
-                - document_name (Optional[str]): The base name of the file, if available.
-                - document_path (Optional[str]): The absolute path to the file or URL, if available.
-                - document_id (Optional[str]): Unique identifier for the document, if provided.
-                - conversion_method (Optional[str]): The method used for conversion, if provided.
-                - ocr_method (Optional[str]): The OCR method applied, if any.
-                - metadata (Optional[dict]): Additional document-level metadata, if provided.
+            ReaderOutput: An object with these keys:
+                - text (str)
+                - document_name (Optional[str])
+                - document_path (Optional[str])
+                - document_id (Optional[str])
+                - conversion_method (Optional[str])
+                - ocr_method (Optional[str])
+                - metadata (Optional[dict])
 
         Raises:
-            ValueError: If the provided string is not a valid file path, URL, or parsable content.
+            ValueError: If the provided string is not valid file path, URL, or parsable content.
             TypeError: If input type is unsupported.
 
         Example:
             ```python
             class MyReader(BaseReader):
-                def read(self, file_path: str, **kwargs) -> dict:
-                    return {
-                        "text": "example",
-                        "document_name": "example.txt",
-                        "document_path": file_path,
-                        "document_id": kwargs.document_id,
-                        "conversion_method": "custom",
-                        "ocr_method": None,
-                        "metadata": {}
-                    }
+                def read(self, file_path: str, **kwargs) -> ReaderOutput:
+                    return ReaderOutput(
+                        text="example",
+                        document_name="example.txt",
+                        document_path=file_path,
+                        document_id=kwargs.get("document_id"),
+                        conversion_method="custom",
+                        ocr_method=None,
+                        metadata={}
+                    )
             ```
         """
         pass
