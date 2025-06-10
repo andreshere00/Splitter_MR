@@ -14,7 +14,7 @@ from splitter_mr.reader import VanillaReader
 reader = VanillaReader()
 ```
 
-To read the file, we only need to call the `read` method from this class, which is inherited from the `BaseReader` class (see [documentation](./reader.md)).
+To read the file, we only need to call the `read` method from this class, which is inherited from the `BaseReader` class (see [documentation](../api_reference/reader.md)).
 
 ```python
 url = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/test_1.txt"

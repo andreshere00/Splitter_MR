@@ -31,7 +31,7 @@ class VanillaReader(BaseReader):
     Supported: .json, .html, .txt, .xml, .yaml/.yml, .csv, .tsv, .parquet
     """
 
-    def read(self, file_path: Any = None, **kwargs) -> ReaderOutput:
+    def read(self, file_path: Any = None, **kwargs: Any) -> ReaderOutput:
         """
         Reads a document from various sources and returns its text content along with standardized metadata.
 
