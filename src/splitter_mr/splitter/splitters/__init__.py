@@ -1,4 +1,5 @@
 from .character_splitter import CharacterSplitter
+from .code_splitter import CodeSplitter
 from .header_splitter import HeaderSplitter
 from .html_tag_splitter import HTMLTagSplitter
 from .json_splitter import RecursiveJSONSplitter
@@ -10,6 +11,7 @@ from .word_splitter import WordSplitter
 
 __all__ = [
     CharacterSplitter,
+    CodeSplitter,
     HeaderSplitter,
     HTMLTagSplitter,
     RecursiveCharacterSplitter,

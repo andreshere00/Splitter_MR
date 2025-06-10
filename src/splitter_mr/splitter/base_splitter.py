@@ -36,8 +36,6 @@ class BaseSplitter(ABC):
 
         Args:
             chunk_size (int): Maximum units per chunk (e.g., number of characters).
-            chunk_overlap (Union[int, float]): Overlap between chunks;
-                can be an integer (units) or a float (percentage, 0 <= x < 1).
         """
         self.chunk_size = chunk_size
 

@@ -1,5 +1,6 @@
 import os
 import uuid
+from typing import Any
 
 from markitdown import MarkItDown
 
@@ -11,7 +12,7 @@ class MarkItDownReader(BaseReader):
 
     # TODO: Introduce a __init__ method, if needed
 
-    def read(self, file_path: str, **kwargs) -> ReaderOutput:
+    def read(self, file_path: str, **kwargs: Any) -> ReaderOutput:
         """
         Reads a file and converts its contents to Markdown using MarkItDown, returning
         structured metadata.

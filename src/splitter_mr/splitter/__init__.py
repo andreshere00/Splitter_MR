@@ -1,6 +1,7 @@
 from .base_splitter import BaseSplitter
 from .splitters import (
     CharacterSplitter,
+    CodeSplitter,
     HeaderSplitter,
     HTMLTagSplitter,
     ParagraphSplitter,
@@ -15,6 +16,7 @@ __all__ = [
     CharacterSplitter,
     BaseSplitter,
     WordSplitter,
+    CodeSplitter,
     ParagraphSplitter,
     SentenceSplitter,
     RecursiveCharacterSplitter,
