@@ -2194,11 +2194,11 @@ Generates a list of unique chunk IDs using UUID4, for use in the output.</p>
 <span class="sd">        Abstract method to split input data into chunks.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            reader_output (Dict[str, Any]): Input data, typically from a document reader,</span>
+<span class="sd">            reader_output (ReaderOutput): Input data, typically from a document reader,</span>
 <span class="sd">                including the text to split and any relevant metadata.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Dict[str, Any]: A dictionary containing split chunks and associated metadata.</span>
+<span class="sd">            SplitterOutput: A dictionary containing split chunks and associated metadata.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span>
 
@@ -2339,7 +2339,7 @@ Generates a list of unique chunk IDs using UUID4, for use in the output.</p>
                 <code>reader_output</code>
             </td>
             <td>
-                  <code><span title="Dict">Dict</span>[<span title="str">str</span>, <span title="Any">Any</span>]</code>
+                  <code><a class="autorefs autorefs-internal" title="splitter_mr.schema.ReaderOutput" href="../reader/#splitter_mr.schema.schemas.ReaderOutput">ReaderOutput</a></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -2359,18 +2359,18 @@ including the text to split and any relevant metadata.</p>
     <table>
       <thead>
         <tr>
-          <th>Type</th>
+<th>Name</th>          <th>Type</th>
           <th>Description</th>
         </tr>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td>
+<td><code>SplitterOutput</code></td>            <td>
                   <code><a class="autorefs autorefs-internal" title="splitter_mr.schema.SplitterOutput" href="#splitter_mr.schema.schemas.SplitterOutput">SplitterOutput</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Dict[str, Any]: A dictionary containing split chunks and associated metadata.</p>
+                <p>A dictionary containing split chunks and associated metadata.</p>
               </div>
             </td>
           </tr>
@@ -2398,11 +2398,11 @@ including the text to split and any relevant metadata.</p>
 <span class="sd">    Abstract method to split input data into chunks.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        reader_output (Dict[str, Any]): Input data, typically from a document reader,</span>
+<span class="sd">        reader_output (ReaderOutput): Input data, typically from a document reader,</span>
 <span class="sd">            including the text to split and any relevant metadata.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Dict[str, Any]: A dictionary containing split chunks and associated metadata.</span>
+<span class="sd">        SplitterOutput: A dictionary containing split chunks and associated metadata.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">pass</span>
 </code></pre></div></td></tr></table></div>
