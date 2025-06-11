@@ -280,39 +280,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#output-format" class="md-nav__link">
-    <span class="md-ellipsis">
-      Output Format
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Output Format">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#reader" class="md-nav__link">
-    <span class="md-ellipsis">
-      Reader
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#splitter" class="md-nav__link">
-    <span class="md-ellipsis">
-      Splitter
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -685,39 +652,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#output-format" class="md-nav__link">
-    <span class="md-ellipsis">
-      Output Format
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Output Format">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#reader" class="md-nav__link">
-    <span class="md-ellipsis">
-      Reader
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#splitter" class="md-nav__link">
-    <span class="md-ellipsis">
-      Splitter
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -900,14 +834,14 @@
 </tr>
 <tr>
 <td><strong>Paged Splitter</strong></td>
-<td>Splits text by pages for documents that have page structure. Each chunk contains a specified number of pages, with optional word overlap. <br> <strong>Parameters:</strong> <code>num_pages</code> (pages per chunk), <code>chunk_overlap</code> (overlapping words). <br> <strong>Compatible with:</strong> Word, PDF, Excel, PowerPoint.</td>
+<td><strong>WORK IN PROGRESS</strong>. Splits text by pages for documents that have page structure. Each chunk contains a specified number of pages, with optional word overlap. <br> <strong>Parameters:</strong> <code>num_pages</code> (pages per chunk), <code>chunk_overlap</code> (overlapping words). <br> <strong>Compatible with:</strong> Word, PDF, Excel, PowerPoint.</td>
 </tr>
 <tr>
 <td><strong>Row/Column Splitter</strong></td>
 <td>For tabular formats, splits data by a set number of rows or columns per chunk, with possible overlap. Row-based and column-based splitting are mutually exclusive. <br> <strong>Parameters:</strong> <code>num_rows</code>, <code>num_cols</code> (rows/columns per chunk), <code>overlap</code> (overlapping rows or columns). <br> <strong>Compatible with:</strong> Tabular formats (csv, tsv, parquet, flat json).</td>
 </tr>
 <tr>
-<td>(<strong>WIP</strong>) <strong>Schema Based Splitter</strong></td>
+<td><strong>Schema Based Splitter</strong></td>
 <td><strong>WORK IN PROGRESS</strong>. Splits hierarchical documents (XML, HTML) based on element tags or keys, preserving the schema/structure. Splitting can be done on a specified or inferred parent key/tag. <br> <strong>Parameters:</strong> <code>chunk_size</code> (approx. max chars per chunk), <code>key</code> (optional parent key or tag). <br> <strong>Compatible with:</strong> XML, HTML.</td>
 </tr>
 <tr>
@@ -915,7 +849,7 @@
 <td>Recursively splits JSON documents into smaller sub-structures that preserve the original JSON schema. <br> <strong>Parameters:</strong> <code>max_chunk_size</code> (max chars per chunk), <code>min_chunk_size</code> (min chars per chunk). <br> <strong>Compatible with:</strong> JSON.</td>
 </tr>
 <tr>
-<td>(<strong>WIP</strong>) <strong>Semantic Splitter</strong></td>
+<td><strong>Semantic Splitter</strong></td>
 <td><strong>WORK IN PROGRESS</strong>. Splits text into chunks based on semantic similarity, using an embedding model and a max tokens parameter. Useful for meaningful semantic groupings. <br> <strong>Parameters:</strong> <code>embedding_model</code> (model for embeddings), <code>max_tokens</code> (max tokens per chunk). <br> <strong>Compatible with:</strong> Text.</td>
 </tr>
 <tr>
@@ -937,32 +871,6 @@
 <p><strong>Schema Based Splitter</strong>, <strong>PagedSplitter</strong> amd <strong>Semantic Splitter</strong> are <strong>not fully implemented yet</strong>. 
 Stay aware to updates!</p>
 </div>
-<h3 id="output-format">Output Format<a class="headerlink" href="#output-format" title="Permanent link">&para;</a></h3>
-<h4 id="reader">Reader<a class="headerlink" href="#reader" title="Permanent link">&para;</a></h4>
-<p>The output object is a <code>ReaderOutput</code> dataclass, with the following attributes:</p>
-<div class="highlight"><pre><span></span><code><span class="n">text</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>  <span class="c1"># The extracted text</span>
-<span class="n">document_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># The base name of the file</span>
-<span class="n">document_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>  <span class="c1"># The path to the document</span>
-<span class="n">document_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># The document identifier (given by default by an UUID)</span>
-<span class="n">conversion_method</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># The format in which the file has been converted (markdown, json, etc.)</span>
-<span class="n">reader_method</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>  <span class="c1"># The method used to read the file (markitdown, vanilla, etc.)</span>
-<span class="n">ocr_method</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># The OCR method or VLM used to analyze images (TBD)</span>
-<span class="n">metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>  <span class="c1"># The appended metadata, introduced by the user (TBD)</span>
-</code></pre></div>
-<h4 id="splitter">Splitter<a class="headerlink" href="#splitter" title="Permanent link">&para;</a></h4>
-<p>The output object is a <code>SplitterOutput</code> dataclass, with the following attributes:</p>
-<div class="highlight"><pre><span></span><code><span class="n">chunks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>  <span class="c1"># The extracted chunks from the text</span>
-<span class="n">chunk_id</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>  <span class="c1"># The identifier for the chunks (given by default with uuid)</span>
-<span class="n">document_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>  <span class="c1"># The base name of the file.</span>
-<span class="n">document_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>  <span class="c1"># The path to the document</span>
-<span class="n">document_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>  <span class="c1"># The identifier for that document</span>
-<span class="n">conversion_method</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>  <span class="c1"># The format in which the file has been converted (markdown, json, etc.)</span>
-<span class="n">reader_method</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>  <span class="c1"># The method used to read the file (markitdown, vanilla, etc.)</span>
-<span class="n">ocr_method</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>  <span class="c1"># The OCR method or VLM used to analyze images (TBD)</span>
-<span class="n">split_method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>  <span class="c1"># The splitting strategy used for chunking the document</span>
-<span class="n">split_params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>  <span class="c1"># The specific splitter parameters</span>
-<span class="n">metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>  <span class="c1"># The appended metadata, introduced by the user (TBD)</span>
-</code></pre></div>
 <h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
 <p><img alt="SplitterMR architecture diagram" src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/assets/architecture_splitter_mr.svg" /></p>
 <p><strong>SplitterMR</strong> is designed around a modular pipeline that processes files from raw data all the way to chunked, LLM-ready text.</p>

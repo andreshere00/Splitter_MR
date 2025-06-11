@@ -1848,14 +1848,14 @@
 </tr>
 <tr>
 <td><strong>Paged Splitter</strong></td>
-<td>Splits text by pages for documents that have page structure. Each chunk contains a specified number of pages, with optional word overlap. <br> <strong>Parameters:</strong> <code>num_pages</code> (pages per chunk), <code>chunk_overlap</code> (overlapping words). <br> <strong>Compatible with:</strong> Word, PDF, Excel, PowerPoint.</td>
+<td><strong>WORK IN PROGRESS</strong>. Splits text by pages for documents that have page structure. Each chunk contains a specified number of pages, with optional word overlap. <br> <strong>Parameters:</strong> <code>num_pages</code> (pages per chunk), <code>chunk_overlap</code> (overlapping words). <br> <strong>Compatible with:</strong> Word, PDF, Excel, PowerPoint.</td>
 </tr>
 <tr>
 <td><strong>Row/Column Splitter</strong></td>
 <td>For tabular formats, splits data by a set number of rows or columns per chunk, with possible overlap. Row-based and column-based splitting are mutually exclusive. <br> <strong>Parameters:</strong> <code>num_rows</code>, <code>num_cols</code> (rows/columns per chunk), <code>overlap</code> (overlapping rows or columns). <br> <strong>Compatible with:</strong> Tabular formats (csv, tsv, parquet, flat json).</td>
 </tr>
 <tr>
-<td>(<strong>WIP</strong>) <strong>Schema Based Splitter</strong></td>
+<td><strong>Schema Based Splitter</strong></td>
 <td><strong>WORK IN PROGRESS</strong>. Splits hierarchical documents (XML, HTML) based on element tags or keys, preserving the schema/structure. Splitting can be done on a specified or inferred parent key/tag. <br> <strong>Parameters:</strong> <code>chunk_size</code> (approx. max chars per chunk), <code>key</code> (optional parent key or tag). <br> <strong>Compatible with:</strong> XML, HTML.</td>
 </tr>
 <tr>
@@ -1863,7 +1863,7 @@
 <td>Recursively splits JSON documents into smaller sub-structures that preserve the original JSON schema. <br> <strong>Parameters:</strong> <code>max_chunk_size</code> (max chars per chunk), <code>min_chunk_size</code> (min chars per chunk). <br> <strong>Compatible with:</strong> JSON.</td>
 </tr>
 <tr>
-<td>(<strong>WIP</strong>) <strong>Semantic Splitter</strong></td>
+<td><strong>Semantic Splitter</strong></td>
 <td><strong>WORK IN PROGRESS</strong>. Splits text into chunks based on semantic similarity, using an embedding model and a max tokens parameter. Useful for meaningful semantic groupings. <br> <strong>Parameters:</strong> <code>embedding_model</code> (model for embeddings), <code>max_tokens</code> (max tokens per chunk). <br> <strong>Compatible with:</strong> Text.</td>
 </tr>
 <tr>
