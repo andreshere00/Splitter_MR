@@ -379,6 +379,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Output format">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#splitter_mr.schema.schemas.SplitterOutput" class="md-nav__link">
+    <span class="md-ellipsis">
+      SplitterOutput
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -1164,6 +1179,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Output format">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#splitter_mr.schema.schemas.SplitterOutput" class="md-nav__link">
+    <span class="md-ellipsis">
+      SplitterOutput
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -1855,20 +1885,81 @@
 <p><strong>Schema Based Splitter</strong>, <strong>PagedSplitter</strong> amd <strong>Semantic Splitter</strong> are <strong>not fully implemented yet</strong>. Stay aware to updates.</p>
 </div>
 <h3 id="output-format">Output format<a class="headerlink" href="#output-format" title="Permanent link">&para;</a></h3>
-<p>The output object get from the <code>split</code> method for every Splitter is <code>SplitterOutput</code>, a dictionary with the following structure:</p>
-<div class="highlight"><pre><span></span><code><span class="n">chunks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>  <span class="c1"># The extracted chunks from the text</span>
-<span class="n">chunk_id</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>  <span class="c1"># The identifier for the chunks (given by default with uuid)</span>
-<span class="n">document_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>  <span class="c1"># The base name of the file.</span>
-<span class="n">document_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>  <span class="c1"># The path to the document</span>
-<span class="n">document_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>  <span class="c1"># The identifier for that document</span>
-<span class="n">conversion_method</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>  <span class="c1"># The format in which the file has been converted (markdown, json, etc.)</span>
-<span class="n">reader_method</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>  <span class="c1"># The method used to read the file (markitdown, vanilla, etc.)</span>
-<span class="n">ocr_method</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>  <span class="c1"># The OCR method or VLM used to analyze images (TBD)</span>
-<span class="n">split_method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>  <span class="c1"># The splitting strategy used for chunking the document</span>
-<span class="n">split_params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>  <span class="c1"># The specific splitter parameters</span>
-<span class="n">metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>  <span class="c1"># The appended metadata, introduced by the user (TBD)</span>
-</code></pre></div>
-<h2 id="splitters">Splitters<a class="headerlink" href="#splitters" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="splitter_mr.schema.schemas.SplitterOutput"></a>
+    <div class="doc doc-contents first">
+
+
+        <p>Dataclass defining the output structure for all splitters.</p>
+
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>src/splitter_mr/schema/schemas.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SplitterOutput</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Dataclass defining the output structure for all splitters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">chunks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">chunk_id</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">document_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">document_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">document_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">conversion_method</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">reader_method</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">ocr_method</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">split_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">split_params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="splitters">Splitters<a class="headerlink" href="#splitters" title="Permanent link">&para;</a></h2>
 <h3 id="basesplitter">BaseSplitter<a class="headerlink" href="#basesplitter" title="Permanent link">&para;</a></h3>
 
 
@@ -2275,7 +2366,7 @@ including the text to split and any relevant metadata.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="splitter_mr.schema.SplitterOutput">SplitterOutput</span></code>
+                  <code><a class="autorefs autorefs-internal" title="splitter_mr.schema.SplitterOutput" href="#splitter_mr.schema.schemas.SplitterOutput">SplitterOutput</a></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -2552,7 +2643,10 @@ between chunks.</p>
 <span class="normal">112</span>
 <span class="normal">113</span>
 <span class="normal">114</span>
-<span class="normal">115</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">CharacterSplitter</span><span class="p">(</span><span class="n">BaseSplitter</span><span class="p">):</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">CharacterSplitter</span><span class="p">(</span><span class="n">BaseSplitter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    CharacterSplitter splits a given text into overlapping or non-overlapping chunks</span>
 <span class="sd">    based on a specified number of characters per chunk.</span>
@@ -2588,17 +2682,20 @@ between chunks.</p>
 <span class="sd">                (e.g., &#39;document_name&#39;, &#39;document_path&#39;, etc.).</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            SplitterOutput (Dict[str, Any]): A dictionary with the following keys:</span>
-<span class="sd">                - &#39;chunks&#39;: List[str], the resulting text chunks.</span>
-<span class="sd">                - &#39;chunk_id&#39;: List[str], unique IDs for each chunk.</span>
-<span class="sd">                - &#39;document_name&#39;: Optional[str], source document name.</span>
-<span class="sd">                - &#39;document_path&#39;: str, source document path.</span>
-<span class="sd">                - &#39;document_id&#39;: Optional[str], unique document identifier.</span>
-<span class="sd">                - &#39;conversion_method&#39;: Optional[str], conversion method used.</span>
-<span class="sd">                - &#39;ocr_method&#39;: Optional[str], OCR method used (if any).</span>
-<span class="sd">                - &#39;split_method&#39;: str, the name of the split method (&quot;character_splitter&quot;).</span>
-<span class="sd">                - &#39;split_params&#39;: Dict[str, Any], parameters used for splitting.</span>
-<span class="sd">                - &#39;metadata&#39;: List[dict], per-chunk metadata dictionaries.</span>
+<span class="sd">            SplitterOutput: An object with the following keys:</span>
+
+<span class="sd">                - chunks: List[str], the resulting text chunks.</span>
+<span class="sd">                chunk_id: List[str], unique IDs for each chunk.</span>
+<span class="sd">                document_name: Optional[str], source document name.</span>
+<span class="sd">                document_path: str, source document path.</span>
+<span class="sd">                document_id: Optional[str], unique document identifier.</span>
+<span class="sd">                reader_method (Optional[str]): the method used to read the file or variable </span>
+<span class="sd">                    (e.g., docling, markitdown, etc.).</span>
+<span class="sd">                conversion_method: Optional[str], conversion method used.</span>
+<span class="sd">                ocr_method: Optional[str], OCR method used (if any).</span>
+<span class="sd">                split_method: str, the name of the split method (&quot;character_splitter&quot;).</span>
+<span class="sd">                split_params: Optional[Dict[str, Any]], parameters used for splitting.</span>
+<span class="sd">                metadata&#39;: Optional[Dict[str, Any]], per-chunk metadata dictionaries.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If chunk_overlap is greater than or equal to chunk_size.</span>
@@ -2739,21 +2836,25 @@ unique chunk identifiers, and the split parameters used.</p>
       <tbody>
           <tr class="doc-section-item">
 <td><code>SplitterOutput</code></td>            <td>
-                  <code><span title="Dict">Dict</span>[<span title="str">str</span>, <span title="Any">Any</span>]</code>
+                  <code><a class="autorefs autorefs-internal" title="splitter_mr.schema.SplitterOutput" href="#splitter_mr.schema.schemas.SplitterOutput">SplitterOutput</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>A dictionary with the following keys:
-- 'chunks': List[str], the resulting text chunks.
-- 'chunk_id': List[str], unique IDs for each chunk.
-- 'document_name': Optional[str], source document name.
-- 'document_path': str, source document path.
-- 'document_id': Optional[str], unique document identifier.
-- 'conversion_method': Optional[str], conversion method used.
-- 'ocr_method': Optional[str], OCR method used (if any).
-- 'split_method': str, the name of the split method ("character_splitter").
-- 'split_params': Dict[str, Any], parameters used for splitting.
-- 'metadata': List[dict], per-chunk metadata dictionaries.</p>
+                <p>An object with the following keys:</p>
+<ul>
+<li>chunks: List[str], the resulting text chunks.
+chunk_id: List[str], unique IDs for each chunk.
+document_name: Optional[str], source document name.
+document_path: str, source document path.
+document_id: Optional[str], unique document identifier.
+reader_method (Optional[str]): the method used to read the file or variable 
+    (e.g., docling, markitdown, etc.).
+conversion_method: Optional[str], conversion method used.
+ocr_method: Optional[str], OCR method used (if any).
+split_method: str, the name of the split method ("character_splitter").
+split_params: Optional[Dict[str, Any]], parameters used for splitting.
+metadata': Optional[Dict[str, Any]], per-chunk metadata dictionaries.</li>
+</ul>
               </div>
             </td>
           </tr>
@@ -2893,7 +2994,10 @@ unique chunk identifiers, and the split parameters used.</p>
 <span class="normal">112</span>
 <span class="normal">113</span>
 <span class="normal">114</span>
-<span class="normal">115</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader_output</span><span class="p">:</span> <span class="n">ReaderOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SplitterOutput</span><span class="p">:</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader_output</span><span class="p">:</span> <span class="n">ReaderOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SplitterOutput</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Splits the input text from the reader_output dictionary into character-based chunks.</span>
 
@@ -2908,17 +3012,20 @@ unique chunk identifiers, and the split parameters used.</p>
 <span class="sd">            (e.g., &#39;document_name&#39;, &#39;document_path&#39;, etc.).</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        SplitterOutput (Dict[str, Any]): A dictionary with the following keys:</span>
-<span class="sd">            - &#39;chunks&#39;: List[str], the resulting text chunks.</span>
-<span class="sd">            - &#39;chunk_id&#39;: List[str], unique IDs for each chunk.</span>
-<span class="sd">            - &#39;document_name&#39;: Optional[str], source document name.</span>
-<span class="sd">            - &#39;document_path&#39;: str, source document path.</span>
-<span class="sd">            - &#39;document_id&#39;: Optional[str], unique document identifier.</span>
-<span class="sd">            - &#39;conversion_method&#39;: Optional[str], conversion method used.</span>
-<span class="sd">            - &#39;ocr_method&#39;: Optional[str], OCR method used (if any).</span>
-<span class="sd">            - &#39;split_method&#39;: str, the name of the split method (&quot;character_splitter&quot;).</span>
-<span class="sd">            - &#39;split_params&#39;: Dict[str, Any], parameters used for splitting.</span>
-<span class="sd">            - &#39;metadata&#39;: List[dict], per-chunk metadata dictionaries.</span>
+<span class="sd">        SplitterOutput: An object with the following keys:</span>
+
+<span class="sd">            - chunks: List[str], the resulting text chunks.</span>
+<span class="sd">            chunk_id: List[str], unique IDs for each chunk.</span>
+<span class="sd">            document_name: Optional[str], source document name.</span>
+<span class="sd">            document_path: str, source document path.</span>
+<span class="sd">            document_id: Optional[str], unique document identifier.</span>
+<span class="sd">            reader_method (Optional[str]): the method used to read the file or variable </span>
+<span class="sd">                (e.g., docling, markitdown, etc.).</span>
+<span class="sd">            conversion_method: Optional[str], conversion method used.</span>
+<span class="sd">            ocr_method: Optional[str], OCR method used (if any).</span>
+<span class="sd">            split_method: str, the name of the split method (&quot;character_splitter&quot;).</span>
+<span class="sd">            split_params: Optional[Dict[str, Any]], parameters used for splitting.</span>
+<span class="sd">            metadata&#39;: Optional[Dict[str, Any]], per-chunk metadata dictionaries.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: If chunk_overlap is greater than or equal to chunk_size.</span>
@@ -3229,7 +3336,9 @@ important for context preservation.</p>
 <span class="normal">123</span>
 <span class="normal">124</span>
 <span class="normal">125</span>
-<span class="normal">126</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">WordSplitter</span><span class="p">(</span><span class="n">BaseSplitter</span><span class="p">):</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">WordSplitter</span><span class="p">(</span><span class="n">BaseSplitter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    WordSplitter splits a given text into overlapping or non-overlapping chunks</span>
 <span class="sd">    based on a specified number of words per chunk.</span>
@@ -3263,17 +3372,19 @@ important for context preservation.</p>
 <span class="sd">                (e.g., &#39;document_name&#39;, &#39;document_path&#39;, etc.).</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Dict[str, Any]: A dictionary with the following keys:</span>
-<span class="sd">                - &#39;chunks&#39;: List[str], the resulting text chunks.</span>
-<span class="sd">                - &#39;chunk_id&#39;: List[str], unique IDs for each chunk.</span>
-<span class="sd">                - &#39;document_name&#39;: Optional[str], source document name.</span>
-<span class="sd">                - &#39;document_path&#39;: str, source document path.</span>
-<span class="sd">                - &#39;document_id&#39;: Optional[str], unique document identifier.</span>
-<span class="sd">                - &#39;conversion_method&#39;: Optional[str], conversion method used.</span>
-<span class="sd">                - &#39;ocr_method&#39;: Optional[str], OCR method used (if any).</span>
-<span class="sd">                - &#39;split_method&#39;: str, the name of the split method (&quot;word_splitter&quot;).</span>
-<span class="sd">                - &#39;split_params&#39;: Dict[str, Any], parameters used for splitting.</span>
-<span class="sd">                - &#39;metadata&#39;: Dict[str, Any], document-level metadata.</span>
+<span class="sd">            SplitterOutput: An object with the following keys:</span>
+<span class="sd">                chunks: List[str], the resulting text chunks.</span>
+<span class="sd">                chunk_id: List[str], unique IDs for each chunk.</span>
+<span class="sd">                document_name: Optional[str], source document name.</span>
+<span class="sd">                document_path: str, source document path.</span>
+<span class="sd">                document_id: Optional[str], unique document identifier.</span>
+<span class="sd">                reader_method (Optional[str]): the method used to read the file or variable </span>
+<span class="sd">                    (e.g., docling, markitdown, etc.).</span>
+<span class="sd">                conversion_method: Optional[str], conversion method used.</span>
+<span class="sd">                ocr_method: Optional[str], OCR method used (if any).</span>
+<span class="sd">                split_method: str, the name of the split method (&quot;character_splitter&quot;).</span>
+<span class="sd">                split_params: Optional[Dict[str, Any]], parameters used for splitting.</span>
+<span class="sd">                metadata&#39;: Optional[Dict[str, Any]], per-chunk metadata dictionaries.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If chunk_overlap is greater than or equal to chunk_size.</span>
@@ -3417,28 +3528,30 @@ parameter set at initialization.</p>
     <table>
       <thead>
         <tr>
-          <th>Type</th>
+<th>Name</th>          <th>Type</th>
           <th>Description</th>
         </tr>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td>
-                  <code><span title="splitter_mr.schema.SplitterOutput">SplitterOutput</span></code>
+<td><code>SplitterOutput</code></td>            <td>
+                  <code><a class="autorefs autorefs-internal" title="splitter_mr.schema.SplitterOutput" href="#splitter_mr.schema.schemas.SplitterOutput">SplitterOutput</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Dict[str, Any]: A dictionary with the following keys:
-- 'chunks': List[str], the resulting text chunks.
-- 'chunk_id': List[str], unique IDs for each chunk.
-- 'document_name': Optional[str], source document name.
-- 'document_path': str, source document path.
-- 'document_id': Optional[str], unique document identifier.
-- 'conversion_method': Optional[str], conversion method used.
-- 'ocr_method': Optional[str], OCR method used (if any).
-- 'split_method': str, the name of the split method ("word_splitter").
-- 'split_params': Dict[str, Any], parameters used for splitting.
-- 'metadata': Dict[str, Any], document-level metadata.</p>
+                <p>An object with the following keys:
+chunks: List[str], the resulting text chunks.
+chunk_id: List[str], unique IDs for each chunk.
+document_name: Optional[str], source document name.
+document_path: str, source document path.
+document_id: Optional[str], unique document identifier.
+reader_method (Optional[str]): the method used to read the file or variable 
+    (e.g., docling, markitdown, etc.).
+conversion_method: Optional[str], conversion method used.
+ocr_method: Optional[str], OCR method used (if any).
+split_method: str, the name of the split method ("character_splitter").
+split_params: Optional[Dict[str, Any]], parameters used for splitting.
+metadata': Optional[Dict[str, Any]], per-chunk metadata dictionaries.</p>
               </div>
             </td>
           </tr>
@@ -3593,7 +3706,9 @@ parameter set at initialization.</p>
 <span class="normal">123</span>
 <span class="normal">124</span>
 <span class="normal">125</span>
-<span class="normal">126</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader_output</span><span class="p">:</span> <span class="n">ReaderOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SplitterOutput</span><span class="p">:</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader_output</span><span class="p">:</span> <span class="n">ReaderOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SplitterOutput</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Splits the input text from the reader_output dictionary into word-based chunks.</span>
 
@@ -3607,17 +3722,19 @@ parameter set at initialization.</p>
 <span class="sd">            (e.g., &#39;document_name&#39;, &#39;document_path&#39;, etc.).</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Dict[str, Any]: A dictionary with the following keys:</span>
-<span class="sd">            - &#39;chunks&#39;: List[str], the resulting text chunks.</span>
-<span class="sd">            - &#39;chunk_id&#39;: List[str], unique IDs for each chunk.</span>
-<span class="sd">            - &#39;document_name&#39;: Optional[str], source document name.</span>
-<span class="sd">            - &#39;document_path&#39;: str, source document path.</span>
-<span class="sd">            - &#39;document_id&#39;: Optional[str], unique document identifier.</span>
-<span class="sd">            - &#39;conversion_method&#39;: Optional[str], conversion method used.</span>
-<span class="sd">            - &#39;ocr_method&#39;: Optional[str], OCR method used (if any).</span>
-<span class="sd">            - &#39;split_method&#39;: str, the name of the split method (&quot;word_splitter&quot;).</span>
-<span class="sd">            - &#39;split_params&#39;: Dict[str, Any], parameters used for splitting.</span>
-<span class="sd">            - &#39;metadata&#39;: Dict[str, Any], document-level metadata.</span>
+<span class="sd">        SplitterOutput: An object with the following keys:</span>
+<span class="sd">            chunks: List[str], the resulting text chunks.</span>
+<span class="sd">            chunk_id: List[str], unique IDs for each chunk.</span>
+<span class="sd">            document_name: Optional[str], source document name.</span>
+<span class="sd">            document_path: str, source document path.</span>
+<span class="sd">            document_id: Optional[str], unique document identifier.</span>
+<span class="sd">            reader_method (Optional[str]): the method used to read the file or variable </span>
+<span class="sd">                (e.g., docling, markitdown, etc.).</span>
+<span class="sd">            conversion_method: Optional[str], conversion method used.</span>
+<span class="sd">            ocr_method: Optional[str], OCR method used (if any).</span>
+<span class="sd">            split_method: str, the name of the split method (&quot;character_splitter&quot;).</span>
+<span class="sd">            split_params: Optional[Dict[str, Any]], parameters used for splitting.</span>
+<span class="sd">            metadata&#39;: Optional[Dict[str, Any]], per-chunk metadata dictionaries.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: If chunk_overlap is greater than or equal to chunk_size.</span>
@@ -3980,7 +4097,9 @@ by a number or percentage of words from the end of the previous chunk.</p>
 <span class="normal">153</span>
 <span class="normal">154</span>
 <span class="normal">155</span>
-<span class="normal">156</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SentenceSplitter</span><span class="p">(</span><span class="n">BaseSplitter</span><span class="p">):</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SentenceSplitter</span><span class="p">(</span><span class="n">BaseSplitter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    SentenceSplitter splits a given text into overlapping or non-overlapping chunks,</span>
 <span class="sd">    where each chunk contains a specified number of sentences, and overlap is defined</span>
@@ -4021,17 +4140,19 @@ by a number or percentage of words from the end of the previous chunk.</p>
 <span class="sd">                such as &#39;document_name&#39;, &#39;document_path&#39;, &#39;document_id&#39;, etc.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Dict[str, Any]: A dictionary with the following keys:</span>
-<span class="sd">                - &#39;chunks&#39;: List[str], the resulting text chunks (each chunk is a group of sentences).</span>
-<span class="sd">                - &#39;chunk_id&#39;: List[str], unique IDs for each chunk.</span>
-<span class="sd">                - &#39;document_name&#39;: Optional[str], source document name.</span>
-<span class="sd">                - &#39;document_path&#39;: str, source document path.</span>
-<span class="sd">                - &#39;document_id&#39;: Optional[str], unique document identifier.</span>
-<span class="sd">                - &#39;conversion_method&#39;: Optional[str], conversion method used.</span>
-<span class="sd">                - &#39;ocr_method&#39;: Optional[str], OCR method used (if any).</span>
-<span class="sd">                - &#39;split_method&#39;: str, the name of the split method (&quot;sentence_splitter&quot;).</span>
-<span class="sd">                - &#39;split_params&#39;: Dict[str, Any], parameters used for splitting.</span>
-<span class="sd">                - &#39;metadata&#39;: List[dict], per-chunk metadata dictionaries.</span>
+<span class="sd">            SplitterOutput: An object with the following keys:</span>
+<span class="sd">                chunks: List[str], the resulting text chunks.</span>
+<span class="sd">                chunk_id: List[str], unique IDs for each chunk.</span>
+<span class="sd">                document_name: Optional[str], source document name.</span>
+<span class="sd">                document_path: str, source document path.</span>
+<span class="sd">                document_id: Optional[str], unique document identifier.</span>
+<span class="sd">                reader_method (Optional[str]): the method used to read the file or variable </span>
+<span class="sd">                    (e.g., docling, markitdown, etc.).</span>
+<span class="sd">                conversion_method: Optional[str], conversion method used.</span>
+<span class="sd">                ocr_method: Optional[str], OCR method used (if any).</span>
+<span class="sd">                split_method: str, the name of the split method (&quot;character_splitter&quot;).</span>
+<span class="sd">                split_params: Optional[Dict[str, Any]], parameters used for splitting.</span>
+<span class="sd">                metadata&#39;: Optional[Dict[str, Any]], per-chunk metadata dictionaries.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If `chunk_overlap` is negative or greater than or equal to `chunk_size`.</span>
@@ -4200,28 +4321,30 @@ such as 'document_name', 'document_path', 'document_id', etc.</p>
     <table>
       <thead>
         <tr>
-          <th>Type</th>
+<th>Name</th>          <th>Type</th>
           <th>Description</th>
         </tr>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td>
-                  <code><span title="splitter_mr.schema.SplitterOutput">SplitterOutput</span></code>
+<td><code>SplitterOutput</code></td>            <td>
+                  <code><a class="autorefs autorefs-internal" title="splitter_mr.schema.SplitterOutput" href="#splitter_mr.schema.schemas.SplitterOutput">SplitterOutput</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Dict[str, Any]: A dictionary with the following keys:
-- 'chunks': List[str], the resulting text chunks (each chunk is a group of sentences).
-- 'chunk_id': List[str], unique IDs for each chunk.
-- 'document_name': Optional[str], source document name.
-- 'document_path': str, source document path.
-- 'document_id': Optional[str], unique document identifier.
-- 'conversion_method': Optional[str], conversion method used.
-- 'ocr_method': Optional[str], OCR method used (if any).
-- 'split_method': str, the name of the split method ("sentence_splitter").
-- 'split_params': Dict[str, Any], parameters used for splitting.
-- 'metadata': List[dict], per-chunk metadata dictionaries.</p>
+                <p>An object with the following keys:
+chunks: List[str], the resulting text chunks.
+chunk_id: List[str], unique IDs for each chunk.
+document_name: Optional[str], source document name.
+document_path: str, source document path.
+document_id: Optional[str], unique document identifier.
+reader_method (Optional[str]): the method used to read the file or variable 
+    (e.g., docling, markitdown, etc.).
+conversion_method: Optional[str], conversion method used.
+ocr_method: Optional[str], OCR method used (if any).
+split_method: str, the name of the split method ("character_splitter").
+split_params: Optional[Dict[str, Any]], parameters used for splitting.
+metadata': Optional[Dict[str, Any]], per-chunk metadata dictionaries.</p>
               </div>
             </td>
           </tr>
@@ -4416,7 +4539,9 @@ such as 'document_name', 'document_path', 'document_id', etc.</p>
 <span class="normal">153</span>
 <span class="normal">154</span>
 <span class="normal">155</span>
-<span class="normal">156</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader_output</span><span class="p">:</span> <span class="n">ReaderOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SplitterOutput</span><span class="p">:</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader_output</span><span class="p">:</span> <span class="n">ReaderOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SplitterOutput</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Splits the input text from the `reader_output` dictionary into sentence-based chunks,</span>
 <span class="sd">    allowing for overlap at the word level.</span>
@@ -4433,17 +4558,19 @@ such as 'document_name', 'document_path', 'document_id', etc.</p>
 <span class="sd">            such as &#39;document_name&#39;, &#39;document_path&#39;, &#39;document_id&#39;, etc.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Dict[str, Any]: A dictionary with the following keys:</span>
-<span class="sd">            - &#39;chunks&#39;: List[str], the resulting text chunks (each chunk is a group of sentences).</span>
-<span class="sd">            - &#39;chunk_id&#39;: List[str], unique IDs for each chunk.</span>
-<span class="sd">            - &#39;document_name&#39;: Optional[str], source document name.</span>
-<span class="sd">            - &#39;document_path&#39;: str, source document path.</span>
-<span class="sd">            - &#39;document_id&#39;: Optional[str], unique document identifier.</span>
-<span class="sd">            - &#39;conversion_method&#39;: Optional[str], conversion method used.</span>
-<span class="sd">            - &#39;ocr_method&#39;: Optional[str], OCR method used (if any).</span>
-<span class="sd">            - &#39;split_method&#39;: str, the name of the split method (&quot;sentence_splitter&quot;).</span>
-<span class="sd">            - &#39;split_params&#39;: Dict[str, Any], parameters used for splitting.</span>
-<span class="sd">            - &#39;metadata&#39;: List[dict], per-chunk metadata dictionaries.</span>
+<span class="sd">        SplitterOutput: An object with the following keys:</span>
+<span class="sd">            chunks: List[str], the resulting text chunks.</span>
+<span class="sd">            chunk_id: List[str], unique IDs for each chunk.</span>
+<span class="sd">            document_name: Optional[str], source document name.</span>
+<span class="sd">            document_path: str, source document path.</span>
+<span class="sd">            document_id: Optional[str], unique document identifier.</span>
+<span class="sd">            reader_method (Optional[str]): the method used to read the file or variable </span>
+<span class="sd">                (e.g., docling, markitdown, etc.).</span>
+<span class="sd">            conversion_method: Optional[str], conversion method used.</span>
+<span class="sd">            ocr_method: Optional[str], OCR method used (if any).</span>
+<span class="sd">            split_method: str, the name of the split method (&quot;character_splitter&quot;).</span>
+<span class="sd">            split_params: Optional[Dict[str, Any]], parameters used for splitting.</span>
+<span class="sd">            metadata&#39;: Optional[Dict[str, Any]], per-chunk metadata dictionaries.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: If `chunk_overlap` is negative or greater than or equal to `chunk_size`.</span>
@@ -4799,7 +4926,9 @@ by a number or percentage of words from the end of the previous chunk.</p>
 <span class="normal">124</span>
 <span class="normal">125</span>
 <span class="normal">126</span>
-<span class="normal">127</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ParagraphSplitter</span><span class="p">(</span><span class="n">BaseSplitter</span><span class="p">):</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ParagraphSplitter</span><span class="p">(</span><span class="n">BaseSplitter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ParagraphSplitter splits a given text into overlapping or non-overlapping chunks,</span>
 <span class="sd">    where each chunk contains a specified number of paragraphs, and overlap is defined</span>
@@ -4830,17 +4959,19 @@ by a number or percentage of words from the end of the previous chunk.</p>
 <span class="sd">                and optional document metadata (e.g., &#39;document_name&#39;, &#39;document_path&#39;).</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Dict[str, Any]: Dictionary with the following keys:</span>
-<span class="sd">                - &#39;chunks&#39;: List[str], the resulting text chunks.</span>
-<span class="sd">                - &#39;chunk_id&#39;: List[str], unique IDs for each chunk.</span>
-<span class="sd">                - &#39;document_name&#39;: Optional[str], source document name.</span>
-<span class="sd">                - &#39;document_path&#39;: str, source document path.</span>
-<span class="sd">                - &#39;document_id&#39;: Optional[str], unique document identifier.</span>
-<span class="sd">                - &#39;conversion_method&#39;: Optional[str], conversion method used.</span>
-<span class="sd">                - &#39;ocr_method&#39;: Optional[str], OCR method used (if any).</span>
-<span class="sd">                - &#39;split_method&#39;: str, the name of the split method (&quot;paragraph_splitter&quot;).</span>
-<span class="sd">                - &#39;split_params&#39;: Dict[str, Any], parameters used for splitting.</span>
-<span class="sd">                - &#39;metadata&#39;: List[dict], per-chunk metadata dictionaries.</span>
+<span class="sd">            SplitterOutput: An object with the following keys:</span>
+<span class="sd">                chunks: List[str], the resulting text chunks.</span>
+<span class="sd">                chunk_id: List[str], unique IDs for each chunk.</span>
+<span class="sd">                document_name: Optional[str], source document name.</span>
+<span class="sd">                document_path: str, source document path.</span>
+<span class="sd">                document_id: Optional[str], unique document identifier.</span>
+<span class="sd">                reader_method (Optional[str]): the method used to read the file or variable </span>
+<span class="sd">                    (e.g., docling, markitdown, etc.).</span>
+<span class="sd">                conversion_method: Optional[str], conversion method used.</span>
+<span class="sd">                ocr_method: Optional[str], OCR method used (if any).</span>
+<span class="sd">                split_method: str, the name of the split method (&quot;character_splitter&quot;).</span>
+<span class="sd">                split_params: Optional[Dict[str, Any]], parameters used for splitting.</span>
+<span class="sd">                metadata&#39;: Optional[Dict[str, Any]], per-chunk metadata dictionaries.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If &#39;text&#39; is missing from `reader_output` or is not a string.</span>
@@ -4952,17 +5083,19 @@ by a number or percentage of words from the end of the previous chunk.</p>
             and optional document metadata (e.g., &#39;document_name&#39;, &#39;document_path&#39;).
 
     Returns:
-        Dict[str, Any]: Dictionary with the following keys:
-            - &#39;chunks&#39;: List[str], the resulting text chunks.
-            - &#39;chunk_id&#39;: List[str], unique IDs for each chunk.
-            - &#39;document_name&#39;: Optional[str], source document name.
-            - &#39;document_path&#39;: str, source document path.
-            - &#39;document_id&#39;: Optional[str], unique document identifier.
-            - &#39;conversion_method&#39;: Optional[str], conversion method used.
-            - &#39;ocr_method&#39;: Optional[str], OCR method used (if any).
-            - &#39;split_method&#39;: str, the name of the split method (&quot;paragraph_splitter&quot;).
-            - &#39;split_params&#39;: Dict[str, Any], parameters used for splitting.
-            - &#39;metadata&#39;: List[dict], per-chunk metadata dictionaries.
+        SplitterOutput: An object with the following keys:
+            chunks: List[str], the resulting text chunks.
+            chunk_id: List[str], unique IDs for each chunk.
+            document_name: Optional[str], source document name.
+            document_path: str, source document path.
+            document_id: Optional[str], unique document identifier.
+            reader_method (Optional[str]): the method used to read the file or variable 
+                (e.g., docling, markitdown, etc.).
+            conversion_method: Optional[str], conversion method used.
+            ocr_method: Optional[str], OCR method used (if any).
+            split_method: str, the name of the split method (&quot;character_splitter&quot;).
+            split_params: Optional[Dict[str, Any]], parameters used for splitting.
+            metadata&#39;: Optional[Dict[str, Any]], per-chunk metadata dictionaries.
 
     Raises:
         ValueError: If &#39;text&#39; is missing from `reader_output` or is not a string.
@@ -5090,7 +5223,9 @@ by a number or percentage of words from the end of the previous chunk.</p>
 <span class="normal">124</span>
 <span class="normal">125</span>
 <span class="normal">126</span>
-<span class="normal">127</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader_output</span><span class="p">:</span> <span class="n">ReaderOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SplitterOutput</span><span class="p">:</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader_output</span><span class="p">:</span> <span class="n">ReaderOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SplitterOutput</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Splits text in `reader_output[&#39;text&#39;]` into paragraph-based chunks, with optional word overlap.</span>
 
@@ -5099,17 +5234,19 @@ by a number or percentage of words from the end of the previous chunk.</p>
 <span class="sd">            and optional document metadata (e.g., &#39;document_name&#39;, &#39;document_path&#39;).</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Dict[str, Any]: Dictionary with the following keys:</span>
-<span class="sd">            - &#39;chunks&#39;: List[str], the resulting text chunks.</span>
-<span class="sd">            - &#39;chunk_id&#39;: List[str], unique IDs for each chunk.</span>
-<span class="sd">            - &#39;document_name&#39;: Optional[str], source document name.</span>
-<span class="sd">            - &#39;document_path&#39;: str, source document path.</span>
-<span class="sd">            - &#39;document_id&#39;: Optional[str], unique document identifier.</span>
-<span class="sd">            - &#39;conversion_method&#39;: Optional[str], conversion method used.</span>
-<span class="sd">            - &#39;ocr_method&#39;: Optional[str], OCR method used (if any).</span>
-<span class="sd">            - &#39;split_method&#39;: str, the name of the split method (&quot;paragraph_splitter&quot;).</span>
-<span class="sd">            - &#39;split_params&#39;: Dict[str, Any], parameters used for splitting.</span>
-<span class="sd">            - &#39;metadata&#39;: List[dict], per-chunk metadata dictionaries.</span>
+<span class="sd">        SplitterOutput: An object with the following keys:</span>
+<span class="sd">            chunks: List[str], the resulting text chunks.</span>
+<span class="sd">            chunk_id: List[str], unique IDs for each chunk.</span>
+<span class="sd">            document_name: Optional[str], source document name.</span>
+<span class="sd">            document_path: str, source document path.</span>
+<span class="sd">            document_id: Optional[str], unique document identifier.</span>
+<span class="sd">            reader_method (Optional[str]): the method used to read the file or variable </span>
+<span class="sd">                (e.g., docling, markitdown, etc.).</span>
+<span class="sd">            conversion_method: Optional[str], conversion method used.</span>
+<span class="sd">            ocr_method: Optional[str], OCR method used (if any).</span>
+<span class="sd">            split_method: str, the name of the split method (&quot;character_splitter&quot;).</span>
+<span class="sd">            split_params: Optional[Dict[str, Any]], parameters used for splitting.</span>
+<span class="sd">            metadata&#39;: Optional[Dict[str, Any]], per-chunk metadata dictionaries.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: If &#39;text&#39; is missing from `reader_output` or is not a string.</span>
@@ -5463,7 +5600,9 @@ chunks.</p>
 <span class="normal">135</span>
 <span class="normal">136</span>
 <span class="normal">137</span>
-<span class="normal">138</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">RecursiveCharacterSplitter</span><span class="p">(</span><span class="n">BaseSplitter</span><span class="p">):</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">RecursiveCharacterSplitter</span><span class="p">(</span><span class="n">BaseSplitter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    RecursiveCharacterSplitter splits a given text into overlapping or non-overlapping chunks,</span>
 <span class="sd">    where each chunk is created repeatedly breaking down the text until it reaches the</span>
@@ -5513,17 +5652,19 @@ chunks.</p>
 <span class="sd">                and optional document metadata (e.g., &#39;document_name&#39;, &#39;document_path&#39;, etc.).</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Dict[str, Any]: A dictionary with these keys:</span>
-<span class="sd">                - &#39;chunks&#39;: List[str], the resulting text chunks.</span>
-<span class="sd">                - &#39;chunk_id&#39;: List[str], unique IDs for each chunk.</span>
-<span class="sd">                - &#39;document_name&#39;: Optional[str], source document name.</span>
-<span class="sd">                - &#39;document_path&#39;: str, source document path.</span>
-<span class="sd">                - &#39;document_id&#39;: Optional[str], unique document identifier.</span>
-<span class="sd">                - &#39;conversion_method&#39;: Optional[str], conversion method used.</span>
-<span class="sd">                - &#39;ocr_method&#39;: Optional[str], OCR method used (if any).</span>
-<span class="sd">                - &#39;split_method&#39;: str, the name of the split method (&quot;sentence_splitter&quot;).</span>
-<span class="sd">                - &#39;split_params&#39;: Dict[str, Any], parameters used for splitting.</span>
-<span class="sd">                - &#39;metadata&#39;: List[dict], per-chunk metadata dictionaries.</span>
+<span class="sd">            SplitterOutput: An object with the following keys:</span>
+<span class="sd">                chunks: List[str], the resulting text chunks.</span>
+<span class="sd">                chunk_id: List[str], unique IDs for each chunk.</span>
+<span class="sd">                document_name: Optional[str], source document name.</span>
+<span class="sd">                document_path: str, source document path.</span>
+<span class="sd">                document_id: Optional[str], unique document identifier.</span>
+<span class="sd">                reader_method (Optional[str]): the method used to read the file or variable </span>
+<span class="sd">                    (e.g., docling, markitdown, etc.).</span>
+<span class="sd">                conversion_method: Optional[str], conversion method used.</span>
+<span class="sd">                ocr_method: Optional[str], OCR method used (if any).</span>
+<span class="sd">                split_method: str, the name of the split method (&quot;character_splitter&quot;).</span>
+<span class="sd">                split_params: Optional[Dict[str, Any]], parameters used for splitting.</span>
+<span class="sd">                metadata&#39;: Optional[Dict[str, Any]], per-chunk metadata dictionaries.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If &#39;text&#39; is missing in `reader_output` or is not a string.</span>
@@ -5660,28 +5801,30 @@ and optional document metadata (e.g., 'document_name', 'document_path', etc.).</
     <table>
       <thead>
         <tr>
-          <th>Type</th>
+<th>Name</th>          <th>Type</th>
           <th>Description</th>
         </tr>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td>
-                  <code><span title="splitter_mr.schema.SplitterOutput">SplitterOutput</span></code>
+<td><code>SplitterOutput</code></td>            <td>
+                  <code><a class="autorefs autorefs-internal" title="splitter_mr.schema.SplitterOutput" href="#splitter_mr.schema.schemas.SplitterOutput">SplitterOutput</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Dict[str, Any]: A dictionary with these keys:
-- 'chunks': List[str], the resulting text chunks.
-- 'chunk_id': List[str], unique IDs for each chunk.
-- 'document_name': Optional[str], source document name.
-- 'document_path': str, source document path.
-- 'document_id': Optional[str], unique document identifier.
-- 'conversion_method': Optional[str], conversion method used.
-- 'ocr_method': Optional[str], OCR method used (if any).
-- 'split_method': str, the name of the split method ("sentence_splitter").
-- 'split_params': Dict[str, Any], parameters used for splitting.
-- 'metadata': List[dict], per-chunk metadata dictionaries.</p>
+                <p>An object with the following keys:
+chunks: List[str], the resulting text chunks.
+chunk_id: List[str], unique IDs for each chunk.
+document_name: Optional[str], source document name.
+document_path: str, source document path.
+document_id: Optional[str], unique document identifier.
+reader_method (Optional[str]): the method used to read the file or variable 
+    (e.g., docling, markitdown, etc.).
+conversion_method: Optional[str], conversion method used.
+ocr_method: Optional[str], OCR method used (if any).
+split_method: str, the name of the split method ("character_splitter").
+split_params: Optional[Dict[str, Any]], parameters used for splitting.
+metadata': Optional[Dict[str, Any]], per-chunk metadata dictionaries.</p>
               </div>
             </td>
           </tr>
@@ -5823,7 +5966,9 @@ and optional document metadata (e.g., 'document_name', 'document_path', etc.).</
 <span class="normal">135</span>
 <span class="normal">136</span>
 <span class="normal">137</span>
-<span class="normal">138</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader_output</span><span class="p">:</span> <span class="n">ReaderOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SplitterOutput</span><span class="p">:</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader_output</span><span class="p">:</span> <span class="n">ReaderOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SplitterOutput</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Splits the input text into character-based chunks using a recursive splitting strategy</span>
 <span class="sd">    (via Langchain&#39;s `RecursiveCharacterTextSplitter`), supporting configurable separators,</span>
@@ -5834,17 +5979,19 @@ and optional document metadata (e.g., 'document_name', 'document_path', etc.).</
 <span class="sd">            and optional document metadata (e.g., &#39;document_name&#39;, &#39;document_path&#39;, etc.).</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Dict[str, Any]: A dictionary with these keys:</span>
-<span class="sd">            - &#39;chunks&#39;: List[str], the resulting text chunks.</span>
-<span class="sd">            - &#39;chunk_id&#39;: List[str], unique IDs for each chunk.</span>
-<span class="sd">            - &#39;document_name&#39;: Optional[str], source document name.</span>
-<span class="sd">            - &#39;document_path&#39;: str, source document path.</span>
-<span class="sd">            - &#39;document_id&#39;: Optional[str], unique document identifier.</span>
-<span class="sd">            - &#39;conversion_method&#39;: Optional[str], conversion method used.</span>
-<span class="sd">            - &#39;ocr_method&#39;: Optional[str], OCR method used (if any).</span>
-<span class="sd">            - &#39;split_method&#39;: str, the name of the split method (&quot;sentence_splitter&quot;).</span>
-<span class="sd">            - &#39;split_params&#39;: Dict[str, Any], parameters used for splitting.</span>
-<span class="sd">            - &#39;metadata&#39;: List[dict], per-chunk metadata dictionaries.</span>
+<span class="sd">        SplitterOutput: An object with the following keys:</span>
+<span class="sd">            chunks: List[str], the resulting text chunks.</span>
+<span class="sd">            chunk_id: List[str], unique IDs for each chunk.</span>
+<span class="sd">            document_name: Optional[str], source document name.</span>
+<span class="sd">            document_path: str, source document path.</span>
+<span class="sd">            document_id: Optional[str], unique document identifier.</span>
+<span class="sd">            reader_method (Optional[str]): the method used to read the file or variable </span>
+<span class="sd">                (e.g., docling, markitdown, etc.).</span>
+<span class="sd">            conversion_method: Optional[str], conversion method used.</span>
+<span class="sd">            ocr_method: Optional[str], OCR method used (if any).</span>
+<span class="sd">            split_method: str, the name of the split method (&quot;character_splitter&quot;).</span>
+<span class="sd">            split_params: Optional[Dict[str, Any]], parameters used for splitting.</span>
+<span class="sd">            metadata&#39;: Optional[Dict[str, Any]], per-chunk metadata dictionaries.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: If &#39;text&#39; is missing in `reader_output` or is not a string.</span>
@@ -6208,7 +6355,9 @@ under the hood.</p>
 <span class="normal">168</span>
 <span class="normal">169</span>
 <span class="normal">170</span>
-<span class="normal">171</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">HeaderSplitter</span><span class="p">(</span><span class="n">BaseSplitter</span><span class="p">):</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">HeaderSplitter</span><span class="p">(</span><span class="n">BaseSplitter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Splits a Markdown or HTML document into chunks based on header levels.</span>
 
@@ -6300,17 +6449,19 @@ under the hood.</p>
 <span class="sd">                plus optional document-level metadata such as &#39;document_name&#39; and &#39;document_path&#39;.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Dict[str, Any]: Dictionary following the SplitterOutput schema with keys:</span>
-<span class="sd">                - &#39;chunks&#39;: List of chunked document strings.</span>
-<span class="sd">                - &#39;chunk_id&#39;: List of unique IDs for each chunk.</span>
-<span class="sd">                - &#39;document_name&#39;: Optional source document name.</span>
-<span class="sd">                - &#39;document_path&#39;: Source document path.</span>
-<span class="sd">                - &#39;document_id&#39;: Optional document identifier.</span>
-<span class="sd">                - &#39;conversion_method&#39;: Optional conversion method.</span>
-<span class="sd">                - &#39;ocr_method&#39;: Optional OCR method used.</span>
-<span class="sd">                - &#39;split_method&#39;: Name of the split method (&quot;header_splitter&quot;).</span>
-<span class="sd">                - &#39;split_params&#39;: Parameters used for splitting.</span>
-<span class="sd">                - &#39;metadata&#39;: Document-level metadata dictionary.</span>
+<span class="sd">            SplitterOutput: An object with the following keys:</span>
+<span class="sd">                chunks: List[str], the resulting text chunks.</span>
+<span class="sd">                chunk_id: List[str], unique IDs for each chunk.</span>
+<span class="sd">                document_name: Optional[str], source document name.</span>
+<span class="sd">                document_path: str, source document path.</span>
+<span class="sd">                document_id: Optional[str], unique document identifier.</span>
+<span class="sd">                reader_method (Optional[str]): the method used to read the file or variable </span>
+<span class="sd">                    (e.g., docling, markitdown, etc.).</span>
+<span class="sd">                conversion_method: Optional[str], conversion method used.</span>
+<span class="sd">                ocr_method: Optional[str], OCR method used (if any).</span>
+<span class="sd">                split_method: str, the name of the split method (&quot;character_splitter&quot;).</span>
+<span class="sd">                split_params: Optional[Dict[str, Any]], parameters used for splitting.</span>
+<span class="sd">                metadata&#39;: Optional[Dict[str, Any]], per-chunk metadata dictionaries.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If &#39;text&#39; is missing from reader_output or is empty.</span>
@@ -6532,28 +6683,30 @@ plus optional document-level metadata such as 'document_name' and 'document_path
     <table>
       <thead>
         <tr>
-          <th>Type</th>
+<th>Name</th>          <th>Type</th>
           <th>Description</th>
         </tr>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td>
-                  <code><span title="splitter_mr.schema.SplitterOutput">SplitterOutput</span></code>
+<td><code>SplitterOutput</code></td>            <td>
+                  <code><a class="autorefs autorefs-internal" title="splitter_mr.schema.SplitterOutput" href="#splitter_mr.schema.schemas.SplitterOutput">SplitterOutput</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Dict[str, Any]: Dictionary following the SplitterOutput schema with keys:
-- 'chunks': List of chunked document strings.
-- 'chunk_id': List of unique IDs for each chunk.
-- 'document_name': Optional source document name.
-- 'document_path': Source document path.
-- 'document_id': Optional document identifier.
-- 'conversion_method': Optional conversion method.
-- 'ocr_method': Optional OCR method used.
-- 'split_method': Name of the split method ("header_splitter").
-- 'split_params': Parameters used for splitting.
-- 'metadata': Document-level metadata dictionary.</p>
+                <p>An object with the following keys:
+chunks: List[str], the resulting text chunks.
+chunk_id: List[str], unique IDs for each chunk.
+document_name: Optional[str], source document name.
+document_path: str, source document path.
+document_id: Optional[str], unique document identifier.
+reader_method (Optional[str]): the method used to read the file or variable 
+    (e.g., docling, markitdown, etc.).
+conversion_method: Optional[str], conversion method used.
+ocr_method: Optional[str], OCR method used (if any).
+split_method: str, the name of the split method ("character_splitter").
+split_params: Optional[Dict[str, Any]], parameters used for splitting.
+metadata': Optional[Dict[str, Any]], per-chunk metadata dictionaries.</p>
               </div>
             </td>
           </tr>
@@ -6689,7 +6842,9 @@ plus optional document-level metadata such as 'document_name' and 'document_path
 <span class="normal">168</span>
 <span class="normal">169</span>
 <span class="normal">170</span>
-<span class="normal">171</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader_output</span><span class="p">:</span> <span class="n">ReaderOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SplitterOutput</span><span class="p">:</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader_output</span><span class="p">:</span> <span class="n">ReaderOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SplitterOutput</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Splits a document (Markdown or HTML) into chunks using the configured header levels.</span>
 
@@ -6699,17 +6854,19 @@ plus optional document-level metadata such as 'document_name' and 'document_path
 <span class="sd">            plus optional document-level metadata such as &#39;document_name&#39; and &#39;document_path&#39;.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Dict[str, Any]: Dictionary following the SplitterOutput schema with keys:</span>
-<span class="sd">            - &#39;chunks&#39;: List of chunked document strings.</span>
-<span class="sd">            - &#39;chunk_id&#39;: List of unique IDs for each chunk.</span>
-<span class="sd">            - &#39;document_name&#39;: Optional source document name.</span>
-<span class="sd">            - &#39;document_path&#39;: Source document path.</span>
-<span class="sd">            - &#39;document_id&#39;: Optional document identifier.</span>
-<span class="sd">            - &#39;conversion_method&#39;: Optional conversion method.</span>
-<span class="sd">            - &#39;ocr_method&#39;: Optional OCR method used.</span>
-<span class="sd">            - &#39;split_method&#39;: Name of the split method (&quot;header_splitter&quot;).</span>
-<span class="sd">            - &#39;split_params&#39;: Parameters used for splitting.</span>
-<span class="sd">            - &#39;metadata&#39;: Document-level metadata dictionary.</span>
+<span class="sd">        SplitterOutput: An object with the following keys:</span>
+<span class="sd">            chunks: List[str], the resulting text chunks.</span>
+<span class="sd">            chunk_id: List[str], unique IDs for each chunk.</span>
+<span class="sd">            document_name: Optional[str], source document name.</span>
+<span class="sd">            document_path: str, source document path.</span>
+<span class="sd">            document_id: Optional[str], unique document identifier.</span>
+<span class="sd">            reader_method (Optional[str]): the method used to read the file or variable </span>
+<span class="sd">                (e.g., docling, markitdown, etc.).</span>
+<span class="sd">            conversion_method: Optional[str], conversion method used.</span>
+<span class="sd">            ocr_method: Optional[str], OCR method used (if any).</span>
+<span class="sd">            split_method: str, the name of the split method (&quot;character_splitter&quot;).</span>
+<span class="sd">            split_params: Optional[Dict[str, Any]], parameters used for splitting.</span>
+<span class="sd">            metadata&#39;: Optional[Dict[str, Any]], per-chunk metadata dictionaries.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: If &#39;text&#39; is missing from reader_output or is empty.</span>
@@ -6995,7 +7152,9 @@ arrays, or other separators, until the desired chunk size is reached.</p>
 <span class="normal">104</span>
 <span class="normal">105</span>
 <span class="normal">106</span>
-<span class="normal">107</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">RecursiveJSONSplitter</span><span class="p">(</span><span class="n">BaseSplitter</span><span class="p">):</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">RecursiveJSONSplitter</span><span class="p">(</span><span class="n">BaseSplitter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    JSONRecursiveSplitter splits a JSON string or structure into overlapping or non-overlapping</span>
 <span class="sd">    chunks, using the Langchain RecursiveJsonSplitter. This splitter is designed to recursively</span>
@@ -7025,17 +7184,19 @@ arrays, or other separators, until the desired chunk size is reached.</p>
 <span class="sd">                (e.g., &#39;document_name&#39;, &#39;document_path&#39;, etc.).</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            SplitterOutput (Dict[str, Any]): A dictionary with the following keys:</span>
-<span class="sd">                - &#39;chunks&#39;: List[str], the resulting text chunks.</span>
-<span class="sd">                - &#39;chunk_id&#39;: List[str], unique IDs for each chunk.</span>
-<span class="sd">                - &#39;document_name&#39;: Optional[str], source document name.</span>
-<span class="sd">                - &#39;document_path&#39;: str, source document path.</span>
-<span class="sd">                - &#39;document_id&#39;: Optional[str], unique document identifier.</span>
-<span class="sd">                - &#39;conversion_method&#39;: Optional[str], conversion method used.</span>
-<span class="sd">                - &#39;ocr_method&#39;: Optional[str], OCR method used (if any).</span>
-<span class="sd">                - &#39;split_method&#39;: str, the name of the split method (&quot;json_recursive_splitter&quot;).</span>
-<span class="sd">                - &#39;split_params&#39;: Dict[str, Any], parameters used for splitting.</span>
-<span class="sd">                - &#39;metadata&#39;: List[dict], per-chunk metadata dictionaries.</span>
+<span class="sd">            SplitterOutput: An object with the following keys:</span>
+<span class="sd">                chunks: List[str], the resulting text chunks.</span>
+<span class="sd">                chunk_id: List[str], unique IDs for each chunk.</span>
+<span class="sd">                document_name: Optional[str], source document name.</span>
+<span class="sd">                document_path: str, source document path.</span>
+<span class="sd">                document_id: Optional[str], unique document identifier.</span>
+<span class="sd">                reader_method (Optional[str]): the method used to read the file or variable </span>
+<span class="sd">                    (e.g., docling, markitdown, etc.).</span>
+<span class="sd">                conversion_method: Optional[str], conversion method used.</span>
+<span class="sd">                ocr_method: Optional[str], OCR method used (if any).</span>
+<span class="sd">                split_method: str, the name of the split method (&quot;character_splitter&quot;).</span>
+<span class="sd">                split_params: Optional[Dict[str, Any]], parameters used for splitting.</span>
+<span class="sd">                metadata&#39;: Optional[Dict[str, Any]], per-chunk metadata dictionaries.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If the &#39;text&#39; field is missing from reader_output.</span>
@@ -7167,21 +7328,23 @@ allowing for overlap by number or percentage of characters.</p>
       <tbody>
           <tr class="doc-section-item">
 <td><code>SplitterOutput</code></td>            <td>
-                  <code><span title="Dict">Dict</span>[<span title="str">str</span>, <span title="Any">Any</span>]</code>
+                  <code><a class="autorefs autorefs-internal" title="splitter_mr.schema.SplitterOutput" href="#splitter_mr.schema.schemas.SplitterOutput">SplitterOutput</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>A dictionary with the following keys:
-- 'chunks': List[str], the resulting text chunks.
-- 'chunk_id': List[str], unique IDs for each chunk.
-- 'document_name': Optional[str], source document name.
-- 'document_path': str, source document path.
-- 'document_id': Optional[str], unique document identifier.
-- 'conversion_method': Optional[str], conversion method used.
-- 'ocr_method': Optional[str], OCR method used (if any).
-- 'split_method': str, the name of the split method ("json_recursive_splitter").
-- 'split_params': Dict[str, Any], parameters used for splitting.
-- 'metadata': List[dict], per-chunk metadata dictionaries.</p>
+                <p>An object with the following keys:
+chunks: List[str], the resulting text chunks.
+chunk_id: List[str], unique IDs for each chunk.
+document_name: Optional[str], source document name.
+document_path: str, source document path.
+document_id: Optional[str], unique document identifier.
+reader_method (Optional[str]): the method used to read the file or variable 
+    (e.g., docling, markitdown, etc.).
+conversion_method: Optional[str], conversion method used.
+ocr_method: Optional[str], OCR method used (if any).
+split_method: str, the name of the split method ("character_splitter").
+split_params: Optional[Dict[str, Any]], parameters used for splitting.
+metadata': Optional[Dict[str, Any]], per-chunk metadata dictionaries.</p>
               </div>
             </td>
           </tr>
@@ -7324,7 +7487,9 @@ allowing for overlap by number or percentage of characters.</p>
 <span class="normal">104</span>
 <span class="normal">105</span>
 <span class="normal">106</span>
-<span class="normal">107</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader_output</span><span class="p">:</span> <span class="n">ReaderOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SplitterOutput</span><span class="p">:</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader_output</span><span class="p">:</span> <span class="n">ReaderOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SplitterOutput</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Splits the input JSON text from the reader_output dictionary into recursively chunked pieces,</span>
 <span class="sd">    allowing for overlap by number or percentage of characters.</span>
@@ -7335,17 +7500,19 @@ allowing for overlap by number or percentage of characters.</p>
 <span class="sd">            (e.g., &#39;document_name&#39;, &#39;document_path&#39;, etc.).</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        SplitterOutput (Dict[str, Any]): A dictionary with the following keys:</span>
-<span class="sd">            - &#39;chunks&#39;: List[str], the resulting text chunks.</span>
-<span class="sd">            - &#39;chunk_id&#39;: List[str], unique IDs for each chunk.</span>
-<span class="sd">            - &#39;document_name&#39;: Optional[str], source document name.</span>
-<span class="sd">            - &#39;document_path&#39;: str, source document path.</span>
-<span class="sd">            - &#39;document_id&#39;: Optional[str], unique document identifier.</span>
-<span class="sd">            - &#39;conversion_method&#39;: Optional[str], conversion method used.</span>
-<span class="sd">            - &#39;ocr_method&#39;: Optional[str], OCR method used (if any).</span>
-<span class="sd">            - &#39;split_method&#39;: str, the name of the split method (&quot;json_recursive_splitter&quot;).</span>
-<span class="sd">            - &#39;split_params&#39;: Dict[str, Any], parameters used for splitting.</span>
-<span class="sd">            - &#39;metadata&#39;: List[dict], per-chunk metadata dictionaries.</span>
+<span class="sd">        SplitterOutput: An object with the following keys:</span>
+<span class="sd">            chunks: List[str], the resulting text chunks.</span>
+<span class="sd">            chunk_id: List[str], unique IDs for each chunk.</span>
+<span class="sd">            document_name: Optional[str], source document name.</span>
+<span class="sd">            document_path: str, source document path.</span>
+<span class="sd">            document_id: Optional[str], unique document identifier.</span>
+<span class="sd">            reader_method (Optional[str]): the method used to read the file or variable </span>
+<span class="sd">                (e.g., docling, markitdown, etc.).</span>
+<span class="sd">            conversion_method: Optional[str], conversion method used.</span>
+<span class="sd">            ocr_method: Optional[str], OCR method used (if any).</span>
+<span class="sd">            split_method: str, the name of the split method (&quot;character_splitter&quot;).</span>
+<span class="sd">            split_params: Optional[Dict[str, Any]], parameters used for splitting.</span>
+<span class="sd">            metadata&#39;: Optional[Dict[str, Any]], per-chunk metadata dictionaries.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: If the &#39;text&#39; field is missing from reader_output.</span>
@@ -7662,7 +7829,9 @@ the most frequent and shallowest tag.</p>
 <span class="normal">142</span>
 <span class="normal">143</span>
 <span class="normal">144</span>
-<span class="normal">145</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">HTMLTagSplitter</span><span class="p">(</span><span class="n">BaseSplitter</span><span class="p">):</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">HTMLTagSplitter</span><span class="p">(</span><span class="n">BaseSplitter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    HTMLTagSplitter splits HTML content based on a specified tag.</span>
 <span class="sd">    In case that this tag is not specified, it is automatically detected as</span>
@@ -7688,17 +7857,19 @@ the most frequent and shallowest tag.</p>
 <span class="sd">                (str) and optional document metadata (e.g., &#39;document_name&#39;, &#39;document_path&#39;).</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Dict[str, Any]: A dictionary with the following keys:</span>
-<span class="sd">                - &#39;chunks&#39;: List[str], the resulting text chunks (each chunk is valid HTML).</span>
-<span class="sd">                - &#39;chunk_id&#39;: List[str], unique IDs for each chunk.</span>
-<span class="sd">                - &#39;document_name&#39;: Optional[str], source document name.</span>
-<span class="sd">                - &#39;document_path&#39;: str, source document path.</span>
-<span class="sd">                - &#39;document_id&#39;: Optional[str], unique document identifier.</span>
-<span class="sd">                - &#39;conversion_method&#39;: Optional[str], conversion method used.</span>
-<span class="sd">                - &#39;ocr_method&#39;: Optional[str], OCR method used (if any).</span>
-<span class="sd">                - &#39;split_method&#39;: str, the name of the split method (&quot;html_splitter&quot;).</span>
-<span class="sd">                - &#39;split_params&#39;: Dict[str, Any], parameters used for splitting.</span>
-<span class="sd">                - &#39;metadata&#39;: List[dict], per-chunk metadata dictionaries.</span>
+<span class="sd">            SplitterOutput: An object with the following keys:</span>
+<span class="sd">                chunks: List[str], the resulting text chunks.</span>
+<span class="sd">                chunk_id: List[str], unique IDs for each chunk.</span>
+<span class="sd">                document_name: Optional[str], source document name.</span>
+<span class="sd">                document_path: str, source document path.</span>
+<span class="sd">                document_id: Optional[str], unique document identifier.</span>
+<span class="sd">                reader_method (Optional[str]): the method used to read the file or variable </span>
+<span class="sd">                    (e.g., docling, markitdown, etc.).</span>
+<span class="sd">                conversion_method: Optional[str], conversion method used.</span>
+<span class="sd">                ocr_method: Optional[str], OCR method used (if any).</span>
+<span class="sd">                split_method: str, the name of the split method (&quot;character_splitter&quot;).</span>
+<span class="sd">                split_params: Optional[Dict[str, Any]], parameters used for splitting.</span>
+<span class="sd">                metadata&#39;: Optional[Dict[str, Any]], per-chunk metadata dictionaries.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If `reader_output` does not contain a &#39;text&#39; key or if the HTML cannot be parsed.</span>
@@ -7864,28 +8035,30 @@ automatically selects the most frequent and shallowest tag.</p>
     <table>
       <thead>
         <tr>
-          <th>Type</th>
+<th>Name</th>          <th>Type</th>
           <th>Description</th>
         </tr>
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td>
-                  <code><span title="splitter_mr.schema.SplitterOutput">SplitterOutput</span></code>
+<td><code>SplitterOutput</code></td>            <td>
+                  <code><a class="autorefs autorefs-internal" title="splitter_mr.schema.SplitterOutput" href="#splitter_mr.schema.schemas.SplitterOutput">SplitterOutput</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Dict[str, Any]: A dictionary with the following keys:
-- 'chunks': List[str], the resulting text chunks (each chunk is valid HTML).
-- 'chunk_id': List[str], unique IDs for each chunk.
-- 'document_name': Optional[str], source document name.
-- 'document_path': str, source document path.
-- 'document_id': Optional[str], unique document identifier.
-- 'conversion_method': Optional[str], conversion method used.
-- 'ocr_method': Optional[str], OCR method used (if any).
-- 'split_method': str, the name of the split method ("html_splitter").
-- 'split_params': Dict[str, Any], parameters used for splitting.
-- 'metadata': List[dict], per-chunk metadata dictionaries.</p>
+                <p>An object with the following keys:
+chunks: List[str], the resulting text chunks.
+chunk_id: List[str], unique IDs for each chunk.
+document_name: Optional[str], source document name.
+document_path: str, source document path.
+document_id: Optional[str], unique document identifier.
+reader_method (Optional[str]): the method used to read the file or variable 
+    (e.g., docling, markitdown, etc.).
+conversion_method: Optional[str], conversion method used.
+ocr_method: Optional[str], OCR method used (if any).
+split_method: str, the name of the split method ("character_splitter").
+split_params: Optional[Dict[str, Any]], parameters used for splitting.
+metadata': Optional[Dict[str, Any]], per-chunk metadata dictionaries.</p>
               </div>
             </td>
           </tr>
@@ -8021,7 +8194,9 @@ automatically selects the most frequent and shallowest tag.</p>
 <span class="normal">105</span>
 <span class="normal">106</span>
 <span class="normal">107</span>
-<span class="normal">108</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader_output</span><span class="p">:</span> <span class="n">ReaderOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SplitterOutput</span><span class="p">:</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader_output</span><span class="p">:</span> <span class="n">ReaderOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SplitterOutput</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Splits HTML in `reader_output[&#39;text&#39;]` using the specified tag or, if not specified,</span>
 <span class="sd">    automatically selects the most frequent and shallowest tag.</span>
@@ -8031,17 +8206,19 @@ automatically selects the most frequent and shallowest tag.</p>
 <span class="sd">            (str) and optional document metadata (e.g., &#39;document_name&#39;, &#39;document_path&#39;).</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Dict[str, Any]: A dictionary with the following keys:</span>
-<span class="sd">            - &#39;chunks&#39;: List[str], the resulting text chunks (each chunk is valid HTML).</span>
-<span class="sd">            - &#39;chunk_id&#39;: List[str], unique IDs for each chunk.</span>
-<span class="sd">            - &#39;document_name&#39;: Optional[str], source document name.</span>
-<span class="sd">            - &#39;document_path&#39;: str, source document path.</span>
-<span class="sd">            - &#39;document_id&#39;: Optional[str], unique document identifier.</span>
-<span class="sd">            - &#39;conversion_method&#39;: Optional[str], conversion method used.</span>
-<span class="sd">            - &#39;ocr_method&#39;: Optional[str], OCR method used (if any).</span>
-<span class="sd">            - &#39;split_method&#39;: str, the name of the split method (&quot;html_splitter&quot;).</span>
-<span class="sd">            - &#39;split_params&#39;: Dict[str, Any], parameters used for splitting.</span>
-<span class="sd">            - &#39;metadata&#39;: List[dict], per-chunk metadata dictionaries.</span>
+<span class="sd">        SplitterOutput: An object with the following keys:</span>
+<span class="sd">            chunks: List[str], the resulting text chunks.</span>
+<span class="sd">            chunk_id: List[str], unique IDs for each chunk.</span>
+<span class="sd">            document_name: Optional[str], source document name.</span>
+<span class="sd">            document_path: str, source document path.</span>
+<span class="sd">            document_id: Optional[str], unique document identifier.</span>
+<span class="sd">            reader_method (Optional[str]): the method used to read the file or variable </span>
+<span class="sd">                (e.g., docling, markitdown, etc.).</span>
+<span class="sd">            conversion_method: Optional[str], conversion method used.</span>
+<span class="sd">            ocr_method: Optional[str], OCR method used (if any).</span>
+<span class="sd">            split_method: str, the name of the split method (&quot;character_splitter&quot;).</span>
+<span class="sd">            split_params: Optional[Dict[str, Any]], parameters used for splitting.</span>
+<span class="sd">            metadata&#39;: Optional[Dict[str, Any]], per-chunk metadata dictionaries.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: If `reader_output` does not contain a &#39;text&#39; key or if the HTML cannot be parsed.</span>
@@ -8651,7 +8828,9 @@ rows (not characters).</p>
 <span class="normal">387</span>
 <span class="normal">388</span>
 <span class="normal">389</span>
-<span class="normal">390</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">RowColumnSplitter</span><span class="p">(</span><span class="n">BaseSplitter</span><span class="p">):</span>
+<span class="normal">390</span>
+<span class="normal">391</span>
+<span class="normal">392</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">RowColumnSplitter</span><span class="p">(</span><span class="n">BaseSplitter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    RowColumnSplitter splits tabular data (such as CSV, TSV, Markdown tables, or JSON tables)</span>
 <span class="sd">    into smaller tables based on rows, columns, or by total character size while preserving row integrity.</span>
@@ -8711,17 +8890,19 @@ rows (not characters).</p>
 <span class="sd">                    - Additional document metadata fields (optional).</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            SplitterOutput (Dict[str, Any]): Dictionary with keys:</span>
-<span class="sd">                - &#39;chunks&#39;: List[str], the resulting markdown table chunks.</span>
-<span class="sd">                - &#39;chunk_id&#39;: List[str], unique UUID for each chunk.</span>
-<span class="sd">                - &#39;document_name&#39;: Optional[str], source document name.</span>
-<span class="sd">                - &#39;document_path&#39;: str, source document path.</span>
-<span class="sd">                - &#39;document_id&#39;: Optional[str], unique document identifier.</span>
-<span class="sd">                - &#39;conversion_method&#39;: Optional[str], conversion method used.</span>
-<span class="sd">                - &#39;ocr_method&#39;: Optional[str], OCR method used (if any).</span>
-<span class="sd">                - &#39;split_method&#39;: str, the name of the split method (&quot;row_column_splitter&quot;).</span>
-<span class="sd">                - &#39;split_params&#39;: Dict[str, Any], parameters used for splitting.</span>
-<span class="sd">                - &#39;metadata&#39;: List[dict], per-chunk metadata with rows/cols indices and type.</span>
+<span class="sd">            SplitterOutput: An object with the following keys:</span>
+<span class="sd">                chunks: List[str], the resulting text chunks.</span>
+<span class="sd">                chunk_id: List[str], unique IDs for each chunk.</span>
+<span class="sd">                document_name: Optional[str], source document name.</span>
+<span class="sd">                document_path: str, source document path.</span>
+<span class="sd">                document_id: Optional[str], unique document identifier.</span>
+<span class="sd">                reader_method (Optional[str]): the method used to read the file or variable </span>
+<span class="sd">                    (e.g., docling, markitdown, etc.).</span>
+<span class="sd">                conversion_method: Optional[str], conversion method used.</span>
+<span class="sd">                ocr_method: Optional[str], OCR method used (if any).</span>
+<span class="sd">                split_method: str, the name of the split method (&quot;character_splitter&quot;).</span>
+<span class="sd">                split_params: Optional[Dict[str, Any]], parameters used for splitting.</span>
+<span class="sd">                metadata&#39;: Optional[Dict[str, Any]], per-chunk metadata dictionaries.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If both num_rows and num_cols are set.</span>
@@ -9106,21 +9287,23 @@ cut a row in half. The overlap is always applied in terms of full rows or column
       <tbody>
           <tr class="doc-section-item">
 <td><code>SplitterOutput</code></td>            <td>
-                  <code><span title="typing.Dict">Dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
+                  <code><a class="autorefs autorefs-internal" title="splitter_mr.schema.SplitterOutput" href="#splitter_mr.schema.schemas.SplitterOutput">SplitterOutput</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Dictionary with keys:
-- 'chunks': List[str], the resulting markdown table chunks.
-- 'chunk_id': List[str], unique UUID for each chunk.
-- 'document_name': Optional[str], source document name.
-- 'document_path': str, source document path.
-- 'document_id': Optional[str], unique document identifier.
-- 'conversion_method': Optional[str], conversion method used.
-- 'ocr_method': Optional[str], OCR method used (if any).
-- 'split_method': str, the name of the split method ("row_column_splitter").
-- 'split_params': Dict[str, Any], parameters used for splitting.
-- 'metadata': List[dict], per-chunk metadata with rows/cols indices and type.</p>
+                <p>An object with the following keys:
+chunks: List[str], the resulting text chunks.
+chunk_id: List[str], unique IDs for each chunk.
+document_name: Optional[str], source document name.
+document_path: str, source document path.
+document_id: Optional[str], unique document identifier.
+reader_method (Optional[str]): the method used to read the file or variable 
+    (e.g., docling, markitdown, etc.).
+conversion_method: Optional[str], conversion method used.
+ocr_method: Optional[str], OCR method used (if any).
+split_method: str, the name of the split method ("character_splitter").
+split_params: Optional[Dict[str, Any]], parameters used for splitting.
+metadata': Optional[Dict[str, Any]], per-chunk metadata dictionaries.</p>
               </div>
             </td>
           </tr>
@@ -9359,7 +9542,9 @@ cut a row in half. The overlap is always applied in terms of full rows or column
 <span class="normal">216</span>
 <span class="normal">217</span>
 <span class="normal">218</span>
-<span class="normal">219</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader_output</span><span class="p">:</span> <span class="n">ReaderOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SplitterOutput</span><span class="p">:</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader_output</span><span class="p">:</span> <span class="n">ReaderOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SplitterOutput</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Splits the input tabular data into multiple markdown table chunks according to the specified</span>
 <span class="sd">    chunking strategy. Each output chunk is a complete markdown table with header, and will never</span>
@@ -9373,17 +9558,19 @@ cut a row in half. The overlap is always applied in terms of full rows or column
 <span class="sd">                - Additional document metadata fields (optional).</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        SplitterOutput (Dict[str, Any]): Dictionary with keys:</span>
-<span class="sd">            - &#39;chunks&#39;: List[str], the resulting markdown table chunks.</span>
-<span class="sd">            - &#39;chunk_id&#39;: List[str], unique UUID for each chunk.</span>
-<span class="sd">            - &#39;document_name&#39;: Optional[str], source document name.</span>
-<span class="sd">            - &#39;document_path&#39;: str, source document path.</span>
-<span class="sd">            - &#39;document_id&#39;: Optional[str], unique document identifier.</span>
-<span class="sd">            - &#39;conversion_method&#39;: Optional[str], conversion method used.</span>
-<span class="sd">            - &#39;ocr_method&#39;: Optional[str], OCR method used (if any).</span>
-<span class="sd">            - &#39;split_method&#39;: str, the name of the split method (&quot;row_column_splitter&quot;).</span>
-<span class="sd">            - &#39;split_params&#39;: Dict[str, Any], parameters used for splitting.</span>
-<span class="sd">            - &#39;metadata&#39;: List[dict], per-chunk metadata with rows/cols indices and type.</span>
+<span class="sd">        SplitterOutput: An object with the following keys:</span>
+<span class="sd">            chunks: List[str], the resulting text chunks.</span>
+<span class="sd">            chunk_id: List[str], unique IDs for each chunk.</span>
+<span class="sd">            document_name: Optional[str], source document name.</span>
+<span class="sd">            document_path: str, source document path.</span>
+<span class="sd">            document_id: Optional[str], unique document identifier.</span>
+<span class="sd">            reader_method (Optional[str]): the method used to read the file or variable </span>
+<span class="sd">                (e.g., docling, markitdown, etc.).</span>
+<span class="sd">            conversion_method: Optional[str], conversion method used.</span>
+<span class="sd">            ocr_method: Optional[str], OCR method used (if any).</span>
+<span class="sd">            split_method: str, the name of the split method (&quot;character_splitter&quot;).</span>
+<span class="sd">            split_params: Optional[Dict[str, Any]], parameters used for splitting.</span>
+<span class="sd">            metadata&#39;: Optional[Dict[str, Any]], per-chunk metadata dictionaries.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: If both num_rows and num_cols are set.</span>
@@ -9783,7 +9970,16 @@ Output:
 <span class="normal">109</span>
 <span class="normal">110</span>
 <span class="normal">111</span>
-<span class="normal">112</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">CodeSplitter</span><span class="p">(</span><span class="n">BaseSplitter</span><span class="p">):</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">CodeSplitter</span><span class="p">(</span><span class="n">BaseSplitter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    CodeSplitter recursively splits source code into programmatically meaningful chunks</span>
 <span class="sd">    (functions, classes, methods, etc.) for the given programming language.</span>
@@ -9836,10 +10032,19 @@ Output:
 <span class="sd">                plus optional document metadata.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            SplitterOutput: An object with keys:</span>
-<span class="sd">                - &#39;chunks&#39;: List[str], the resulting code chunks.</span>
-<span class="sd">                - &#39;chunk_id&#39;: List[str], unique IDs for each chunk.</span>
-<span class="sd">                - &#39;document_name&#39;, &#39;document_path&#39;, etc.: Metadata.</span>
+<span class="sd">            SplitterOutput: An object with the following keys:</span>
+<span class="sd">                chunks: List[str], the resulting text chunks.</span>
+<span class="sd">                chunk_id: List[str], unique IDs for each chunk.</span>
+<span class="sd">                document_name: Optional[str], source document name.</span>
+<span class="sd">                document_path: str, source document path.</span>
+<span class="sd">                document_id: Optional[str], unique document identifier.</span>
+<span class="sd">                reader_method (Optional[str]): the method used to read the file or variable </span>
+<span class="sd">                    (e.g., docling, markitdown, etc.).</span>
+<span class="sd">                conversion_method: Optional[str], conversion method used.</span>
+<span class="sd">                ocr_method: Optional[str], OCR method used (if any).</span>
+<span class="sd">                split_method: str, the name of the split method (&quot;character_splitter&quot;).</span>
+<span class="sd">                split_params: Optional[Dict[str, Any]], parameters used for splitting.</span>
+<span class="sd">                metadata&#39;: Optional[Dict[str, Any]], per-chunk metadata dictionaries.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If language is not supported.</span>
@@ -9921,7 +10126,7 @@ programming language, using function/class boundaries where possible.</p>
                 <code>reader_output</code>
             </td>
             <td>
-                  <code><span title="splitter_mr.schema.ReaderOutput">ReaderOutput</span></code>
+                  <code><a class="autorefs autorefs-internal" title="splitter_mr.schema.ReaderOutput" href="../reader/#splitter_mr.schema.schemas.ReaderOutput">ReaderOutput</a></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -9948,14 +10153,23 @@ plus optional document metadata.</p>
       <tbody>
           <tr class="doc-section-item">
 <td><code>SplitterOutput</code></td>            <td>
-                  <code><span title="splitter_mr.schema.SplitterOutput">SplitterOutput</span></code>
+                  <code><a class="autorefs autorefs-internal" title="splitter_mr.schema.SplitterOutput" href="#splitter_mr.schema.schemas.SplitterOutput">SplitterOutput</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>An object with keys:
-- 'chunks': List[str], the resulting code chunks.
-- 'chunk_id': List[str], unique IDs for each chunk.
-- 'document_name', 'document_path', etc.: Metadata.</p>
+                <p>An object with the following keys:
+chunks: List[str], the resulting text chunks.
+chunk_id: List[str], unique IDs for each chunk.
+document_name: Optional[str], source document name.
+document_path: str, source document path.
+document_id: Optional[str], unique document identifier.
+reader_method (Optional[str]): the method used to read the file or variable 
+    (e.g., docling, markitdown, etc.).
+conversion_method: Optional[str], conversion method used.
+ocr_method: Optional[str], OCR method used (if any).
+split_method: str, the name of the split method ("character_splitter").
+split_params: Optional[Dict[str, Any]], parameters used for splitting.
+metadata': Optional[Dict[str, Any]], per-chunk metadata dictionaries.</p>
               </div>
             </td>
           </tr>
@@ -10041,7 +10255,16 @@ plus optional document metadata.</p>
 <span class="normal">109</span>
 <span class="normal">110</span>
 <span class="normal">111</span>
-<span class="normal">112</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader_output</span><span class="p">:</span> <span class="n">ReaderOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SplitterOutput</span><span class="p">:</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader_output</span><span class="p">:</span> <span class="n">ReaderOutput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SplitterOutput</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Splits code in `reader_output[&#39;text&#39;]` according to the syntax of the specified</span>
 <span class="sd">    programming language, using function/class boundaries where possible.</span>
@@ -10051,10 +10274,19 @@ plus optional document metadata.</p>
 <span class="sd">            plus optional document metadata.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        SplitterOutput: An object with keys:</span>
-<span class="sd">            - &#39;chunks&#39;: List[str], the resulting code chunks.</span>
-<span class="sd">            - &#39;chunk_id&#39;: List[str], unique IDs for each chunk.</span>
-<span class="sd">            - &#39;document_name&#39;, &#39;document_path&#39;, etc.: Metadata.</span>
+<span class="sd">        SplitterOutput: An object with the following keys:</span>
+<span class="sd">            chunks: List[str], the resulting text chunks.</span>
+<span class="sd">            chunk_id: List[str], unique IDs for each chunk.</span>
+<span class="sd">            document_name: Optional[str], source document name.</span>
+<span class="sd">            document_path: str, source document path.</span>
+<span class="sd">            document_id: Optional[str], unique document identifier.</span>
+<span class="sd">            reader_method (Optional[str]): the method used to read the file or variable </span>
+<span class="sd">                (e.g., docling, markitdown, etc.).</span>
+<span class="sd">            conversion_method: Optional[str], conversion method used.</span>
+<span class="sd">            ocr_method: Optional[str], OCR method used (if any).</span>
+<span class="sd">            split_method: str, the name of the split method (&quot;character_splitter&quot;).</span>
+<span class="sd">            split_params: Optional[Dict[str, Any]], parameters used for splitting.</span>
+<span class="sd">            metadata&#39;: Optional[Dict[str, Any]], per-chunk metadata dictionaries.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: If language is not supported.</span>
