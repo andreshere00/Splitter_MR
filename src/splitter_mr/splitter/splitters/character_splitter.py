@@ -38,17 +38,7 @@ class CharacterSplitter(BaseSplitter):
                 (e.g., 'document_name', 'document_path', etc.).
 
         Returns:
-            SplitterOutput (Dict[str, Any]): A dictionary with the following keys:
-                - 'chunks': List[str], the resulting text chunks.
-                - 'chunk_id': List[str], unique IDs for each chunk.
-                - 'document_name': Optional[str], source document name.
-                - 'document_path': str, source document path.
-                - 'document_id': Optional[str], unique document identifier.
-                - 'conversion_method': Optional[str], conversion method used.
-                - 'ocr_method': Optional[str], OCR method used (if any).
-                - 'split_method': str, the name of the split method ("character_splitter").
-                - 'split_params': Dict[str, Any], parameters used for splitting.
-                - 'metadata': List[dict], per-chunk metadata dictionaries.
+            SplitterOutput: Dataclass defining the output structure for all splitters.
 
         Raises:
             ValueError: If chunk_overlap is greater than or equal to chunk_size.
@@ -58,17 +48,17 @@ class CharacterSplitter(BaseSplitter):
             from splitter_mr.splitter import CharacterSplitter
 
             # This dictionary has been obtained as the output from a Reader object.
-            reader_output = {
-                "text": "abcdefghijklmnopqrstuvwxyz",
-                "document_name": "doc.txt",
-                "document_path": "/path/doc.txt",
-            }
+            reader_output = ReaderOutput(
+                text: "abcdefghijklmnopqrstuvwxyz",
+                document_name: "doc.txt",
+                document_path: "/path/doc.txt",
+            )
             splitter = CharacterSplitter(chunk_size=5, chunk_overlap=2)
             output = splitter.split(reader_output)
             print(output["chunks"])
             ```
-            ```bash
-            ["abcde", "defgh", "ghijk", ..., "yz"]
+            ```python
+            ['abcde', 'defgh', 'ghijk', ..., 'yz']
             ```
         """
         # Initialize variables

@@ -30,14 +30,7 @@ class MarkItDownReader(BaseReader):
                     Default is an empty list.
 
         Returns:
-            dict: Dictionary containing:
-                - text (str): The Markdown-formatted text content of the file.
-                - document_name (str): The base name of the file.
-                - document_path (str): The absolute path to the file.
-                - document_id (str): Unique identifier for the document.
-                - conversion_method (Optional[str]): The conversion method used.
-                - ocr_method (Optional[str]): The OCR method applied (if any).
-                - metadata (Optionaal[dict]): Additional metadata associated with the document.
+            ReaderOutput: Dataclass defining the output structure for all readers.
 
         Notes:
             - This method uses [MarkItDown](https://github.com/microsoft/markitdown) to convert

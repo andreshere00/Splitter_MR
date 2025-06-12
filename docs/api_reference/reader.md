@@ -29,18 +29,10 @@ Additionally, the file compatibility depending on the Reader class is given by t
 
 ### Output format
 
-`ReaderOutput` is the object get from the `read` method, which is a dictionary with the following attributes:
-
-```python
-text: Optional[str] = ""  # The extracted text
-document_name: Optional[str] = None  # The base name of the file
-document_path: str = ""  # The path to the document
-document_id: Optional[str] = None  # The document identifier (given by default by an UUID)
-conversion_method: Optional[str] = None  # The format in which the file has been converted (markdown, json, etc.)
-reader_method: Optional[str]  # The method used to read the file (markitdown, vanilla, etc.)
-ocr_method: Optional[str] = None  # The OCR method or VLM used to analyze images (TBD)
-metadata: Optional[List[str]]  # The appended metadata, introduced by the user (TBD)
-```
+::: splitter_mr.schema.schemas.ReaderOutput
+    handler: python
+    options:
+      members_order: source
 
 ## Readers
 

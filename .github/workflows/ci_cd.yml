@@ -16,10 +16,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Build docker image for testing
+        run: docker build -f Dockerfile.test -t splitter_mr_tests .
       - name: Run tests and check coverage
-        run: |
-          docker build -f Dockerfile.test -t splitter_mr_tests .
-          docker run splitter_mr_tests
+        run: docker run splitter_mr_tests
 
   deploy:
     runs-on: ubuntu-latest
@@ -29,12 +29,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Deploy Docs
+      - name: Build docker for Docs
+        run: docker build -f Dockerfile.docs -t splitter_mr_docs .
+      - name: Deploy docs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          docker build -f Dockerfile.docs -t splitter_mr_docs .
-          docker run -e GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} splitter_mr_docs
+        run: docker run -e GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} splitter_mr_docs
 
   publish:
     runs-on: ubuntu-latest

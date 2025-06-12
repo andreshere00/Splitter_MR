@@ -46,17 +46,7 @@ class SentenceSplitter(BaseSplitter):
                 such as 'document_name', 'document_path', 'document_id', etc.
 
         Returns:
-            Dict[str, Any]: A dictionary with the following keys:
-                - 'chunks': List[str], the resulting text chunks (each chunk is a group of sentences).
-                - 'chunk_id': List[str], unique IDs for each chunk.
-                - 'document_name': Optional[str], source document name.
-                - 'document_path': str, source document path.
-                - 'document_id': Optional[str], unique document identifier.
-                - 'conversion_method': Optional[str], conversion method used.
-                - 'ocr_method': Optional[str], OCR method used (if any).
-                - 'split_method': str, the name of the split method ("sentence_splitter").
-                - 'split_params': Dict[str, Any], parameters used for splitting.
-                - 'metadata': List[dict], per-chunk metadata dictionaries.
+            SplitterOutput: Dataclass defining the output structure for all splitters.
 
         Raises:
             ValueError: If `chunk_overlap` is negative or greater than or equal to `chunk_size`.
@@ -68,26 +58,22 @@ class SentenceSplitter(BaseSplitter):
 
             # Example input: 7 sentences with varied punctuation
             # This dictionary has been obtained as an output from a Reader class.
-            reader_output = {
-                "text": (
-                    "Hello world! How are you? I am fine. "
-                    "Testing sentence splitting. "
-                    "Short. End! And another?"
-                ),
-                "document_name": "sample.txt",
-                "document_path": "/tmp/sample.txt",
-                "document_id": "123"
-            }
+            reader_output = ReaderOutput(
+                text: "Hello world! How are you? I am fine. Testing sentence splitting. Short. End! And another?",
+                document_name: "sample.txt",
+                document_path: "/tmp/sample.txt",
+                document_id: "123"
+            )
 
             # Split into chunks of 3 sentences each, no overlap
             splitter = SentenceSplitter(chunk_size=3, chunk_overlap=0)
             result = splitter.split(reader_output)
             print(result.chunks)
             ```
-            ```bash
-            ["Hello world! How are you? I am fine.",
-            "Testing sentence splitting. Short. End!",
-            "And another?", ...]
+            ```python
+            ['Hello world! How are you? I am fine.',
+            'Testing sentence splitting. Short. End!',
+            'And another?', ...]
             ```
         """
         # Initialize variables

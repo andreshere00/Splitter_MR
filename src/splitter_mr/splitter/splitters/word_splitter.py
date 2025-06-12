@@ -38,17 +38,7 @@ class WordSplitter(BaseSplitter):
                 (e.g., 'document_name', 'document_path', etc.).
 
         Returns:
-            Dict[str, Any]: A dictionary with the following keys:
-                - 'chunks': List[str], the resulting text chunks.
-                - 'chunk_id': List[str], unique IDs for each chunk.
-                - 'document_name': Optional[str], source document name.
-                - 'document_path': str, source document path.
-                - 'document_id': Optional[str], unique document identifier.
-                - 'conversion_method': Optional[str], conversion method used.
-                - 'ocr_method': Optional[str], OCR method used (if any).
-                - 'split_method': str, the name of the split method ("word_splitter").
-                - 'split_params': Dict[str, Any], parameters used for splitting.
-                - 'metadata': Dict[str, Any], document-level metadata.
+            SplitterOutput: Dataclass defining the output structure for all splitters.
 
         Raises:
             ValueError: If chunk_overlap is greater than or equal to chunk_size.
@@ -57,23 +47,21 @@ class WordSplitter(BaseSplitter):
             ```python
             from splitter_mr.splitter import WordSplitter
 
-            reader_output = {
-                "text": (
-                    "The quick brown fox jumps over the lazy dog. "
-                    "Pack my box with five dozen liquor jugs. "
-                    "Sphinx of black quartz, judge my vow."
-                ),
-                "document_name": "pangrams.txt",
-                "document_path": "/data/pangrams.txt",
-            }
+            reader_output = ReaderOutput(
+                text: "The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs. Sphinx of black quartz, judge my vow.",
+                document_name: "pangrams.txt",
+                document_path: "/data/pangrams.txt",
+            )
 
             # Split into chunks of 5 words, overlapping by 2 words
             splitter = WordSplitter(chunk_size=5, chunk_overlap=2)
             output = splitter.split(reader_output)
             print(output["chunks"])
             ```
-            ```bash
-            ["The quick brown fox jumps", "fox jumps over the lazy", "over the lazy dog. Pack", ...]
+            ```python
+            ['The quick brown fox jumps',
+            'fox jumps over the lazy',
+            'over the lazy dog. Pack', ...]
             ```
         """
         # Initialize variables

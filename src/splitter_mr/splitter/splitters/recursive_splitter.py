@@ -56,17 +56,7 @@ class RecursiveCharacterSplitter(BaseSplitter):
                 and optional document metadata (e.g., 'document_name', 'document_path', etc.).
 
         Returns:
-            Dict[str, Any]: A dictionary with these keys:
-                - 'chunks': List[str], the resulting text chunks.
-                - 'chunk_id': List[str], unique IDs for each chunk.
-                - 'document_name': Optional[str], source document name.
-                - 'document_path': str, source document path.
-                - 'document_id': Optional[str], unique document identifier.
-                - 'conversion_method': Optional[str], conversion method used.
-                - 'ocr_method': Optional[str], OCR method used (if any).
-                - 'split_method': str, the name of the split method ("sentence_splitter").
-                - 'split_params': Dict[str, Any], parameters used for splitting.
-                - 'metadata': List[dict], per-chunk metadata dictionaries.
+            SplitterOutput: Dataclass defining the output structure for all splitters.
 
         Raises:
             ValueError: If 'text' is missing in `reader_output` or is not a string.
@@ -76,19 +66,19 @@ class RecursiveCharacterSplitter(BaseSplitter):
             from splitter_mr.splitter import RecursiveCharacterSplitter
 
             # This dictionary has been obtained as the output from a Reader object.
-            reader_output = {
-                "text": "This is a long document. It will be recursively split into" \
-                        "smaller chunks using the specified separators. Each chunk" \
-                        "will have some overlap with the next.",
-                "document_name": "sample.txt",
-                "document_path": "/tmp/sample.txt"
-            }
+            reader_output = ReaderOutput(
+                text: "This is a long document.
+                It will be recursively split into smaller chunks using the specified separators.
+                Each chunk will have some overlap with the next.",
+                document_name: "sample.txt",
+                document_path: "/tmp/sample.txt"
+            )
 
             splitter = RecursiveCharacterSplitter(chunk_size=40, chunk_overlap=5)
             output = splitter.split(reader_output)
             print(output["chunks"])
             ```
-            ```bash
+            ```python
             ['This is a long document. It will be', 'be recursively split into smaller chunks', ...]
             ```
         """

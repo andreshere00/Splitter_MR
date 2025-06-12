@@ -17,8 +17,10 @@ class BaseReader(ABC):
     strategies.
 
     Methods:
-        read(file_path: str, **kwargs) -> dict:
-            Reads the input file and returns a dictionary with text and metadata.
+        read: Reads the input file and returns a dictionary with text and metadata.
+        is_valid_file_path: Check if a path is valid.
+        is_url: Check if the string provided is an URL.
+        parse_json: Try to parse a JSON object when a dictionary or string is provided.
     """
 
     @staticmethod
@@ -128,14 +130,7 @@ class BaseReader(ABC):
             **kwargs: Additional keyword arguments for implementation-specific options.
 
         Returns:
-            ReaderOutput: An object with these keys:
-                - text (str)
-                - document_name (Optional[str])
-                - document_path (Optional[str])
-                - document_id (Optional[str])
-                - conversion_method (Optional[str])
-                - ocr_method (Optional[str])
-                - metadata (Optional[dict])
+            ReaderOutput: Dataclass defining the output structure for all readers.
 
         Raises:
             ValueError: If the provided string is not valid file path, URL, or parsable content.

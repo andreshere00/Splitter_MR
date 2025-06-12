@@ -1,5 +1,15 @@
 # v0.2.x
 
+## 0.2.2
+
+### Features
+
+- `MarkItDownReader` now supports more file extensions: PDFs, audio, etc.
+
+### Fixes
+
+- Change `docstring` documentation.
+
 ## v0.2.1
 
 ### Features

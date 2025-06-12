@@ -9,6 +9,7 @@ from .splitters import (
     RecursiveJSONSplitter,
     RowColumnSplitter,
     SentenceSplitter,
+    TokenSplitter,
     WordSplitter,
 )
 
@@ -24,4 +25,5 @@ __all__ = [
     HTMLTagSplitter,
     HeaderSplitter,
     RowColumnSplitter,
+    TokenSplitter,
 ]

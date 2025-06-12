@@ -30,27 +30,6 @@ class CodeSplitter(BaseSplitter):
     Notes:
         - Uses Langchain's RecursiveCharacterTextSplitter and its language-aware `from_language` method.
         - See Langchain docs: https://python.langchain.com/docs/how_to/code_splitter/
-
-    Raises:
-        ValueError: If `language` is not supported.
-
-    Example:
-        ```python
-        from splitter_mr.splitter import CodeSplitter
-
-        reader_output = {
-            "text": "def foo():\\n    pass\\n\\nclass Bar:\\n    def baz(self):\\n        pass",
-            "document_name": "example.py",
-            "document_path": "/tmp/example.py"
-        }
-        splitter = CodeSplitter(chunk_size=50, language="python")
-        output = splitter.split(reader_output)
-        print(output.chunks)
-        ```
-        Output:
-        ```python
-        ['def foo():\\n    pass\\n', 'class Bar:\\n    def baz(self):\\n        pass']
-        ```
     """
 
     def __init__(
@@ -71,16 +50,27 @@ class CodeSplitter(BaseSplitter):
                 plus optional document metadata.
 
         Returns:
-            SplitterOutput: An object with keys:
-                - 'chunks': List[str], the resulting code chunks.
-                - 'chunk_id': List[str], unique IDs for each chunk.
-                - 'document_name', 'document_path', etc.: Metadata.
+            SplitterOutput: Dataclass defining the output structure for all splitters.
 
         Raises:
             ValueError: If language is not supported.
 
         Example:
-            (see class-level docstring)
+            ```python
+            from splitter_mr.splitter import CodeSplitter
+
+            reader_output = ReaderOutput(
+                text: "def foo():\\n    pass\\n\\nclass Bar:\\n    def baz(self):\\n        pass",
+                document_name: "example.py",
+                document_path: "/tmp/example.py"
+            )
+            splitter = CodeSplitter(chunk_size=50, language="python")
+            output = splitter.split(reader_output)
+            print(output.chunks)
+            ```
+            ```python
+            ['def foo():\\n    pass\\n', 'class Bar:\\n    def baz(self):\\n        pass']
+            ```
         """
         text = reader_output.text
         chunk_size = self.chunk_size
