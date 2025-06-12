@@ -36,17 +36,7 @@ class ParagraphSplitter(BaseSplitter):
                 and optional document metadata (e.g., 'document_name', 'document_path').
 
         Returns:
-            Dict[str, Any]: Dictionary with the following keys:
-                - 'chunks': List[str], the resulting text chunks.
-                - 'chunk_id': List[str], unique IDs for each chunk.
-                - 'document_name': Optional[str], source document name.
-                - 'document_path': str, source document path.
-                - 'document_id': Optional[str], unique document identifier.
-                - 'conversion_method': Optional[str], conversion method used.
-                - 'ocr_method': Optional[str], OCR method used (if any).
-                - 'split_method': str, the name of the split method ("paragraph_splitter").
-                - 'split_params': Dict[str, Any], parameters used for splitting.
-                - 'metadata': List[dict], per-chunk metadata dictionaries.
+            SplitterOutput: Dataclass defining the output structure for all splitters.
 
         Raises:
             ValueError: If 'text' is missing from `reader_output` or is not a string.
@@ -56,17 +46,17 @@ class ParagraphSplitter(BaseSplitter):
             from splitter_mr.splitter import ParagraphSplitter
 
             # This dictionary has been obtained as the output from a Reader object.
-            reader_output = {
-                "text": "Para 1.\n\nPara 2.\n\nPara 3.",
-                "document_name": "test.txt",
-                "document_path": "/tmp/test.txt"
-            }
-            splitter = ParagraphSplitter(chunk_size=2, chunk_overlap=1, line_break="\n\n")
+            reader_output = ReaderOutput(
+                text: "Para 1.\\n\\nPara 2.\\n\\nPara 3.",
+                document_name: "test.txt",
+                document_path: "/tmp/test.txt"
+            )
+            splitter = ParagraphSplitter(chunk_size=2, chunk_overlap=1, line_break="\\n\\n")
             output = splitter.split(reader_output)
             print(output["chunks"])
             ```
-            ```bash
-            ["Para 1.\n\nPara 2.", "2. Para 3."]
+            ```python
+            ['Para 1.\\n\\nPara 2.', '2. Para 3.']
             ```
         """
         # Intialize variables

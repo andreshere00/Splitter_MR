@@ -29,7 +29,7 @@ repos:
         stages: [pre-commit]
 
       - id: generate-requirements
-        name: Generate requirements.txt for compatibility with CI/CD
+        name: Generate requirements.txt
         entry: bash
         args: ["-c", "uv pip freeze > requirements.txt"]
         language: system

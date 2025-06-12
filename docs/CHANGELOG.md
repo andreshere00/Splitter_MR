@@ -1,5 +1,27 @@
 # v0.2.x
 
+## 0.2.3
+
+### Features
+
+- Implement TokenSplitter: split text into chunks by number of tokens, using selectable tokenizers (`tiktoken`, `spacy`, `nltk`).
+
+### Documentation
+
+- Updated Splitter strategies documentation to include TokenSplitter.
+- Expanded example scripts and test scripts for end-to-end manual and automated verification of all Splitter strategies.
+- Updated main table of splitter strategies to describe TokenSplitter usage and parameters.
+
+## 0.2.2
+
+### Features
+
+- `MarkItDownReader` now supports more file extensions: PDFs, audio, etc.
+
+### Fixes
+
+- Change `docstring` documentation.
+
 ## v0.2.1
 
 ### Features

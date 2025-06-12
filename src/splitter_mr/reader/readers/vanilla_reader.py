@@ -54,14 +54,7 @@ class VanillaReader(BaseReader):
                 text_document (str, optional): Raw text or string content of the document.
 
         Returns:
-            dict: Dictionary with the following keys:
-                - text (str): The extracted or loaded text content.
-                - document_name (str or None): The document's name (base filename, URL, or user-provided).
-                - document_path (str or None): The path or URL of the document, if available.
-                - document_id (str): Unique identifier for the document.
-                - conversion_method (str): Method or strategy used to read/convert the document.
-                - ocr_method (str or None): The OCR method applied (if any).
-                - metadata (dict): Additional document-level metadata.
+            ReaderOutput: Dataclass defining the output structure for all readers.
 
         Raises:
             ValueError: If the provided source is not valid or supported, or if file/URL/JSON detection fails.
@@ -85,7 +78,7 @@ class VanillaReader(BaseReader):
 
             result = reader.read(file_path="data/sample.txt") # Read from file path
             result = reader.read(file_url="https://example.com/sample.txt") # Read from URL
-            result = reader.read(json_document={"text": "Hello, world!"}) # Read from dict
+            result = reader.read(json_document={text: "Hello, world!"}) # Read from dict
             result = reader.read(text_document="Hello, world!") # Read from text
 
             print(result.text)

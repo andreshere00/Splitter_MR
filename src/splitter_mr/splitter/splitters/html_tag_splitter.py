@@ -33,17 +33,7 @@ class HTMLTagSplitter(BaseSplitter):
                 (str) and optional document metadata (e.g., 'document_name', 'document_path').
 
         Returns:
-            Dict[str, Any]: A dictionary with the following keys:
-                - 'chunks': List[str], the resulting text chunks (each chunk is valid HTML).
-                - 'chunk_id': List[str], unique IDs for each chunk.
-                - 'document_name': Optional[str], source document name.
-                - 'document_path': str, source document path.
-                - 'document_id': Optional[str], unique document identifier.
-                - 'conversion_method': Optional[str], conversion method used.
-                - 'ocr_method': Optional[str], OCR method used (if any).
-                - 'split_method': str, the name of the split method ("html_splitter").
-                - 'split_params': Dict[str, Any], parameters used for splitting.
-                - 'metadata': List[dict], per-chunk metadata dictionaries.
+            SplitterOutput: Dataclass defining the output structure for all splitters.
 
         Raises:
             ValueError: If `reader_output` does not contain a 'text' key or if the HTML cannot be parsed.
@@ -53,16 +43,16 @@ class HTMLTagSplitter(BaseSplitter):
             from splitter_mr.splitter import HTMLTagSplitter
 
             # This dictionary has been obtained as the output from a Reader object.
-            reader_output = {
-                "text": "<html><body><div>Chunk 1</div><div>Chunk 2</div></body></html>",
-                "document_name": "example.html",
-                "document_path": "/path/to/example.html"
-            }
+            reader_output = ReaderOutput(
+                text: "<html><body><div>Chunk 1</div><div>Chunk 2</div></body></html>",
+                document_name: "example.html",
+                document_path: "/path/to/example.html"
+            )
             splitter = HTMLTagSplitter(tag="div")
             output = splitter.split(reader_output)
             print(output["chunks"])
             ```
-            ```bash
+            ```python
             [
             '<html><body><div>Chunk 1</div></body></html>',
             '<html><body><div>Chunk 2</div></body></html>'

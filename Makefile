@@ -61,4 +61,4 @@ format:  ## Run pyupgrade, isort, black, and flake8 for code style.
 	@echo "Running black..."
 	uv run --dev black .
 	@echo "Running flake8..."
-	uv run --dev flake8 --max-line-length=101 --ignore=E203,W291,E501 src/
+	uv run --dev flake8 --max-line-length=101 --ignore=E203,W291,E501,W293 src/
