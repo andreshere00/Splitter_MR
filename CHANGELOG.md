@@ -1,34 +1,29 @@
 # v0.2.x
 
-## 0.2.3
+## 0.2.2
 
 ### Features
 
 - Implement `TokenSplitter`: split text into chunks by number of tokens, using selectable tokenizers (`tiktoken`, `spacy`, `nltk`).
+- `MarkItDownReader` now supports more file extensions: PDFs, audio, etc.
 
 ### Fixes
 
 - `HTMLTagSplitter` does not correctly chunking the document as desired.
+- Change `docstring` documentation.
 
 ### Documentation
 
 - Updated Splitter strategies documentation to include `TokenSplitter`.
 - Expanded example scripts and test scripts for end-to-end manual and automated verification of all Splitter strategies.
+- New examples in documentation server for `HTMLTagSplitter`. 
 
 ### Developer Features
 
 - Remove `Pipfile` and `Pipfile.lock`. 
 - Update to [`poethepoet`](https://poethepoet.natn.io/index.html) as task runner tool 
 
-## 0.2.2
-
-### Features
-
-- `MarkItDownReader` now supports more file extensions: PDFs, audio, etc.
-
 ### Fixes
-
-- Change `docstring` documentation.
 
 ## v0.2.1
 
