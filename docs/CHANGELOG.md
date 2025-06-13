@@ -4,13 +4,17 @@
 
 ### Features
 
-- Implement TokenSplitter: split text into chunks by number of tokens, using selectable tokenizers (`tiktoken`, `spacy`, `nltk`).
+- Implement `TokenSplitter`: split text into chunks by number of tokens, using selectable tokenizers (`tiktoken`, `spacy`, `nltk`).
 
 ### Documentation
 
-- Updated Splitter strategies documentation to include TokenSplitter.
+- Updated Splitter strategies documentation to include `TokenSplitter`.
 - Expanded example scripts and test scripts for end-to-end manual and automated verification of all Splitter strategies.
-- Updated main table of splitter strategies to describe TokenSplitter usage and parameters.
+
+### Developer Features
+
+- Remove `Pipfile` and `Pipfile.lock`. 
+- Update to [`poethepoet`](https://poethepoet.natn.io/index.html) as task runner tool 
 
 ## 0.2.2
 
