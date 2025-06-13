@@ -6,6 +6,10 @@
 
 - Implement TokenSplitter: split text into chunks by number of tokens, using selectable tokenizers (`tiktoken`, `spacy`, `nltk`).
 
+### Fixes
+
+- `HTMLTagSplitter` does not correctly chunking the document as desired.
+
 ### Documentation
 
 - Updated Splitter strategies documentation to include TokenSplitter.

@@ -72,6 +72,7 @@ class CodeSplitter(BaseSplitter):
             ['def foo():\\n    pass\\n', 'class Bar:\\n    def baz(self):\\n        pass']
             ```
         """
+        # Initialize variables
         text = reader_output.text
         chunk_size = self.chunk_size
 
@@ -84,8 +85,11 @@ class CodeSplitter(BaseSplitter):
         texts = splitter.create_documents([text])
         chunks = [doc.page_content for doc in texts]
 
+        # Generate chunk_id and append metadata
         chunk_ids = self._generate_chunk_ids(len(chunks))
         metadata = self._default_metadata()
+
+        # Return output
         output = SplitterOutput(
             chunks=chunks,
             chunk_id=chunk_ids,

@@ -93,11 +93,11 @@ class TokenSplitter(BaseSplitter):
             'Pack my box with five dozen liquor jugs.']
             ```
         """
+        # Initialize variables
         text = reader_output.text
         model_name = self.model_name
         TOKENIZERS = ("tiktoken", "spacy", "nltk")
         tokenizer, model = model_name.split("/")
-        print(tokenizer, model)
 
         if tokenizer == "tiktoken":
             splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
@@ -134,7 +134,10 @@ class TokenSplitter(BaseSplitter):
             )
 
         chunks = splitter.split_text(text)
+
+        # Generate chunks_id
         chunk_ids = self._generate_chunk_ids(len(chunks))
+        metadata = self._default_metadata()
 
         # Return output
         output = SplitterOutput(
@@ -152,6 +155,6 @@ class TokenSplitter(BaseSplitter):
                 "model_name": self.model_name,
                 "language": self.language,
             },
-            metadata=reader_output.metadata,
+            metadata=metadata,
         )
         return output
