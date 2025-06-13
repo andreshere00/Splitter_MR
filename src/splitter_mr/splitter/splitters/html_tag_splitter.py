@@ -33,17 +33,7 @@ class HTMLTagSplitter(BaseSplitter):
                 (str) and optional document metadata (e.g., 'document_name', 'document_path').
 
         Returns:
-            Dict[str, Any]: A dictionary with the following keys:
-                - 'chunks': List[str], the resulting text chunks (each chunk is valid HTML).
-                - 'chunk_id': List[str], unique IDs for each chunk.
-                - 'document_name': Optional[str], source document name.
-                - 'document_path': str, source document path.
-                - 'document_id': Optional[str], unique document identifier.
-                - 'conversion_method': Optional[str], conversion method used.
-                - 'ocr_method': Optional[str], OCR method used (if any).
-                - 'split_method': str, the name of the split method ("html_splitter").
-                - 'split_params': Dict[str, Any], parameters used for splitting.
-                - 'metadata': List[dict], per-chunk metadata dictionaries.
+            SplitterOutput: Dataclass defining the output structure for all splitters.
 
         Raises:
             ValueError: If `reader_output` does not contain a 'text' key or if the HTML cannot be parsed.
@@ -53,45 +43,66 @@ class HTMLTagSplitter(BaseSplitter):
             from splitter_mr.splitter import HTMLTagSplitter
 
             # This dictionary has been obtained as the output from a Reader object.
-            reader_output = {
-                "text": "<html><body><div>Chunk 1</div><div>Chunk 2</div></body></html>",
-                "document_name": "example.html",
-                "document_path": "/path/to/example.html"
-            }
+            reader_output = ReaderOutput(
+                text: "<html><body><div>Chunk 1</div><div>Chunk 2</div></body></html>",
+                document_name: "example.html",
+                document_path: "/path/to/example.html"
+            )
             splitter = HTMLTagSplitter(tag="div")
             output = splitter.split(reader_output)
             print(output["chunks"])
             ```
-            ```bash
+            ```python
             [
             '<html><body><div>Chunk 1</div></body></html>',
             '<html><body><div>Chunk 2</div></body></html>'
             ]
             ```
         """
+        # Initialize variables
         html = reader_output.text
         soup = BeautifulSoup(html, "html.parser")
         tag = self.tag or self._auto_tag(soup)
 
+        elements = soup.find_all(tag)
+
         chunks: List[str] = []
-        for el in soup.find_all(tag):
+        buffer = []
+
+        # Helper to build a chunk HTML string from buffer
+        # Split text into smaller JSON chunks
+        def build_chunk_html(elements):
             chunk_soup = BeautifulSoup("", "html.parser")
             html_tag = chunk_soup.new_tag("html")
             body_tag = chunk_soup.new_tag("body")
             html_tag.append(body_tag)
             chunk_soup.append(html_tag)
+            for el in elements:
+                body_tag.append(copy.deepcopy(el))
+            return str(chunk_soup)
 
-            # Use deepcopy to avoid moving elements
-            body_tag.append(copy.deepcopy(el))
-            chunk_str = str(chunk_soup)
-            if len(chunk_str) > self.chunk_size:
-                print(
-                    f"Warning: Chunk exceeds max_chunk_size ({self.chunk_size}); saving anyway"
-                )
+        for el in elements:
+            # Predict the new buffer size if we add this element
+            test_buffer = buffer + [el]
+            test_chunk_str = build_chunk_html(test_buffer)
+            if len(test_chunk_str) > self.chunk_size and buffer:
+                # Flush current buffer as a chunk
+                chunk_str = build_chunk_html(buffer)
+                chunks.append(chunk_str)
+                buffer = [el]  # start new buffer with current element
+            else:
+                buffer.append(el)
+
+        # Don't forget last buffer
+        if buffer:
+            chunk_str = build_chunk_html(buffer)
             chunks.append(chunk_str)
 
+        # Generate chunk_id and append metadata
         chunk_ids = self._generate_chunk_ids(len(chunks))
         metadata = self._default_metadata()
+
+        # Return output
         output = SplitterOutput(
             chunks=chunks,
             chunk_id=chunk_ids,

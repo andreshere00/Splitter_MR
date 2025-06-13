@@ -14,7 +14,8 @@ nav:
   - Examples:
     - Overview: examples/examples.md
     - RecursiveCharacterSplitter: examples/recursive_character_splitter.md
-  - Changelog: CHANGELOG.md
+    - HTMLTagSplitter: examples/html_tag_splitter.md
+  - CHANGELOG: CHANGELOG.md
 
 extra_css:
   - assets/extra.css

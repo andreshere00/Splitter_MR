@@ -16,10 +16,10 @@ class RowColumnSplitter(BaseSplitter):
 
     This splitter supports several modes:
 
-    - By rows: Split the table into chunks with a fixed number of rows, with optional overlapping rows between
-        chunks.
-    - By columns: Split the table into chunks by columns, with optional overlapping columns between chunks.
-    - By chunk size: Split the table into markdown-formatted table chunks, where each chunk contains
+    - **By rows**: Split the table into chunks with a fixed number of rows, with optional overlapping
+        rows between chunks.
+    - **By columns**: Split the table into chunks by columns, with optional overlapping columns between chunks.
+    - **By chunk size**: Split the table into markdown-formatted table chunks, where each chunk contains
         as many complete rows as fit under the specified character limit, optionally overlapping a fixed
         number of rows between chunks.
 
@@ -69,17 +69,7 @@ class RowColumnSplitter(BaseSplitter):
                     - Additional document metadata fields (optional).
 
         Returns:
-            SplitterOutput (Dict[str, Any]): Dictionary with keys:
-                - 'chunks': List[str], the resulting markdown table chunks.
-                - 'chunk_id': List[str], unique UUID for each chunk.
-                - 'document_name': Optional[str], source document name.
-                - 'document_path': str, source document path.
-                - 'document_id': Optional[str], unique document identifier.
-                - 'conversion_method': Optional[str], conversion method used.
-                - 'ocr_method': Optional[str], OCR method used (if any).
-                - 'split_method': str, the name of the split method ("row_column_splitter").
-                - 'split_params': Dict[str, Any], parameters used for splitting.
-                - 'metadata': List[dict], per-chunk metadata with rows/cols indices and type.
+            SplitterOutput: Dataclass defining the output structure for all splitters.
 
         Raises:
             ValueError: If both num_rows and num_cols are set.
@@ -88,18 +78,18 @@ class RowColumnSplitter(BaseSplitter):
 
         Example:
             ```python
-            reader_output = {
-                "text": '| id | name |\\n|----|------|\\n| 1  | A    |\\n| 2  | B    |\\n| 3  | C    |',
-                "conversion_method": "markdown",
-                "document_name": "table.md",
-                "document_path": "/path/table.md",
-            }
+            reader_output = ReaderOutput(
+                text: '| id | name |\\n|----|------|\\n| 1  | A    |\\n| 2  | B    |\\n| 3  | C    |',
+                conversion_method: "markdown",
+                document_name: "table.md",
+                document_path: "/path/table.md",
+            )
             splitter = RowColumnSplitter(chunk_size=80, chunk_overlap=20)
             output = splitter.split(reader_output)
             for chunk in output["chunks"]:
                 print("\\n" + str(chunk) + "\\n")
             ```
-            ```bash
+            ```python
             | id   | name   |
             |------|--------|
             |  1   | A      |
@@ -195,6 +185,7 @@ class RowColumnSplitter(BaseSplitter):
                 else:
                     i = j
 
+        # Generate chunk_id
         chunk_ids = self._generate_chunk_ids(len(chunks))
 
         # Return output

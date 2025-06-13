@@ -13,15 +13,15 @@ class HeaderSplitter(BaseSplitter):
     Splits a Markdown or HTML document into chunks based on header levels.
 
     This splitter automatically adapts the provided list of semantic header names
-    (e.g., ["Header 1", "Header 2"]) into the appropriate header tokens for either
-    Markdown (e.g., "#", "##") or HTML (e.g., "h1", "h2"), depending on the document type.
+    (e.g., `["Header 1", "Header 2"]`) into the appropriate header tokens for either
+    Markdown (e.g., `"#", "##"`) or HTML (e.g., `"h1", "h2"`), depending on the document type.
     It then uses Langchain's `MarkdownHeaderTextSplitter` or `HTMLHeaderTextSplitter`
     under the hood.
 
     Args:
         chunk_size (int, optional): Unused, kept for compatibility with BaseSplitter API.
         headers_to_split_on (Optional[List[str]]):
-            List of semantic header names to split on. For example: ["Header 1", "Header 2", "Header 3"]
+            List of semantic header names to split on. For example: `["Header 1", "Header 2", "Header 3"]`
 
     Notes:
         - See [Langchain MarkdownHeaderTextSplitter](https://api.python.langchain.com/en/latest/markdown/langchain_text_splitters.markdown.MarkdownHeaderTextSplitter.html)
@@ -33,14 +33,6 @@ class HeaderSplitter(BaseSplitter):
         chunk_size: int = 1000,
         headers_to_split_on: Optional[List[str]] = ["Header 1", "Header 2", "Header 3"],
     ):
-        """
-        Initializes a HeaderSplitter instance.
-
-        Args:
-            chunk_size (int, optional): Unused parameter. Present for API compatibility.
-            headers_to_split_on (Optional[List[str]]):
-                List of header names such as ["Header 1", "Header 2"]. Defaults to first three levels.
-        """
         super().__init__(chunk_size)
         self.headers_to_split_on = headers_to_split_on
 
@@ -100,17 +92,7 @@ class HeaderSplitter(BaseSplitter):
                 plus optional document-level metadata such as 'document_name' and 'document_path'.
 
         Returns:
-            Dict[str, Any]: Dictionary following the SplitterOutput schema with keys:
-                - 'chunks': List of chunked document strings.
-                - 'chunk_id': List of unique IDs for each chunk.
-                - 'document_name': Optional source document name.
-                - 'document_path': Source document path.
-                - 'document_id': Optional document identifier.
-                - 'conversion_method': Optional conversion method.
-                - 'ocr_method': Optional OCR method used.
-                - 'split_method': Name of the split method ("header_splitter").
-                - 'split_params': Parameters used for splitting.
-                - 'metadata': Document-level metadata dictionary.
+            SplitterOutput: Dataclass defining the output structure for all splitters.
 
         Raises:
             ValueError: If 'text' is missing from reader_output or is empty.
@@ -120,16 +102,20 @@ class HeaderSplitter(BaseSplitter):
             ```python
             from splitter_mr.splitter import HeaderSplitter
 
-            reader_output = {
-                "text": "# Title\\n\\n## Subtitle\\nText...",
-                "document_name": "doc.md",
-                "document_path": "/path/doc.md"
-            }
+            reader_output = ReaderOutput(
+                text: "# Title\\n\\n## Subtitle\\nText...",
+                document_name: "doc.md",
+                document_path: "/path/doc.md"
+            )
             splitter = HeaderSplitter(headers_to_split_on=["Header 1", "Header 2"])
             output = splitter.split(reader_output)
             print(output["chunks"])
             ```
+            ```python
+            ['# Title', '## Subtitle \n Text ...']
+            ```
         """
+        # Initialize variables
         text = reader_output.text
         if not text:
             raise ValueError("reader_output must contain non-empty 'text' field.")
@@ -150,9 +136,12 @@ class HeaderSplitter(BaseSplitter):
 
         docs = splitter.split_text(text)
         chunks = [doc.page_content for doc in docs]
+
+        # Generate chunk_id and append metadata
         chunk_ids = self._generate_chunk_ids(len(chunks))
         metadata = self._default_metadata()
 
+        # Return output
         output = SplitterOutput(
             chunks=chunks,
             chunk_id=chunk_ids,

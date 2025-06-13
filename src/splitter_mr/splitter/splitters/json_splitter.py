@@ -36,17 +36,7 @@ class RecursiveJSONSplitter(BaseSplitter):
                 (e.g., 'document_name', 'document_path', etc.).
 
         Returns:
-            SplitterOutput (Dict[str, Any]): A dictionary with the following keys:
-                - 'chunks': List[str], the resulting text chunks.
-                - 'chunk_id': List[str], unique IDs for each chunk.
-                - 'document_name': Optional[str], source document name.
-                - 'document_path': str, source document path.
-                - 'document_id': Optional[str], unique document identifier.
-                - 'conversion_method': Optional[str], conversion method used.
-                - 'ocr_method': Optional[str], OCR method used (if any).
-                - 'split_method': str, the name of the split method ("json_recursive_splitter").
-                - 'split_params': Dict[str, Any], parameters used for splitting.
-                - 'metadata': List[dict], per-chunk metadata dictionaries.
+            SplitterOutput: Dataclass defining the output structure for all splitters.
 
         Raises:
             ValueError: If the 'text' field is missing from reader_output.
@@ -57,20 +47,22 @@ class RecursiveJSONSplitter(BaseSplitter):
             from splitter_mr.splitter import RecursiveJSONSplitter
 
             # This dictionary has been obtained from `VanillaReader`
-            reader_output = {
-                "text": '{"company": {"name": "TechCorp", "employees": [{"name": "Alice"}, {"name": "Bob"}]}}'
-                "document_name": "company_data.json",
-                "document_path": "/data/company_data.json",
-                "document_id": "doc123",
-                "conversion_method": "vanilla",
-                "ocr_method": None
-            }
+            reader_output = ReaderOutput(
+                text: '{"company": {"name": "TechCorp", "employees": [{"name": "Alice"}, {"name": "Bob"}]}}'
+                document_name: "company_data.json",
+                document_path: "/data/company_data.json",
+                document_id: "doc123",
+                conversion_method: "vanilla",
+                ocr_method: None
+            )
             splitter = RecursiveJSONSplitter(chunk_size=100, min_chunk_size=20)
             output = splitter.split(reader_output)
             print(output["chunks"])
             ```
-            ```bash
-            ['{"company": {"name": "TechCorp"}}', '{"employees": [{"name": "Alice"}, {"name": "Bob"}]}']
+            ```python
+            ['{"company": {"name": "TechCorp"}}',
+            '{"employees": [{"name": "Alice"},
+            {"name": "Bob"}]}']
             ```
         """
         # Initialize variables

@@ -19,24 +19,15 @@ class BaseSplitter(ABC):
         chunk_size (int): The maximum number of units (e.g., characters, words, etc.) per chunk.
 
     Methods:
-        split(reader_output: Dict[str, Any]) -> Dict[str, Any]:
-            Abstract method. Should be implemented by all subclasses to perform the actual
+        split: Abstract method. Should be implemented by all subclasses to perform the actual
             splitting logic.
 
-        _generate_chunk_ids(num_chunks: int) -> List[str]:
-            Generates a list of unique chunk IDs using UUID4, for use in the output.
+        _generate_chunk_ids: Generates a list of unique chunk IDs using UUID4, for use in the output.
 
-        _default_metadata() -> dict:
-            Returns a default (empty) metadata dictionary, which can be extended by subclasses.
+        _default_metadata: Returns a default (empty) metadata dictionary, which can be extended by subclasses.
     """
 
     def __init__(self, chunk_size: int = 1000):
-        """
-        Initialize the BaseSplitter.
-
-        Args:
-            chunk_size (int): Maximum units per chunk (e.g., number of characters).
-        """
         self.chunk_size = chunk_size
 
     @abstractmethod
@@ -45,11 +36,11 @@ class BaseSplitter(ABC):
         Abstract method to split input data into chunks.
 
         Args:
-            reader_output (Dict[str, Any]): Input data, typically from a document reader,
+            reader_output (ReaderOutput): Input data, typically from a document reader,
                 including the text to split and any relevant metadata.
 
         Returns:
-            Dict[str, Any]: A dictionary containing split chunks and associated metadata.
+            SplitterOutput: A dictionary containing split chunks and associated metadata.
         """
         pass
 

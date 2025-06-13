@@ -7,6 +7,7 @@ from .paragraph_splitter import ParagraphSplitter
 from .recursive_splitter import RecursiveCharacterSplitter
 from .row_column_splitter import RowColumnSplitter
 from .sentence_splitter import SentenceSplitter
+from .token_splitter import TokenSplitter
 from .word_splitter import WordSplitter
 
 __all__ = [
@@ -20,4 +21,5 @@ __all__ = [
     ParagraphSplitter,
     SentenceSplitter,
     WordSplitter,
+    TokenSplitter,
 ]
