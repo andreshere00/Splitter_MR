@@ -185,6 +185,7 @@ class RowColumnSplitter(BaseSplitter):
                 else:
                     i = j
 
+        # Generate chunk_id
         chunk_ids = self._generate_chunk_ids(len(chunks))
 
         # Return output

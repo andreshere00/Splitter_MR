@@ -115,6 +115,7 @@ class HeaderSplitter(BaseSplitter):
             ['# Title', '## Subtitle \n Text ...']
             ```
         """
+        # Initialize variables
         text = reader_output.text
         if not text:
             raise ValueError("reader_output must contain non-empty 'text' field.")
@@ -135,9 +136,12 @@ class HeaderSplitter(BaseSplitter):
 
         docs = splitter.split_text(text)
         chunks = [doc.page_content for doc in docs]
+
+        # Generate chunk_id and append metadata
         chunk_ids = self._generate_chunk_ids(len(chunks))
         metadata = self._default_metadata()
 
+        # Return output
         output = SplitterOutput(
             chunks=chunks,
             chunk_id=chunk_ids,

@@ -31,12 +31,11 @@ def test_split_with_explicit_tag(reader_output):
     splitter = HTMLTagSplitter(chunk_size=1000, tag="div")
     result = splitter.split(reader_output)
     assert hasattr(result, "chunks")
-    # There are three divs, so three chunks
-    assert len(result.chunks) == 3
-    # Each chunk should contain exactly one <div>
-    for chunk in result.chunks:
-        assert chunk.count("<div>") == 1
-        assert chunk.count("<p>") == 1
+    # All three <div> fit in one chunk under chunk_size
+    assert len(result.chunks) == 1
+    # The single chunk contains all three divs
+    assert result.chunks[0].count("<div>") == 3
+    assert result.chunks[0].count("<p>") == 3
     assert result.split_params["tag"] == "div"
     assert result.split_method == "html_tag_splitter"
 
@@ -44,10 +43,9 @@ def test_split_with_explicit_tag(reader_output):
 def test_split_with_auto_tag(reader_output):
     splitter = HTMLTagSplitter(chunk_size=1000)  # No tag specified
     result = splitter.split(reader_output)
-    # Should auto-detect <div> as most frequent/shallowest
-    assert len(result.chunks) == 3
-    for chunk in result.chunks:
-        assert "<div>" in chunk
+    # All three <div> fit in one chunk under chunk_size
+    assert len(result.chunks) == 1
+    assert result.chunks[0].count("<div>") == 3
     assert result.split_params["tag"] == "div"
 
 
