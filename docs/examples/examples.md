@@ -8,6 +8,12 @@ This section illustrates some use cases with **Splitter_MR** to read documents a
 
 How to divide the text recursively by group of words and sentences.
 
+## HTML Tag splitting
+
+### [HTMLTagSplitter](./html_tag_splitter.md)
+
+How to divide the text by tags conserving the HTML schema.
+
 !!! note
     
     👨‍💻 **Work-in-progress...** More examples to come!

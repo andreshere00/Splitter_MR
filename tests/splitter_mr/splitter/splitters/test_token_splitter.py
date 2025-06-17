@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from splitter_mr.schema import ReaderOutput, SplitterOutput
+from splitter_mr.schema import ReaderOutput
 from splitter_mr.splitter import TokenSplitter
 
 

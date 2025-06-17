@@ -23,6 +23,7 @@ cymem==2.0.11
 defusedxml==0.7.1
 dill==0.4.0
 distlib==0.3.9
+distro==1.9.0
 docling==2.36.1
 docling-core==2.33.1
 docling-ibm-models==3.4.4
@@ -54,6 +55,7 @@ jaraco-classes==3.4.0
 jaraco-context==6.0.1
 jaraco-functools==4.1.0
 jinja2==3.1.6
+jiter==0.10.0
 joblib==1.5.1
 jsonlines==3.1.0
 jsonpatch==1.33
@@ -104,6 +106,7 @@ nltk==3.9.1
 nodeenv==1.9.1
 numpy==2.3.0
 onnxruntime==1.22.0
+openai==1.88.0
 opencv-python-headless==4.11.0.86
 openpyxl==3.1.5
 orjson==3.10.18

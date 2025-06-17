@@ -81,11 +81,7 @@ SplitterOutput(
 )
 ```
 
----
-
-## Step 3: Visualize the Chunks
-
-To see each chunk, simply iterate through them:
+To visualize each chunk, simply iterate through them:
 
 ```python
 for idx, chunk in enumerate(splitter_output.chunks):
