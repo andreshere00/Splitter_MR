@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 
 from openai import AzureOpenAI
 
@@ -64,17 +65,13 @@ class AzureOpenAIVisionModel(BaseModel):
         )
         self.model_name = model_name
 
-    def get_model_name(self) -> str:
-        """Returns the deployed vision model name."""
-        return self.model_name
-
-    def get_client(self):
-        """Returns the Azure OpenAI client instance."""
+    def get_client(self) -> AzureOpenAI:
+        """Returns the AzureOpenAI client instance."""
         return self.client
 
     def extract_text(
         self,
-        file_b64: str,
+        file: Optional[bytes],
         prompt: str = "Extract the text from this resource in the original language. Return the result in markdown code format.",
         **parameters,
     ) -> str:
@@ -82,7 +79,7 @@ class AzureOpenAIVisionModel(BaseModel):
         Extracts text from a base64 image using Azure's Responses API.
 
         Args:
-            file_b64 (str): Base64‑encoded image string.
+            file (bytes): Base64‑encoded image string.
             prompt (str): Instruction prompt for text extraction.
             **parameters: Extra params passed to client.responses.create().
 
@@ -95,42 +92,7 @@ class AzureOpenAIVisionModel(BaseModel):
                 {"type": "input_text", "text": prompt},
                 {
                     "type": "input_image",
-                    "image_url": f"data:image/jpeg;base64,{file_b64}",
-                },
-            ],
-        }
-        response = self.client.responses.create(
-            model=self.model_name, input=[payload], **parameters
-        )
-        return response.output[0].content[0].text
-
-    def analyze_resource(
-        self,
-        file_b64: str,
-        context: str,
-        prompt: str = "Analyze the text from this resource in the original language. Be concise, adapting the analysis to the style and tone from the context. Return the result in markdown code format.",
-        **parameters,
-    ) -> str:
-        """
-        Analyzes a base64 image in context using Azure's Responses API.
-
-        Args:
-            file_b64 (str): Base64‑encoded image string.
-            context (str): Contextual text surrounding where the image appears.
-            prompt (str): Instruction prompt for analysis.
-            **parameters: Extra params passed to client.responses.create().
-
-        Returns:
-            str: The model’s analysis output.
-        """
-        combined = f"{prompt}\n\nContext:\n{context}"
-        payload = {
-            "role": "user",
-            "content": [
-                {"type": "input_text", "text": combined},
-                {
-                    "type": "input_image",
-                    "image_url": f"data:image/jpeg;base64,{file_b64}",
+                    "image_url": f"data:image/jpeg;base64,{file}",
                 },
             ],
         }

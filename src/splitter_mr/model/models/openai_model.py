@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 
 from openai import OpenAI
 
@@ -30,17 +31,13 @@ class OpenAIVisionModel(BaseModel):
         self.client = OpenAI(api_key=api_key)
         self.model_name = model_name
 
-    def get_model_name(self) -> str:
-        """Returns the name of the vision-capable model in use."""
-        return self.model_name
-
-    def get_client(self):
+    def get_client(self) -> OpenAI:
         """Returns the underlying OpenAI client instance."""
         return self.client
 
     def extract_text(
         self,
-        file_b64: str,
+        file: Optional[bytes],
         prompt: str = "Extract the text from this resource in the original language. Return the result in markdown code format.",
         **parameters,
     ) -> str:
@@ -48,7 +45,7 @@ class OpenAIVisionModel(BaseModel):
         Extracts text from a base64-encoded image using OpenAI's Responses API.
 
         Args:
-            file_b64 (str): Base64-encoded image string.
+            file (bytes): Base64-encoded image string.
             prompt (str): Instructions for text extraction.
             **parameters: Additional parameters for `client.responses.create()`.
 
@@ -61,42 +58,7 @@ class OpenAIVisionModel(BaseModel):
                 {"type": "input_text", "text": prompt},
                 {
                     "type": "input_image",
-                    "image_url": f"data:image/jpeg;base64,{file_b64}",
-                },
-            ],
-        }
-        response = self.client.responses.create(
-            model=self.model_name, input=[payload], **parameters
-        )
-        return response.output[0].content[0].text
-
-    def analyze_resource(
-        self,
-        file_b64: str,
-        context: str,
-        prompt: str = "Analyze the text from this resource in the original language. Be concise, adapting the analysis to the style and tone from the context. Return the result in markdown code format.",
-        **parameters,
-    ) -> str:
-        """
-        Analyzes a base64-encoded image in context using OpenAI's Responses API.
-
-        Args:
-            file_b64 (str): Base64-encoded image string.
-            context (str): Context where the image appears.
-            prompt (str): Instructions for analysis.
-            **parameters: Additional params for `client.responses.create()`.
-
-        Returns:
-            str: The model's analysis output.
-        """
-        combined = f"{prompt}\n\nContext:\n{context}"
-        payload = {
-            "role": "user",
-            "content": [
-                {"type": "input_text", "text": combined},
-                {
-                    "type": "input_image",
-                    "image_url": f"data:image/jpeg;base64,{file_b64}",
+                    "image_url": f"data:image/jpeg;base64,{file}",
                 },
             ],
         }

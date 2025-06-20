@@ -10,6 +10,10 @@ from .vanilla_reader import VanillaReader
 
 
 class DoclingReader(BaseReader):
+    """
+    Read multiple file types using IBM's Docling library, and convert the documents
+    into markdown or JSON format.
+    """
 
     SUPPORTED_EXTENSIONS = (
         "pdf",

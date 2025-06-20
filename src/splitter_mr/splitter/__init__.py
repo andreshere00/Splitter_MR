@@ -14,16 +14,16 @@ from .splitters import (
 )
 
 __all__ = [
-    CharacterSplitter,
-    BaseSplitter,
-    WordSplitter,
-    CodeSplitter,
-    ParagraphSplitter,
-    SentenceSplitter,
-    RecursiveCharacterSplitter,
-    RecursiveJSONSplitter,
-    HTMLTagSplitter,
-    HeaderSplitter,
-    RowColumnSplitter,
-    TokenSplitter,
+    "CharacterSplitter",
+    "BaseSplitter",
+    "WordSplitter",
+    "CodeSplitter",
+    "ParagraphSplitter",
+    "SentenceSplitter",
+    "RecursiveCharacterSplitter",
+    "RecursiveJSONSplitter",
+    "HTMLTagSplitter",
+    "HeaderSplitter",
+    "RowColumnSplitter",
+    "TokenSplitter",
 ]

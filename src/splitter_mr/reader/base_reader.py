@@ -1,9 +1,10 @@
 import json
 import os
 from abc import ABC, abstractmethod
-from typing import Any, Union
+from typing import Any, Optional, Union
 from urllib.parse import urlparse
 
+from ..model import BaseModel
 from ..schema import ReaderOutput
 
 
@@ -120,13 +121,15 @@ class BaseReader(ABC):
         raise TypeError("Provided object is not a string or dictionary")
 
     @abstractmethod
-    @abstractmethod
-    def read(self, file_path: str, **kwargs: Any) -> ReaderOutput:
+    def read(
+        self, file_path: str, model: Optional[BaseModel] = None, **kwargs: Any
+    ) -> ReaderOutput:
         """
         Reads input and returns a ReaderOutput with text content and standardized metadata.
 
         Args:
             file_path (str): Path to the input file, a URL, raw string, or dictionary.
+            TODO: Complete argument
             **kwargs: Additional keyword arguments for implementation-specific options.
 
         Returns:

@@ -32,7 +32,6 @@ def azure_vision_model(azure_env):
 
 def test_azure_init_env(azure_env):
     model = AzureOpenAIVisionModel()
-    assert model.get_model_name() == "gpt-4.1"
     assert model.get_client()
 
 
@@ -48,18 +47,4 @@ def test_azure_extract_text_calls_api(azure_vision_model):
         ]
         text = azure_vision_model.extract_text(SAMPLE_IMAGE_B64, prompt="What's here?")
         assert text == "Azure Extracted text!"
-        mock_create.assert_called_once()
-
-
-def test_azure_analyze_resource_calls_api(azure_vision_model):
-    with patch.object(
-        azure_vision_model.client.responses, "create", autospec=True
-    ) as mock_create:
-        mock_create.return_value.output = [
-            MagicMock(content=[MagicMock(text="Azure Analysis result.")])
-        ]
-        result = azure_vision_model.analyze_resource(
-            SAMPLE_IMAGE_B64, context="Report", prompt="Describe this image."
-        )
-        assert result == "Azure Analysis result."
         mock_create.assert_called_once()
