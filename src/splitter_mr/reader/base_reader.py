@@ -96,18 +96,19 @@ class BaseReader(ABC):
             ```python
             BaseReader.try_parse_json('{"a": 1}')
             ```
-            ```bash
+            ```python
             {'a': 1}
             ```
             ```python
             BaseReader.try_parse_json({'b': 2})
             ```
-            ```bash
+            ```python
             {'b': 2}
             ```
             ```python
             BaseReader.try_parse_json('[not valid json]')
             ```
+            ```python
             ValueError: String could not be parsed as JSON: ...
             ```
         """

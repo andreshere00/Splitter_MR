@@ -2246,6 +2246,20 @@ wheels = [
 ]
 
 [[package]]
+name = "pdfplumber"
+version = "0.11.7"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pdfminer-six" },
+    { name = "pillow" },
+    { name = "pypdfium2" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/6d/0d/4135821aa7b1a0b77a29fac881ef0890b46b0b002290d04915ed7acc0043/pdfplumber-0.11.7.tar.gz", hash = "sha256:fa67773e5e599de1624255e9b75d1409297c5e1d7493b386ce63648637c67368", size = 115518 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/db/e0/52b67d4f00e09e497aec4f71bc44d395605e8ebcea52543242ed34c25ef9/pdfplumber-0.11.7-py3-none-any.whl", hash = "sha256:edd2195cca68bd770da479cf528a737e362968ec2351e62a6c0b71ff612ac25e", size = 60029 },
+]
+
+[[package]]
 name = "pillow"
 version = "11.2.1"
 source = { registry = "https://pypi.org/simple" }
@@ -3280,6 +3294,7 @@ dependencies = [
     { name = "nltk" },
     { name = "openai" },
     { name = "openpyxl" },
+    { name = "pdfplumber" },
     { name = "poethepoet" },
     { name = "pyyaml" },
     { name = "spacy" },
@@ -3319,6 +3334,7 @@ requires-dist = [
     { name = "nltk", specifier = ">=3.9.1" },
     { name = "openai", specifier = ">=1.88.0" },
     { name = "openpyxl", specifier = ">=3.1.5" },
+    { name = "pdfplumber", specifier = ">=0.11.7" },
     { name = "poethepoet", specifier = ">=0.35.0" },
     { name = "pyyaml", specifier = ">=6.0.2" },
     { name = "spacy", specifier = ">=3.8.7" },

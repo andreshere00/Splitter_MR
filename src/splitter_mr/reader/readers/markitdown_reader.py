@@ -81,7 +81,7 @@ class MarkItDownReader(BaseReader):
             result = reader.read(file_path = "data/test_1.pdf")
             print(result.text)
             ```
-            ```bash
+            ```python
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget purus non est porta
             rutrum. Suspendisse euismod lectus laoreet sem pellentesque egestas et et sem.
             Pellentesque ex felis, cursus ege...

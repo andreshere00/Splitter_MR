@@ -3,48 +3,95 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from splitter_mr.model.models.azure_openai_model import AzureOpenAIVisionModel
+from splitter_mr.model import AzureOpenAIVisionModel
 
-SAMPLE_IMAGE_B64 = (
-    "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAEBAQ"
-    "EBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQ"
-    "EBAQEBAQEBAQEBAQEBAQH/wAALCAABAAEBAREA/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xA"
-    "AfEAACAQUBAQEAAAAAAAAAAAAAAQIDBAUGERIhIjFBUf/EABQBAQAAAAAAAAAAAAAAAAAAA"
-    "AP/xAAZEQEAAwEBAAAAAAAAAAAAAAAAAQIRAAP/2gAMAwEAAhEDEQA/AJpiwH//Z"
+
+@pytest.fixture(autouse=True)
+def clear_env(monkeypatch):
+    # Clear env vars before each test
+    for var in [
+        "AZURE_OPENAI_API_KEY",
+        "AZURE_OPENAI_ENDPOINT",
+        "AZURE_OPENAI_DEPLOYMENT",
+        "AZURE_OPENAI_API_VERSION",
+    ]:
+        monkeypatch.delenv(var, raising=False)
+
+
+def test_init_with_arguments():
+    with patch(
+        "splitter_mr.model.models.azure_openai_model.AzureOpenAI"
+    ) as mock_client:
+        model = AzureOpenAIVisionModel(
+            api_key="key",
+            azure_endpoint="https://endpoint",
+            azure_deployment="deployment",
+            api_version="2025-04-14-preview",
+            model_name="gpt-4.1",
+        )
+        mock_client.assert_called_once_with(
+            api_key="key",
+            azure_endpoint="https://endpoint",
+            azure_deployment="deployment",
+            api_version="2025-04-14-preview",
+        )
+        assert model.model_name == "gpt-4.1"
+
+
+def test_init_with_env(monkeypatch):
+    monkeypatch.setenv("AZURE_OPENAI_API_KEY", "env_key")
+    monkeypatch.setenv("AZURE_OPENAI_ENDPOINT", "https://env-endpoint")
+    monkeypatch.setenv("AZURE_OPENAI_DEPLOYMENT", "env-deployment")
+    with patch(
+        "splitter_mr.model.models.azure_openai_model.AzureOpenAI"
+    ) as mock_client:
+        model = AzureOpenAIVisionModel()
+        mock_client.assert_called_once()
+        assert model.model_name == "gpt-4.1"
+
+
+@pytest.mark.parametrize(
+    "missing_env,errmsg",
+    [
+        ("AZURE_OPENAI_API_KEY", "API key"),
+        ("AZURE_OPENAI_ENDPOINT", "endpoint"),
+        ("AZURE_OPENAI_DEPLOYMENT", "deployment name"),
+    ],
 )
+def test_init_env_missing(monkeypatch, missing_env, errmsg):
+    monkeypatch.setenv("AZURE_OPENAI_API_KEY", "x")
+    monkeypatch.setenv("AZURE_OPENAI_ENDPOINT", "x")
+    monkeypatch.setenv("AZURE_OPENAI_DEPLOYMENT", "x")
+    monkeypatch.delenv(missing_env, raising=False)
+    with pytest.raises(ValueError) as exc:
+        AzureOpenAIVisionModel()
+    assert errmsg in str(exc.value)
 
 
-# Helpers
+def test_extract_text_makes_correct_call():
+    mock_client = MagicMock()
+    # The ._azure_deployment attribute should be present
+    mock_client._azure_deployment = "deployment"
+    # Mock client.chat.completions.create to return desired value
+    mock_response = MagicMock()
+    mock_response.choices = [MagicMock(message=MagicMock(content="Extracted text"))]
+    mock_client.chat.completions.create.return_value = mock_response
 
-
-@pytest.fixture
-def azure_env(monkeypatch):
-    monkeypatch.setenv("AZURE_OPENAI_API_KEY", "azure-key")
-    monkeypatch.setenv("AZURE_OPENAI_ENDPOINT", "https://endpoint")
-    monkeypatch.setenv("AZURE_OPENAI_DEPLOYMENT", "deployment")
-    monkeypatch.setenv("AZURE_OPENAI_API_VERSION", "2025-04-14-preview")
-
-
-@pytest.fixture
-def azure_vision_model(azure_env):
-    return AzureOpenAIVisionModel()
-
-
-def test_azure_init_env(azure_env):
-    model = AzureOpenAIVisionModel()
-    assert model.get_client()
-
-
-# Test cases
-
-
-def test_azure_extract_text_calls_api(azure_vision_model):
-    with patch.object(
-        azure_vision_model.client.responses, "create", autospec=True
-    ) as mock_create:
-        mock_create.return_value.output = [
-            MagicMock(content=[MagicMock(text="Azure Extracted text!")])
-        ]
-        text = azure_vision_model.extract_text(SAMPLE_IMAGE_B64, prompt="What's here?")
-        assert text == "Azure Extracted text!"
-        mock_create.assert_called_once()
+    with patch(
+        "splitter_mr.model.models.azure_openai_model.AzureOpenAI",
+        return_value=mock_client,
+    ):
+        model = AzureOpenAIVisionModel(
+            api_key="key",
+            azure_endpoint="endpoint",
+            azure_deployment="deployment",
+            api_version="ver",
+        )
+        # Provide dummy base64 bytes for 'file'
+        text = model.extract_text("dGVzdF9pbWFnZQ==", prompt="Extract!")
+        # Check if the correct payload was sent
+        mock_client.chat.completions.create.assert_called_once()
+        called_args = mock_client.chat.completions.create.call_args[1]
+        assert called_args["model"] == "deployment"
+        assert called_args["messages"][0]["content"][0]["text"] == "Extract!"
+        assert text == "Extracted text"

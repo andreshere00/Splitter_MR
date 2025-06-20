@@ -57,6 +57,7 @@ class AzureOpenAIVisionModel(BaseModel):
         if api_version is None:
             api_version = os.getenv("AZURE_OPENAI_API_VERSION", "2025-04-14-preview")
 
+        print([api_key, api_version, azure_deployment, azure_endpoint])
         self.client = AzureOpenAI(
             api_key=api_key,
             azure_endpoint=azure_endpoint,
@@ -89,14 +90,14 @@ class AzureOpenAIVisionModel(BaseModel):
         payload = {
             "role": "user",
             "content": [
-                {"type": "input_text", "text": prompt},
+                {"type": "text", "text": prompt},
                 {
-                    "type": "input_image",
-                    "image_url": f"data:image/jpeg;base64,{file}",
+                    "type": "image_url",
+                    "image_url": {"url": f"data:image/png;base64,{file}"},
                 },
             ],
         }
-        response = self.client.responses.create(
-            model=self.model_name, input=[payload], **parameters
+        response = self.client.chat.completions.create(
+            model=self.get_client()._azure_deployment, messages=[payload], **parameters
         )
-        return response.output[0].content[0].text
+        return response.choices[0].message.content

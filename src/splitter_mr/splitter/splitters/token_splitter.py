@@ -47,7 +47,7 @@ class TokenSplitter(BaseSplitter):
 
     def split(self, reader_output: ReaderOutput) -> SplitterOutput:
         """
-        Splits the input text from `reader_output` into token-based chunks using 
+        Splits the input text from `reader_output` into token-based chunks using
         the specified tokenizer.
 
         Depending on `model_name`, the splitter chooses the appropriate tokenizer:
@@ -78,8 +78,7 @@ class TokenSplitter(BaseSplitter):
             from splitter_mr.splitter import TokenSplitter
 
             reader_output = ReaderOutput(
-                text: "The quick brown fox jumps over the lazy dog. \
-                Pack my box with five dozen liquor jugs.",
+                text: "The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs.",
                 document_name: "pangrams.txt",
                 document_path: "/data/pangrams.txt",
             )
@@ -89,7 +88,7 @@ class TokenSplitter(BaseSplitter):
             print(output.chunks)
             ```
             ```python
-            ['The quick brown fox jumps over the lazy dog.', 
+            ['The quick brown fox jumps over the lazy dog.',
             'Pack my box with five dozen liquor jugs.']
             ```
         """
