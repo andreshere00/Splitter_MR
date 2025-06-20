@@ -57,7 +57,6 @@ class AzureOpenAIVisionModel(BaseModel):
         if api_version is None:
             api_version = os.getenv("AZURE_OPENAI_API_VERSION", "2025-04-14-preview")
 
-        print([api_key, api_version, azure_deployment, azure_endpoint])
         self.client = AzureOpenAI(
             api_key=api_key,
             azure_endpoint=azure_endpoint,

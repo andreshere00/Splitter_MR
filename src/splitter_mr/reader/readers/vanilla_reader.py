@@ -1,14 +1,16 @@
 import os
 import uuid
 from html.parser import HTMLParser
-from typing import Any
+from typing import Any, Optional
 
 import pandas as pd
 import requests
 import yaml
 
+from ...model import BaseModel
 from ...schema import ReaderOutput
 from ..base_reader import BaseReader
+from .utils.pdfplumber_reader import PDFPlumberReader
 
 
 class SimpleHTMLTextExtractor(HTMLParser):
@@ -28,8 +30,15 @@ class SimpleHTMLTextExtractor(HTMLParser):
 class VanillaReader(BaseReader):
     """
     Read multiple file types using Python's built-in and standard libraries.
-    Supported: .json, .html, .txt, .xml, .yaml/.yml, .csv, .tsv, .parquet
+    Supported: .json, .html, .txt, .xml, .yaml/.yml, .csv, .tsv, .parquet, .pdf
+
+    For PDFs, this reader uses PDFPlumberReader to extract text, tables, and images,
+    with options to show or omit images, and to annotate images using a vision model.
     """
+
+    def __init__(self, model: Optional[BaseModel] = None):
+        super().__init__()
+        self.model = model
 
     def read(self, file_path: Any = None, **kwargs: Any) -> ReaderOutput:
         """
@@ -52,6 +61,10 @@ class VanillaReader(BaseReader):
                 file_url (str, optional): URL to read the document from.
                 json_document (dict or str, optional): Dictionary or JSON string containing document content.
                 text_document (str, optional): Raw text or string content of the document.
+                show_images (bool, optional): If True (default), images in PDFs are shown inline as base64 PNG.
+                    If False, images are omitted (or annotated if a model is provided).
+                model (BaseModel, optional): Vision model for image annotation/captioning.
+                prompt (str, optional): Custom prompt for image captioning.
 
         Returns:
             ReaderOutput: Dataclass defining the output structure for all readers.
@@ -61,30 +74,21 @@ class VanillaReader(BaseReader):
             TypeError: If provided arguments are of unsupported types.
 
         Notes:
-            - If reading from a file, supported formats include:
-                .json, .html, .txt, .xml, .yaml/.yml, .csv, .tsv, .parquet.
+            - PDF extraction now supports image captioning/omission indicators.
             - For `.parquet` files, content is loaded via pandas and returned as CSV-formatted text.
-            - For URLs, content type and extension are auto-detected to determine parsing strategy.
-            - If a JSON or YAML string is provided, it will be parsed accordingly; otherwise,
-                the input is treated as plain text.
-            - If `document_id` is not provided, a UUID will be generated.
-            - If `metadata` is not provided, an empty dictionary will be returned.
 
         Example:
             ```python
             from splitter_mr.readers import VanillaReader
+            from splitter_mr.models import AzureOpenAIVisionModel
 
-            reader = VanillaReader()
-
-            result = reader.read(file_path="data/sample.txt") # Read from file path
-            result = reader.read(file_url="https://example.com/sample.txt") # Read from URL
-            result = reader.read(json_document={text: "Hello, world!"}) # Read from dict
-            result = reader.read(text_document="Hello, world!") # Read from text
-
-            print(result.text)
+            model = AzureOpenAIVisionModel()
+            reader = VanillaReader(model=model)
+            output = reader.read(file_path="data/test_1.pdf", show_images=False)
+            print(output.text)
             ```
             ```bash
-            Hello, world!
+            \\n---\\n## Page 1\\n---\\n\\nMultiRAG Project – Splitter\\nMultiRAG | Splitter\\nLorem ipsum dolor sit amet, ...
             ```
         """
 
@@ -122,7 +126,25 @@ class VanillaReader(BaseReader):
                 document_name = os.path.basename(document_source)
                 document_path = os.path.relpath(document_source)
 
-                if ext in (
+                if ext == "pdf":
+                    pdf_reader = PDFPlumberReader()
+                    model = kwargs.get("model", self.model)
+                    if model is not None:
+                        text = pdf_reader.read(
+                            document_source,
+                            model=model,
+                            prompt=kwargs.get("prompt"),
+                            show_images=kwargs.get("show_images", False),
+                        )
+                        # use the **actual** model that was passed in
+                        ocr_method = model.model_name
+                    else:
+                        text = pdf_reader.read(
+                            document_source,
+                            show_images=kwargs.get("show_images", False),
+                        )
+                        conversion_method = "pdf"
+                elif ext in (
                     "json",
                     "html",
                     "txt",
