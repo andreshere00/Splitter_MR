@@ -45,7 +45,7 @@ class MarkItDownReader(BaseReader):
                     "Incompatible client. Only AzureOpenAIVisionModel and OpenAIVisionModel are supported."
                 )
             client = model.get_client()
-            self.model_name = model.get_model_name()
+            self.model_name = self.model.model_name
             self.md = MarkItDown(llm_client=client, llm_model=self.model_name)
         else:
             self.md = MarkItDown()

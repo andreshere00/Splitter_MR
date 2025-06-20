@@ -4,6 +4,10 @@ from typing import Any, Dict, Optional
 
 class BaseModel(ABC):
     @abstractmethod
+    def __init__(self, model_name) -> Any:
+        pass
+
+    @abstractmethod
     def get_client(self) -> Any:
         pass
 

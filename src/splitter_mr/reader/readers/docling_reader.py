@@ -1,9 +1,18 @@
 import os
 import uuid
-from typing import Any
+from typing import Any, Dict, Optional, Tuple
 
-from docling.document_converter import DocumentConverter
+from docling.datamodel.base_models import InputFormat
+from docling.datamodel.pipeline_options import (
+    ApiVlmOptions,
+    ResponseFormat,
+    VlmPipelineOptions,
+)
+from docling.document_converter import DocumentConverter, PdfFormatOption
+from docling.pipeline.vlm_pipeline import VlmPipeline
+from openai import AzureOpenAI, OpenAI
 
+from ...model import BaseModel
 from ...schema import ReaderOutput
 from ..base_reader import BaseReader
 from .vanilla_reader import VanillaReader
@@ -34,7 +43,62 @@ class DoclingReader(BaseReader):
         "tiff",
     )
 
-    def read(self, file_path: str, **kwargs: Any) -> ReaderOutput:
+    def __init__(self, model: Optional[BaseModel] = None):
+        self.model = model
+        if self.model is not None:
+            self.client = self.model.get_client()
+            for attr in ["_azure_deployment", "_azure_endpoint", "_api_version"]:
+                setattr(self, attr, getattr(self.client, attr, None))
+            self.api_key = self.client.api_key
+            self.model_name = self.model.model_name
+
+    def _get_vlm_url_and_headers(self, client: Any) -> Tuple[str, Dict[str, str]]:
+        """
+        Returns VLM API URL and headers based on model type.
+        """
+        if isinstance(client, AzureOpenAI):
+            url = f"{self._azure_endpoint}/openai/deployments/{self._azure_deployment}/chat/completions?api-version={self._api_version}"
+            headers = {"Authorization": f"Bearer {client.api_key}"}
+        elif isinstance(client, OpenAI):
+            url = "https://api.openai.com/v1/chat/completions"
+            headers = {"Authorization": f"Bearer {client.api_key}"}
+        else:
+            raise ValueError(f"Unknown client type: {type(client)}")
+        return url, headers
+
+    def _make_docling_reader(self, prompt: str, timeout: int = 60) -> DocumentConverter:
+        """
+        Returns a configured DocumentConverter with VLM pipeline options for OpenAI or Azure.
+        """
+        url, headers = self._get_vlm_url_and_headers(self.client)
+        vlm_options = ApiVlmOptions(
+            url=url,
+            params={"model": self.model_name},
+            headers=headers,
+            prompt=prompt,
+            timeout=timeout,
+            response_format=ResponseFormat.MARKDOWN,
+        )
+        pipeline_options = VlmPipelineOptions(
+            enable_remote_services=True,
+            vlm_options=vlm_options,
+        )
+        reader = DocumentConverter(
+            format_options={
+                InputFormat.PDF: PdfFormatOption(
+                    pipeline_cls=VlmPipeline,
+                    pipeline_options=pipeline_options,
+                )
+            }
+        )
+        return reader
+
+    def read(
+        self,
+        file_path: str,
+        prompt: str = "Analyze the following resource in the original language. Be concise but comprehensive, according to the image context. Return the content in markdown format",
+        **kwargs: Any,
+    ) -> ReaderOutput:
         """
         Reads and converts a document to Markdown format using the
         [Docling](https://github.com/docling-project/docling) library, supporting a wide range
@@ -74,19 +138,22 @@ class DoclingReader(BaseReader):
             Pellentesque ex felis, cursus ege...
             ```
         """
+        # Check if the extension is valid
         ext = os.path.splitext(file_path)[-1].lower().lstrip(".")
         if ext not in self.SUPPORTED_EXTENSIONS:
             print(
                 f"Warning: File extension not compatible: {ext}. Fallback to VanillaReader."
             )
-            vanilla_reader = VanillaReader()
-            return vanilla_reader.read(file_path=file_path, **kwargs)
+            return VanillaReader().read(file_path=file_path, **kwargs)
 
-        # Use Docling
-        reader = DocumentConverter()
-        markdown_text = reader.convert(file_path).document.export_to_markdown()
+        if self.model is not None:
+            reader = self._make_docling_reader(prompt)
+        else:
+            reader = DocumentConverter()
 
-        conversion_method = "markdown"
+        # Read and convert to markdown
+        text = reader.convert(file_path)
+        markdown_text = text.document.export_to_markdown()
 
         # Return output
         return ReaderOutput(
@@ -94,8 +161,8 @@ class DoclingReader(BaseReader):
             document_name=os.path.basename(file_path),
             document_path=file_path,
             document_id=kwargs.get("document_id") or str(uuid.uuid4()),
-            conversion_method=conversion_method,
+            conversion_method="markdown",
             reader_method="docling",
-            ocr_method=kwargs.get("ocr_method"),
+            ocr_method=self.model_name,
             metadata=kwargs.get("metadata"),
         )
