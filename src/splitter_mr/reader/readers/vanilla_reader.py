@@ -8,7 +8,7 @@ import requests
 import yaml
 
 from ...model import BaseModel
-from ...schema import ReaderOutput
+from ...schema import LANGUAGES, ReaderOutput
 from ..base_reader import BaseReader
 from .utils.pdfplumber_reader import PDFPlumberReader
 
@@ -171,6 +171,10 @@ class VanillaReader(BaseReader):
                         pd.read_excel(document_source, engine="openpyxl").to_csv()
                     )
                     conversion_method = ext
+                elif ext in LANGUAGES:
+                    with open(document_source, "r", encoding="utf-8") as f:
+                        text = f.read()
+                    conversion_method = "txt"
                 else:
                     raise ValueError(
                         f"Unsupported file extension: {ext}. Use another Reader component."

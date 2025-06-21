@@ -1,6 +1,6 @@
 # Example: Splitting an HTML Table into Chunks with `HTMLTagSplitter`
 
-As an example, we'll use a dataset of donuts in HTML table format (see [reference dataset](https://github.com/andreshere00/Splitter_MR/blob/main/data/test_2.html)).
+As an example, we'll use a dataset of donuts in HTML table format (see [reference dataset](https://github.com/andreshere00/Splitter_MR/blob/main/data/sweet_list.html)).
 The goal is to split the table into groups of rows so that each chunk contains as many `<tr>` elements as possible, while not exceeding a maximum number of characters per chunk.
 
 ---
@@ -15,7 +15,7 @@ from splitter_mr.reader import VanillaReader
 reader = VanillaReader()
 
 # You can provide a local path or a URL to your HTML file
-url = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/test_2.html"
+url = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/sweet_list.html"
 reader_output = reader.read(url)
 ```
 
@@ -30,8 +30,8 @@ Example output:
 ```python
 ReaderOutput(
     text='<table border="1" cellpadding="4" cellspacing="0">\n  <thead>\n    <tr> ...',
-    document_name='test_2.html',
-    document_path='data/test_2.html',
+    document_name='sweet_list.html',
+    document_path='data/sweet_list.html',
     document_id='ae194c82-4ea6-465f-8d49-fc2a36214748',
     conversion_method='html',
     reader_method='vanilla',
@@ -76,7 +76,7 @@ SplitterOutput(
         ...
     ],
     chunk_id=[...],
-    document_name='test_2.html',
+    document_name='sweet_list.html',
     ...
 )
 ```
@@ -116,7 +116,7 @@ from splitter_mr.splitter import HTMLTagSplitter
 
 # Step 1: Read the HTML file
 reader = VanillaReader()
-url = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/test_2.html"  # Use your path or URL here
+url = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/sweet_list.html"  # Use your path or URL here
 reader_output = reader.read(url)
 
 print(reader_output)  # Visualize the ReaderOutput object

@@ -755,6 +755,21 @@ wheels = [
 ]
 
 [[package]]
+name = "ffmpeg-downloader"
+version = "0.4.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "packaging" },
+    { name = "platformdirs" },
+    { name = "requests" },
+    { name = "tqdm" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/ab/71/b2c6796bf77be114b79edd5b9c8c68b36069abbc01e4879b34d015d35f6a/ffmpeg_downloader-0.4.0.tar.gz", hash = "sha256:9db655763d35fdba9bc46639aafa804113ce4f5ae3abb4d41d6ce3fb25c543c3", size = 30926 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/66/9b/b8b37445a196c860376d7c2ccf81299a144725c3019bd2bb344781d3ca42/ffmpeg_downloader-0.4.0-py3-none-any.whl", hash = "sha256:06af1c1f683d7b056df2fc7137da4d6f09bd69ea2c39fd4a8c0810d3ecf3008d", size = 34520 },
+]
+
+[[package]]
 name = "filelock"
 version = "3.18.0"
 source = { registry = "https://pypi.org/simple" }
@@ -3289,6 +3304,7 @@ source = { editable = "." }
 dependencies = [
     { name = "docling" },
     { name = "fastparquet" },
+    { name = "ffmpeg-downloader" },
     { name = "langchain-text-splitters" },
     { name = "markitdown", extra = ["all"] },
     { name = "nltk" },
@@ -3329,6 +3345,7 @@ dev = [
 requires-dist = [
     { name = "docling", specifier = ">=2.15.1" },
     { name = "fastparquet", specifier = ">=2024.11.0" },
+    { name = "ffmpeg-downloader", specifier = ">=0.4.0" },
     { name = "langchain-text-splitters", specifier = ">=0.3.8" },
     { name = "markitdown", extras = ["all"], specifier = ">=0.1.2" },
     { name = "nltk", specifier = ">=3.9.1" },

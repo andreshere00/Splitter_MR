@@ -1,6 +1,27 @@
+# v0.3.x
+
+## v0.3.0
+
+### Features
+
+- Implement `AzureOpenAI` and `OpenAI` Visual Models to analyse graphical resources in PDF files.
+- Add support to read PDF files to VanillaReader using `PDFPlumber`.
+
+### Documentation
+
+- Update examples.
+- Add new examples to documentation.
+- Change file names on data folder to be more descriptive.
+- Update README.md and CHANGELOG.
+
+### Fixes
+
+- Update tests.
+- Update docstrings.
+
 # v0.2.x
 
-## 0.2.2
+## v0.2.2
 
 ### Features
 

@@ -105,19 +105,20 @@ reader = VanillaReader()
 To read any file, provide the file path within the `read()` method. If you use `DoclingReader` or `MarkItDownReader`, your files will be automatically parsed to markdown text format. The result of this reader will be a `ReaderOutput` object, a dictionary with the following shape:
 
 ```python 
-reader_output = reader.read('https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/test.txt')
+reader_output = reader.read('https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/lorem_ipsum.txt')
 print(reader_output)
 ```
 ```python
 ReaderOutput(
     text='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sit amet ultricies orci. Nullam et tellus dui.', 
-    document_name='test.txt',
-    document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/test.txt', 
+    document_name='lorem_ipsum.txt',
+    document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/lorem_ipsum.txt', 
     document_id='732b9530-3e41-4a1a-a4ea-1d9d6fe815d3', 
     conversion_method='txt', 
     reader_method='vanilla', 
     ocr_method=None, 
-    metadata={})
+    metadata={}
+    )
 ```
 
 > [!NOTE]
@@ -140,8 +141,8 @@ print(splitter_output)
 SplitterOutput(
     chunks=['Lorem ipsum dolor sit amet, consectetur adipiscing', 'adipiscing elit. Vestibulum sit amet ultricies orc', 'ricies orci. Nullam et tellus dui.'], 
     chunk_id=['db454a9b-32aa-4fdc-9aab-8770cae99882', 'e67b427c-4bb0-4f28-96c2-7785f070d1c1', '6206a89d-efd1-4586-8889-95590a14645b'], 
-    document_name='test.txt', 
-    document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/test.txt', 
+    document_name='lorem_ipsum.txt', 
+    document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/lorem_ipsum.txt', 
     document_id='732b9530-3e41-4a1a-a4ea-1d9d6fe815d3', 
     conversion_method='txt', 
     reader_method='vanilla', 
@@ -149,7 +150,8 @@ SplitterOutput(
     split_method='character_splitter', 
     split_params={'chunk_size': 50, 
     'chunk_overlap': 10}, 
-    metadata={})
+    metadata={}
+    )
 ```
 
 The returned object is a `SplitterOutput` dataclass, which provides all the information you need to further process your data. You can easily add custom metadata, and you have access to details such as the document name, path, and type. Each chunk is uniquely identified by an UUID, allowing for easy traceability throughout your LLM workflow.

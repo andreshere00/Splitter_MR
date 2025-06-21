@@ -130,7 +130,7 @@ class BaseReader(ABC):
 
         Args:
             file_path (str): Path to the input file, a URL, raw string, or dictionary.
-            TODO: Complete argument
+            model (Optional[BaseModel]): Optional model instance to assist or customize the reading or extraction process. Used for cases where VLMs or specialized parsers are required for processing the file content.
             **kwargs: Additional keyword arguments for implementation-specific options.
 
         Returns:

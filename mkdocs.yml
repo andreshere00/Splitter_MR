@@ -13,8 +13,11 @@ nav:
     - Splitters: api_reference/splitter.md
   - Examples:
     - Overview: examples/examples.md
-    - RecursiveCharacterSplitter: examples/recursive_character_splitter.md
-    - HTMLTagSplitter: examples/html_tag_splitter.md
+    - Text-based splitting:
+      - RecursiveCharacterSplitter: examples/text/recursive_character_splitter.md
+    - Schema-based splitting:
+      - HTMLTagSplitter: examples/schema/html_tag_splitter.md
+      - CodeSplitter: examples/schema/code_splitter.md
   - CHANGELOG: CHANGELOG.md
 
 extra_css:
