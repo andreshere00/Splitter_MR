@@ -1,6 +1,8 @@
-# Example: Splitting a Python Source File into Chunks with `CodeSplitter`
+# **Example**: Splitting a Python Source File into Chunks with `CodeSplitter`
 
 Suppose you have a Python code file and want to split it into chunks that respect function and class boundaries (rather than just splitting every N characters). The `CodeSplitter` leverages [LangChain's RecursiveCharacterTextSplitter](https://python.langchain.com/docs/how_to/code_splitter/) to achieve this, making it ideal for preparing code for LLM ingestion, code review, or annotation.
+
+![Programming languages](https://bairesdev.mo.cloudinary.net/blog/2020/10/top-programming-languages.png?tx=w_1920,q_auto)
 
 ---
 

@@ -1,7 +1,9 @@
-# Example: Splitting an HTML Table into Chunks with `HTMLTagSplitter`
+# **Example**: Splitting an HTML Table into Chunks with `HTMLTagSplitter`
 
 As an example, we'll use a dataset of donuts in HTML table format (see [reference dataset](https://github.com/andreshere00/Splitter_MR/blob/main/data/sweet_list.html)).
 The goal is to split the table into groups of rows so that each chunk contains as many `<tr>` elements as possible, while not exceeding a maximum number of characters per chunk.
+
+![HTML Tag examples](https://www.tutorialspoint.com/html/images/html_basic_tags.jpg)
 
 ---
 

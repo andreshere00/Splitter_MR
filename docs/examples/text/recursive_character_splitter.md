@@ -1,6 +1,8 @@
-# Read a basic document and chunk it with a Recursive Character Splitter
+# **Example**: Read a basic document and chunk it with a `RecursiveCharacterSplitter`
 
 As an example, we will use the first chapter of the book "*El ingenioso hidalgo Don Quijote de La Mancha*". The text of reference can be extracted from the [GitHub project](https://github.com/andreshere00/Splitter_MR).
+
+![El Quijote](https://www.cartv.es/thumbs/990x750r/2021-05/quijote-1-1-.jpg)
 
 ## Step 1: Read the text using a Reader component
 
@@ -14,7 +16,7 @@ from splitter_mr.reader import VanillaReader
 reader = VanillaReader()
 ```
 
-To read the file, we only need to call the `read` method from this class, which is inherited from the `BaseReader` class (see [documentation](../api_reference/reader.md)).
+To read the file, we only need to call the `read` method from this class, which is inherited from the `BaseReader` class (see [documentation](../../api_reference/reader.md)).
 
 ```python
 url = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/quijote_example.txt"

@@ -1,6 +1,6 @@
 # Examples
 
-This section illustrates some use cases with **Splitter_MR** to read documents and split them into smaller chunks.
+This section illustrates some use cases with **SplitterMR** to read documents and split them into smaller chunks.
 
 ## Text-based splitting
 
@@ -8,7 +8,7 @@ This section illustrates some use cases with **Splitter_MR** to read documents a
 
 Divide your text recursively by group of words and sentences, based on the character length as your choice.
 
-### [How to split by characters, words, sentences or paragraphs]()
+### [How to split by characters, words, sentences or paragraphs](./text/fixed_splitter.md)
 
 Divide your text by gramatical groups, with an specific chunk size and with optional chunk overlap.
 
@@ -30,7 +30,7 @@ Divide your JSON files into valid smaller serialized objects.
 
 Divide your HTML or Markdown files hierarchically by headers.
 
-### [How to split your code scripts]()
+### [How to split your code scripts](./schema/code_splitter.md)
 
 Divide your scripts written in Java, Javascript, Python, Go and many more programming languages by syntax blocks.
 
