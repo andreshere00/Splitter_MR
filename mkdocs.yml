@@ -21,6 +21,8 @@ nav:
       - Split by HTML Tags: examples/schema/html_tag_splitter.md
       - Split by Code: examples/schema/code_splitter.md
       - Split JSON recursively: examples/schema/json_splitter.md
+    - Reading:
+      - Read PDFs without VLMs: examples/pdf/simple_pdf_splitting.md
   - CHANGELOG: CHANGELOG.md
 
 extra_css:

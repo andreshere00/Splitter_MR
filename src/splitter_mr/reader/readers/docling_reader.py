@@ -45,6 +45,7 @@ class DoclingReader(BaseReader):
 
     def __init__(self, model: Optional[BaseModel] = None):
         self.model = model
+        self.model_name = None
         if self.model is not None:
             self.client = self.model.get_client()
             for attr in ["_azure_deployment", "_azure_endpoint", "_api_version"]:
