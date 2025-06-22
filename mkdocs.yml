@@ -1,4 +1,4 @@
-site_name: Splitter MR Docs
+site_name: SplitterMR Docs
 theme:
   name: material
   logo: assets/splitter_mr_logo_white.svg
@@ -11,10 +11,22 @@ nav:
     - Overview: api_reference/api_reference.md
     - Readers: api_reference/reader.md
     - Splitters: api_reference/splitter.md
+    - Models: api_reference/model.md
   - Examples:
     - Overview: examples/examples.md
-    - RecursiveCharacterSplitter: examples/recursive_character_splitter.md
-    - HTMLTagSplitter: examples/html_tag_splitter.md
+    - Text-based splitting:
+      - Split by grammatical groups: examples/text/fixed_splitter.md
+      - Split by characters recursively: examples/text/recursive_character_splitter.md
+      - Split by tokens: examples/text/token_splitter.md
+    - Schema-based splitting:
+      - Split by HTML Tags: examples/schema/html_tag_splitter.md
+      - Split by Code: examples/schema/code_splitter.md
+      - Split JSON recursively: examples/schema/json_splitter.md
+      - Split tables by rows or columns: examples/schema/row_column_splitter.md
+      - Split Markdown and HTML files by headers: examples/schema/header_splitter.md
+    - Reading:
+      - Read PDFs without VLMs: examples/pdf/pdf_without_vlm.md
+      - Read files with VLMs: examples/pdf/pdf_with_vlm.md
   - CHANGELOG: CHANGELOG.md
 
 extra_css:
@@ -34,6 +46,8 @@ markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
   - codehilite:
       guess_lang: false
       linenums: false

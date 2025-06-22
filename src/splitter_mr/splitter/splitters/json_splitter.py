@@ -50,7 +50,7 @@ class RecursiveJSONSplitter(BaseSplitter):
             reader_output = ReaderOutput(
                 text: '{"company": {"name": "TechCorp", "employees": [{"name": "Alice"}, {"name": "Bob"}]}}'
                 document_name: "company_data.json",
-                document_path: "/data/company_data.json",
+                document_path: "/https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/company_data.json",
                 document_id: "doc123",
                 conversion_method: "vanilla",
                 ocr_method: None
@@ -73,7 +73,7 @@ class RecursiveJSONSplitter(BaseSplitter):
             max_chunk_size=self.chunk_size,
             min_chunk_size=int(self.chunk_size - self.min_chunk_size),
         )
-        chunks = splitter.split_json(json_data=text)
+        chunks = splitter.split_json(json_data=text, convert_lists=True)
 
         # Generate chunk_ids and metadata
         chunk_ids = self._generate_chunk_ids(len(chunks))

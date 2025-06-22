@@ -7,12 +7,11 @@
 **SplitterMR** is a library for chunking data into convenient text blocks compatible with your LLM applications.
 
 !!! important
-    **Breaking change!**
+    **Vision Language Model (VLM) support!**
     
-    - All Readers now return `ReaderOutput` dataclass objects.
-    - All Splitters now return `SplitterOutput` dataclass objects.
-    
-    You must access fields using **dot notation** (e.g., `result.text`, `result.chunks`), not as dictionary keys (`result['text']`, `result['chunks']`).
+    You can now use vision-capable models (OpenAI Vision, Azure OpenAI Vision) to extract image descriptions and OCR text during file reading.
+    Pass a VLM model to any Reader class via the `model` parameter. 
+    - See [**documentation**](https://andreshere00.github.io/Splitter_MR/api_reference/reader/).
 
 
 ## Features
@@ -108,19 +107,20 @@ reader = VanillaReader()
 To read any file, provide the file path within the `read()` method. If you use `DoclingReader` or `MarkItDownReader`, your files will be automatically parsed to markdown text format. The result of this reader will be a `ReaderOutput` object, a dictionary with the following shape:
 
 ```python 
-reader_output = reader.read('https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/test.txt')
+reader_output = reader.read('https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/lorem_ipsum.txt')
 print(reader_output)
 ```
 ```python
 ReaderOutput(
     text='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sit amet ultricies orci. Nullam et tellus dui.', 
-    document_name='test.txt',
-    document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/test.txt', 
+    document_name='lorem_ipsum.txt',
+    document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/lorem_ipsum.txt', 
     document_id='732b9530-3e41-4a1a-a4ea-1d9d6fe815d3', 
     conversion_method='txt', 
     reader_method='vanilla', 
     ocr_method=None, 
-    metadata={})
+    metadata={}
+    )
 ```
 
 !!! note
@@ -144,8 +144,8 @@ print(splitter_output)
 SplitterOutput(
     chunks=['Lorem ipsum dolor sit amet, consectetur adipiscing', 'adipiscing elit. Vestibulum sit amet ultricies orc', 'ricies orci. Nullam et tellus dui.'], 
     chunk_id=['db454a9b-32aa-4fdc-9aab-8770cae99882', 'e67b427c-4bb0-4f28-96c2-7785f070d1c1', '6206a89d-efd1-4586-8889-95590a14645b'], 
-    document_name='test.txt', 
-    document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/test.txt', 
+    document_name='lorem_ipsum.txt', 
+    document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/lorem_ipsum.txt', 
     document_id='732b9530-3e41-4a1a-a4ea-1d9d6fe815d3', 
     conversion_method='txt', 
     reader_method='vanilla', 
@@ -153,16 +153,48 @@ SplitterOutput(
     split_method='character_splitter', 
     split_params={'chunk_size': 50, 
     'chunk_overlap': 10}, 
-    metadata={})
+    metadata={}
+    )
 ```
 
 The returned object is a `SplitterOutput` dataclass, which provides all the information you need to further process your data. You can easily add custom metadata, and you have access to details such as the document name, path, and type. Each chunk is uniquely identified by an UUID, allowing for easy traceability throughout your LLM workflow.
 
 ### Compatibility with vision tools for image processing and annotations
 
-!!! note
-    Image-based chunking and annotation is under development. Stay tuned!
+Pass a VLM model to any Reader via the `model` parameter:
 
+```python
+from splitter_mr.reader import VanillaReader
+from splitter_mr.model.models import AzureOpenAIVisionModel
+
+model = AzureOpenAIVisionModel()
+reader = VanillaReader(model=model)
+output = reader.read(file_path="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/test_1.pdf", show_images=False)
+print(output.text)
+```
+
+So, in case that you want to read the images in a document, you only have to pass a model to the Reader component. Then, in the `read` method, you can specify if you want to show the images in Base64 format or not. 
+
+!!! note
+    Showing the images encoded in base64 is a feature independent from using a VLM.
+
+This enables automatic image-to-text conversion in PDFs, DOCX, and PPTX using state-of-the-art VLMs. Currently, the supported models are OpenAI and Azure OpenAI.  Stay tuned for next models which will be implemented!
+
+## Next features
+
+- [ ] Implement a method to split a document by pages (`PagedSplitter`).
+- [ ] Add support to read `xlsx`, `docx` and `pptx` files using `VanillaReader`. 
+- [ ] Implement a method to split by embedding similarity (`SemanticSplitter`).
+    - [ ] Add HuggingFace embeddings model support.
+    - [ ] Add OpenAI embeddings model support.
+    - [ ] Add Gemini embeddings model support.
+    - [ ] Add Claude Anthropic embeddings model support.
+- [ ] Add classic **OCR** models: `easyocr` and `pytesseract`.
+- [ ] Add HuggingFace VLMs model support.
+- [ ] Add Gemini VLMs model support.
+- [ ] Add Claude Anthropic VLMs model support.
+- [ ] Modularize library into several sub-libraries.
+- [ ] Substitute dataclasses to `Pydantic` models.
 
 ## Contact
 

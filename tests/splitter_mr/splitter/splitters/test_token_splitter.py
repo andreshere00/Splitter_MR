@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from splitter_mr.schema import ReaderOutput, SplitterOutput
+from splitter_mr.schema import ReaderOutput
 from splitter_mr.splitter import TokenSplitter
 
 
@@ -11,7 +11,7 @@ def simple_reader_output():
     return ReaderOutput(
         text="The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs.",
         document_name="pangrams.txt",
-        document_path="/data/pangrams.txt",
+        document_path="/https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/pangrams.txt",
         document_id="doc1",
         conversion_method="text",
         reader_method="plain",
@@ -32,11 +32,11 @@ def test_split_tiktoken(monkeypatch, simple_reader_output):
         "splitter_mr.splitter.splitters.token_splitter.RecursiveCharacterTextSplitter"
     ) as mock_class:
         mock_class.from_tiktoken_encoder.return_value = mock_splitter
-        splitter = TokenSplitter(chunk_size=5, model_name="tiktoken/gpt-4o")
+        splitter = TokenSplitter(chunk_size=5, model_name="tiktoken/cl100k_base")
         output = splitter.split(simple_reader_output)
         assert output.chunks == mock_splitter.split_text.return_value
         assert output.split_method == "token_splitter"
-        assert output.split_params["model_name"] == "tiktoken/gpt-4o"
+        assert output.split_params["model_name"] == "tiktoken/cl100k_base"
 
 
 def test_split_spacy(monkeypatch, simple_reader_output):

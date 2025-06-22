@@ -1,6 +1,6 @@
 import pytest
 
-from splitter_mr.schema import ReaderOutput, SplitterOutput
+from splitter_mr.schema import ReaderOutput
 from splitter_mr.splitter import CodeSplitter
 
 # Sample code for each language

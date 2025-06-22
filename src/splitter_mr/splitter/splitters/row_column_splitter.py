@@ -167,23 +167,21 @@ class RowColumnSplitter(BaseSplitter):
                     curr_chunk.append(row_md_list[j])
                     curr_len += row_len_list[j]
                     j += 1
-                # Always add at least one row
-                if not curr_chunk:
-                    curr_chunk.append(row_md_list[i])
-                    j = i + 1
+
+                rows_in_chunk = j - i
                 chunk_str = header_lines + "\n".join(curr_chunk)
                 chunks.append(chunk_str)
                 meta_per_chunk.append({"rows": list(range(i, j)), "type": "char_row"})
-                # overlap in number of rows
-                prev_chunk_row_count = j - i
-                if overlap and j < n:
-                    overlap_rows = min(overlap, prev_chunk_row_count - 1)
-                    if overlap_rows > 0:
-                        i = j - overlap_rows
-                    else:
-                        i = j
+
+                # --- compute overlap AFTER we know rows_in_chunk ---
+                if isinstance(self.chunk_overlap, float):
+                    overlap_rows = int(rows_in_chunk * self.chunk_overlap)
                 else:
-                    i = j
+                    overlap_rows = int(self.chunk_overlap)
+
+                # make sure we don’t loop forever
+                overlap_rows = min(overlap_rows, rows_in_chunk - 1)
+                i = j - overlap_rows
 
         # Generate chunk_id
         chunk_ids = self._generate_chunk_ids(len(chunks))

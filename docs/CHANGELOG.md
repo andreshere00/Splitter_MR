@@ -1,6 +1,33 @@
+# v0.3.x
+
+## v0.3.0
+
+### Features
+
+- Implement `AzureOpenAI` and `OpenAI` Visual Models to analyse graphical resources in PDF files.
+- Add support to read PDF files to VanillaReader using `PDFPlumber`.
+
+### Documentation
+
+- Update examples.
+- Add new examples to documentation.
+- Add Reading methods with PDF documentation.
+- Add information about implementing VLMs in your reading pipeline.
+- Change file names on data folder to be more descriptive.
+- Update `README.md` and `CHANGELOG`.
+
+### Fixes
+
+- Update tests.
+- Update docstrings.
+- Update `TokenSplitter` to raise Exceptions if no valid models are provided.
+- Update `TokenSplitter` to take as default argument a valid tiktoken model.
+- Change `HTMLTagSplitter` to take the headers if a table is provided.
+- Change `HeaderSplitter` to preserve headers in chunks.
+
 # v0.2.x
 
-## 0.2.2
+## v0.2.2
 
 ### Features
 

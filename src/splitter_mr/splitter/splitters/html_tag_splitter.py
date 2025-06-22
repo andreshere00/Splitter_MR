@@ -59,7 +59,6 @@ class HTMLTagSplitter(BaseSplitter):
             ]
             ```
         """
-        # Initialize variables
         html = reader_output.text
         soup = BeautifulSoup(html, "html.parser")
         tag = self.tag or self._auto_tag(soup)
@@ -69,40 +68,82 @@ class HTMLTagSplitter(BaseSplitter):
         chunks: List[str] = []
         buffer = []
 
-        # Helper to build a chunk HTML string from buffer
-        # Split text into smaller JSON chunks
+        def get_table_header(el):
+            """
+            If the element or any of its parents is a <table>,
+            extract the <thead> or first <tr> inside <table> as the header.
+            Return a list of header elements (can be empty).
+            """
+            # Find the closest table ancestor (or self if it's a table)
+            table = el.find_parent("table")
+            if el.name == "table":
+                table = el
+
+            if not table:
+                return []
+
+            # Try to get <thead>
+            thead = table.find("thead")
+            if thead:
+                return [copy.deepcopy(thead)]
+
+            # Else fallback: first <tr> in table (usually header row)
+            first_tr = table.find("tr")
+            if first_tr:
+                # Wrap it in a <thead> tag for consistency
+                soup_tmp = BeautifulSoup("", "html.parser")
+                thead_tag = soup_tmp.new_tag("thead")
+                thead_tag.append(copy.deepcopy(first_tr))
+                return [thead_tag]
+
+            return []
+
         def build_chunk_html(elements):
             chunk_soup = BeautifulSoup("", "html.parser")
             html_tag = chunk_soup.new_tag("html")
             body_tag = chunk_soup.new_tag("body")
             html_tag.append(body_tag)
             chunk_soup.append(html_tag)
+
+            # If the first element is inside a table, prepend the header rows once
+            header_elems = []
+            if elements:
+                header_elems = get_table_header(elements[0])
+                for he in header_elems:
+                    body_tag.append(he)
+
             for el in elements:
+                # Only append <tr> if it's NOT a duplicate of the header row
+                if el.name == "tr":
+                    # Check if all children are <th>
+                    if all(
+                        child.name == "th"
+                        for child in el.children
+                        if getattr(child, "name", None)
+                    ):
+                        # This <tr> is a header row (skip it if header already added)
+                        if header_elems:
+                            continue  # skip, already included in <thead>
                 body_tag.append(copy.deepcopy(el))
             return str(chunk_soup)
 
         for el in elements:
-            # Predict the new buffer size if we add this element
             test_buffer = buffer + [el]
             test_chunk_str = build_chunk_html(test_buffer)
             if len(test_chunk_str) > self.chunk_size and buffer:
-                # Flush current buffer as a chunk
                 chunk_str = build_chunk_html(buffer)
                 chunks.append(chunk_str)
-                buffer = [el]  # start new buffer with current element
+                buffer = [el]
             else:
                 buffer.append(el)
 
-        # Don't forget last buffer
         if buffer:
             chunk_str = build_chunk_html(buffer)
             chunks.append(chunk_str)
 
-        # Generate chunk_id and append metadata
         chunk_ids = self._generate_chunk_ids(len(chunks))
         metadata = self._default_metadata()
 
-        # Return output
         output = SplitterOutput(
             chunks=chunks,
             chunk_id=chunk_ids,
