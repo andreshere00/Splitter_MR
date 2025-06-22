@@ -130,7 +130,7 @@ class DoclingReader(BaseReader):
             from splitter_mr.readers import DoclingReader
 
             reader = DoclingReader()
-            result = reader.read(file_path = "data/test_1.pdf")
+            result = reader.read(file_path = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/test_1.pdf")
             print(result.text)
             ```
             ```bash

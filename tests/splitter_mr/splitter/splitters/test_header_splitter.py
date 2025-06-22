@@ -45,7 +45,7 @@ def test_uses_html_splitter_on_html_content(html_reader_output):
         result = splitter.split(html_reader_output)
         MockHTML.assert_called_once_with(
             headers_to_split_on=[("h1", "Header 1"), ("h2", "Header 2")],
-            return_each_element=True,
+            return_each_element=False,
         )
         mock_html.split_text.assert_called_once_with(html_reader_output.text)
         MockMD.assert_not_called()
@@ -68,7 +68,8 @@ def test_uses_markdown_splitter_on_md_content(markdown_reader_output):
         result = splitter.split(markdown_reader_output)
         MockMD.assert_called_once_with(
             headers_to_split_on=[("#", "Header 1"), ("##", "Header 2")],
-            return_each_line=True,
+            return_each_line=False,
+            strip_headers=False,
         )
         mock_md.split_text.assert_called_once_with(markdown_reader_output.text)
         MockHTML.assert_not_called()
@@ -122,6 +123,6 @@ def test_html_dispatch_on_html_fragment():
         result = splitter.split(reader_output)
         MockHTML.assert_called_once_with(
             headers_to_split_on=[("h1", "Header 1")],
-            return_each_element=True,
+            return_each_element=False,
         )
         assert result.chunks == ["HTML Chunk"]

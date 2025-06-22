@@ -50,7 +50,7 @@ class RecursiveJSONSplitter(BaseSplitter):
             reader_output = ReaderOutput(
                 text: '{"company": {"name": "TechCorp", "employees": [{"name": "Alice"}, {"name": "Bob"}]}}'
                 document_name: "company_data.json",
-                document_path: "/data/company_data.json",
+                document_path: "/https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/company_data.json",
                 document_id: "doc123",
                 conversion_method: "vanilla",
                 ocr_method: None

@@ -165,7 +165,7 @@ from splitter_mr.model.models import AzureOpenAIVisionModel
 
 model = AzureOpenAIVisionModel()
 reader = VanillaReader(model=model)
-output = reader.read(file_path="data/test_1.pdf", show_images=False)
+output = reader.read(file_path="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/test_1.pdf", show_images=False)
 print(output.text)
 ```
 
@@ -178,19 +178,19 @@ This enables automatic image-to-text conversion in PDFs, DOCX, and PPTX using st
 
 ## Next features
 
-- [] Implement a method to split a document by pages (`PagedSplitter`).
-- [] Add support to read `xlsx`, `docx` and `pptx` files using `VanillaReader`. 
-- [] Implement a method to split by embedding similarity (`SemanticSplitter`).
-    - [] Add HuggingFace embeddings model support.
-    - [] Add OpenAI embeddings model support.
-    - [] Add Gemini embeddings model support.
-    - [] Add Claude Anthropic embeddings model support.
-- [] Add classic **OCR** models: `easyocr` and `pytesseract`.
-- [] Add HuggingFace VLMs model support.
-- [] Add Gemini VLMs model support.
-- [] Add Claude Anthropic VLMs model support.
-- [] Modularize library into several sub-libraries.
-- [] Substitute dataclasses to `Pydantic` models.
+- [ ] Implement a method to split a document by pages (`PagedSplitter`).
+- [ ] Add support to read `xlsx`, `docx` and `pptx` files using `VanillaReader`. 
+- [ ] Implement a method to split by embedding similarity (`SemanticSplitter`).
+    - [ ] Add HuggingFace embeddings model support.
+    - [ ] Add OpenAI embeddings model support.
+    - [ ] Add Gemini embeddings model support.
+    - [ ] Add Claude Anthropic embeddings model support.
+- [ ] Add classic **OCR** models: `easyocr` and `pytesseract`.
+- [ ] Add HuggingFace VLMs model support.
+- [ ] Add Gemini VLMs model support.
+- [ ] Add Claude Anthropic VLMs model support.
+- [ ] Modularize library into several sub-libraries.
+- [ ] Substitute dataclasses to `Pydantic` models.
 
 ## Contact
 

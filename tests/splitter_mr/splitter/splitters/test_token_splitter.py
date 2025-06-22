@@ -11,7 +11,7 @@ def simple_reader_output():
     return ReaderOutput(
         text="The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs.",
         document_name="pangrams.txt",
-        document_path="/data/pangrams.txt",
+        document_path="/https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/pangrams.txt",
         document_id="doc1",
         conversion_method="text",
         reader_method="plain",

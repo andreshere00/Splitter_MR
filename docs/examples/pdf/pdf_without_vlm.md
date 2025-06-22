@@ -24,7 +24,7 @@ reader = VanillaReader()
 To read the file, you simply call to the `read` method:
 
 ```python
-file = "data/sample_pdf.pdf"
+file = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/sample_pdf.pdf"
 reader_output = reader.read(file)
 ```
 
@@ -38,7 +38,7 @@ print(reader_output)
 ReaderOutput(
     text="\n---\n## Page 1\n---\n\nA sample PDF\nConverting PDF files to other formats, such as Markdown, is a surprisingly\ncomplex tasks ...", 
     document_name='sample_pdf.pdf', 
-    document_path='data/sample_pdf.pdf', 
+    document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/sample_pdf.pdf', 
     document_id='2b4a9f04-1b98-40ec-bdae-1d8ddcc652c3', 
     conversion_method='pdf', 
     reader_method='vanilla', 
@@ -153,7 +153,7 @@ is rarely possible, and manual review and cleanup are often required.
 --- ![Image]() ---
 ```
 
-As we can see from the [original file](https://github.com/andreshere00/Splitter_MR/blob/feature/main/data/sample_pdf.pdf), all the text has been preserved. Bold, italics, etc. are not preserved, nor are text colors, headers, and font type. Despite that, the format is mostly plain text rather than markdown. In addition, we can observe that images are signaled by a `--- ![Image]() ---` placeholder, which can be useful to identify where a image has been placed. The order of the document is preserved.
+As we can see from the [original file](https://github.com/andreshere00/Splitter_MR/blob/feature/main/https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/sample_pdf.pdf), all the text has been preserved. Bold, italics, etc. are not preserved, nor are text colors, headers, and font type. Despite that, the format is mostly plain text rather than markdown. In addition, we can observe that images are signaled by a `--- ![Image]() ---` placeholder, which can be useful to identify where a image has been placed. The order of the document is preserved.
 
 Now, let's see how well the other readers handle markdown conversion:
 
@@ -373,13 +373,10 @@ So, does this mean you should always use this method to parse PDFs? Not exactly.
 To measure the compute time for every method, we can encapsulate every reading logic into a function and define a decorator which computes a function execution time. Then, we can compare compute times in relative terms. Then, we can compare compute times in relative terms by executing the following code:
 
 ```python
-from splitter_mr.reader import (
-    VanillaReader,
-    MarkItDownReader,
-    DoclingReader
-)
-
 import time
+
+from splitter_mr.reader import DoclingReader, MarkItDownReader, VanillaReader
+
 
 def timeit(func):
     def wrapper(*args, **kwargs):
@@ -396,7 +393,7 @@ def get_reader_output(file, reader = VanillaReader()):
     print()
     return output.text
 
-file = "data/sample_pdf.pdf"
+file = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/sample_pdf.pdf"
 
 print("*"*20 + " Vanilla Reader " + "*"*20)
 vanilla_output = get_reader_output(file, reader = VanillaReader())

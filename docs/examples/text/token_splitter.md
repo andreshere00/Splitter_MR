@@ -17,7 +17,7 @@ We will start by reading a text file using the `MarkItDownReader`. Remember that
 ```python
 from splitter_mr.reader import MarkItDownReader
 
-file = "data/my_wonderful_family.txt"
+file = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/my_wonderful_family.txt"
 reader = MarkItDownReader()
 reader_output = reader.read(file)
 ```
@@ -32,7 +32,7 @@ print(reader_output)
 ReaderOutput(
     text='My Wonderful Family\nI live in a house near the mountains. ...',
     document_name='my_wonderful_family.txt',
-    document_path='data/my_wonderful_family.txt',
+    document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/my_wonderful_family.txt',
     document_id='9a72ac14-0fad-41ab-992f-3aaf2fa97afd',
     conversion_method='markdown',
     reader_method='markitdown',
@@ -92,7 +92,7 @@ SplitterOutput(
         '8225f436-b039-4b54-9472-093dee2068d8', '1c347f11-421f-4549-9074-0dbe18072eb8', '1582e42a-aac2-46ba-bfe0-c87a25b452f4', '82d76292-103e-4a94-9ea4-8bbe4e321a6c', '36d5d71d-3a2c-42c7-a722-7b65dcf3ffc0', 'cb4c57d9-1174-49f4-a7d3-6e52a96bb8ed', '9f67d776-f2df-4cc7-864e-1f5b43b36658', 'ef130c6f-7b69-430a-9af5-4c1c1b72ac99', '744aef78-806b-4439-880e-7921111659d2', 'd3355854-099d-4a05-ae63-94ee0954fd92'
     ], 
     document_name='my_wonderful_family.txt', 
-    document_path='data/my_wonderful_family.txt', 
+    document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/my_wonderful_family.txt', 
     document_id='90cf6e00-b4ca-439e-9b3d-3bd8713934b4',
     conversion_method='markdown', 
     reader_method='markitdown', 
@@ -183,7 +183,7 @@ In previous examples, we show you how to split the text by tokens, but these mod
 ```python
 from splitter_mr.reader import DoclingReader
 
-sp_file = "data/mi_nueva_casa.txt"
+sp_file = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/mi_nueva_casa.txt"
 sp_reader = DoclingReader()
 sp_reader_output = sp_reader.read(sp_file)
 print(sp_reader_output.text)
@@ -259,49 +259,100 @@ You can now tokenize and chunk text with precision, using the NLP backend and la
 ## **Complete Script**
 
 ```python
+from splitter_mr.reader import DoclingReader, MarkItDownReader
 from splitter_mr.splitter import TokenSplitter
-from splitter_mr.reader import MarkItDownReader, DoclingReader
 
-# 1. Read file
-file = "data/my_wonderful_family.txt"
+# 1. Read the file using any Reader (e.g., MarkItDownReader)
+
+file = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/my_wonderful_family.txt"
+
 reader = MarkItDownReader()
 reader_output = reader.read(file)
 print(reader_output.text)
 
 # 2. Split by Tokens
-## 2.1. SpaCy
-spacy_splitter = TokenSplitter(chunk_size=100, model_name="spacy/en_core_web_sm")
-spacy_output = spacy_splitter.split(reader_output)
+
+## 2.1. Using SpaCy
+
+print("*"*40 + " spaCy " + "*"*40)
+
+spacy_splitter = TokenSplitter(
+    chunk_size=100, 
+    model_name = "spacy/en_core_web_sm" # Select a valid model with nomenclature spacy/{model_name}.
+    ) 
+# Note that it is required to have the model installed in your execution machine.
+
+spacy_output = spacy_splitter.split(reader_output) # Split the text
+print(spacy_output)  # Print the SplitterOutput object
+
+# Visualize each chunk
 for idx, chunk in enumerate(spacy_output.chunks):
     print("="*40 + f" Chunk {idx + 1} " + "="*40 + "\n" + chunk + "\n")
 
-## 2.2. NLTK
-nltk_splitter = TokenSplitter(chunk_size=100, model_name="nltk/punkt", language="english")
+## 2.2. Using NLTK
+
+print("*"*40 + " NLTK " + "*"*40)
+
+nltk_splitter = TokenSplitter(
+    chunk_size=100,
+    model_name="nltk/punkt", # introduce the model as nltk/{model_name}
+    language="english" # defaults to this language
+)
+
 nltk_output = nltk_splitter.split(reader_output)
+
+# Visualize each chunk
 for idx, chunk in enumerate(nltk_output.chunks):
     print("="*40 + f" Chunk {idx + 1} " + "="*40 + "\n" + chunk + "\n")
 
-## 2.3. tiktoken
-tiktoken_splitter = TokenSplitter(chunk_size=100, model_name="tiktoken/cl100k_base", language="english")
+## 2.3. Using tiktoken
+
+print("*"*40 + " Tiktoken " + "*"*40)
+
+tiktoken_splitter = TokenSplitter(
+    chunk_size=100,
+    model_name="tiktoken/cl100k_base", # introduce the model as tiktoken/{model_name}
+    language="english"
+)
+
 tiktoken_output = tiktoken_splitter.split(reader_output)
+
+# Visualize each chunk
 for idx, chunk in enumerate(tiktoken_output.chunks):
     print("="*40 + f" Chunk {idx + 1} " + "="*40 + "\n" + chunk + "\n")
 
-# 3. Spanish example
-sp_file = "data/mi_nueva_casa.txt"
+## 2.4. Split by tokens in other languages (e.g., Spanish)
+
+sp_file = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/mi_nueva_casa.txt"
+
 sp_reader = DoclingReader()
 sp_reader_output = sp_reader.read(sp_file)
-print(sp_reader_output.text)
+print(sp_reader_output.text) # Visualize the text content
 
-## 3.1. SpaCy (Spanish)
-spacy_sp_splitter = TokenSplitter(chunk_size=100, model_name="spacy/es_core_news_sm")
-spacy_sp_output = spacy_sp_splitter.split(sp_reader_output)
-for idx, chunk in enumerate(spacy_sp_output.chunks):
+### 2.4.1. Using SpaCy
+
+print("*"*40 + " Spacy in Spanish " + "*"*40)
+
+spacy_sp_splitter = TokenSplitter(
+    chunk_size = 100,
+    model_name = "spacy/es_core_news_sm", # Pick another model in Spanish
+)
+nltk_sp_output = spacy_sp_splitter.split(sp_reader_output)
+
+for idx, chunk in enumerate(nltk_sp_output.chunks):
     print("="*40 + f" Chunk {idx + 1} " + "="*40 + "\n" + chunk + "\n")
 
-## 3.2. NLTK (Spanish)
-nltk_sp_splitter = TokenSplitter(chunk_size=100, model_name="nltk/punkt", language="spanish")
+### 2.4.2 Using NLTK
+
+print("*"*40 + " NLTK in Spanish " + "*"*40)
+
+nltk_sp_splitter = TokenSplitter(
+    chunk_size = 100,
+    model_name = "nltk/punkt",
+    language="spanish" # select `spanish` as language for the tokenizer
+)
 nltk_sp_output = nltk_sp_splitter.split(sp_reader_output)
+
 for idx, chunk in enumerate(nltk_sp_output.chunks):
     print("="*40 + f" Chunk {idx + 1} " + "="*40 + "\n" + chunk + "\n")
 ```

@@ -84,7 +84,7 @@ class VanillaReader(BaseReader):
 
             model = AzureOpenAIVisionModel()
             reader = VanillaReader(model=model)
-            output = reader.read(file_path="data/test_1.pdf", show_images=False)
+            output = reader.read(file_path="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/test_1.pdf", show_images=False)
             print(output.text)
             ```
             ```bash

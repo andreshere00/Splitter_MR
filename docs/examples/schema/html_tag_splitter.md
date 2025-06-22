@@ -1,6 +1,6 @@
 # **Example**: Splitting an HTML Table into Chunks with `HTMLTagSplitter`
 
-As an example, we will use a dataset of donuts in HTML table format (see [reference dataset](https://github.com/andreshere00/Splitter_MR/blob/main/data/sweet_list.html)).
+As an example, we will use a dataset of donuts in HTML table format (see [reference dataset](https://github.com/andreshere00/Splitter_MR/blob/main/https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/sweet_list.html)).
 The goal is to split the table into groups of rows so that each chunk contains as many `<tr>` elements as possible, while not exceeding a maximum number of characters per chunk.
 
 ![HTML Tag examples](https://www.tutorialspoint.com/html/images/html_basic_tags.jpg)
@@ -33,7 +33,7 @@ Example output:
 ReaderOutput(
     text='<table border="1" cellpadding="4" cellspacing="0">\n  <thead>\n    <tr> ...',
     document_name='sweet_list.html',
-    document_path='data/sweet_list.html',
+    document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/sweet_list.html',
     document_id='ae194c82-4ea6-465f-8d49-fc2a36214748',
     conversion_method='html',
     reader_method='vanilla',
@@ -109,7 +109,7 @@ SplitterOutput(
         'fb0cc57f-866b-4a15-9369-e9ac7905c521', ..., 
         'b2ec81a9-044d-4a90-ac5b-705b77e7bcd5'], 
     document_name='sweet_list.html', 
-    document_path='data/sweet_list.html', 
+    document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/sweet_list.html', 
     document_id='0d9f18c6-31a8-4a5d-b7d1-16287233ba64', 
     conversion_method='html', 
     reader_method='vanilla', 

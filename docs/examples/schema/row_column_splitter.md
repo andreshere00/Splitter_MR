@@ -9,7 +9,7 @@ Let's use the `VanillaReader` to load a CSV file:
 ```python
 from splitter_mr.reader import VanillaReader
 
-file = "data/invoices.csv"
+file = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/invoices.csv"
 reader = VanillaReader()
 reader_output = reader.read(file)
 
@@ -24,7 +24,7 @@ print(reader_output.text)
 ReaderOutput(
     text='id,name,amount,Remark\n1,"Johnson, Smith, and Jones Co.",345.33,Pays on time\n2,"Sam ""Mad Dog"" Smith",993.44,\n3,Barney & Company,0,"Great to work with and always pays with cash."\n4,Johnson\'s Automotive,2344,',
     document_name='invoices.csv',
-    document_path='data/invoices.csv',
+    document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/invoices.csv',
     document_id='4eb99715-b11c-4a34-b0be-724ae6e34e4c',
     conversion_method='csv',
     reader_method='vanilla',
@@ -192,34 +192,49 @@ The output is a table with an overlapping row column:
 ## Complete script
 
 ```python
-from splitter_mr.splitter import RowColumnSplitter
 from splitter_mr.reader import VanillaReader
+from splitter_mr.splitter import RowColumnSplitter
 
-file = "data/invoices.csv"
+file = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/invoices.csv"
+
 reader = VanillaReader()
 reader_output = reader.read(file)
 
-# Split by character size
-splitter = RowColumnSplitter(chunk_size=150)
+# Visualize the ReaderOutput object
+print(reader_output)
+
+# Access to the text content
+print(reader_output.text)
+
+print("*"*20 + " Split by rows based on chunk size " + "*"*20)
+
+splitter = RowColumnSplitter(chunk_size=200)
 splitter_output = splitter.split(reader_output)
+
 for idx, chunk in enumerate(splitter_output.chunks):
     print("="*40 + f" Chunk {idx + 1} " + "="*40 + "\n" + chunk + "\n")
 
-# Split by number of rows
+print("*"*20 + " Split by an specific number of rows " + "*"*20)
+
 splitter = RowColumnSplitter(num_rows=2)
 splitter_output = splitter.split(reader_output)
+
 for idx, chunk in enumerate(splitter_output.chunks):
     print("="*40 + f" Chunk {idx + 1} " + "="*40 + "\n" + chunk + "\n")
 
-# Split by number of columns
+print("*"*20 + " Split by an specific number of columns " + "*"*20)
+
 splitter = RowColumnSplitter(num_cols=2)
 splitter_output = splitter.split(reader_output)
+
 for idx, chunk in enumerate(splitter_output.chunks):
     print("="*40 + f" Chunk {idx + 1} " + "="*40 + "\n" + chunk + "\n")
 
-# Split with overlap
-splitter = RowColumnSplitter(chunk_size=150, chunk_overlap=0.2)
+print("*"*20 + " Split with overlap " + "*"*20)
+
+splitter = RowColumnSplitter(chunk_size=300, chunk_overlap=0.4)
 splitter_output = splitter.split(reader_output)
+
 for idx, chunk in enumerate(splitter_output.chunks):
     print("="*40 + f" Chunk {idx + 1} " + "="*40 + "\n" + chunk + "\n")
 ```

@@ -17,7 +17,7 @@ We will use the `VanillaReader` to load our code file. You can provide a local f
 from splitter_mr.reader import VanillaReader
 
 reader = VanillaReader()
-reader_output = reader.read("data/code_example.py")
+reader_output = reader.read("https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/code_example.py")
 ```
 
 The `reader_output` is an object containing the raw code and its metadata:
@@ -32,7 +32,7 @@ Example output:
 ReaderOutput(
     text='from langchain_text_splitters import Language, RecursiveCharacterTextSplitter\n\nfrom ...',
     document_name='code_example.py',
-    document_path='data/code_example.py',
+    document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/code_example.py',
     document_id='8fdfd0c1-1b94-4eb0-86f4-c304ce8aa463',
     conversion_method='txt',
     reader_method='vanilla',
@@ -52,7 +52,7 @@ ReaderOutput(
     text='from langchain_text_splitters import Language, RecursiveCharacterTextSplitter\n\nfrom ...schema import ReaderOutput, SplitterOutput\nfrom ..base_splitter import BaseSplitter\n\n\ndef get_langchain_language(lang_str: str) -> Language:\n    """\n    Map a string language name to Langchain Language enum...', 
     chunk_id=['682dd838-f672-4337-b52a-b68b6a4cb0b1', 'a978d9be-cfe1-4a61-b73c-49842bdeca30', 'f390953f-d4b3-40b1-bd87-a9b1b7e634c9', 'f2bde214-5378-49e4-8d84-8832d46e2e26', '1cc57a4d-4618-4e53-bda1-977a343cbe9e', '58eb9713-320a-4a9c-924c-0ebce6b1a228'], 
     document_name='code_example.py', 
-    document_path='data/code_example.py', document_id='8fdfd0c1-1b94-4eb0-86f4-c304ce8aa463', conversion_method='txt', 
+    document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/code_example.py', document_id='8fdfd0c1-1b94-4eb0-86f4-c304ce8aa463', conversion_method='txt', 
     reader_method='vanilla', 
     ocr_method=None, 
     split_method='code_splitter', 
@@ -175,7 +175,7 @@ from splitter_mr.splitter import CodeSplitter
 
 # Step 1: Read the code file
 reader = VanillaReader()
-reader_output = reader.read("data/code_example.py")
+reader_output = reader.read("https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/code_example.py")
 
 print(reader_output)  # See metadata
 print(reader_output.text)  # See raw code

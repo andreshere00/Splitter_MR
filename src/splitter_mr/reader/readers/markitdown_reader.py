@@ -78,7 +78,7 @@ class MarkItDownReader(BaseReader):
             openai = OpenAIVisionModel() # make sure to have necessary environment variables on `.env`.
 
             reader = MarkItDownReader(model = openai)
-            result = reader.read(file_path = "data/test_1.pdf")
+            result = reader.read(file_path = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/test_1.pdf")
             print(result.text)
             ```
             ```python

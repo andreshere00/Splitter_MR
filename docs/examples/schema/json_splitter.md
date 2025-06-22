@@ -13,7 +13,7 @@ First, use the `VanillaReader` to load the JSON file. You can use other Reader m
 ```python
 from splitter_mr.reader import VanillaReader
 
-file = "data/invoices.json"  # Path to your JSON file
+file = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/invoices.json"  # Path to your JSON file
 reader = VanillaReader()
 reader_output = reader.read(file)
 
@@ -24,7 +24,7 @@ print(reader_output)        # Show metadata and summary
 ReaderOutput(
     text='[\n   {\n      "id": 1,\n      "name": "Johnson, Smith, and Jones Co.",\n      "amount": 345.33,\n      "Remark": "Pays on time"\n   },\n   {\n      "id": 2,\n      "name": "Sam \\"Mad Dog\\" Smith",\n      "amount": 993.44,\n      "Remark": ""\n   },\n   {\n      "id": 3,\n      "name": "Barney & Company",\n      "amount": 0,\n      "Remark": "Great to work with\\nand always pays with cash."\n   },\n   {\n      "id": 4,\n      "name": "Johnson\'s Automotive",\n      "amount": 2344,\n      "Remark": ""\n   }\n]', 
     document_name='invoices.json', 
-    document_path='data/invoices.json', 
+    document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/invoices.json', 
     document_id='103c305c-60c8-485a-9f43-73db3216e2a4', 
     conversion_method='json', 
     reader_method='vanilla', 
@@ -99,7 +99,7 @@ SplitterOutput(
     chunks=[{'0': {'id': 1, 'name': 'Johnson, Smith, and Jones Co.', 'amount': 345.33, 'Remark': 'Pays on time'}}, {'1': {'id': 2, 'name': 'Sam "Mad Dog" Smith', 'amount': 993.44, 'Remark': ''}}, {'2': {'id': 3, 'name': 'Barney & Company', 'amount': 0, 'Remark': 'Great to work with\nand always pays with cash.'}}, {'3': {'id': 4, 'name': "Johnson's Automotive", 'amount': 2344, 'Remark': ''}}], 
     chunk_id=['58556605-6e2b-4994-b764-56555b1eb68f', '74826121-4ef7-42a6-8288-7d950feaf0c5', 'e73b6464-2ec2-49a8-9387-a31ab9295b49', '4368e0f4-c1f2-440a-8aec-6f9d28eb07cd'], 
     document_name='invoices.json', 
-    document_path='data/invoices.json', 
+    document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/invoices.json', 
     document_id='103c305c-60c8-485a-9f43-73db3216e2a4', 
     conversion_method='json', 
     reader_method='vanilla', 
@@ -161,10 +161,10 @@ In markdown format table:
 ### Complete Example Script
 
 ```python
-from splitter_mr.splitter import RecursiveJSONSplitter
 from splitter_mr.reader import VanillaReader
+from splitter_mr.splitter import RecursiveJSONSplitter
 
-file = "data/invoices.json"
+file = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/invoices.json"
 
 reader = VanillaReader() # Load a Reader
 reader_output = reader.read(file) # Read the file
@@ -181,8 +181,6 @@ print(splitter_output) # SplitterOutput object
 for idx, chunk in enumerate(splitter_output.chunks):
     print("="*40 + f" Chunk {int(idx + 1)} " + "="*40 + "\n" + str(chunk[str(idx)]) + "\n")
 ```
-
----
 
 ### References
 

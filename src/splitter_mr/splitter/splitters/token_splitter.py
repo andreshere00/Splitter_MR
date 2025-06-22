@@ -94,7 +94,7 @@ class TokenSplitter(BaseSplitter):
             reader_output = ReaderOutput(
                 text: "The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs.",
                 document_name: "pangrams.txt",
-                document_path: "/data/pangrams.txt",
+                document_path: "/https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/pangrams.txt",
             )
 
             splitter = TokenSplitter(chunk_size=10, model_name="tiktoken/gpt-4o")

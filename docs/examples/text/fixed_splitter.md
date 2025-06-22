@@ -16,7 +16,7 @@ We will use the `VanillaReader` to load our text file.
 from splitter_mr.reader import VanillaReader
 
 reader = VanillaReader()
-data = "data/quijote_example.txt"  # Path to your file
+data = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/quijote_example.txt"  # Path to your file
 reader_output = reader.read(data)
 ```
 
@@ -30,7 +30,7 @@ print(reader_output)
 ReaderOutput(
     text='Capítulo Primero\n\nQue trata de la condición y ejercicio del famoso hidalgo D. Quijote de la Mancha\n\nEn un lugar de la Mancha, ...',
     document_name='quijote_example.txt',
-    document_path='data/quijote_example.txt',
+    document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/quijote_example.txt',
     document_id='34e37be6-743f-4807-80c3-216c76c7798b',
     conversion_method='txt',
     reader_method='vanilla',
@@ -82,7 +82,7 @@ SplitterOutput(
         'c0382a84-693e-4c2f-bb82-2eef1166c0e7', '96a42f50-33bd-4a78-bd99-73542bbd763d', 'e3a0a647-baf9-442c-8737-b0abf0ddf87e', 'ee2b7209-1e1b-4d33-b420-3949385013ad'
         ], 
     document_name='quijote_example.txt', 
-    document_path='data/quijote_example.txt', document_id='34e37be6-743f-4807-80c3-216c76c7798b', conversion_method='txt', 
+    document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/quijote_example.txt', document_id='34e37be6-743f-4807-80c3-216c76c7798b', conversion_method='txt', 
     reader_method='vanilla', 
     ocr_method=None, 
     split_method='character_splitter', 
@@ -217,47 +217,55 @@ Finally, we provide a full example script for reproducibility purposes:
 
 ```python
 from splitter_mr.reader import VanillaReader
-from splitter_mr.splitter import (
-    CharacterSplitter,
-    WordSplitter,
-    SentenceSplitter,
-    ParagraphSplitter
-)
+from splitter_mr.splitter import (CharacterSplitter, ParagraphSplitter,
+                                  SentenceSplitter, WordSplitter)
 
 reader = VanillaReader()
-data = "data/quijote_example.txt"
+
+data = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/quijote_example.txt"
 reader_output = reader.read(data)
 
-print(reader_output)  # Show metadata
-print(reader_output.text)  # Show full text
+print(reader_output) # Visualize the ReaderOutput object
+print(reader_output.text) # Get the text from the document
 
-# 1. Character Splitter
+# 1. Split by Characters
+
 char_splitter = CharacterSplitter(chunk_size=100)
 char_splitter_output = char_splitter.split(reader_output)
-for idx, chunk in enumerate(char_splitter_output.chunks):
-    print("="*40 + f" Chunk {idx + 1} " + "="*40 + "\n" + chunk + "\n")
+print(char_splitter_output) # Visualize Character Splitter output
 
-# 2. Word Splitter
+for idx, chunk in enumerate(char_splitter_output.chunks): # Visualize chunks
+    print("="*40 + " Chunk " + str(idx + 1) + " " + "="*40 + "\n" + chunk + "\n")
+
+# 2. Split by Words
+
 word_splitter = WordSplitter(chunk_size=20)
 word_splitter_output = word_splitter.split(reader_output)
-for idx, chunk in enumerate(word_splitter_output.chunks):
-    print("="*40 + f" Chunk {idx + 1} " + "="*40 + "\n" + chunk + "\n")
 
-# 3. Sentence Splitter
+for idx, chunk in enumerate(word_splitter_output.chunks):
+    print("="*40 + " Chunk " + str(idx + 1) + " " + "="*40 + "\n" + chunk + "\n")
+
+# 3. Split by Sentences
+
 sentence_splitter = SentenceSplitter(chunk_size=5)
 sentence_splitter_output = sentence_splitter.split(reader_output)
-for idx, chunk in enumerate(sentence_splitter_output.chunks):
-    print("="*40 + f" Chunk {idx + 1} " + "="*40 + "\n" + chunk + "\n")
 
-# 4. Paragraph Splitter
+for idx, chunk in enumerate(sentence_splitter_output.chunks):
+    print("="*40 + " Chunk " + str(idx + 1) + " " + "="*40 + "\n" + chunk + "\n")
+
+# 4. Split by Paragraphs
+
 paragraph_splitter = ParagraphSplitter(chunk_size=3)
 paragraph_splitter_output = paragraph_splitter.split(reader_output)
-for idx, chunk in enumerate(paragraph_splitter_output.chunks):
-    print("="*40 + f" Chunk {idx + 1} " + "="*40 + "\n" + chunk + "\n")
 
-# 5. Character Splitter with Overlap
+for idx, chunk in enumerate(paragraph_splitter_output.chunks):
+    print("="*40 + " Chunk " + str(idx + 1) + " " + "="*40 + "\n" + chunk + "\n")
+
+# 5. Add overlapping words between chunks
+
 char_splitter_with_overlap = CharacterSplitter(chunk_size=100, chunk_overlap=0.2)
 char_splitter_output = char_splitter_with_overlap.split(reader_output)
+
 for idx, chunk in enumerate(char_splitter_output.chunks):
-    print("="*40 + f" Chunk {idx + 1} " + "="*40 + "\n" + chunk + "\n")
+    print("="*40 + " Chunk " + str(idx + 1) + " " + "="*40 + "\n" + chunk + "\n")
 ```
