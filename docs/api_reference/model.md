@@ -25,12 +25,16 @@ All models inherit from `BaseModel` and provide the same interface for extractin
 
 ### OpenAIVisionModel
 
+<img alt="OpenAI logo" src = "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg" width = 50%>
+
 ::: src.splitter_mr.model.models.openai_model
     handler: python
     options:
       members_order: source
 
 ### AzureOpenAIVisionModel
+
+<img alt="OpenAI logo" src = "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg" width = 50%>
 
 ::: src.splitter_mr.model.models.azure_openai_model
     handler: python

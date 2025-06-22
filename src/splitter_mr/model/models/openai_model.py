@@ -1,5 +1,5 @@
 import os
-from typing import Optional
+from typing import Any, Optional
 
 from openai import OpenAI
 
@@ -39,7 +39,7 @@ class OpenAIVisionModel(BaseModel):
         self,
         file: Optional[bytes],
         prompt: str = "Extract the text from this resource in the original language. Return the result in markdown code format.",
-        **parameters,
+        **parameters: Any,
     ) -> str:
         """
         Extracts text from a base64-encoded image using OpenAI's Responses API.

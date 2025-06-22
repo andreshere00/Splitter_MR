@@ -1,5 +1,5 @@
 import os
-from typing import Optional
+from typing import Any, Optional
 
 from openai import AzureOpenAI
 
@@ -33,7 +33,6 @@ class AzureOpenAIVisionModel(BaseModel):
                 If not provided, uses 'AZURE_OPENAI_DEPLOYMENT' env var.
             api_version (str, optional): API version string.
                 If not provided, uses 'AZURE_OPENAI_API_VERSION' env var or defaults to '2025-04-14-preview'.
-            model_name (str): Model name (defaults to 'gpt-4.1').
         """
         if api_key is None:
             api_key = os.getenv("AZURE_OPENAI_API_KEY")
@@ -72,7 +71,7 @@ class AzureOpenAIVisionModel(BaseModel):
         self,
         file: Optional[bytes],
         prompt: str = "Extract the text from this resource in the original language. Return the result in markdown code format.",
-        **parameters,
+        **parameters: Any,
     ) -> str:
         """
         Extracts text from a base64 image using Azure's Responses API.
