@@ -9,7 +9,7 @@ In this example, we will show how to read a PDF file using three readers: `Vanil
 
 ## 1. Read PDF files using `VanillaReader`
 
-<img src = "https://github.com/andreshere00/Splitter_MR/blob/main/docs/assets/vanilla_reader.svg" alt = "VanillaReader logo" width = 100%>
+<img src = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/vanilla_reader.svg" alt = "VanillaReader logo" width = 100%>
 
 `VanillaReader` uses open-source libraries to read many file formats, aiming to preserve the text as a string. However, converting a PDF directly to text results in a complete loss of readability. So, to read PDFs, `VanillaReader` uses [PDFPlumber](https://github.com/jsvine/pdfplumber) as the core library. PDFPlumber is a Python library that extracts text, tables, and metadata from PDF files while preserving their layout as much as possible. It is widely used for converting PDF content into readable and structured formats for further processing. Let's see how it works and what results it produces:
 

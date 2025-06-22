@@ -23,6 +23,7 @@
 - Update `TokenSplitter` to raise Exceptions if no valid models are provided.
 - Update `TokenSplitter` to take as default argument a valid tiktoken model.
 - Change `HTMLTagSplitter` to take the headers if a table is provided.
+- Change `HeaderSplitter` to preserve headers in chunks.
 
 # v0.2.x
 
