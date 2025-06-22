@@ -55,15 +55,18 @@ class OpenAIVisionModel(BaseModel):
         Example:
             ```python
             from splitter_mr.model import OpenAIVisionModel
-            from splitter_mr.reader import VanillaReader
 
-            file = "data/pdfplumber_example.pdf"
+            # Initialize with your OpenAI API key (set as env variable or pass directly)
+            model = OpenAIVisionModel(api_key="sk-...")
 
-            model = OpenAIVisionModel() # provide your own keys and model
-            # Connection parameters can be provided via environment variables
+            with open("example.png", "rb") as f:
+                image_bytes = f.read()
 
-            reader = VanillaReader(model = model)
-            reader.read(file)
+            markdown = model.extract_text(image_bytes)
+            print(markdown)
+            ```
+            ```python
+            This picture shows ...
             ```
         """
         payload = {

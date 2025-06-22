@@ -11,16 +11,18 @@
 
 - Update examples.
 - Add new examples to documentation.
+- Add Reading methods with PDF documentation.
+- Add information about implementing VLMs in your reading pipeline.
 - Change file names on data folder to be more descriptive.
-- Update README.md and CHANGELOG.
+- Update `README.md` and `CHANGELOG`.
 
 ### Fixes
 
 - Update tests.
 - Update docstrings.
-- Update TokenSplitter to raise Exceptions if no valid models are provided.
-- Update TokenSplitter to take as default argument a valid tiktoken model.
-- Change HTMLTagSplitter to take the headers if a table is provided.
+- Update `TokenSplitter` to raise Exceptions if no valid models are provided.
+- Update `TokenSplitter` to take as default argument a valid tiktoken model.
+- Change `HTMLTagSplitter` to take the headers if a table is provided.
 
 # v0.2.x
 

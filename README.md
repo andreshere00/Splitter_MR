@@ -7,12 +7,11 @@
 **SplitterMR** is a library for chunking data into convenient text blocks compatible with your LLM applications.
 
 > [!IMPORTANT]
-> **Breaking change!**
-> 
-> - All Readers now return `ReaderOutput` dataclass objects.
-> - All Splitters now return `SplitterOutput` dataclass objects.
-> 
-> You must access fields using **dot notation** (e.g., `result.text`, `result.chunks`), not as dictionary keys (`result['text']`, `result['chunks']`).
+> **Vision Language Model (VLM) support!**
+>
+> You can now use vision-capable models (OpenAI Vision, Azure OpenAI Vision) to extract image descriptions and OCR text during file reading.
+> Pass a VLM model to any Reader class via the `model` parameter. 
+> - See [**documentation**](https://andreshere00.github.io/Splitter_MR/api_reference/model/).
 
 ## Features
 
@@ -158,8 +157,21 @@ The returned object is a `SplitterOutput` dataclass, which provides all the info
 
 ### Compatibility with vision tools for image processing and annotations
 
-> [!NOTE]
-> Image-based chunking and annotation is under development. Stay tuned!
+Pass a VLM model to any Reader via the `model` parameter:
+
+```python
+from splitter_mr.reader import VanillaReader
+from splitter_mr.model.models import AzureOpenAIVisionModel
+
+model = AzureOpenAIVisionModel()
+reader = VanillaReader(model=model)
+output = reader.read(file_path="data/test_1.pdf", show_images=False)
+print(output.text)
+```
+
+This enables automatic image-to-text conversion in PDFs, DOCX, and PPTX using state-of-the-art VLMs.
+
+- Supported models: `OpenAIVisionModel`, `AzureOpenAIVisionModel` (see [documentation](https://andreshere00.github.io/Splitter_MR/api_reference/model/) for details).
 
 ## Contact
 

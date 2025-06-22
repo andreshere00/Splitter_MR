@@ -88,15 +88,19 @@ class AzureOpenAIVisionModel(BaseModel):
         Example:
             ```python
             from splitter_mr.model import AzureOpenAIVisionModel
-            from splitter_mr.reader import VanillaReader
 
-            file = "data/pdfplumber_example.pdf"
+            # Ensure required Azure environment variables are set, or pass parameters directly
+            model = AzureOpenAIVisionModel(
+                api_key="...",
+                azure_endpoint="https://...azure.com/",
+                azure_deployment="deployment-name"
+            )
 
-            model = AzureOpenAIVisionModel() # provide your own keys and model
-            # Connection parameters can be provided via environment variables
+            with open("example.png", "rb") as f:
+                image_bytes = f.read()
 
-            reader = VanillaReader(model = model)
-            reader.read(file)
+            markdown = model.extract_text(image_bytes)
+            print(markdown)
             ```
         """
         payload = {
