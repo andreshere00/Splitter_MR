@@ -253,7 +253,7 @@ Here’s a corrected and slightly clarified version:
 
 ---
 
-### Conclusion
+## Conclusion
 
 Although all three methods can read files from various sources, they differ significantly in how VLM analysis is implemented:
 
@@ -266,3 +266,49 @@ Although all three methods can read files from various sources, they differ sign
 Again, using one or another method depends on your needs!
 
 In case that you want more information about available Models, visit [Developer guide](../../api_reference/model.md). **Thank you for reading!**
+
+## Complete script
+
+```python
+from markitdown import MarkItDown
+from openai import AzureOpenAI
+
+from splitter_mr.model import AzureOpenAIVisionModel
+from splitter_mr.reader import DoclingReader, MarkItDownReader, VanillaReader
+
+# Define the model
+model = AzureOpenAIVisionModel()
+
+# Readers
+
+## Vanilla Reader
+
+file = "data/pdfplumber_example.pdf"
+
+reader = VanillaReader(model = model)
+reader_output = reader.read(file)
+
+print(reader_output.text)
+
+reader_output_with_dif_prompt = reader.read(file, prompt = "Describe the resource in a concise way: e.g., <!---- Caption: Image shows ...!--->:")
+
+print(reader_output_with_dif_prompt.text)
+
+## MarkItDown Reader
+
+file = "data/chameleon.jpg"
+
+md = MarkItDownReader(model = model)
+md_reader_output = md.read(file)
+
+print(md_reader_output.text)
+
+## Docling Reader
+
+file = "data/sunny_farm.pdf"
+
+docling = DoclingReader(model = model)
+docling_output = docling.read(file, prompt = "Provide a long description")
+
+print(docling_output.text)
+```

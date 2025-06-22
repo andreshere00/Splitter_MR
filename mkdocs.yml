@@ -26,7 +26,7 @@ nav:
       - Split Markdown and HTML files by headers: examples/schema/header_splitter.md
     - Reading:
       - Read PDFs without VLMs: examples/pdf/pdf_without_vlm.md
-      - Read PDFs with VLMs: examples/pdf/pdf_with_vlm.md
+      - Read files with VLMs: examples/pdf/pdf_with_vlm.md
   - CHANGELOG: CHANGELOG.md
 
 extra_css:
