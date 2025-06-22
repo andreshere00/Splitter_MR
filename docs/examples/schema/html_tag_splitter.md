@@ -1,6 +1,6 @@
 # **Example**: Splitting an HTML Table into Chunks with `HTMLTagSplitter`
 
-As an example, we'll use a dataset of donuts in HTML table format (see [reference dataset](https://github.com/andreshere00/Splitter_MR/blob/main/data/sweet_list.html)).
+As an example, we will use a dataset of donuts in HTML table format (see [reference dataset](https://github.com/andreshere00/Splitter_MR/blob/main/data/sweet_list.html)).
 The goal is to split the table into groups of rows so that each chunk contains as many `<tr>` elements as possible, while not exceeding a maximum number of characters per chunk.
 
 ![HTML Tag examples](https://www.tutorialspoint.com/html/images/html_basic_tags.jpg)
@@ -48,6 +48,40 @@ To see the HTML text:
 print(reader_output.text)
 ```
 
+```html
+<table border="1" cellpadding="4" cellspacing="0">
+    <thead>
+      <tr>
+        <th>id</th>
+        <th>type</th>
+        <th>name</th>
+        <th>batter</th>
+        <th>topping</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>0001</td><td>donut</td><td>Cake</td><td>Regular</td><td>None</td></tr>
+      <tr><td>0001</td><td>donut</td><td>Cake</td><td>Regular</td><td>Glazed</td></tr>
+      <tr><td>0001</td><td>donut</td><td>Cake</td><td>Regular</td><td>Sugar</td></tr>
+      ...
+      <tr><td>0006</td><td>filled</td><td>Filled</td><td>Regular</td><td>Chocolate</td></tr>
+      <tr><td>0006</td><td>filled</td><td>Filled</td><td>Regular</td><td>Maple</td></tr>
+    </tbody>
+  </table>
+```
+
+This table can be interpretated in markdown format as:
+
+|id|type|name|batter|topping|
+|--- |--- |--- |--- |--- |
+|0001|donut|Cake|Regular|None|
+|0001|donut|Cake|Regular|Glazed|
+|0001|donut|Cake|Regular|Sugar|
+|...|...|...|...|...|
+|0006|filled|Filled|Regular|Chocolate|
+|0006|filled|Filled|Regular|Maple|
+
+
 ---
 
 ## Step 2: Chunk the HTML Table Using `HTMLTagSplitter`
@@ -60,27 +94,33 @@ from splitter_mr.splitter import HTMLTagSplitter
 # Set chunk_size to the max number of characters you want per chunk
 splitter = HTMLTagSplitter(chunk_size=400, tag="tr")
 splitter_output = splitter.split(reader_output)
-```
-
-The `splitter_output` contains the chunks:
-
-```python
 print(splitter_output)
 ```
 
-Example output:
+The output is a `SplitterOutput` object:
 
 ```python
 SplitterOutput(
     chunks=[
-        '<html><body><tr> ... </tr><tr> ... </tr><tr> ... </tr></body></html>',
-        '<html><body><tr> ... </tr><tr> ... </tr> ... </body></html>',
-        ...
-    ],
-    chunk_id=[...],
-    document_name='sweet_list.html',
-    ...
-)
+        '<html><body><thead>\n<tr>\n<th>id</th>\n<th>type</th>\n<th>name</th>\n<th>batter</th>\n<th>topping</th>\n</tr>\n</thead><tr><td>0001</td><td>donut</td><td>Cake</td><td>Regular</td><td>None</td></tr><tr><td>0001</td><td>donut</td><td>Cake</td><td>Regular</td><td>Glazed</td></tr><tr><td>0001</td><td>donut</td><td>Cake</td><td>Regular</td><td>Sugar</td></tr></body></html>', ... 
+        '<html><body><thead>\n<tr>\n<th>id</th>\n<th>type</th>\n<th>name</th>\n<th>batter</th>\n<th>topping</th>\n</tr>\n</thead><tr><td>0006</td><td>filled</td><td>Filled</td><td>Regular</td><td>Powdered Sugar</td></tr><tr><td>0006</td><td>filled</td><td>Filled</td><td>Regular</td><td>Chocolate</td></tr><tr><td>0006</td><td>filled</td><td>Filled</td><td>Regular</td><td>Maple</td></tr></body></html>'
+        ],
+    chunk_id=[
+        'fb0cc57f-866b-4a15-9369-e9ac7905c521', ..., 
+        'b2ec81a9-044d-4a90-ac5b-705b77e7bcd5'], 
+    document_name='sweet_list.html', 
+    document_path='data/sweet_list.html', 
+    document_id='0d9f18c6-31a8-4a5d-b7d1-16287233ba64', 
+    conversion_method='html', 
+    reader_method='vanilla', 
+    ocr_method=None, 
+    split_method='html_tag_splitter', 
+    split_params={
+        'chunk_size': 400, 
+        'tag': 'tr'
+        }, 
+    metadata={}
+    )
 ```
 
 To visualize each chunk, simply iterate through them:
@@ -90,21 +130,57 @@ for idx, chunk in enumerate(splitter_output.chunks):
     print("="*40 + f" Chunk {idx + 1} " + "="*40 + "\n" + chunk + "\n")
 ```
 
-Sample output:
+And the output will be chunks with a valid HTML format:
 
 ```
 ======================================== Chunk 1 ========================================
-<html><body><tr>
+<html><body><thead>
+<tr>
 <th>id</th>
 <th>type</th>
 <th>name</th>
 <th>batter</th>
 <th>topping</th>
-</tr><tr><td>0001</td><td>donut</td><td>Cake</td><td>Regular</td><td>None</td></tr><tr><td>0001</td><td>donut</td><td>Cake</td><td>Regular</td><td>Glazed</td></tr><tr><td>0001</td><td>donut</td><td>Cake</td><td>Regular</td><td>Sugar</td></tr></body></html>
+</tr>
+</thead><tr><td>0001</td><td>donut</td><td>Cake</td><td>Regular</td><td>None</td></tr><tr><td>0001</td><td>donut</td><td>Cake</td><td>Regular</td><td>Glazed</td></tr><tr><td>0001</td><td>donut</td><td>Cake</td><td>Regular</td><td>Sugar</td></tr></body></html>
+
 ======================================== Chunk 2 ========================================
-<html><body><tr><td>0001</td><td>donut</td><td>Cake</td><td>Regular</td><td>Powdered Sugar</td></tr><tr><td>0001</td><td>donut</td><td>Cake</td><td>Regular</td><td>Chocolate with Sprinkles</td></tr><tr><td>0001</td><td>donut</td><td>Cake</td><td>Regular</td><td>Chocolate</td></tr><tr><td>0001</td><td>donut</td><td>Cake</td><td>Regular</td><td>Maple</td></tr></body></html>
+<html><body><thead>
+<tr>
+<th>id</th>
+<th>type</th>
+<th>name</th>
+<th>batter</th>
+<th>topping</th>
+</tr>
+</thead><tr><td>0001</td><td>donut</td><td>Cake</td><td>Regular</td><td>Powdered Sugar</td></tr><tr><td>0001</td><td>donut</td><td>Cake</td><td>Regular</td><td>Chocolate with Sprinkles</td></tr><tr><td>0001</td><td>donut</td><td>Cake</td><td>Regular</td><td>Chocolate</td></tr></body></html>
 ...
 ```
+
+In markdown format can be displayed as:
+
+**Chunk 1:**
+
+| id   | type  | name | batter  | topping |
+|-------|-------|-------|---------|---------|
+| 0001  | donut | Cake  | Regular | None    |
+| 0001  | donut | Cake  | Regular | Glazed  |
+| 0001  | donut | Cake  | Regular | Sugar   |
+
+**Chunk 2:**
+
+| id   | type  | name | batter  | topping |
+|-------|-------|-------|---------|---------|
+| 0001  | donut | Cake  | Regular | Powdered Sugar          |
+| 0001  | donut | Cake  | Regular | Chocolate with Sprinkles|
+| 0001  | donut | Cake  | Regular | Chocolate               |
+| 0001  | donut | Cake  | Regular | Maple                   |
+
+
+!!! Note
+    If you want to always include the table header in every chunk (for tables), you can enhance the splitter to prepend the `<thead>` content to each chunk.
+
+**And that's it!** You can now flexibly chunk HTML tables for processing, annotation, or LLM ingestion.
 
 ---
 
@@ -134,13 +210,3 @@ print(splitter_output)  # Print the SplitterOutput object
 for idx, chunk in enumerate(splitter_output.chunks):
     print("="*40 + f" Chunk {idx + 1} " + "="*40 + "\n" + chunk + "\n")
 ```
-
----
-
-!!! Note
-
-    If you want to always include the table header in every chunk (for tables), you can enhance the splitter to prepend the `<thead>` content to each chunk.
-
----
-
-**And that's it!** You can now flexibly chunk HTML tables for processing, annotation, or LLM ingestion.

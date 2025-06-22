@@ -16,6 +16,7 @@ nav:
     - Text-based splitting:
       - Split by grammatical groups: examples/text/fixed_splitter.md
       - Split by characters recursively: examples/text/recursive_character_splitter.md
+      - Split by tokens: examples/text/token_splitter.md
     - Schema-based splitting:
       - Split by HTML Tags: examples/schema/html_tag_splitter.md
       - Split by Code: examples/schema/code_splitter.md

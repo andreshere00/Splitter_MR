@@ -36,6 +36,8 @@ docling-ibm-models==3.4.4
 docling-parse==4.0.3
 docutils==0.21.2
 easyocr==1.7.2
+en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
+es-core-news-sm @ https://github.com/explosion/spacy-models/releases/download/es_core_news_sm-3.8.0/es_core_news_sm-3.8.0-py3-none-any.whl
 et-xmlfile==2.0.0
 fastparquet==2024.11.0
 ffmpeg-downloader==0.4.0
@@ -130,6 +132,7 @@ pathspec==0.12.1
 pdfminer-six==20250506
 pdfplumber==0.11.7
 pillow==11.2.1
+pip==25.1.1
 platformdirs==4.3.8
 pluggy==1.6.0
 poethepoet==0.35.0

@@ -32,11 +32,11 @@ def test_split_tiktoken(monkeypatch, simple_reader_output):
         "splitter_mr.splitter.splitters.token_splitter.RecursiveCharacterTextSplitter"
     ) as mock_class:
         mock_class.from_tiktoken_encoder.return_value = mock_splitter
-        splitter = TokenSplitter(chunk_size=5, model_name="tiktoken/gpt-4o")
+        splitter = TokenSplitter(chunk_size=5, model_name="tiktoken/cl100k_base")
         output = splitter.split(simple_reader_output)
         assert output.chunks == mock_splitter.split_text.return_value
         assert output.split_method == "token_splitter"
-        assert output.split_params["model_name"] == "tiktoken/gpt-4o"
+        assert output.split_params["model_name"] == "tiktoken/cl100k_base"
 
 
 def test_split_spacy(monkeypatch, simple_reader_output):

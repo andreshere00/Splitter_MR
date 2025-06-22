@@ -1,5 +1,9 @@
+import warnings
+from pathlib import Path
+
 import nltk
 import spacy
+import tiktoken
 from langchain_text_splitters import (
     NLTKTextSplitter,
     RecursiveCharacterTextSplitter,
@@ -38,12 +42,22 @@ class TokenSplitter(BaseSplitter):
     def __init__(
         self,
         chunk_size: int = 1000,
-        model_name: str = "tiktoken/gpt-4o",
+        model_name: str = "tiktoken/cl100k_base",
         language: str = "english",
     ):
         super().__init__(chunk_size)
         self.model_name = model_name
         self.language = language
+
+    @staticmethod
+    def list_nltk_punkt_languages():
+        """Return a sorted list of available punkt models (languages) for NLTK."""
+        models = set()
+        for base in map(Path, nltk.data.path):
+            punkt_dir = base / "tokenizers" / "punkt"
+            if punkt_dir.exists():
+                models.update(f.stem for f in punkt_dir.glob("*.pickle"))
+        return sorted(models)
 
     def split(self, reader_output: ReaderOutput) -> SplitterOutput:
         """
@@ -99,6 +113,13 @@ class TokenSplitter(BaseSplitter):
         tokenizer, model = model_name.split("/")
 
         if tokenizer == "tiktoken":
+            # Check if the model is available in tiktoken
+            available_models = tiktoken.list_encoding_names()
+            if model not in available_models:
+                raise ValueError(
+                    f"tiktoken encoding '{model}' is not available. "
+                    f"Available encodings are: {available_models}"
+                )
             splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
                 encoding_name=model,
                 chunk_size=self.chunk_size,
@@ -115,15 +136,26 @@ class TokenSplitter(BaseSplitter):
                     raise RuntimeError(
                         f"spaCy model '{model}' is not available for download."
                     ) from e
+            spacy.load(model)
+            MAX_SAFE_LENGTH = 1_000_000
+            # If text is too long, raise a warning
+            if self.chunk_size > MAX_SAFE_LENGTH:
+                warnings.warn(
+                    "Too many characters: the v2.x parser and NER models require roughly 1GB of temporary memory per 100,000 characters in the input",
+                    UserWarning,
+                )
+            # Set max_length to text length + some buffer
             splitter = SpacyTextSplitter(
-                max_length=self.chunk_size,
+                chunk_size=self.chunk_size,
+                chunk_overlap=0,
+                max_length=MAX_SAFE_LENGTH,
                 pipeline=model,
             )
         elif tokenizer == "nltk":
             try:
-                nltk.data.find(f"tokenizers/{model}.zip")
+                nltk.data.find(f"tokenizers/punkt/{self.language}.pickle")
             except LookupError:
-                nltk.download(f"{model}")
+                nltk.download("punkt")
             splitter = NLTKTextSplitter(
                 chunk_size=self.chunk_size, chunk_overlap=0, language=self.language
             )
