@@ -1,9 +1,10 @@
 import json
 import os
 from abc import ABC, abstractmethod
-from typing import Any, Union
+from typing import Any, Optional, Union
 from urllib.parse import urlparse
 
+from ..model import BaseModel
 from ..schema import ReaderOutput
 
 
@@ -95,18 +96,19 @@ class BaseReader(ABC):
             ```python
             BaseReader.try_parse_json('{"a": 1}')
             ```
-            ```bash
+            ```python
             {'a': 1}
             ```
             ```python
             BaseReader.try_parse_json({'b': 2})
             ```
-            ```bash
+            ```python
             {'b': 2}
             ```
             ```python
             BaseReader.try_parse_json('[not valid json]')
             ```
+            ```python
             ValueError: String could not be parsed as JSON: ...
             ```
         """
@@ -120,13 +122,15 @@ class BaseReader(ABC):
         raise TypeError("Provided object is not a string or dictionary")
 
     @abstractmethod
-    @abstractmethod
-    def read(self, file_path: str, **kwargs: Any) -> ReaderOutput:
+    def read(
+        self, file_path: str, model: Optional[BaseModel] = None, **kwargs: Any
+    ) -> ReaderOutput:
         """
         Reads input and returns a ReaderOutput with text content and standardized metadata.
 
         Args:
             file_path (str): Path to the input file, a URL, raw string, or dictionary.
+            model (Optional[BaseModel]): Optional model instance to assist or customize the reading or extraction process. Used for cases where VLMs or specialized parsers are required for processing the file content.
             **kwargs: Additional keyword arguments for implementation-specific options.
 
         Returns:

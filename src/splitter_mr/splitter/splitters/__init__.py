@@ -11,15 +11,15 @@ from .token_splitter import TokenSplitter
 from .word_splitter import WordSplitter
 
 __all__ = [
-    CharacterSplitter,
-    CodeSplitter,
-    HeaderSplitter,
-    HTMLTagSplitter,
-    RecursiveCharacterSplitter,
-    RecursiveJSONSplitter,
-    RowColumnSplitter,
-    ParagraphSplitter,
-    SentenceSplitter,
-    WordSplitter,
-    TokenSplitter,
+    "CharacterSplitter",
+    "CodeSplitter",
+    "HeaderSplitter",
+    "HTMLTagSplitter",
+    "RecursiveCharacterSplitter",
+    "RecursiveJSONSplitter",
+    "RowColumnSplitter",
+    "ParagraphSplitter",
+    "SentenceSplitter",
+    "WordSplitter",
+    "TokenSplitter",
 ]

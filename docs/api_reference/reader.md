@@ -47,6 +47,8 @@ Additionally, the file compatibility depending on the Reader class is given by t
 
 ### VanillaReader
 
+<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/vanilla_reader.svg" alt="Vanilla Reader logo" width=100%/>
+
 ::: splitter_mr.reader.readers.vanilla_reader
     handler: python
     options:

@@ -50,7 +50,7 @@ class WordSplitter(BaseSplitter):
             reader_output = ReaderOutput(
                 text: "The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs. Sphinx of black quartz, judge my vow.",
                 document_name: "pangrams.txt",
-                document_path: "/data/pangrams.txt",
+                document_path: "/https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/pangrams.txt",
             )
 
             # Split into chunks of 5 words, overlapping by 2 words
