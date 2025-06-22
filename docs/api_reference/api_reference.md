@@ -6,10 +6,14 @@ Welcome to the **SplitterMR Python API** reference.
 
 ## Documentation
 
-### Reader component documentation
+### [Reader component documentation](./reader.md)
 
-[Link](./reader.md)
+Use several reading methods to process your files.
 
-### Splitter component documentation
+### [Model component documentation](./model.md)
 
-[Link](./splitter.md)
+Add VLMs (Visual Language Models) to analyse your images from your documents.
+
+### [Splitter component documentation](./splitter.md)
+
+Implement several splitting strategies based on your needs.

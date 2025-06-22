@@ -11,6 +11,7 @@ nav:
     - Overview: api_reference/api_reference.md
     - Readers: api_reference/reader.md
     - Splitters: api_reference/splitter.md
+    - Models: api_reference/model.md
   - Examples:
     - Overview: examples/examples.md
     - Text-based splitting:
@@ -21,8 +22,11 @@ nav:
       - Split by HTML Tags: examples/schema/html_tag_splitter.md
       - Split by Code: examples/schema/code_splitter.md
       - Split JSON recursively: examples/schema/json_splitter.md
+      - Split tables by rows or columns: examples/schema/row_column_splitter.md
+      - Split Markdown and HTML files by headers: examples/schema/header_splitter.md
     - Reading:
-      - Read PDFs without VLMs: examples/pdf/simple_pdf_splitting.md
+      - Read PDFs without VLMs: examples/pdf/pdf_without_vlm.md
+      - Read PDFs with VLMs: examples/pdf/pdf_with_vlm.md
   - CHANGELOG: CHANGELOG.md
 
 extra_css:

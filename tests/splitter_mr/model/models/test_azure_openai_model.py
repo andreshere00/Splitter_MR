@@ -27,7 +27,6 @@ def test_init_with_arguments():
             azure_endpoint="https://endpoint",
             azure_deployment="deployment",
             api_version="2025-04-14-preview",
-            model_name="gpt-4.1",
         )
         mock_client.assert_called_once_with(
             api_key="key",
@@ -35,7 +34,7 @@ def test_init_with_arguments():
             azure_deployment="deployment",
             api_version="2025-04-14-preview",
         )
-        assert model.model_name == "gpt-4.1"
+        assert model.model_name == "deployment"
 
 
 def test_init_with_env(monkeypatch):
@@ -47,7 +46,7 @@ def test_init_with_env(monkeypatch):
     ) as mock_client:
         model = AzureOpenAIVisionModel()
         mock_client.assert_called_once()
-        assert model.model_name == "gpt-4.1"
+        assert model.model_name == "env-deployment"
 
 
 @pytest.mark.parametrize(

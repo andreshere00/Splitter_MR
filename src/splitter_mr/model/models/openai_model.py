@@ -51,6 +51,20 @@ class OpenAIVisionModel(BaseModel):
 
         Returns:
             str: The extracted text from the image.
+
+        Example:
+            ```python
+            from splitter_mr.model import OpenAIVisionModel
+            from splitter_mr.reader import VanillaReader
+
+            file = "data/pdfplumber_example.pdf"
+
+            model = OpenAIVisionModel() # provide your own keys and model
+            # Connection parameters can be provided via environment variables
+
+            reader = VanillaReader(model = model)
+            reader.read(file)
+            ```
         """
         payload = {
             "role": "user",

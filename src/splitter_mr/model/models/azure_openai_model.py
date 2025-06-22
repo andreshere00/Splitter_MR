@@ -20,7 +20,6 @@ class AzureOpenAIVisionModel(BaseModel):
         azure_endpoint: str = None,
         azure_deployment: str = None,
         api_version: str = None,
-        model_name: str = "gpt-4.1",
     ):
         """
         Initializes the AzureOpenAIVisionModel.
@@ -63,7 +62,7 @@ class AzureOpenAIVisionModel(BaseModel):
             azure_deployment=azure_deployment,
             api_version=api_version,
         )
-        self.model_name = model_name
+        self.model_name = azure_deployment
 
     def get_client(self) -> AzureOpenAI:
         """Returns the AzureOpenAI client instance."""
@@ -85,6 +84,20 @@ class AzureOpenAIVisionModel(BaseModel):
 
         Returns:
             str: Extracted text from the image.
+
+        Example:
+            ```python
+            from splitter_mr.model import AzureOpenAIVisionModel
+            from splitter_mr.reader import VanillaReader
+
+            file = "data/pdfplumber_example.pdf"
+
+            model = AzureOpenAIVisionModel() # provide your own keys and model
+            # Connection parameters can be provided via environment variables
+
+            reader = VanillaReader(model = model)
+            reader.read(file)
+            ```
         """
         payload = {
             "role": "user",

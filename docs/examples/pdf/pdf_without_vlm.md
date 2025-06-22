@@ -449,6 +449,6 @@ Finally, here we present a comparative table of each method, with the strengths 
 | **Pagination**                           | **yes**                | no                        | no                         |
 | **Execution time**                       | low                    | **the lowest**            | the highest                |
 
-With this information, we know which method to use. However, there is an element that we have not yet analyzed: the description and annotation of images. Currently, all three methods can describe and annotate images using VLMs. To see how to do this, [jump to the next tutorial](./pdf_splitting_with_VLM.md).
+With this information, we know which method to use. However, there is an element that we have not yet analyzed: the description and annotation of images. Currently, all three methods can describe and annotate images using VLMs. To see how to do this, [jump to the next tutorial](./pdf_with_vlm.md).
 
 **Thanks for Reading!**
