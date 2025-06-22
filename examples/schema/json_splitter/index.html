@@ -1,0 +1,1289 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../code_splitter/">
+      
+      
+        <link rel="next" href="../row_column_splitter/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Split JSON recursively - SplitterMR Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../../assets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#example-splitting-json-files-with-recursivejsonsplitter" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="SplitterMR Docs" class="md-header__button md-logo" aria-label="SplitterMR Docs" data-md-component="logo">
+      
+  <img src="../../../assets/splitter_mr_logo_white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SplitterMR Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Split JSON recursively
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="SplitterMR Docs" class="md-nav__button md-logo" aria-label="SplitterMR Docs" data-md-component="logo">
+      
+  <img src="../../../assets/splitter_mr_logo_white.svg" alt="logo">
+
+    </a>
+    SplitterMR Docs
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Developer Guide
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Developer Guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api_reference/api_reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api_reference/reader/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Readers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api_reference/splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Splitters
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api_reference/model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Models
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Examples
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Examples
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Text-based splitting
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Text-based splitting
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../text/fixed_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by grammatical groups
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../text/recursive_character_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by characters recursively
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../text/token_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by tokens
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Schema-based splitting
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            Schema-based splitting
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../html_tag_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by HTML Tags
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../code_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Split JSON recursively
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split JSON recursively
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#example-splitting-json-files-with-recursivejsonsplitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example: Splitting JSON Files with RecursiveJSONSplitter
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Example: Splitting JSON Files with RecursiveJSONSplitter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-read-the-json-document" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1: Read the JSON Document
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-split-the-json-document" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Split the JSON Document
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complete-example-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complete Example Script
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../row_column_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split tables by rows or columns
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../header_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split Markdown and HTML files by headers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Reading
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            Reading
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pdf/pdf_without_vlm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Read PDFs without VLMs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pdf/pdf_with_vlm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Read files with VLMs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CHANGELOG
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#example-splitting-json-files-with-recursivejsonsplitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example: Splitting JSON Files with RecursiveJSONSplitter
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Example: Splitting JSON Files with RecursiveJSONSplitter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-read-the-json-document" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1: Read the JSON Document
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-split-the-json-document" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Split the JSON Document
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complete-example-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complete Example Script
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>Split JSON recursively</h1>
+
+<h2 id="example-splitting-json-files-with-recursivejsonsplitter"><strong>Example</strong>: Splitting JSON Files with <code>RecursiveJSONSplitter</code><a class="headerlink" href="#example-splitting-json-files-with-recursivejsonsplitter" title="Permanent link">&para;</a></h2>
+<p>When working with structured data such as invoices, user records, or any other JSON document, it's often necessary to split the data into manageable chunks for downstream processing, storage, or LLM ingestion. <strong>SplitterMR</strong> provides the <code>RecursiveJSONSplitter</code>, an splitter which divides a JSON structure into key-based chunks, preserving the hierarchy and content integrity. Let's see how it works!</p>
+<p><img alt="JSON object" src="https://www.json.org/img/object.png" /></p>
+<hr />
+<h3 id="step-1-read-the-json-document">Step 1: Read the JSON Document<a class="headerlink" href="#step-1-read-the-json-document" title="Permanent link">&para;</a></h3>
+<p>First, use the <code>VanillaReader</code> to load the JSON file. You can use other Reader methods as your choice. Note that you can read from an URL, Path or variable.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">VanillaReader</span>
+
+<span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/invoices.json&quot;</span>  <span class="c1"># Path to your JSON file</span>
+<span class="n">reader</span> <span class="o">=</span> <span class="n">VanillaReader</span><span class="p">()</span>
+<span class="n">reader_output</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span>        <span class="c1"># Show metadata and summary</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">ReaderOutput</span><span class="p">(</span>
+    <span class="n">text</span><span class="o">=</span><span class="s1">&#39;[</span><span class="se">\n</span><span class="s1">   {</span><span class="se">\n</span><span class="s1">      &quot;id&quot;: 1,</span><span class="se">\n</span><span class="s1">      &quot;name&quot;: &quot;Johnson, Smith, and Jones Co.&quot;,</span><span class="se">\n</span><span class="s1">      &quot;amount&quot;: 345.33,</span><span class="se">\n</span><span class="s1">      &quot;Remark&quot;: &quot;Pays on time&quot;</span><span class="se">\n</span><span class="s1">   },</span><span class="se">\n</span><span class="s1">   {</span><span class="se">\n</span><span class="s1">      &quot;id&quot;: 2,</span><span class="se">\n</span><span class="s1">      &quot;name&quot;: &quot;Sam </span><span class="se">\\</span><span class="s1">&quot;Mad Dog</span><span class="se">\\</span><span class="s1">&quot; Smith&quot;,</span><span class="se">\n</span><span class="s1">      &quot;amount&quot;: 993.44,</span><span class="se">\n</span><span class="s1">      &quot;Remark&quot;: &quot;&quot;</span><span class="se">\n</span><span class="s1">   },</span><span class="se">\n</span><span class="s1">   {</span><span class="se">\n</span><span class="s1">      &quot;id&quot;: 3,</span><span class="se">\n</span><span class="s1">      &quot;name&quot;: &quot;Barney &amp; Company&quot;,</span><span class="se">\n</span><span class="s1">      &quot;amount&quot;: 0,</span><span class="se">\n</span><span class="s1">      &quot;Remark&quot;: &quot;Great to work with</span><span class="se">\\</span><span class="s1">nand always pays with cash.&quot;</span><span class="se">\n</span><span class="s1">   },</span><span class="se">\n</span><span class="s1">   {</span><span class="se">\n</span><span class="s1">      &quot;id&quot;: 4,</span><span class="se">\n</span><span class="s1">      &quot;name&quot;: &quot;Johnson</span><span class="se">\&#39;</span><span class="s1">s Automotive&quot;,</span><span class="se">\n</span><span class="s1">      &quot;amount&quot;: 2344,</span><span class="se">\n</span><span class="s1">      &quot;Remark&quot;: &quot;&quot;</span><span class="se">\n</span><span class="s1">   }</span><span class="se">\n</span><span class="s1">]&#39;</span><span class="p">,</span> 
+    <span class="n">document_name</span><span class="o">=</span><span class="s1">&#39;invoices.json&#39;</span><span class="p">,</span> 
+    <span class="n">document_path</span><span class="o">=</span><span class="s1">&#39;https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/invoices.json&#39;</span><span class="p">,</span> 
+    <span class="n">document_id</span><span class="o">=</span><span class="s1">&#39;103c305c-60c8-485a-9f43-73db3216e2a4&#39;</span><span class="p">,</span> 
+    <span class="n">conversion_method</span><span class="o">=</span><span class="s1">&#39;json&#39;</span><span class="p">,</span> 
+    <span class="n">reader_method</span><span class="o">=</span><span class="s1">&#39;vanilla&#39;</span><span class="p">,</span> 
+    <span class="n">ocr_method</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+    <span class="n">metadata</span><span class="o">=</span><span class="p">{}</span>
+    <span class="p">)</span>
+</code></pre></div>
+<p>Accessing to the text attribute you find the following JSON object:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="n">reader_output</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="p">[</span>
+<span class="w">   </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Johnson, Smith, and Jones Co.&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">345.33</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Remark&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Pays on time&quot;</span>
+<span class="w">   </span><span class="p">},</span>
+<span class="w">   </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Sam \&quot;Mad Dog\&quot; Smith&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">993.44</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Remark&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">   </span><span class="p">},</span>
+<span class="w">   </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Barney &amp; Company&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Remark&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Great to work with\nand always pays with cash.&quot;</span>
+<span class="w">   </span><span class="p">},</span>
+<span class="w">   </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Johnson&#39;s Automotive&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2344</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;Remark&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div>
+<p>This is a JSON dataset with some sample invoices.</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name</th>
+<th>amount</th>
+<th>Remark</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Johnson, Smith, and Jones Co.</td>
+<td>345.33</td>
+<td>Pays on time</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Sam "Mad Dog" Smith</td>
+<td>993.44</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Barney &amp; Company</td>
+<td>0</td>
+<td>Great to work with and always pays with cash.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Johnson's Automotive</td>
+<td>2344</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="step-2-split-the-json-document">Step 2: Split the JSON Document<a class="headerlink" href="#step-2-split-the-json-document" title="Permanent link">&para;</a></h3>
+<p>To split the text, instantiate the <code>RecursiveJSONSplitter</code> and split the loaded JSON content:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.splitter</span><span class="w"> </span><span class="kn">import</span> <span class="n">RecursiveJSONSplitter</span>
+
+<span class="n">splitter</span> <span class="o">=</span> <span class="n">RecursiveJSONSplitter</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">min_chunk_size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">splitter_output</span> <span class="o">=</span> <span class="n">splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">splitter_output</span><span class="p">)</span>  <span class="c1"># Show the SplitterOutput object</span>
+</code></pre></div>
+<p>You will get an object like this:</p>
+<div class="highlight"><pre><span></span><code><span class="n">SplitterOutput</span><span class="p">(</span>
+    <span class="n">chunks</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;0&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Johnson, Smith, and Jones Co.&#39;</span><span class="p">,</span> <span class="s1">&#39;amount&#39;</span><span class="p">:</span> <span class="mf">345.33</span><span class="p">,</span> <span class="s1">&#39;Remark&#39;</span><span class="p">:</span> <span class="s1">&#39;Pays on time&#39;</span><span class="p">}},</span> <span class="p">{</span><span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Sam &quot;Mad Dog&quot; Smith&#39;</span><span class="p">,</span> <span class="s1">&#39;amount&#39;</span><span class="p">:</span> <span class="mf">993.44</span><span class="p">,</span> <span class="s1">&#39;Remark&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}},</span> <span class="p">{</span><span class="s1">&#39;2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Barney &amp; Company&#39;</span><span class="p">,</span> <span class="s1">&#39;amount&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Remark&#39;</span><span class="p">:</span> <span class="s1">&#39;Great to work with</span><span class="se">\n</span><span class="s1">and always pays with cash.&#39;</span><span class="p">}},</span> <span class="p">{</span><span class="s1">&#39;3&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s2">&quot;Johnson&#39;s Automotive&quot;</span><span class="p">,</span> <span class="s1">&#39;amount&#39;</span><span class="p">:</span> <span class="mi">2344</span><span class="p">,</span> <span class="s1">&#39;Remark&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}}],</span> 
+    <span class="n">chunk_id</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;58556605-6e2b-4994-b764-56555b1eb68f&#39;</span><span class="p">,</span> <span class="s1">&#39;74826121-4ef7-42a6-8288-7d950feaf0c5&#39;</span><span class="p">,</span> <span class="s1">&#39;e73b6464-2ec2-49a8-9387-a31ab9295b49&#39;</span><span class="p">,</span> <span class="s1">&#39;4368e0f4-c1f2-440a-8aec-6f9d28eb07cd&#39;</span><span class="p">],</span> 
+    <span class="n">document_name</span><span class="o">=</span><span class="s1">&#39;invoices.json&#39;</span><span class="p">,</span> 
+    <span class="n">document_path</span><span class="o">=</span><span class="s1">&#39;https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/invoices.json&#39;</span><span class="p">,</span> 
+    <span class="n">document_id</span><span class="o">=</span><span class="s1">&#39;103c305c-60c8-485a-9f43-73db3216e2a4&#39;</span><span class="p">,</span> 
+    <span class="n">conversion_method</span><span class="o">=</span><span class="s1">&#39;json&#39;</span><span class="p">,</span> 
+    <span class="n">reader_method</span><span class="o">=</span><span class="s1">&#39;vanilla&#39;</span><span class="p">,</span> 
+    <span class="n">ocr_method</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+    <span class="n">split_method</span><span class="o">=</span><span class="s1">&#39;recursive_json_splitter&#39;</span><span class="p">,</span> 
+    <span class="n">split_params</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">&#39;max_chunk_size&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;min_chunk_size&#39;</span><span class="p">:</span> <span class="mi">20</span>
+        <span class="p">},</span>
+    <span class="n">metadata</span><span class="o">=</span><span class="p">{}</span>
+    <span class="p">)</span>
+</code></pre></div>
+<p>To inspect every chunk individually, print them as follows:</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">splitter_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; Chunk </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">chunk</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">)])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="o">========================================</span> <span class="n">Chunk</span> <span class="mi">1</span> <span class="o">========================================</span>
+<span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Johnson, Smith, and Jones Co.&#39;</span><span class="p">,</span> <span class="s1">&#39;amount&#39;</span><span class="p">:</span> <span class="mf">345.33</span><span class="p">,</span> <span class="s1">&#39;Remark&#39;</span><span class="p">:</span> <span class="s1">&#39;Pays on time&#39;</span><span class="p">}</span>
+
+<span class="o">========================================</span> <span class="n">Chunk</span> <span class="mi">2</span> <span class="o">========================================</span>
+<span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Sam &quot;Mad Dog&quot; Smith&#39;</span><span class="p">,</span> <span class="s1">&#39;amount&#39;</span><span class="p">:</span> <span class="mf">993.44</span><span class="p">,</span> <span class="s1">&#39;Remark&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}</span>
+
+<span class="o">========================================</span> <span class="n">Chunk</span> <span class="mi">3</span> <span class="o">========================================</span>
+<span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Barney &amp; Company&#39;</span><span class="p">,</span> <span class="s1">&#39;amount&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Remark&#39;</span><span class="p">:</span> <span class="s1">&#39;Great to work with</span><span class="se">\n</span><span class="s1">and always pays with cash.&#39;</span><span class="p">}</span>
+
+<span class="o">========================================</span> <span class="n">Chunk</span> <span class="mi">4</span> <span class="o">========================================</span>
+<span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s2">&quot;Johnson&#39;s Automotive&quot;</span><span class="p">,</span> <span class="s1">&#39;amount&#39;</span><span class="p">:</span> <span class="mi">2344</span><span class="p">,</span> <span class="s1">&#39;Remark&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}</span>
+</code></pre></div>
+<p>In markdown format table:</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name</th>
+<th>amount</th>
+<th>Remark</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Johnson, Smith, and Jones Co.</td>
+<td>345.33</td>
+<td>Pays on time</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name</th>
+<th>amount</th>
+<th>Remark</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2</td>
+<td>Sam "Mad Dog" Smith</td>
+<td>993.44</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name</th>
+<th>amount</th>
+<th>Remark</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3</td>
+<td>Barney &amp; Company</td>
+<td>0</td>
+<td>Great to work with and always pays with cash.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name</th>
+<th>amount</th>
+<th>Remark</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4</td>
+<td>Johnson's Automotive</td>
+<td>2344</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>And that's it!</strong> As you can see, a chunk for every row in the JSON table has been generated. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All the objects obtained by the <code>SplitterOutput</code> <code>.chunks</code> attribute are <code>dict</code>. In case that you need to transform it into <code>str</code> elements, you need to process them with the instruction <code>str(chunk[idx])</code>.</p>
+</div>
+<hr />
+<h3 id="complete-example-script">Complete Example Script<a class="headerlink" href="#complete-example-script" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">VanillaReader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.splitter</span><span class="w"> </span><span class="kn">import</span> <span class="n">RecursiveJSONSplitter</span>
+
+<span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/invoices.json&quot;</span>
+
+<span class="n">reader</span> <span class="o">=</span> <span class="n">VanillaReader</span><span class="p">()</span> <span class="c1"># Load a Reader</span>
+<span class="n">reader_output</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file</span><span class="p">)</span> <span class="c1"># Read the file</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span> <span class="c1"># ReaderOutput object</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">reader_output</span><span class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="c1"># Visualize the file</span>
+
+<span class="n">splitter</span> <span class="o">=</span> <span class="n">RecursiveJSONSplitter</span><span class="p">(</span><span class="n">chunk_size</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">min_chunk_size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span> <span class="c1"># Instantiate the Splitter class</span>
+<span class="n">splitter_output</span> <span class="o">=</span> <span class="n">splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span> <span class="c1"># Split the text</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">splitter_output</span><span class="p">)</span> <span class="c1"># SplitterOutput object</span>
+
+<span class="c1"># Visualize every chunk</span>
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">splitter_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; Chunk </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">chunk</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">)])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://python.langchain.com/api_reference/text_splitters/json/langchain_text_splitters.json.RecursiveJsonSplitter.html#langchain_text_splitters.json.RecursiveJsonSplitter">RecursiveJSONSplitter API (Langchain)</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy"], "search": "../../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>
