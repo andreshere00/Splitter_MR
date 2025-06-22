@@ -73,7 +73,7 @@ class RecursiveJSONSplitter(BaseSplitter):
             max_chunk_size=self.chunk_size,
             min_chunk_size=int(self.chunk_size - self.min_chunk_size),
         )
-        chunks = splitter.split_json(json_data=text)
+        chunks = splitter.split_json(json_data=text, convert_lists=True)
 
         # Generate chunk_ids and metadata
         chunk_ids = self._generate_chunk_ids(len(chunks))

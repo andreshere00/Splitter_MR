@@ -20,6 +20,7 @@ nav:
     - Schema-based splitting:
       - Split by HTML Tags: examples/schema/html_tag_splitter.md
       - Split by Code: examples/schema/code_splitter.md
+      - Split JSON recursively: examples/schema/json_splitter.md
   - CHANGELOG: CHANGELOG.md
 
 extra_css:

@@ -105,7 +105,7 @@ for idx, chunk in enumerate(splitter_output.chunks):
 
 Example output:
 
-```
+```python
 ======================================== Chunk 0 ========================================
 from langchain_text_splitters import Language, RecursiveCharacterTextSplitter
 
@@ -191,3 +191,7 @@ for idx, chunk in enumerate(splitter_output.chunks):
     print("="*40 + f" Chunk {idx} " + "="*40)
     print(chunk)
 ```
+
+### References
+
+* [LangChain's RecursiveCharacterTextSplitter](https://python.langchain.com/docs/how_to/code_splitter/) 

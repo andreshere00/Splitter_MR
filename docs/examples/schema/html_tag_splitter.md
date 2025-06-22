@@ -176,10 +176,6 @@ In markdown format can be displayed as:
 | 0001  | donut | Cake  | Regular | Chocolate               |
 | 0001  | donut | Cake  | Regular | Maple                   |
 
-
-!!! Note
-    If you want to always include the table header in every chunk (for tables), you can enhance the splitter to prepend the `<thead>` content to each chunk.
-
 **And that's it!** You can now flexibly chunk HTML tables for processing, annotation, or LLM ingestion.
 
 ---

@@ -310,13 +310,17 @@ for idx, chunk in enumerate(nltk_sp_output.chunks):
 
 There are several tokenizer models that you can use to split your text. In the following table is provided a summary of the models that you can currently use, among with some implementation examples:
 
----
-
 | **Library**      | **Model identifier/template**                                                                                                      | **How to implement**                      | **Reference Guide**                                            |
 | :--------------- | :--------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------- | :------------------------------------------------------------- |
 | **NLTK (Punkt)** | `<language>`                                                                                                                       | See [NLTK Example](#nltk-example)         | [NLTK Tokenizers](https://www.nltk.org/api/nltk.tokenize.html) |
 | **Tiktoken**     | `<encoder>`                                                                                                                        | See [Tiktoken Example](#tiktoken-example) | [tiktoken](https://github.com/openai/tiktoken)                 |
 | **spaCy**        | `{CC}_core_web_sm`,<br>`{CC}_core_web_md`,<br>`{CC}_core_web_lg`,<br>`{CCe}_core_web_trf`,<br>`xx_ent_wiki_sm`,<br>`xx_sent_ud_sm` | See [spaCy Example](#spacy-example)       | [spaCy Models](https://spacy.io/usage/models)                  |
+
+**spaCy Model Suffixes:**
+- `sm` (**small**): Fastest, small in size, less accurate; good for prototyping and lightweight use-cases.
+- `md` (**medium**): Medium size and accuracy; balances speed and performance.
+- `lg` (**large**): Largest and most accurate pipeline with the most vectors; slower and uses more memory.
+- `trf` (**transformer**): Uses transformer-based architectures (e.g., BERT, RoBERTa); highest accuracy, slowest, and requires more resources.
 
 ### NLTK Example
 
