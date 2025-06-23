@@ -1034,7 +1034,7 @@
 
 <h1 id="example-reading-files-with-visual-language-models-to-provide-image-annotations"><strong>Example</strong>: Reading files with Visual Language Models to Provide Image Annotations<a class="headerlink" href="#example-reading-files-with-visual-language-models-to-provide-image-annotations" title="Permanent link">&para;</a></h1>
 <p>When reading a PDF file or other files which contains images, it can be useful to provide descriptive text alongside those images. Since images in a Markdown file are typically rendered by encoding them in base64 format, you may alternatively want to include a description of each image instead. </p>
-<p>This is where <strong>Visual Language Models (VLMs)</strong> come in—to analyze and describe images automatically. In this tutorial, we'll show how to use these models with the library.</p>
+<p>This is where <strong>Visual Language Models (VLMs)</strong> come in. VLM allows tou to analyze and describe images based on a prompt that you provide. In this tutorial, we'll show how to use these models with the library.</p>
 <h2 id="step-1-load-a-model">Step 1: Load a Model<a class="headerlink" href="#step-1-load-a-model" title="Permanent link">&para;</a></h2>
 <p>Currently, two models are supported: one from OpenAI and one from an Azure OpenAI deployment. After choosing a model, you simply need to instantiate the <code>BaseModel</code> class, which implements one of these VLMs.</p>
 <p>Before that, you should provide some environment variables (these variables should be saved in a <code>.env</code> file in the directory where the Python script will be executed):</p>
@@ -1164,7 +1164,7 @@ Cras in interdum augue.
 <span class="nb">print</span><span class="p">(</span><span class="n">md_reader_output</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 </code></pre></div>
 <p>Original image is:</p>
-<p><img alt="Chameleon" src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/blob/main/data/chameleon.jpg" /></p>
+<p><img alt="Chameleon" src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/chameleon.jpg" /></p>
 <p>And the description is:</p>
 <div class="highlight"><pre><span></span><code><span class="gh"># Description:</span>
 In this captivating close-up, we see a vibrant lizard peering curiously from the embrace of a blooming flower. The intricate details of its scales shimmer in a range of mesmerizing colors, from vivid turquoise to rich reds. Its large, expressive eyes reflect a sense of wonder as it engages with its blooming surroundings, seemingly unbothered by the colorful petals that cradle it. The soft, blurred background, awash in dreamy hues of pink and yellow, contrasts beautifully with the lizard’s eye-catching palette, enhancing the ethereal quality of the composition. This image invites us to appreciate the delicate balance of nature, showcasing how creatures from different realms come together in splendor, creating a harmonious moment in the natural world. With every glance, one can’t help but marvel at the beauty of biodiversity and the intriguing interactions that occur in hidden corners of our environment.
@@ -1183,7 +1183,7 @@ In this captivating close-up, we see a vibrant lizard peering curiously from the
 
 <span class="nb">print</span><span class="p">(</span><span class="n">docling_output</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 </code></pre></div>
-<p>The result is pretty similar to the observed PDF (https://raw.githubusercontent.com/andreshere00/Splitter_MR/blob/main/data/sunny_farm.pdf)</p>
+<p>The result is pretty similar to the <a href="https://raw.githubusercontent.com/andreshere00/Splitter_MR/blob/main/data/sunny_farm.pdf">observed PDF</a>:</p>
 <div class="highlight"><pre><span></span><code><span class="gh"># Sunny Farm Invoice</span>
 
 Attention To: Denny Gunawan 221 Queen St Melbourne VIC 3000  
@@ -1238,8 +1238,6 @@ At the bottom of the invoice, there is a &quot;THANK YOU&quot; message, indicati
 
 Overall, the invoice is well-structured, providing clear information about the purchase, pricing, and total amount due, while also conveying a friendly and professional tone.
 </code></pre></div>
-<p>Here’s a corrected and slightly clarified version:</p>
-<hr />
 <h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
 <p>Although all three methods can read files from various sources, they differ significantly in how VLM analysis is implemented:</p>
 <ul>
@@ -1269,7 +1267,7 @@ Overall, the invoice is well-structured, providing clear information about the p
 
 <span class="c1">## Vanilla Reader</span>
 
-<span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;data/pdfplumber_example.pdf&quot;</span>
+<span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/pdfplumber_example.pdf&quot;</span>
 
 <span class="n">reader</span> <span class="o">=</span> <span class="n">VanillaReader</span><span class="p">(</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="p">)</span>
 <span class="n">reader_output</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
@@ -1282,7 +1280,7 @@ Overall, the invoice is well-structured, providing clear information about the p
 
 <span class="c1">## MarkItDown Reader</span>
 
-<span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;data/chameleon.jpg&quot;</span>
+<span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/chameleon.jpg&quot;</span>
 
 <span class="n">md</span> <span class="o">=</span> <span class="n">MarkItDownReader</span><span class="p">(</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="p">)</span>
 <span class="n">md_reader_output</span> <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
@@ -1291,7 +1289,7 @@ Overall, the invoice is well-structured, providing clear information about the p
 
 <span class="c1">## Docling Reader</span>
 
-<span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;data/sunny_farm.pdf&quot;</span>
+<span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/sunny_farm.pdf&quot;</span>
 
 <span class="n">docling</span> <span class="o">=</span> <span class="n">DoclingReader</span><span class="p">(</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="p">)</span>
 <span class="n">docling_output</span> <span class="o">=</span> <span class="n">docling</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;Provide a long description&quot;</span><span class="p">)</span>

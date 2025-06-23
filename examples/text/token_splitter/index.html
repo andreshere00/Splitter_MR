@@ -1165,10 +1165,10 @@
 
 
 <h1 id="example-split-a-document-by-tokens-with-tokensplitter-spacy-nltk-tiktoken"><strong>Example</strong>: Split a Document by Tokens with <code>TokenSplitter</code> (SpaCy, NLTK, tiktoken)<a class="headerlink" href="#example-split-a-document-by-tokens-with-tokensplitter-spacy-nltk-tiktoken" title="Permanent link">&para;</a></h1>
-<p>In this example, we will use several popular NLP libraries to split a text document into token-based chunks. A token is the minimal lexical unit in which a text is divided into. Tokenization can be performed in many ways: by words, by characters, by lemmas, etc. One of the most common methods is by sub-words. </p>
+<p>In this example, we will use several popular NLP libraries to split a text document into token-based chunks. A token is the minimal lexical unit into which a text is divided. Tokenization can be performed in many ways: by words, by characters, by lemmas, etc. One of the most common methods is by sub-words.</p>
 <p>Observe the following example:</p>
 <p><img alt="Tokenization illustration" src="https://miro.medium.com/v2/resize:fit:1400/1*8QoeQNDcgwHjrS4AcX3V8g.png" /></p>
-<p>Every Large Language Model uses tokenizers to process a large text into comprehensive lexical units . Hence, split by tokens could be a suitable option to produce chunks of a fixed length compatible with the LLM context window. So, in this tutorial we show how to split the text using three tokenizers: <strong>SpaCy</strong>, <strong>NLTK</strong>, and <strong>tiktoken</strong> (OpenAI tokenization). Let's see!</p>
+<p>Every Large Language Model (LLM) uses tokenizers to process text into comprehensible lexical units. Hence, splitting by tokens could be a suitable option to produce chunks of a fixed length compatible with the LLM context window. So, in this tutorial, we show how to split text using three tokenizers: <strong>SpaCy</strong>, <strong>NLTK</strong>, and <strong>tiktoken</strong> (OpenAI tokenization). Let's see!</p>
 <hr />
 <h2 id="step-1-read-the-text-using-a-reader">Step 1: Read the Text Using a Reader<a class="headerlink" href="#step-1-read-the-text-using-a-reader" title="Permanent link">&para;</a></h2>
 <p>We will start by reading a text file using the <code>MarkItDownReader</code>. Remember that you can use any other compatible <a href="../../../api_reference/reader/">Reader</a>. Simply, instantiate a Reader object and use the <code>read</code> method. Provide as an argument the file to be read, which can be an URL, variable or path</p>
@@ -1459,7 +1459,7 @@ You can now tokenize and chunk text with precision, using the NLP backend and la
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; Chunk </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">chunk</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="available-models">Available models<a class="headerlink" href="#available-models" title="Permanent link">&para;</a></h2>
-<p>There are several tokenizer models that you can use to split your text. In the following table is provided a summary of the models that you can currently use, among with some implementation examples:</p>
+<p>There are several tokenizer models that you can use to split your text. The following table provides a summary of the models you can currently use, along with some implementation examples:</p>
 <table>
 <thead>
 <tr>
@@ -1490,11 +1490,22 @@ You can now tokenize and chunk text with precision, using the NLP backend and la
 </tr>
 </tbody>
 </table>
-<p><strong>spaCy Model Suffixes:</strong>
-- <code>sm</code> (<strong>small</strong>): Fastest, small in size, less accurate; good for prototyping and lightweight use-cases.
-- <code>md</code> (<strong>medium</strong>): Medium size and accuracy; balances speed and performance.
-- <code>lg</code> (<strong>large</strong>): Largest and most accurate pipeline with the most vectors; slower and uses more memory.
-- <code>trf</code> (<strong>transformer</strong>): Uses transformer-based architectures (e.g., BERT, RoBERTa); highest accuracy, slowest, and requires more resources.</p>
+<details><summary>About spaCy model templates</summary>
+<p><strong>spaCy Model Suffixes:</strong></p>
+<ul>
+  <li><code>sm</code> (<strong>small</strong>): Fastest, small in size, less accurate; good for prototyping and lightweight use-cases.</li>
+  <li><code>md</code> (<strong>medium</strong>): Medium size and accuracy; balances speed and performance.</li>
+  <li><code>lg</code> (<strong>large</strong>): Largest and most accurate pipeline with the most vectors; slower and uses more memory.</li>
+  <li><code>trf</code> (<strong>transformer</strong>): Uses transformer-based architectures (e.g., BERT, RoBERTa); highest accuracy, slowest, and requires more resources.</li>
+</ul>
+
+<p><strong>spaCy Model Prefixes:</strong></p>
+<ul>
+  <li><strong>CC</strong> codes: <code>ca</code> (catalan), <code>zh</code> (chinese), <code>hr</code> (croatian), <code>da</code> (danish), <code>nl</code> (dutch), <code>en</code> (english), <code>fi</code> (finnish), <code>fr</code> (french), <code>ge</code> (german), <code>gr</code> (greek), <code>it</code> (italian), <code>ja</code> (japanese), <code>ko</code> (korean), <code>li</code> (lithuanian), <code>mk</code> (macedonian), <code>nb</code> (norwegian), <code>pl</code> (polish), <code>pt</code> (portuguese), <code>ro</code> (romanian), <code>ru</code> (russian), <code>sl</code> (slovenian), <code>sp</code> (spanish), <code>sw</code> (swedish), <code>uk</code> (ukranian)</li>
+  <li><strong>CCe</strong> codes (for trf): <code>ca</code>, <code>zh</code>, <code>en</code>, <code>fr</code>, <code>ge</code>, <code>ja</code>, <code>sl</code>, <code>sp</code>, <code>uk</code></li>
+</ul>
+</details>
+
 <h3 id="nltk-example">NLTK Example<a class="headerlink" href="#nltk-example" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">language</span> <span class="o">=</span> <span class="s2">&quot;english&quot;</span>
 <span class="n">TokenSplitter</span><span class="p">(</span>

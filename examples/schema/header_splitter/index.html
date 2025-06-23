@@ -754,6 +754,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Splitting Markdown File">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-read-the-markdown-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1. Read the Markdown file
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-split-the-markdown-files-by-header-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2. Split the Markdown files by Header Levels
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -969,6 +993,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Splitting Markdown File">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-read-the-markdown-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1. Read the Markdown file
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-split-the-markdown-files-by-header-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2. Split the Markdown files by Header Levels
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1123,6 +1171,7 @@
 </code></pre></div>
 <hr />
 <h2 id="splitting-markdown-file">Splitting Markdown File<a class="headerlink" href="#splitting-markdown-file" title="Permanent link">&para;</a></h2>
+<h3 id="step-1-read-the-markdown-file">Step 1. Read the Markdown file<a class="headerlink" href="#step-1-read-the-markdown-file" title="Permanent link">&para;</a></h3>
 <p>The exact same interface works for Markdown files. Just change the path:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Markdown file example&quot;</span><span class="p">)</span>
 
@@ -1198,6 +1247,7 @@ _This is italic text_
 
 ...
 </code></pre></div>
+<h3 id="step-2-split-the-markdown-files-by-header-levels">Step 2. Split the Markdown files by Header Levels<a class="headerlink" href="#step-2-split-the-markdown-files-by-header-levels" title="Permanent link">&para;</a></h3>
 <p>To split this text by the level 2 headers (<code>##</code>), we can use the following instructions:</p>
 <div class="highlight"><pre><span></span><code><span class="n">splitter</span> <span class="o">=</span> <span class="n">HeaderSplitter</span><span class="p">(</span><span class="n">headers_to_split_on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Header 2&quot;</span><span class="p">])</span>
 <span class="n">splitter_output</span> <span class="o">=</span> <span class="n">splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span>

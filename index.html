@@ -1137,7 +1137,7 @@
 <p><strong>Vision Language Model (VLM) support!</strong></p>
 <p>You can now use vision-capable models (OpenAI Vision, Azure OpenAI Vision) to extract image descriptions and OCR text during file reading.
 Pass a VLM model to any Reader class via the <code>model</code> parameter. 
-- See <a href="https://andreshere00.github.io/Splitter_MR/api_reference/reader/"><strong>documentation</strong></a>.</p>
+- See <a href="https://andreshere00.github.io/Splitter_MR/api_reference/model/"><strong>documentation</strong></a>.</p>
 </div>
 <h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
 <h3 id="different-input-formats">Different input formats<a class="headerlink" href="#different-input-formats" title="Permanent link">&para;</a></h3>
@@ -1158,12 +1158,12 @@ Pass a VLM model to any Reader class via the <code>model</code> parameter.
 <tbody>
 <tr>
 <td><strong><code>VanillaReader</code></strong></td>
-<td><code>txt</code>, <code>md</code></td>
+<td><code>txt</code>, <code>md</code>, <code>pdf</code></td>
 <td><code>xlsx</code></td>
 <td><code>csv</code>, <code>tsv</code>, <code>parquet</code></td>
 <td><code>json</code>, <code>yaml</code>, <code>html</code>, <code>xml</code></td>
 <td>-</td>
-<td>No</td>
+<td>Partial</td>
 </tr>
 <tr>
 <td><strong><code>MarkItDownReader</code></strong></td>
@@ -1197,60 +1197,60 @@ Pass a VLM model to any Reader class via the <code>model</code> parameter.
 </thead>
 <tbody>
 <tr>
-<td><strong>Character Splitter</strong></td>
-<td>Splits text into chunks based on a specified number of characters. Supports overlapping by character count or percentage. <br> <strong>Parameters:</strong> <code>chunk_size</code> (max chars per chunk), <code>chunk_overlap</code> (overlapping chars: int or %). <br> <strong>Compatible with:</strong> Text.</td>
+<td><a href="https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#charactersplitter"><strong>Character Splitter</strong></a></td>
+<td>Splits text into chunks based on a specified number of characters. Supports overlapping by character count or percentage. <br> <strong>Main Parameters:</strong> <code>chunk_size</code> (max chars per chunk), <code>chunk_overlap</code> (overlapping chars: int or %). <br> <strong>Compatible with:</strong> Text.</td>
 </tr>
 <tr>
-<td><strong>Word Splitter</strong></td>
-<td>Splits text into chunks based on a specified number of words. Supports overlapping by word count or percentage. <br> <strong>Parameters:</strong> <code>chunk_size</code> (max words per chunk), <code>chunk_overlap</code> (overlapping words: int or %). <br> <strong>Compatible with:</strong> Text.</td>
+<td><a href="https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#wordsplitter"><strong>Word Splitter</strong></a></td>
+<td>Splits text into chunks based on a specified number of words. Supports overlapping by word count or percentage. <br> <strong>Main Parameters:</strong> <code>chunk_size</code> (max words per chunk), <code>chunk_overlap</code> (overlapping words: int or %). <br> <strong>Compatible with:</strong> Text.</td>
 </tr>
 <tr>
-<td><strong>Sentence Splitter</strong></td>
-<td>Splits text into chunks by a specified number of sentences. Allows overlap defined by a number or percentage of words from the end of the previous chunk. Customizable sentence separators (e.g., <code>.</code>, <code>!</code>, <code>?</code>). <br> <strong>Parameters:</strong> <code>chunk_size</code> (max sentences per chunk), <code>chunk_overlap</code> (overlapping words: int or %), <code>sentence_separators</code> (list of characters). <br> <strong>Compatible with:</strong> Text.</td>
+<td><a href="https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#sentencesplitter"><strong>Sentence Splitter</strong></a></td>
+<td>Splits text into chunks by a specified number of sentences. Allows overlap defined by a number or percentage of words from the end of the previous chunk. Customizable sentence separators (e.g., <code>.</code>, <code>!</code>, <code>?</code>). <br> <strong>Main Parameters:</strong> <code>chunk_size</code> (max sentences per chunk), <code>chunk_overlap</code> (overlapping words: int or %), <code>sentence_separators</code> (list of characters). <br> <strong>Compatible with:</strong> Text.</td>
 </tr>
 <tr>
-<td><strong>Paragraph Splitter</strong></td>
-<td>Splits text into chunks based on a specified number of paragraphs. Allows overlapping by word count or percentage, and customizable line breaks. <br> <strong>Parameters:</strong> <code>chunk_size</code> (max paragraphs per chunk), <code>chunk_overlap</code> (overlapping words: int or %), <code>line_break</code> (delimiter(s) for paragraphs). <br> <strong>Compatible with:</strong> Text.</td>
+<td><a href="https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#paragraphsplitter"><strong>Paragraph Splitter</strong></a></td>
+<td>Splits text into chunks based on a specified number of paragraphs. Allows overlapping by word count or percentage, and customizable line breaks. <br> <strong>Main Parameters:</strong> <code>chunk_size</code> (max paragraphs per chunk), <code>chunk_overlap</code> (overlapping words: int or %), <code>line_break</code> (delimiter(s) for paragraphs). <br> <strong>Compatible with:</strong> Text.</td>
 </tr>
 <tr>
-<td><strong>Recursive Splitter</strong></td>
-<td>Recursively splits text based on a hierarchy of separators (e.g., paragraph, sentence, word, character) until chunks reach a target size. Tries to preserve semantic units as long as possible. <br> <strong>Parameters:</strong> <code>chunk_size</code> (max chars per chunk), <code>chunk_overlap</code> (overlapping chars), <code>separators</code> (list of characters to split on, e.g., <code>["\n\n", "\n", " ", ""]</code>). <br> <strong>Compatible with:</strong> Text.</td>
+<td><a href="https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#recursivesplitter"><strong>Recursive Character Splitter</strong></a></td>
+<td>Recursively splits text based on a hierarchy of separators (e.g., paragraph, sentence, word, character) until chunks reach a target size. Tries to preserve semantic units as long as possible. <br> <strong>Main Parameters:</strong> <code>chunk_size</code> (max chars per chunk), <code>chunk_overlap</code> (overlapping chars), <code>separators</code> (list of characters to split on, e.g., <code>["\n\n", "\n", " ", ""]</code>). <br> <strong>Compatible with:</strong> Text.</td>
 </tr>
 <tr>
-<td><strong>Token Splitter</strong></td>
-<td>Splits text into chunks based on the number of tokens, using various tokenization models (e.g., tiktoken, spaCy, NLTK). Useful for ensuring chunks are compatible with LLM context limits. <br> <strong>Parameters:</strong> <code>chunk_size</code> (max tokens per chunk), <code>model_name</code> (tokenizer/model, e.g., <code>"tiktoken/cl100k_base"</code>, <code>"spacy/en_core_web_sm"</code>, <code>"nltk/punkt"</code>), <code>language</code> (for NLTK). <br> <strong>Compatible with:</strong> Text.</td>
+<td><a href="https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#headersplitter"><strong>Token Splitter</strong></a></td>
+<td>Splits text into chunks based on the number of tokens, using various tokenization models (e.g., tiktoken, spaCy, NLTK). Useful for ensuring chunks are compatible with LLM context limits. <br> <strong>Main Parameters:</strong> <code>chunk_size</code> (max tokens per chunk), <code>model_name</code> (tokenizer/model, e.g., <code>"tiktoken/cl100k_base"</code>, <code>"spacy/en_core_web_sm"</code>, <code>"nltk/punkt"</code>), <code>language</code> (for NLTK). <br> <strong>Compatible with:</strong> Text.</td>
 </tr>
 <tr>
-<td><strong>Paged Splitter</strong></td>
-<td><strong>WORK IN PROGRESS</strong>. Splits text by pages for documents that have page structure. Each chunk contains a specified number of pages, with optional word overlap. <br> <strong>Parameters:</strong> <code>num_pages</code> (pages per chunk), <code>chunk_overlap</code> (overlapping words). <br> <strong>Compatible with:</strong> Word, PDF, Excel, PowerPoint.</td>
+<td><a href="https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#pagedsplitter"><strong>Paged Splitter</strong></a></td>
+<td><strong>WORK IN PROGRESS</strong>. Splits text by pages for documents that have page structure. Each chunk contains a specified number of pages, with optional word overlap. <br> <strong>Main Parameters:</strong> <code>num_pages</code> (pages per chunk), <code>chunk_overlap</code> (overlapping words). <br> <strong>Compatible with:</strong> Word, PDF, Excel, PowerPoint.</td>
 </tr>
 <tr>
-<td><strong>Row/Column Splitter</strong></td>
-<td>For tabular formats, splits data by a set number of rows or columns per chunk, with possible overlap. Row-based and column-based splitting are mutually exclusive. <br> <strong>Parameters:</strong> <code>num_rows</code>, <code>num_cols</code> (rows/columns per chunk), <code>overlap</code> (overlapping rows or columns). <br> <strong>Compatible with:</strong> Tabular formats (csv, tsv, parquet, flat json).</td>
+<td><a href="https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#rowcolumnsplitter"><strong>Row/Column Splitter</strong></a></td>
+<td>For tabular formats, splits data by a set number of rows or columns per chunk, with possible overlap. Row-based and column-based splitting are mutually exclusive. <br> <strong>Main Parameters:</strong> <code>num_rows</code>, <code>num_cols</code> (rows/columns per chunk), <code>overlap</code> (overlapping rows or columns). <br> <strong>Compatible with:</strong> Tabular formats (csv, tsv, parquet, flat json).</td>
 </tr>
 <tr>
-<td><strong>Schema Based Splitter</strong></td>
-<td><strong>WORK IN PROGRESS</strong>. Splits hierarchical documents (XML, HTML) based on element tags or keys, preserving the schema/structure. Splitting can be done on a specified or inferred parent key/tag. <br> <strong>Parameters:</strong> <code>chunk_size</code> (approx. max chars per chunk), <code>key</code> (optional parent key or tag). <br> <strong>Compatible with:</strong> XML, HTML.</td>
+<td><a href="https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#jsonrecursivesplitter"><strong>JSON Recursive Splitter</strong></a></td>
+<td>Recursively splits JSON documents into smaller sub-structures that preserve the original JSON schema. <br> <strong>Main Parameters:</strong> <code>max_chunk_size</code> (max chars per chunk), <code>min_chunk_size</code> (min chars per chunk). <br> <strong>Compatible with:</strong> JSON.</td>
 </tr>
 <tr>
-<td><strong>JSON Splitter</strong></td>
-<td>Recursively splits JSON documents into smaller sub-structures that preserve the original JSON schema. <br> <strong>Parameters:</strong> <code>max_chunk_size</code> (max chars per chunk), <code>min_chunk_size</code> (min chars per chunk). <br> <strong>Compatible with:</strong> JSON.</td>
+<td><a href="https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#semanticsplitter"><strong>Semantic Splitter</strong></a></td>
+<td><strong>WORK IN PROGRESS</strong>. Splits text into chunks based on semantic similarity, using an embedding model and a max tokens parameter. Useful for meaningful semantic groupings. <br> <strong>Main Parameters:</strong> <code>embedding_model</code> (model for embeddings), <code>max_tokens</code> (max tokens per chunk). <br> <strong>Compatible with:</strong> Text.</td>
 </tr>
 <tr>
-<td><strong>Semantic Splitter</strong></td>
-<td><strong>WORK IN PROGRESS</strong>. Splits text into chunks based on semantic similarity, using an embedding model and a max tokens parameter. Useful for meaningful semantic groupings. <br> <strong>Parameters:</strong> <code>embedding_model</code> (model for embeddings), <code>max_tokens</code> (max tokens per chunk). <br> <strong>Compatible with:</strong> Text.</td>
+<td><a href="https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#htmltagsplitter"><strong>HTMLTagSplitter</strong></a></td>
+<td>Splits HTML content based on a specified tag, or automatically detects the most frequent and shallowest tag if not specified. Each chunk is a complete HTML fragment for that tag. <br> <strong>Main Parameters:</strong> <code>chunk_size</code> (max chars per chunk), <code>tag</code> (HTML tag to split on, optional). <br> <strong>Compatible with:</strong> HTML.</td>
 </tr>
 <tr>
-<td><strong>HTMLTagSplitter</strong></td>
-<td>Splits HTML content based on a specified tag, or automatically detects the most frequent and shallowest tag if not specified. Each chunk is a complete HTML fragment for that tag. <br> <strong>Parameters:</strong> <code>chunk_size</code> (max chars per chunk), <code>tag</code> (HTML tag to split on, optional). <br> <strong>Compatible with:</strong> HTML.</td>
+<td><a href="https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#headersplitter"><strong>HeaderSplitter</strong></a></td>
+<td>Splits Markdown or HTML documents into chunks using header levels (e.g., <code>#</code>, <code>##</code>, or <code>&lt;h1&gt;</code>, <code>&lt;h2&gt;</code>). Uses configurable headers for chunking. <br> <strong>Main Parameters:</strong> <code>headers_to_split_on</code> (list of headers and semantic names), <code>chunk_size</code> (unused, for compatibility). <br> <strong>Compatible with:</strong> Markdown, HTML.</td>
 </tr>
 <tr>
-<td><strong>HeaderSplitter</strong></td>
-<td>Splits Markdown or HTML documents into chunks using header levels (e.g., <code>#</code>, <code>##</code>, or <code>&lt;h1&gt;</code>, <code>&lt;h2&gt;</code>). Uses configurable headers for chunking. <br> <strong>Parameters:</strong> <code>headers_to_split_on</code> (list of headers and semantic names), <code>chunk_size</code> (unused, for compatibility). <br> <strong>Compatible with:</strong> Markdown, HTML.</td>
+<td><a href="https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#codesplitter"><strong>Code Splitter</strong></a></td>
+<td>Splits source code files into programmatically meaningful chunks (functions, classes, methods, etc.), aware of the syntax of the specified programming language (e.g., Python, Java, Kotlin). Uses language-aware logic to avoid splitting inside code blocks. <br> <strong>Main Parameters:</strong> <code>chunk_size</code> (max chars per chunk), <code>language</code> (programming language as string, e.g., <code>"python"</code>, <code>"java"</code>). <br> <strong>Compatible with:</strong> Source code files (Python, Java, Kotlin, C++, JavaScript, Go, etc.).</td>
 </tr>
 <tr>
-<td><strong>Code Splitter</strong></td>
-<td>Splits source code files into programmatically meaningful chunks (functions, classes, methods, etc.), aware of the syntax of the specified programming language (e.g., Python, Java, Kotlin). Uses language-aware logic to avoid splitting inside code blocks. <br> <strong>Parameters:</strong> <code>chunk_size</code> (max chars per chunk), <code>language</code> (programming language as string, e.g., <code>"python"</code>, <code>"java"</code>). <br> <strong>Compatible with:</strong> Source code files (Python, Java, Kotlin, C++, JavaScript, Go, etc.).</td>
+<td><a href="https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#tokenplitter"><strong>Token Splitter</strong></a></td>
+<td>Splits text files into LLM-aware minimal semantic units (tokens). You can use nltk, spacy and tiktoken as tokenizers. <br> <strong>Main Parameters:</strong> <code>chunk_size</code> (max chars per chunk), <code>model</code> (e.g., <code>nltk/punkt</code>, <code>tiktoken/cl100k</code>, etc.), <code>language</code> (e.g., <code>"spanish"</code>, <code>"english"</code>). <br> <strong>Compatible with:</strong> Text.</td>
 </tr>
 </tbody>
 </table>
@@ -1355,9 +1355,9 @@ Stay aware to updates!</p>
 <p>So, in case that you want to read the images in a document, you only have to pass a model to the Reader component. Then, in the <code>read</code> method, you can specify if you want to show the images in Base64 format or not. </p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Showing the images encoded in base64 is a feature independent from using a VLM.</p>
+<p>Appending the images encoded in base64 is a feature independent from using a VLM.</p>
 </div>
-<p>This enables automatic image-to-text conversion in PDFs, DOCX, and PPTX using state-of-the-art VLMs. Currently, the supported models are OpenAI and Azure OpenAI.  Stay tuned for next models which will be implemented!</p>
+<p>Currently, the supported models are OpenAI and Azure OpenAI.  Stay tuned for next models which will be implemented!</p>
 <h2 id="next-features">Next features<a class="headerlink" href="#next-features" title="Permanent link">&para;</a></h2>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Implement a method to split a document by pages (<code>PagedSplitter</code>).</li>
