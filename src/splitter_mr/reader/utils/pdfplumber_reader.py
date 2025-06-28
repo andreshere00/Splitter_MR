@@ -1,5 +1,6 @@
 import base64
 from collections import defaultdict
+from io import BytesIO
 from itertools import groupby
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -215,6 +216,41 @@ class PDFPlumberReader:
         blocks = tables + images + texts
         return sorted(blocks, key=lambda x: x["top"])
 
+    def extract_pages_as_images(
+        self,
+        file_path: str,
+        resolution: int = 150,
+        image_format: str = "PNG",
+        return_base64: bool = True,
+    ) -> List[str]:
+        """
+        Render every page of *file_path* to an image.
+
+        Args:
+            file_path (str): PDF to rasterise.
+            resolution (int): DPI for rendering (72-600).
+            image_format (str): Pillow output format ("PNG", "JPEG", …).
+            return_base64 (bool): If True (default) return base64 strings
+                                    (without the `data:image/*;base64,` prefix);
+                                    otherwise raw bytes.
+
+        Returns:
+            List[str] | List[bytes]: One element per page in order.
+        """
+        pages_data: List[str] = []
+        with pdfplumber.open(file_path) as pdf:
+            for page in pdf.pages:
+                page_img = page.to_image(resolution=resolution)
+                buf = BytesIO()
+                page_img.save(buf, format=image_format)
+                data_bytes = buf.getvalue()
+                pages_data.append(
+                    base64.b64encode(data_bytes).decode()
+                    if return_base64
+                    else data_bytes
+                )
+        return pages_data
+
     def table_to_markdown(self, table: List[List[Any]]) -> str:
         """
         Converts a table (list of lists) to GitHub-flavored Markdown.
@@ -302,6 +338,47 @@ class PDFPlumberReader:
             if line != "" or (clean_lines and clean_lines[-1] != ""):
                 clean_lines.append(line)
         return "\n".join(clean_lines)
+
+    def describe_pages(
+        self,
+        file_path: str,
+        model: "BaseModel",
+        prompt: str = (
+            "Extract all the elements detected in the page, orderly. "
+            "Return only all the extracted content, always in markdown code format."
+        ),
+        resolution: int = 512,
+        **parameters,
+    ) -> List[str]:
+        """
+        Uses a Vision-Language Model (VLM) to describe each full PDF page.
+
+        Args:
+            file_path (str): PDF to process.
+            model (BaseModel): Any implementation of the provided BaseModel
+                               interface (e.g. OpenAIVisionModel).
+            prompt (str): Instruction sent to the VLM.  Has the default
+                          requested in the spec.
+            resolution (int): DPI to rasterise pages before sending.
+
+        Returns:
+            List[str]: Markdown descriptions, one per page, in order.
+        """
+        page_images_b64 = self.extract_pages_as_images(
+            file_path=file_path, resolution=resolution, return_base64=True
+        )
+
+        descriptions: List[str] = []
+        for i, img_b64 in enumerate(page_images_b64, start=1):
+            try:
+                description = model.extract_text(
+                    file=img_b64, prompt=prompt, **parameters
+                )
+            except Exception as e:
+                description = f"**Error on page {i}:** {e}"
+            descriptions.append(description)
+
+        return descriptions
 
     def read(
         self,

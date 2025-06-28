@@ -84,11 +84,13 @@ class VanillaReader(BaseReader):
 
             model = AzureOpenAIVisionModel()
             reader = VanillaReader(model=model)
-            output = reader.read(file_path="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/test_1.pdf", show_base64_images=False)
+            output = reader.read(file_path="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/lorem_ipsum.pdf", show_base64_images=False)
             print(output.text)
             ```
             ```bash
-            \\n---\\n## Page 1\\n---\\n\\nMultiRAG Project – Splitter\\nMultiRAG | Splitter\\nLorem ipsum dolor sit amet, ...
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget purus non est porta
+            rutrum. Suspendisse euismod lectus laoreet sem pellentesque egestas et et sem.
+            Pellentesque ex felis, cursus ege...
             ```
         """
 
