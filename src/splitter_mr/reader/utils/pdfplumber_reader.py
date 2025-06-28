@@ -195,11 +195,7 @@ class PDFPlumberReader:
         return texts
 
     def extract_page_blocks(
-        self,
-        page,
-        page_num: int,
-        model: "Optional[BaseModel]" = None,
-        prompt: str = None,
+        self, page, page_num: int, prompt: str, model: Optional[BaseModel] = None
     ) -> List[Dict[str, Any]]:
         """
         Extracts all structural content blocks (tables, images, text) from a PDF page.
@@ -311,7 +307,7 @@ class PDFPlumberReader:
         self,
         file_path: str,
         model: Optional[BaseModel] = None,
-        prompt: str = "Provide a descriptive and short caption for this image. Return the caption as emphasis in markdown format (e.g., *A short description*).",
+        prompt: str = "Provide a caption for the following image. Return the result as emphasis in markdown code format (e.g., *Description of the image*).",
         show_base64_images: bool = False,
     ) -> str:
         """

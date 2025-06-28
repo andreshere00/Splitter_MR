@@ -93,9 +93,11 @@ class DoclingReader(BaseReader):
             return VanillaReader().read(file_path=file_path, **kwargs)
 
         if ext == "pdf":
-            md = self._read_pdf(file_path, prompt, scan_pdf_pages)
+            md = self._read_pdf(
+                file_path=file_path, prompt=prompt, scan_pdf_pages=scan_pdf_pages
+            )
         else:
-            md = self._read_non_pdf(file_path, prompt)
+            md = self._read_non_pdf(file_path=file_path, prompt=prompt)
 
         # Post-process images
         return ReaderOutput(
@@ -109,7 +111,12 @@ class DoclingReader(BaseReader):
             metadata=kwargs.get("metadata"),
         )
 
-    def _read_pdf(self, file_path: str, scan_pdf_pages: bool, prompt: str = "") -> str:
+    def _read_pdf(
+        self,
+        file_path: str,
+        scan_pdf_pages: bool,
+        prompt: str = "Extract all the elements detected in the page, orderly. Return only all the extracted content, always in markdown code format.",
+    ) -> str:
         """
         Extract Markdown from a PDF, using VLM or image pipeline.
 
@@ -122,10 +129,6 @@ class DoclingReader(BaseReader):
             Raw Markdown with embedded base64 images.
         """
         if scan_pdf_pages and self.model:
-            prompt = prompt or (
-                "Extract all the elements detected in the page, orderly."
-                "Return only all the extracted content, always in markdown code format."
-            )
             pipeline = self._utils.get_pdf_pipeline(
                 mode="vlm",
                 client=self.client,
@@ -139,7 +142,11 @@ class DoclingReader(BaseReader):
             image_mode="embedded"
         )
 
-    def _read_non_pdf(self, file_path: str, prompt: str) -> str:
+    def _read_non_pdf(
+        self,
+        file_path: str,
+        prompt: str = "Extract all the elements detected in the page, orderly. Return only all the extracted content, always in markdown code format.",
+    ) -> str:
         """
         Convert non-PDF documents via Docling or fallback converter.
 
@@ -164,8 +171,8 @@ class DoclingReader(BaseReader):
     def _process_images(
         self,
         markdown: str,
-        prompt: str,
         show_base64_images: bool,
+        prompt: str = "Provide a caption for the following image. Return the result as emphasis in markdown code format (e.g., *Description of the image*).",
     ) -> str:
         """
         Handle embedded base64 images: caption, embed, or placeholder.
@@ -193,8 +200,8 @@ class DoclingReader(BaseReader):
     def _format_caption(
         self,
         match: re.Match,
-        prompt: str,
         show_base64_images: bool,
+        prompt: str = "Provide a caption for the following image. Return the result as emphasis in markdown code format (e.g., *Description of the image*).",
     ) -> str:
         """
         Generate caption for a base64 image match.

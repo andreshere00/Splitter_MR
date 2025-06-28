@@ -46,13 +46,13 @@ class DoclingUtils:
             path = f"openai/deployments/{deployment}/chat/completions"
             url = urljoin(base, path)
             query = urlencode({"api-version": version})
-            full_url = f"{url}?{query}"
+            full_url = str(f"{url}?{query}")
             return full_url, headers
 
         if isinstance(client, OpenAI):
             base = "https://api.openai.com/"
             path = "v1/chat/completions"
-            full_url = urljoin(base, path)
+            full_url = str(urljoin(base, path))
             return full_url, headers
 
         raise ValueError(f"Unsupported client type: {type(client)}")
