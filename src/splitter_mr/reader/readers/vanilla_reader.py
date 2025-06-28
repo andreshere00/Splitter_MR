@@ -10,7 +10,7 @@ import yaml
 from ...model import BaseModel
 from ...schema import LANGUAGES, ReaderOutput
 from ..base_reader import BaseReader
-from .utils.pdfplumber_reader import PDFPlumberReader
+from ..utils import PDFPlumberReader
 
 
 class SimpleHTMLTextExtractor(HTMLParser):
@@ -57,14 +57,14 @@ class VanillaReader(BaseReader):
         Args:
             file_path (str, optional): Path to the input file.
             **kwargs:
-                file_path (str, optional): Path to the input file (overrides positional argument).
-                file_url (str, optional): URL to read the document from.
-                json_document (dict or str, optional): Dictionary or JSON string containing document content.
-                text_document (str, optional): Raw text or string content of the document.
-                show_images (bool, optional): If True (default), images in PDFs are shown inline as base64 PNG.
+                - file_path (str, optional): Path to the input file (overrides positional argument).
+                - file_url (str, optional): URL to read the document from.
+                - json_document (dict or str, optional): Dictionary or JSON string containing document content.
+                - text_document (str, optional): Raw text or string content of the document.
+                - show_base64_images (bool, optional): If True (default), images in PDFs are shown inline as base64 PNG.
                     If False, images are omitted (or annotated if a model is provided).
-                model (BaseModel, optional): Vision model for image annotation/captioning.
-                prompt (str, optional): Custom prompt for image captioning.
+                - model (BaseModel, optional): Vision model for image annotation/captioning.
+                - prompt (str, optional): Custom prompt for image captioning.
 
         Returns:
             ReaderOutput: Dataclass defining the output structure for all readers.
@@ -84,7 +84,7 @@ class VanillaReader(BaseReader):
 
             model = AzureOpenAIVisionModel()
             reader = VanillaReader(model=model)
-            output = reader.read(file_path="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/test_1.pdf", show_images=False)
+            output = reader.read(file_path="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/test_1.pdf", show_base64_images=False)
             print(output.text)
             ```
             ```bash
@@ -134,14 +134,14 @@ class VanillaReader(BaseReader):
                             document_source,
                             model=model,
                             prompt=kwargs.get("prompt"),
-                            show_images=kwargs.get("show_images", False),
+                            show_base64_images=kwargs.get("show_base64_images", False),
                         )
                         # use the **actual** model that was passed in
                         ocr_method = model.model_name
                     else:
                         text = pdf_reader.read(
                             document_source,
-                            show_images=kwargs.get("show_images", False),
+                            show_base64_images=kwargs.get("show_base64_images", False),
                         )
                         conversion_method = "pdf"
                 elif ext in (

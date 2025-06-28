@@ -1,171 +1,165 @@
-import os
-import uuid
-from pathlib import Path
-from unittest.mock import MagicMock, patch
+from types import SimpleNamespace
 
 import pytest
-from openai import AzureOpenAI, OpenAI
+from docling.document_converter import DocumentConverter
 
-from splitter_mr.model.base_model import BaseModel
-from splitter_mr.reader.readers.docling_reader import DoclingReader
+from splitter_mr.model import BaseModel
+from splitter_mr.reader import DoclingReader, VanillaReader
+from splitter_mr.reader.utils import DoclingUtils
 from splitter_mr.schema import ReaderOutput
 
-# Helpers
 
+class DummyPipeline:
+    def __init__(self, output):
+        self.output = output
 
-class ConcreteModel(BaseModel):
-    def __init__(self, model_name="dummy-model"):
-        self.model_name = model_name
-
-    def get_client(self):
-        return self
-
-    def extract_text(self, *a, **kw):
-        pass
-
-
-@pytest.fixture
-def patch_vlm(monkeypatch):
-    monkeypatch.setattr(
-        DoclingReader,
-        "_get_vlm_url_and_headers",
-        lambda self, client: ("https://dummy", {"Authorization": "Bearer dummy"}),
-    )
-
-
-class StubAzure(AzureOpenAI):
-    def __init__(self):
-        pass
-
-    api_key = "stub"
-
-
-class StubOpenAI(OpenAI):
-    def __init__(self):
-        pass
-
-    api_key = "stub"
+    def convert(self, path, **kwargs):
+        return SimpleNamespace(
+            document=SimpleNamespace(
+                export_to_markdown=lambda image_mode=None: self.output
+            )
+        )
 
 
 class DummyModel(BaseModel):
-    def __init__(self, model_name="dummy-model"):
-        self.api_key = "dummy-key"
-        self.model_name = model_name
-        self._azure_deployment = "dummy-deployment"
-        self._azure_endpoint = "https://dummy-endpoint.com"
-        self._api_version = "2025-01-01-preview"
+    def __init__(self, text):
+        self.model_name = "dummy"
+        self._client = SimpleNamespace(
+            _azure_endpoint="https://endpoint",
+            _azure_deployment="dep",
+            _api_version="v1",
+            api_key="key",
+        )
+        self._text = text
 
     def get_client(self):
-        return self
+        return self._client
 
-    def extract_text(self, *a, **kw):
-        pass
-
-
-@pytest.fixture
-def dummy_pdf_path(tmp_path):
-    p = tmp_path / "test.pdf"
-    p.write_bytes(b"%PDF-1.4 test content")
-    return str(p)
+    def extract_text(self, file, prompt):
+        return self._text
 
 
-@pytest.fixture
-def unsupported_file_path(tmp_path):
-    p = tmp_path / "test.txt"
-    p.write_text("Not supported extension.")
-    return str(p)
+@pytest.fixture(autouse=True)
+def patch_docling_utils(monkeypatch):
+    """Mock get_pdf_pipeline to return dummy pipelines based on mode"""
+
+    def fake_get_pdf_pipeline(
+        self, mode, client=None, model_name=None, prompt=None, **kwargs
+    ):
+        if mode == "vlm":
+            return DummyPipeline(output="# VLM OUTPUT")
+        elif mode == "image":
+            return DummyPipeline(output="![alt](data:image/png;base64,AAA)")
+        raise ValueError(mode)
+
+    monkeypatch.setattr(DoclingUtils, "get_pdf_pipeline", fake_get_pdf_pipeline)
+    yield
 
 
-@pytest.fixture
-def dummy_model():
-    return DummyModel()
+def fake_get_pdf_pipeline(
+    self, mode, client=None, model_name=None, prompt=None, **kwargs
+):
+    if mode == "vlm":
+        return DummyPipeline(output="# VLM OUTPUT")
+    elif mode == "image":
+        # Esta salida debe contener una imagen base64 para que _process_images funcione bien
+        return DummyPipeline(output="![alt](data:image/png;base64,AAA)")
+    raise ValueError(mode)
 
 
-# Test cases
-
-
-def test_dummy_model_instantiable_and_methods_work():
-    model = ConcreteModel()
-    assert model.get_client() is model
-
-
-def test_init_with_and_without_model(dummy_model):
-    reader = DoclingReader(model=dummy_model)
-    assert reader.model is dummy_model
-    assert reader.api_key == "dummy-key"
-    reader_no_model = DoclingReader()
-    assert reader_no_model.model is None
-
-
-def test_supported_extensions_check(dummy_model, dummy_pdf_path):
-    reader = DoclingReader(model=dummy_model)
-    assert Path(dummy_pdf_path).suffix.lstrip(".") in reader.SUPPORTED_EXTENSIONS
-
-
-def test_unsupported_extensions_triggers_vanilla(monkeypatch, unsupported_file_path):
-    reader = DoclingReader()
+def test_unsupported_extension(monkeypatch, tmp_path):
+    path = tmp_path / "file.xyz"
+    path.write_text("dummy")
+    # Mock VanillaReader.read
     called = {}
 
-    def fake_vanilla_read(file_path, **kwargs):
-        called["called"] = True
+    def fake_vr_read(self, file_path, **kwargs):
+        called["args"] = (file_path, kwargs)
         return ReaderOutput(
-            text="Fallback text",
-            document_name=os.path.basename(file_path),
-            document_path=file_path,
-            document_id=str(uuid.uuid4()),
-            conversion_method="vanilla",
-            reader_method="vanilla",
+            text="vr",
+            document_name="file.xyz",
+            document_path=str(path),
+            document_id="id",
+            conversion_method="",
+            reader_method="",
             ocr_method=None,
             metadata=None,
         )
 
+    monkeypatch.setattr(VanillaReader, "read", fake_vr_read)
+
+    reader = DoclingReader()
+    out = reader.read(str(path))
+    assert out.text == "vr"
+    assert called["args"][0] == str(path)
+
+
+def test_read_pdf_without_model(monkeypatch, tmp_path):
+    path = tmp_path / "doc.pdf"
+    path.write_bytes(b"%PDF-1.4")
+
+    reader = DoclingReader(model=None)
+    # no model, so _read_pdf returns image pipeline output
+    md = reader._read_pdf(str(path), prompt="p", scan_pdf_pages=False)
+    assert md == "![alt](data:image/png;base64,AAA)"
+
+    # process_images without model and hiding images
+    processed = reader._process_images(md, prompt="p", show_base64_images=False)
+    assert processed == "<!-- image -->"
+
+    # keep images when show_base64_images True
+    processed2 = reader._process_images(md, prompt="p", show_base64_images=True)
+    # no model, skip caption, hide still applies? actually only caption for model
+    assert "data:image/png" in processed2
+
+
+def test_read_pdf_with_model_vlm(monkeypatch, tmp_path):
+    path = tmp_path / "doc.pdf"
+    path.write_bytes(b"%PDF")
+
+    model = DummyModel(text="caption")
+    reader = DoclingReader(model=model)
+    out_text = reader._read_pdf(str(path), prompt="p", scan_pdf_pages=True)
+    assert out_text == "# VLM OUTPUT"
+
+
+def test_read_non_pdf_with_and_without_model(monkeypatch, tmp_path):
+    # create dummy txt file
+    path = tmp_path / "a.txt"
+    path.write_text("text")
+    # monkeypatch DocumentConverter
     monkeypatch.setattr(
-        "splitter_mr.reader.readers.docling_reader.VanillaReader",
-        lambda: MagicMock(read=fake_vanilla_read),
+        DocumentConverter,
+        "convert",
+        lambda self, fp: SimpleNamespace(
+            document=SimpleNamespace(export_to_markdown=lambda: "md")
+        ),
     )
-    out = reader.read(unsupported_file_path)
-    assert called["called"]
-    assert out.conversion_method == "vanilla"
+
+    # without model
+    reader1 = DoclingReader()
+    md1 = reader1._read_non_pdf(str(path), prompt="p")
+    assert md1 == "md"
+
+    # with model
+    model = DummyModel(text="x")
+    reader2 = DoclingReader(model=model)
+    md2 = reader2._read_non_pdf(str(path), prompt="p")
+    assert md2 == "# VLM OUTPUT"
 
 
-@patch("splitter_mr.reader.readers.docling_reader.DocumentConverter")
-def test_read_success_with_mocked_docling(
-    mock_docconv, dummy_model, dummy_pdf_path, patch_vlm
-):
-    reader = DoclingReader(model=dummy_model)
-    fake_result = MagicMock()
-    fake_result.document.export_to_markdown.return_value = "# Hello"
-    mock_docconv.return_value.convert.return_value = fake_result
-    out = reader.read(dummy_pdf_path)
-    assert out.text == "# Hello"
-
-
-@patch("splitter_mr.reader.readers.docling_reader.DocumentConverter")
-def test_read_missing_file_raises(mock_docconv, dummy_model, patch_vlm):
-    reader = DoclingReader(model=dummy_model)
-    mock_docconv.return_value.convert.side_effect = FileNotFoundError
-    with pytest.raises(FileNotFoundError):
-        reader.read("missing.pdf")
-
-
-def test_get_vlm_url_and_headers_for_azure(dummy_model):
-    reader = DoclingReader(model=dummy_model)
-    reader._azure_deployment = "dep"
-    reader._azure_endpoint = "https://azure.endpoint"
-    reader._api_version = "v2025"
-
-    url, hdr = reader._get_vlm_url_and_headers(StubAzure())
-    assert "azure.endpoint" in url
-    assert hdr["Authorization"].startswith("Bearer")
-
-
-def test_get_vlm_url_and_headers_for_openai(dummy_model, monkeypatch):
-    reader = DoclingReader(model=dummy_model)
-    monkeypatch.setattr(
-        DoclingReader,
-        "_get_vlm_url_and_headers",
-        DoclingReader.__dict__["_get_vlm_url_and_headers"],
-        raising=False,
-    )
-    url, hdr = reader._get_vlm_url_and_headers(StubOpenAI())
-    assert "api.openai.com" in url and hdr["Authorization"].startswith("Bearer")
+def test_format_caption_keeps_and_captions(monkeypatch):
+    model = DummyModel(text="hello")
+    reader = DoclingReader(model=model)
+    b64 = "AAA"
+    uri = f"data:image/png;base64,{b64}"
+    alt = "alt"
+    md = f"![{alt}]({uri})"
+    # caption only
+    out1 = reader._process_images(md, prompt="p", show_base64_images=False)
+    assert "hello" in out1
+    assert "<!-- image -->" in out1
+    # keep image
+    out2 = reader._process_images(md, prompt="p", show_base64_images=True)
+    assert "![alt](" in out2
+    assert "hello" in out2

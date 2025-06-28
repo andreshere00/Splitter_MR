@@ -68,7 +68,7 @@ extract and convert the underlying content into a more flexible, structured form
 like Markdown.
 
 
---- ![Image]() ---
+<!-- image -->
 
 Ilustración 1. SplitterMR logo.
 1. Lack of Structural Information
@@ -150,10 +150,10 @@ usable, readable, and faithful Markdown output. As a result, perfect conversion
 is rarely possible, and manual review and cleanup are often required.
 
 
---- ![Image]() ---
+<!-- image -->
 ```
 
-As we can see from the [original file](https://github.com/andreshere00/Splitter_MR/blob/feature/main/https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/sample_pdf.pdf), all the text has been preserved. Bold, italics, etc. are not preserved, nor are text colors, headers, and font type. Despite that, the format is mostly plain text rather than markdown. In addition, we can observe that images are signaled by a `--- ![Image]() ---` placeholder, which can be useful to identify where a image has been placed. The order of the document is preserved.
+As we can see from the [original file](https://github.com/andreshere00/Splitter_MR/blob/feature/main/https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/sample_pdf.pdf), all the text has been preserved. Bold, italics, etc. are not preserved, nor are text colors, headers, and font type. Despite that, the format is mostly plain text rather than markdown. In addition, we can observe that images are signaled by a `<!-- image -->` placeholder, which can be useful to identify where a image has been placed. The order of the document is preserved.
 
 Now, let's see how well the other readers handle markdown conversion:
 

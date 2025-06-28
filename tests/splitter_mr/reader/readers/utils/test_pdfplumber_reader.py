@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from splitter_mr.reader.readers.utils.pdfplumber_reader import PDFPlumberReader
+from splitter_mr.reader.utils import PDFPlumberReader
 
 # Helpers
 
@@ -72,7 +72,7 @@ def test_read_extracts_text(
     mock_pdfplumber_open.return_value.__enter__.return_value = mock_pdf
 
     reader = PDFPlumberReader()
-    md = reader.read("fakefile.pdf", show_images=False)
+    md = reader.read("fakefile.pdf", show_base64_images=False)
     assert "Hello world" in md
     assert "This is" in md
 
@@ -117,11 +117,11 @@ def test_read_with_images_and_annotations(mock_pdfplumber_open):
 
     reader = PDFPlumberReader()
     # Without annotation
-    md = reader.read("fakefile.pdf", show_images=True)
+    md = reader.read("fakefile.pdf", show_base64_images=True)
     assert "data:image/png;base64" in md
 
     # With annotation
-    md = reader.read("fakefile.pdf", show_images=False, model=DummyModel())
+    md = reader.read("fakefile.pdf", show_base64_images=False, model=DummyModel())
     assert "Dummy caption" in md
 
 
@@ -143,7 +143,7 @@ def test_blocks_to_markdown_omitted_image_indicator(mock_pdfplumber_open):
     mock_pdfplumber_open.return_value.__enter__.return_value = mock_pdf
 
     reader = PDFPlumberReader()
-    md = reader.read("fakefile.pdf", show_images=False)
+    md = reader.read("fakefile.pdf", show_base64_images=False)
     assert "Image" in md or "image" in md
 
 
@@ -160,7 +160,7 @@ def test_blocks_to_markdown_table_and_text():
         },
         {"type": "text", "top": 50, "bottom": 60, "content": "Text 2", "page": 1},
     ]
-    md = reader.blocks_to_markdown(blocks, show_images=True)
+    md = reader.blocks_to_markdown(blocks, show_base64_images=True)
     assert "Text 1" in md
     assert "| a | b |" in md
     assert "Text 2" in md

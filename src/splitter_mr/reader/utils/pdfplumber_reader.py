@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import pdfplumber
 
-from ....model import BaseModel
+from ...model import BaseModel
 
 
 class PDFPlumberReader:
@@ -24,7 +24,7 @@ class PDFPlumberReader:
     Example:
         ```python
         reader = PDFPlumberReader()
-        markdown = reader.read("example.pdf", show_images=True)
+        markdown = reader.read("example.pdf", show_base64_images=True)
         print(markdown)
         ```
     """
@@ -145,20 +145,24 @@ class PDFPlumberReader:
                 img_bytes = buf.getvalue()
                 img_b64 = base64.b64encode(img_bytes).decode()
                 img_uri = f"data:image/png;base64,{img_b64}"
-                annotation = None
+                image_description = "<!-- image -->"
                 if model:
                     annotation = model.extract_text(
                         file=img_b64,
                         prompt=prompt
-                        or "Provide a descriptive and short caption for this image. Start always `> **Caption:** `",  # noqa: W503
+                        or (  # noqa: W503
+                            "Provide a descriptive and short caption for this image."
+                            "Return the caption as emphasis in markdown format (e.g., *A short description*)."
+                        ),
                     )
+                    image_description = f"{image_description}\n{annotation}"
                 images.append(
                     {
                         "type": "image",
                         "top": img["top"],
                         "bottom": img["bottom"],
                         "content": img_uri,
-                        "annotation": annotation,
+                        "annotation": image_description,
                         "page": page_num,
                     }
                 )
@@ -248,14 +252,14 @@ class PDFPlumberReader:
         return "\n".join([header, separator] + rows)
 
     def blocks_to_markdown(
-        self, all_blocks: List[Dict[str, Any]], show_images: bool = True
+        self, all_blocks: List[Dict[str, Any]], show_base64_images: bool = True
     ) -> str:
         """
         Converts a list of content blocks into Markdown, optionally embedding images and tables.
 
         Args:
             all_blocks (List[Dict[str, Any]]): All content blocks, possibly across multiple pages.
-            show_images (bool): Whether to render images inline. If False, images are omitted or replaced with an indicator.
+            show_base64_images (bool): Whether to render images inline. If False, images are omitted or replaced with an indicator.
 
         Returns:
             str: Markdown document representing the extracted content.
@@ -280,7 +284,7 @@ class PDFPlumberReader:
                         md_lines.append("")
                         paragraph = []
                     if item["type"] == "image":
-                        if show_images:
+                        if show_base64_images:
                             md_lines.append(
                                 f'![Image page {item["page"]}]({item["content"]})\n'
                             )
@@ -288,7 +292,7 @@ class PDFPlumberReader:
                             md_lines.append(f'{item["annotation"]}\n')
                         else:
                             # Write an indicator that an image was omitted
-                            md_lines.append("\n--- ![Image]() ---\n")
+                            md_lines.append("\n<!-- image -->\n")
                     elif item["type"] == "table":
                         md_lines.append(self.table_to_markdown(item["content"]))
                         md_lines.append("")
@@ -307,8 +311,8 @@ class PDFPlumberReader:
         self,
         file_path: str,
         model: Optional[BaseModel] = None,
-        prompt: str = "Provide a descriptive and short caption for this image. Start always `> **Caption:** `",
-        show_images: bool = False,
+        prompt: str = "Provide a descriptive and short caption for this image. Return the caption as emphasis in markdown format (e.g., *A short description*).",
+        show_base64_images: bool = False,
     ) -> str:
         """
         Reads a PDF file and returns extracted content as Markdown.
@@ -317,7 +321,7 @@ class PDFPlumberReader:
             file_path (str): Path to the PDF file.
             model (Optional[BaseModel], optional): Optional model for image annotation.
             prompt (str, optional): Prompt for the image annotation model.
-            show_images (bool, optional): If True, images are included as base64 in Markdown. If False, they are omitted or replaced with a placeholder.
+            show_base64_images (bool, optional): If True, images are included as base64 in Markdown. If False, they are omitted or replaced with a placeholder.
 
         Returns:
             str: Markdown-formatted string with structured content from the PDF.
@@ -328,5 +332,7 @@ class PDFPlumberReader:
                 all_blocks.extend(
                     self.extract_page_blocks(page, i, model=model, prompt=prompt)
                 )
-        markdown_test = self.blocks_to_markdown(all_blocks, show_images=show_images)
+        markdown_test = self.blocks_to_markdown(
+            all_blocks, show_base64_images=show_base64_images
+        )
         return markdown_test
