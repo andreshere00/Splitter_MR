@@ -1,7 +1,9 @@
+import io
 import os
 import uuid
 from typing import Any, Optional, Union
 
+import fitz
 from markitdown import MarkItDown
 
 from ...model import AzureOpenAIVisionModel, OpenAIVisionModel
@@ -16,39 +18,13 @@ class MarkItDownReader(BaseReader):
 
     This reader supports both standard MarkItDown conversion and the use of Vision Language Models (VLMs)
     for LLM-based OCR when extracting text from images or scanned documents.
-
-    Currently, only the following VLMs are supported:
-        - OpenAIVisionModel
-        - AzureOpenAIVisionModel
-
-    If a compatible model is provided, MarkItDown will leverage the specified VLM for OCR, and the
-    model's name will be recorded as the OCR method used.
-
-    Notes:
-        - This method uses [MarkItDown](https://github.com/microsoft/markitdown) to convert
-            a wide variety of file formats (e.g., PDF, DOCX, images, HTML, CSV) to Markdown.
-        - If `document_id` is not provided, a UUID will be automatically assigned.
-        - If `metadata` is not provided, an empty list will be used.
-        - MarkItDown should be installed with all relevant optional dependencies for full
-            file format support.
     """
 
     def __init__(
         self, model: Optional[Union[AzureOpenAIVisionModel, OpenAIVisionModel]] = None
     ):
         self.model = model
-        self.model_name = None
-
-        if model is not None:
-            if not isinstance(model, (OpenAIVisionModel, AzureOpenAIVisionModel)):
-                raise ValueError(
-                    "Incompatible client. Only AzureOpenAIVisionModel and OpenAIVisionModel are supported."
-                )
-            client = model.get_client()
-            self.model_name = self.model.model_name
-            self.md = MarkItDown(llm_client=client, llm_model=self.model_name)
-        else:
-            self.md = MarkItDown()
+        self.model_name = model.model_name if self.model else None
 
     def read(self, file_path: str, **kwargs: Any) -> ReaderOutput:
         """
@@ -87,10 +63,63 @@ class MarkItDownReader(BaseReader):
             Pellentesque ex felis, cursus ege...
             ```
         """
-        # Read using MarkItDown
-        markdown_text = self.md.convert(file_path).text_content
+
+        # Helper
+        def pdf_pages_to_streams(pdf_path: str) -> list[io.BytesIO]:
+            """Render each PDF page to PNG bytes wrapped in BytesIO."""
+            doc = fitz.open(pdf_path)
+            streams: list[io.BytesIO] = []
+            for idx in range(len(doc)):
+                pix = doc.load_page(idx).get_pixmap()
+                buf = io.BytesIO(pix.tobytes("png"))
+                # give MarkItDown a hint about the mime-type / extension
+                buf.name = f"page_{idx + 1}.png"
+                buf.seek(0)
+                streams.append(buf)
+            return streams
+
+        # Initialise Mark-It-Down reader
+        if self.model is not None:
+            if not isinstance(self.model, (OpenAIVisionModel, AzureOpenAIVisionModel)):
+                raise ValueError(
+                    "Incompatible client. Only AzureOpenAIVisionModel or "
+                    "OpenAIVisionModel are supported."
+                )
+            client = self.model.get_client()
+            md = MarkItDown(llm_client=client, llm_model=self.model.model_name)
+            ocr_method = self.model.model_name
+        else:
+            md = MarkItDown()
+            ocr_method = None
+
+        scan_pdf_pages: bool = kwargs.get("scan_pdf_pages", False)
         ext = os.path.splitext(file_path)[-1].lower().lstrip(".")
-        conversion_method = "json" if ext == "json" else "markdown"
+        conversion_method: str | None = None
+
+        #  Handle page-by-page OCR for PDFs
+        if scan_pdf_pages:
+            if ext != "pdf":
+                raise ValueError("scan_pdf_pages=True requires a PDF file.")
+            if self.model is None:
+                raise ValueError("scan_pdf_pages=True requires a VisionModel.")
+
+            prompt = kwargs.get("prompt") or (
+                "Extract all elements detected in the page, in order. "
+                "Return only the extracted content, in valid Markdown."
+            )
+            page_md: list[str] = []
+            for idx, page_stream in enumerate(pdf_pages_to_streams(file_path), start=1):
+                page_md.append(f"<!-- page {idx} -->\n")
+                result = md.convert(page_stream, llm_prompt=prompt)
+                page_md.append(result.text_content)
+
+            markdown_text = "\n\n".join(page_md)
+            conversion_method = "markdown"
+
+        # Regular conversion path
+        else:
+            markdown_text = md.convert(file_path).text_content
+            conversion_method = "json" if ext == "json" else "markdown"
 
         # Return output
         return ReaderOutput(
@@ -100,6 +129,6 @@ class MarkItDownReader(BaseReader):
             document_id=kwargs.get("document_id") or str(uuid.uuid4()),
             conversion_method=conversion_method,
             reader_method="markitdown",
-            ocr_method=self.model_name,
+            ocr_method=ocr_method,
             metadata=kwargs.get("metadata"),
         )

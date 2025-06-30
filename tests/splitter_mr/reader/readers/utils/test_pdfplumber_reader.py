@@ -1,3 +1,5 @@
+import base64
+from io import BytesIO
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -8,7 +10,17 @@ from splitter_mr.reader.utils import PDFPlumberReader
 
 
 class DummyModel:
-    def extract_text(self, file, prompt=None):
+    """
+    Mimics a vision model: always returns the same caption but records calls.
+    Matches the DummyModel used in the original test-suite so expectations stay
+    consistent across all files.
+    """
+
+    def __init__(self):
+        self.calls = []
+
+    def extract_text(self, file, prompt=None, **kw):
+        self.calls.append({"file": file, "prompt": prompt, **kw})
         return "Dummy caption"
 
 
@@ -30,6 +42,21 @@ def fake_table():
 @pytest.fixture
 def fake_image_dict():
     return [{"x0": 100, "top": 200, "x1": 300, "bottom": 400}]
+
+
+def _fake_to_image_factory(payload: bytes = b"fakeimg"):
+    """Builds a stub for pdfplumber.Page.to_image()."""
+
+    class _FakeImage:
+        def save(self, buf: BytesIO, format: str = "PNG"):
+            buf.write(payload)
+
+    fake_image = _FakeImage()
+
+    def _to_image(resolution=150):
+        return fake_image
+
+    return _to_image
 
 
 # Test cases
@@ -171,3 +198,102 @@ def test_blocks_to_markdown_handles_blank():
     blocks = []
     md = reader.blocks_to_markdown(blocks)
     assert isinstance(md, str)
+
+
+@patch("pdfplumber.open")
+def test_extract_tables_filters_invalid(mock_open):
+    valid_tbl = [["H1", "H2"], ["v1", "v2"]]
+    trash_tbl = [["solo"], ["x"], ["y"], ["z"]]
+
+    good = MagicMock(bbox=(0, 10, 100, 50))
+    good.extract.return_value = valid_tbl
+
+    bad = MagicMock(bbox=(0, 60, 100, 90))
+    bad.extract.return_value = trash_tbl
+
+    fake_page = MagicMock()
+    fake_page.find_tables.return_value = [good, bad]
+    fake_page.extract_words.return_value = []
+    fake_page.images = []
+
+    fake_pdf = MagicMock()
+    fake_pdf.pages = [fake_page]
+    mock_open.return_value.__enter__.return_value = fake_pdf
+
+    reader = PDFPlumberReader()
+    tables, bboxes = reader.extract_tables(fake_page, 1)
+
+    assert tables == [
+        {
+            "type": "table",
+            "top": 10,
+            "bottom": 50,
+            "content": valid_tbl,
+            "page": 1,
+        }
+    ]
+    assert bboxes == [(0, 10, 100, 50)]
+
+
+def test_extract_text_excludes_table_rows():
+    reader = PDFPlumberReader()
+    words = [
+        {"text": "Header", "top": 20, "bottom": 30, "x0": 10},
+        {"text": "Outside", "top": 70, "bottom": 80, "x0": 10},
+    ]
+    table_bbox = [(0, 10, 100, 30)]
+
+    page = MagicMock()
+    page.extract_words.return_value = words
+
+    lines = reader.extract_text(page, 1, table_bbox)
+    assert [l["content"] for l in lines] == ["Outside"]
+
+
+@patch("pdfplumber.open")
+def test_extract_pages_as_images_base64(mock_open):
+    fake_page = MagicMock()
+    fake_page.to_image.side_effect = _fake_to_image_factory(b"abc123")
+    fake_pdf = MagicMock()
+    fake_pdf.pages = [fake_page, fake_page]
+    mock_open.return_value.__enter__.return_value = fake_pdf
+
+    reader = PDFPlumberReader()
+    b64_list = reader.extract_pages_as_images("dummy.pdf")
+
+    expected = base64.b64encode(b"abc123").decode()
+    assert b64_list == [expected, expected]
+
+
+def test_describe_pages_calls_vlm(monkeypatch):
+    reader = PDFPlumberReader()
+
+    dummy_imgs = ["a", "b", "c"]
+    monkeypatch.setattr(reader, "extract_pages_as_images", lambda *a, **kw: dummy_imgs)
+
+    model = DummyModel()
+    output = reader.describe_pages("file.pdf", model=model)
+
+    assert output == ["Dummy caption"] * 3
+    assert len(model.calls) == 3
+    for idx, call in enumerate(model.calls):
+        assert call["file"] == dummy_imgs[idx]
+        assert "Extract all the elements detected in the page" in call["prompt"]
+
+
+def test_extract_images_encodes_and_annotates():
+    reader = PDFPlumberReader()
+
+    bbox = {"x0": 0, "top": 0, "x1": 10, "bottom": 10}
+    page = MagicMock()
+    page.images = [bbox]
+    page.within_bbox.return_value.to_image = _fake_to_image_factory(b"img")
+
+    # Without model: placeholder only
+    imgs = reader.extract_images(page, page_num=1, model=None)
+    assert imgs[0]["annotation"].startswith("<!-- image -->")
+
+    # With model: caption appended
+    model = DummyModel()
+    imgs_annot = reader.extract_images(page, page_num=1, model=model)
+    assert "Dummy caption" in imgs_annot[0]["annotation"]

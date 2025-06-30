@@ -120,7 +120,11 @@ class PDFPlumberReader:
         return tables, table_bboxes
 
     def extract_images(
-        self, page, page_num: int, model: Optional[BaseModel] = None, prompt: str = None
+        self,
+        page,
+        page_num: int,
+        model: Optional[BaseModel] = None,
+        prompt: str = "Provide a short, descriptive caption for this image. Return only the caption, in emphasis markdown (e.g., *A cat sitting*).",
     ) -> List[Dict[str, Any]]:
         """
         Extracts images from a PDF page as base64-encoded PNG data, with optional annotation via a model.
@@ -150,11 +154,7 @@ class PDFPlumberReader:
                 if model:
                     annotation = model.extract_text(
                         file=img_b64,
-                        prompt=prompt
-                        or (  # noqa: W503
-                            "Provide a descriptive and short caption for this image."
-                            "Return the caption as emphasis in markdown format (e.g., *A short description*)."
-                        ),
+                        prompt=prompt or (),  # noqa: W503
                     )
                     image_description = f"{image_description}\n{annotation}"
                 images.append(
@@ -345,7 +345,7 @@ class PDFPlumberReader:
         model: "BaseModel",
         prompt: str = (
             "Extract all the elements detected in the page, orderly. "
-            "Return only all the extracted content, always in markdown code format."
+            "Return only all the extracted content, always in markdown format."
         ),
         resolution: int = 512,
         **parameters,

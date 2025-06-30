@@ -1,5 +1,16 @@
 # v0.3.x
 
+## v0.3.1
+
+### Features
+
+- Add support to read PDF by pages for all the readers, using the parameter `scan_pdf_images = True`. 
+- Add support to split by pages for PDFs. 
+
+### Documentation
+
+- Update examples.
+
 ## v0.3.0
 
 ### Features

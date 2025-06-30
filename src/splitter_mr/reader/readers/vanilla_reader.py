@@ -1,7 +1,7 @@
 import os
 import uuid
 from html.parser import HTMLParser
-from typing import Any, Optional
+from typing import Any, Dict, List, Optional
 
 import pandas as pd
 import requests
@@ -39,6 +39,7 @@ class VanillaReader(BaseReader):
     def __init__(self, model: Optional[BaseModel] = None):
         super().__init__()
         self.model = model
+        self.pdf_reader = PDFPlumberReader()
 
     def read(self, file_path: Any = None, **kwargs: Any) -> ReaderOutput:
         """
@@ -63,6 +64,11 @@ class VanillaReader(BaseReader):
                 - text_document (str, optional): Raw text or string content of the document.
                 - show_base64_images (bool, optional): If True (default), images in PDFs are shown inline as base64 PNG.
                     If False, images are omitted (or annotated if a model is provided).
+                - scan_pdf_pages (bool): If *True* and the source is a PDF, run the vision-powered “page description” pipeline.
+                - vlm_parameters : dict, optional
+                    Extra kwargs forwarded verbatim to `model.extract_text`.
+                - resolution : int, default 150
+                    DPI used when rasterising PDF pages for vision models.
                 - model (BaseModel, optional): Vision model for image annotation/captioning.
                 - prompt (str, optional): Custom prompt for image captioning.
 
@@ -117,6 +123,7 @@ class VanillaReader(BaseReader):
         document_name = kwargs.get("document_name")
         document_path = None
         conversion_method = None
+        ocr_method = None
 
         # --- 1. File path or default
         if source_type == "file_path":
@@ -129,23 +136,69 @@ class VanillaReader(BaseReader):
                 document_path = os.path.relpath(document_source)
 
                 if ext == "pdf":
-                    pdf_reader = PDFPlumberReader()
-                    model = kwargs.get("model", self.model)
-                    if model is not None:
-                        text = pdf_reader.read(
-                            document_source,
+                    scan_pdf_pages: bool = kwargs.get("scan_pdf_pages", False)
+
+                    if scan_pdf_pages:
+                        # --- Vision-powered full-page description --------
+                        model: Optional[BaseModel] = kwargs.get("model", self.model)
+                        if model is None:
+                            raise ValueError(
+                                "scan_pdf_pages=True requires a vision-capable "
+                                "`model` implementing BaseModel."
+                            )
+
+                        prompt = kwargs.get(
+                            "prompt",
+                            "Extract all the elements detected in the page, orderly. "
+                            "Return only all the extracted content, always in markdown format.",
+                        )
+                        resolution = kwargs.get("resolution", 512)
+                        vlm_parameters: Dict[str, Any] = kwargs.get(
+                            "vlm_parameters", {}
+                        )
+
+                        page_markdowns: List[str] = self.pdf_reader.describe_pages(
+                            file_path=document_source,
                             model=model,
-                            prompt=kwargs.get("prompt"),
-                            show_base64_images=kwargs.get("show_base64_images", False),
+                            prompt=prompt,
+                            resolution=resolution,
+                            **vlm_parameters,
                         )
-                        # use the **actual** model that was passed in
+
+                        # Join pages under clear headings
+                        joined_pages = []
+                        for i, md in enumerate(page_markdowns, start=1):
+                            joined_pages.append(f"## Page {i}\n\n{md}")
+                        text = "\n\n---\n\n".join(joined_pages)
+
+                        conversion_method = "png"
                         ocr_method = model.model_name
+
                     else:
-                        text = pdf_reader.read(
-                            document_source,
-                            show_base64_images=kwargs.get("show_base64_images", False),
-                        )
+                        # --- Element-wised PDF extraction  ---------------
+                        pdf_reader = self.pdf_reader
+                        model = kwargs.get("model", self.model)
+
+                        if model is not None:
+                            # --- Vision-powered element description ---------------
+                            text = pdf_reader.read(
+                                document_source,
+                                model=model,
+                                prompt=kwargs.get("prompt"),
+                                show_base64_images=kwargs.get(
+                                    "show_base64_images", False
+                                ),
+                            )
+                            ocr_method = model.model_name
+                        else:
+                            text = pdf_reader.read(
+                                document_source,
+                                show_base64_images=kwargs.get(
+                                    "show_base64_images", False
+                                ),
+                            )
                         conversion_method = "pdf"
+
                 elif ext in (
                     "json",
                     "html",
@@ -288,7 +341,6 @@ class VanillaReader(BaseReader):
 
         metadata = kwargs.get("metadata", {})
         document_id = kwargs.get("document_id") or str(uuid.uuid4())
-        ocr_method = kwargs.get("ocr_method")
 
         return ReaderOutput(
             text=text,

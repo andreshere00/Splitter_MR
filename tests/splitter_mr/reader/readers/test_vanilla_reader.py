@@ -15,13 +15,34 @@ from splitter_mr.schema import ReaderOutput
 
 
 class DummyPDFPlumberReader:
-    def read(self, *args, **kwargs):
-        return "PDF_TEXT"
+    def __init__(self):
+        self.last_kwargs = None  # store kwargs for assertions
+
+    # element-wise extraction (legacy path)
+    def read(self, *a, **kw):
+        self.last_kwargs = kw
+        return "ELEMENT_WISE_PDF_TEXT"
+
+    # full-page vision pipeline
+    def describe_pages(self, file_path, model, prompt, resolution=512, **kw):
+        # record params so the test can inspect them
+        self.last_kwargs = {
+            "file_path": file_path,
+            "model": model,
+            "prompt": prompt,
+            "resolution": resolution,
+            **kw,
+        }
+        # pretend 2-page PDF
+        return ["PAGE-1-MD", "PAGE-2-MD"]
+
+
+class DummyVisionModel:
+    model_name = "dummy-vlm"
 
 
 @pytest.fixture(autouse=True)
 def patch_pdf_reader(monkeypatch):
-    # Patch PDFPlumberReader inside vanilla_reader
     monkeypatch.setattr(
         "splitter_mr.reader.readers.vanilla_reader.PDFPlumberReader",
         lambda: DummyPDFPlumberReader(),
@@ -119,7 +140,7 @@ def test_read_pdf_file(tmp_path):
     path.write_bytes(b"%PDF-FAKE")
     reader = VanillaReader()
     out = reader.read(str(path))
-    assert out.text == "PDF_TEXT"
+    assert out.text == "ELEMENT_WISE_PDF_TEXT"
     assert out.conversion_method == "pdf"
 
 
@@ -346,3 +367,58 @@ def test_reader_metadata_and_ids(tmp_path):
     out = reader.read(str(path), metadata={"source": "x"}, document_id=doc_id)
     assert out.metadata == {"source": "x"}
     assert out.document_id == doc_id
+
+
+#  ---------- scan_pdf_pages functionalities ----------
+
+
+def test_scan_pdf_pages_success(tmp_path):
+    pdf_path = tmp_path / "doc.pdf"
+    pdf_path.write_bytes(b"%PDF-FAKE")
+
+    reader = VanillaReader(model=DummyVisionModel())  # default model OK
+    out = reader.read(
+        str(pdf_path),
+        scan_pdf_pages=True,
+        resolution=300,  # custom DPI should flow through
+        vlm_parameters={"temperature": 0.0},
+    )
+
+    # → markdown with page headings
+    assert "## Page 1" in out.text and "PAGE-1-MD" in out.text
+    assert "## Page 2" in out.text and "PAGE-2-MD" in out.text
+
+    # → metadata fields
+    assert out.conversion_method == "png"
+    assert out.ocr_method == "dummy-vlm"
+
+    # → our DummyPDFPlumberReader captured the kwargs
+    pdf_reader = reader.pdf_reader  # the instance inside VanillaReader
+    recorded = pdf_reader.last_kwargs
+    assert recorded["resolution"] == 300
+    assert recorded["model"] is reader.model
+    # default prompt should be passed untouched
+    assert "Extract all the elements detected in the page" in recorded["prompt"]
+
+
+def test_scan_pdf_pages_requires_model(tmp_path):
+    pdf_path = tmp_path / "doc.pdf"
+    pdf_path.write_bytes(b"%PDF-FAKE")
+    reader = VanillaReader(model=None)  # no default model
+
+    with pytest.raises(ValueError):
+        reader.read(str(pdf_path), scan_pdf_pages=True)
+
+
+def test_pdf_with_model_no_scan(tmp_path):
+    pdf_path = tmp_path / "doc.pdf"
+    pdf_path.write_bytes(b"%PDF-FAKE")
+
+    model = DummyVisionModel()
+    reader = VanillaReader(model=None)  # no default; we pass per-call
+
+    out = reader.read(str(pdf_path), model=model, scan_pdf_pages=False)
+
+    assert out.text == "ELEMENT_WISE_PDF_TEXT"
+    assert out.conversion_method == "pdf"
+    assert out.ocr_method == model.model_name

@@ -115,7 +115,7 @@ class DoclingReader(BaseReader):
         self,
         file_path: str,
         scan_pdf_pages: bool,
-        prompt: str = "Extract all the elements detected in the page, orderly. Return only all the extracted content, always in markdown code format.",
+        prompt: str = "Extract all the elements detected in the page, orderly. Return only all the extracted content, always in markdown format.",
     ) -> str:
         """
         Extract Markdown from a PDF, using VLM or image pipeline.
@@ -145,7 +145,7 @@ class DoclingReader(BaseReader):
     def _read_non_pdf(
         self,
         file_path: str,
-        prompt: str = "Extract all the elements detected in the page, orderly. Return only all the extracted content, always in markdown code format.",
+        prompt: str = "Extract all the elements detected in the page, orderly. Return only all the extracted content, always in markdown format.",
     ) -> str:
         """
         Convert non-PDF documents via Docling or fallback converter.
