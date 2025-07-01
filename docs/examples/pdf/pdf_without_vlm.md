@@ -144,7 +144,7 @@ scripts.
 Conclusion
 While it may seem simple on the surface, converting PDFs to formats like
 Markdown involves a series of technical and interpretive challenges. Effective
-conversion tools must blend text extraction, document analysis, and sometimes
+conversion tools must blend text extraction, document analyzis, and sometimes
 machine learning techniques (such as OCR or structure recognition) to produce
 usable, readable, and faithful Markdown output. As a result, perfect conversion
 is rarely possible, and manual review and cleanup are often required.
@@ -286,7 +286,7 @@ Conclusion
 
 While it may seem simple on the surface, converting PDFs to formats like
 Markdown involves a series of technical and interpretive challenges. Effective
-conversion tools must blend text extraction, document analysis, and sometimes
+conversion tools must blend text extraction, document analyzis, and sometimes
 machine learning techniques (such as OCR or structure recognition) to produce
 usable, readable, and faithful Markdown output. As a result, perfect conversion
 is rarely possible, and manual review and cleanup are often required.
@@ -359,7 +359,7 @@ PDFs can use a variety of text encodings, embedded fonts, and even contain nonst
 
 ## Conclusion
 
-While it may seem simple on the surface, converting PDFs to formats like Markdown involves a series of technical and interpretive challenges. Effective conversion tools must blend text extraction, document analysis, and sometimes machine learning techniques (such as OCR or structure recognition) to produce usable, readable, and faithful Markdown output. As a result, perfect conversion is rarely possible, and manual review and cleanup are often required.
+While it may seem simple on the surface, converting PDFs to formats like Markdown involves a series of technical and interpretive challenges. Effective conversion tools must blend text extraction, document analyzis, and sometimes machine learning techniques (such as OCR or structure recognition) to produce usable, readable, and faithful Markdown output. As a result, perfect conversion is rarely possible, and manual review and cleanup are often required.
 
 <!-- image -->
 ```

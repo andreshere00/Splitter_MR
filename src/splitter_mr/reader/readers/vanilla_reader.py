@@ -1,6 +1,7 @@
 import os
 import uuid
 from html.parser import HTMLParser
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import pandas as pd
@@ -8,23 +9,14 @@ import requests
 import yaml
 
 from ...model import BaseModel
-from ...schema import LANGUAGES, ReaderOutput
+from ...schema import (
+    DEFAULT_EXTRACTION_PROMPT,
+    DEFAULT_IMAGE_CAPTION_PROMPT,
+    LANGUAGES,
+    ReaderOutput,
+)
 from ..base_reader import BaseReader
 from ..utils import PDFPlumberReader
-
-
-class SimpleHTMLTextExtractor(HTMLParser):
-    """Extract HTML Structures from a text"""
-
-    def __init__(self):
-        super().__init__()
-        self.text_parts = []
-
-    def handle_data(self, data):
-        self.text_parts.append(data)
-
-    def get_text(self):
-        return " ".join(self.text_parts).strip()
 
 
 class VanillaReader(BaseReader):
@@ -41,7 +33,11 @@ class VanillaReader(BaseReader):
         self.model = model
         self.pdf_reader = PDFPlumberReader()
 
-    def read(self, file_path: Any = None, **kwargs: Any) -> ReaderOutput:
+    def read(
+        self,
+        file_path: str | Path = None,
+        **kwargs: Any,
+    ) -> ReaderOutput:
         """
         Reads a document from various sources and returns its text content along with standardized metadata.
 
@@ -56,21 +52,23 @@ class VanillaReader(BaseReader):
         a path, URL, JSON, YAML, or plain text.
 
         Args:
-            file_path (str, optional): Path to the input file.
+            file_path (str | Path): Path to the input file.
             **kwargs:
-                - file_path (str, optional): Path to the input file (overrides positional argument).
-                - file_url (str, optional): URL to read the document from.
-                - json_document (dict or str, optional): Dictionary or JSON string containing document content.
-                - text_document (str, optional): Raw text or string content of the document.
-                - show_base64_images (bool, optional): If True (default), images in PDFs are shown inline as base64 PNG.
+                - `file_path (str, optional)`: Path to the input file (overrides positional argument).
+                - `prompt (str, optional)`: Custom prompt for image captioning.
+                - `show_base64_images (Optional[bool])`: If True (default), images in PDFs are shown inline as base64 PNG.
                     If False, images are omitted (or annotated if a model is provided).
-                - scan_pdf_pages (bool): If *True* and the source is a PDF, run the vision-powered “page description” pipeline.
-                - vlm_parameters : dict, optional
+                - `scan_pdf_pages (bool)`: If *True* and the source is a PDF, read the PDF by pages as scanned images.
+                - `file_url (str, optional)`: URL to read the document from.
+                - `json_document (dict or str, optional)`: Dictionary or JSON string containing document content.
+                - `text_document (str, optional)`: Raw text or string content of the document.
+                - `document_id (Optional[str])`: Unique document identifier. If not provided, an UUID will be generated.
+                - `metadata (Optional[Dict[str, Any]])`: Additional metadata, given in dictionary format.
+                    If not provided, no metadata is returned.
+                - `vlm_parameters (Optional[Dict[str, Any]])`:
                     Extra kwargs forwarded verbatim to `model.extract_text`.
-                - resolution : int, default 150
-                    DPI used when rasterising PDF pages for vision models.
-                - model (BaseModel, optional): Vision model for image annotation/captioning.
-                - prompt (str, optional): Custom prompt for image captioning.
+                - `resolution (Optional[int])`: DPI used when rasterising PDF pages for vision models. Default is 300.
+                - `placeholder (Optional[str])`: Placeholder string to use for omitted images in PDFs. Default is `"<!-- image -->"`.
 
         Returns:
             ReaderOutput: Dataclass defining the output structure for all readers.
@@ -90,7 +88,7 @@ class VanillaReader(BaseReader):
 
             model = AzureOpenAIVisionModel()
             reader = VanillaReader(model=model)
-            output = reader.read(file_path="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/lorem_ipsum.pdf", show_base64_images=False)
+            output = reader.read(file_path="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/lorem_ipsum.pdf")
             print(output.text)
             ```
             ```bash
@@ -120,15 +118,18 @@ class VanillaReader(BaseReader):
             document_source = file_path
             source_type = "file_path"
 
-        document_name = kwargs.get("document_name")
+        document_name = kwargs.get("document_name", None)
         document_path = None
         conversion_method = None
         ocr_method = None
+        text = ""
 
-        # --- 1. File path or default
+        # File path or default
         if source_type == "file_path":
+            if isinstance(document_source, Path):
+                document_source = os.fspath(document_source)
             if not isinstance(document_source, str):
-                raise ValueError("file_path must be a string.")
+                raise ValueError("file_path must be a string or Path object.")
 
             if self.is_valid_file_path(document_source):
                 ext = os.path.splitext(document_source)[-1].lower().lstrip(".")
@@ -136,23 +137,15 @@ class VanillaReader(BaseReader):
                 document_path = os.path.relpath(document_source)
 
                 if ext == "pdf":
-                    scan_pdf_pages: bool = kwargs.get("scan_pdf_pages", False)
-
-                    if scan_pdf_pages:
-                        # --- Vision-powered full-page description --------
+                    if kwargs.get("scan_pdf_pages"):
+                        # Vision-powered full-page description
                         model: Optional[BaseModel] = kwargs.get("model", self.model)
                         if model is None:
                             raise ValueError(
                                 "scan_pdf_pages=True requires a vision-capable "
                                 "`model` implementing BaseModel."
                             )
-
-                        prompt = kwargs.get(
-                            "prompt",
-                            "Extract all the elements detected in the page, orderly. "
-                            "Return only all the extracted content, always in markdown format.",
-                        )
-                        resolution = kwargs.get("resolution", 512)
+                        resolution = kwargs.get("resolution", 300)
                         vlm_parameters: Dict[str, Any] = kwargs.get(
                             "vlm_parameters", {}
                         )
@@ -160,7 +153,7 @@ class VanillaReader(BaseReader):
                         page_markdowns: List[str] = self.pdf_reader.describe_pages(
                             file_path=document_source,
                             model=model,
-                            prompt=prompt,
+                            prompt=kwargs.get("prompt") or DEFAULT_EXTRACTION_PROMPT,
                             resolution=resolution,
                             **vlm_parameters,
                         )
@@ -175,19 +168,22 @@ class VanillaReader(BaseReader):
                         ocr_method = model.model_name
 
                     else:
-                        # --- Element-wised PDF extraction  ---------------
+                        # Element-wised PDF extraction
                         pdf_reader = self.pdf_reader
                         model = kwargs.get("model", self.model)
 
+                        placeholder = kwargs.get("placeholder", "<!-- image -->")
+
                         if model is not None:
-                            # --- Vision-powered element description ---------------
                             text = pdf_reader.read(
                                 document_source,
                                 model=model,
-                                prompt=kwargs.get("prompt"),
+                                prompt=kwargs.get("prompt")
+                                or DEFAULT_IMAGE_CAPTION_PROMPT,  # noqa: W503
                                 show_base64_images=kwargs.get(
                                     "show_base64_images", False
                                 ),
+                                placeholder=placeholder,
                             )
                             ocr_method = model.model_name
                         else:
@@ -196,6 +192,7 @@ class VanillaReader(BaseReader):
                                 show_base64_images=kwargs.get(
                                     "show_base64_images", False
                                 ),
+                                placeholder=placeholder,
                             )
                         conversion_method = "pdf"
 
@@ -339,8 +336,8 @@ class VanillaReader(BaseReader):
         else:
             raise ValueError(f"Unrecognized document source: {source_type}")
 
-        metadata = kwargs.get("metadata", {})
-        document_id = kwargs.get("document_id") or str(uuid.uuid4())
+        metadata = kwargs.get("metadata") or {}
+        document_id = kwargs.get("document_id", str(uuid.uuid4()))
 
         return ReaderOutput(
             text=text,
@@ -352,3 +349,17 @@ class VanillaReader(BaseReader):
             ocr_method=ocr_method,
             metadata=metadata,
         )
+
+
+class SimpleHTMLTextExtractor(HTMLParser):
+    """Extract HTML Structures from a text"""
+
+    def __init__(self):
+        super().__init__()
+        self.text_parts = []
+
+    def handle_data(self, data):
+        self.text_parts.append(data)
+
+    def get_text(self):
+        return " ".join(self.text_parts).strip()

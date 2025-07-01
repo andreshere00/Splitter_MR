@@ -4,8 +4,14 @@
 
 ### Features
 
-- Add support to read PDF by pages for all the readers, using the parameter `scan_pdf_images = True`. 
+- Add support to read and scan PDF by pages for all the readers, using the parameter `scan_pdf_images = True`. 
+- Add support to use different placeholders for images in Vanilla and Docling Readers.
 - Add support to split by pages for PDFs. 
+
+### Bugs
+
+- Change how the arguments are passed to every Reader to enhance robutsness.
+- Add new test cases.
 
 ### Documentation
 
@@ -15,7 +21,7 @@
 
 ### Features
 
-- Implement `AzureOpenAI` and `OpenAI` Visual Models to analyse graphical resources in PDF files.
+- Implement `AzureOpenAI` and `OpenAI` Visual Models to analyze graphical resources in PDF files.
 - Add support to read PDF files to VanillaReader using `PDFPlumber`.
 
 ### Documentation

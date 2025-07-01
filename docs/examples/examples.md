@@ -8,9 +8,17 @@ This section illustrates some use cases with **SplitterMR** to read documents an
 
 Read your PDF files using three frameworks: `PDFPlumber`, `MarkItDown` and `Docling`. 
 
-### [How to read a PDF file with image processing](./pdf/pdf_with_vlm.md)
+### [How to read a PDF file using Vanilla Reader for image processing](./pdf/pdf_markitdown_.md)
 
-Read your PDF files using three frameworks: `PDFPlumber`, `MarkItDown` and `Docling`. 
+Read your PDF files and analyze the content using PDFPlumber and Visual Language Models.
+
+### [How to read a PDF file using Docling for image processing](./pdf/pdf_docling.md)
+
+Read your PDF files and analyze the content using Docling and Visual Language Models.
+
+### [How to read a PDF file using MarkItDown for image processing](./pdf/pdf_markitdown_.md)
+
+Read your PDF files and analyze the content using MarkItDown and Visual Language Models.
 
 ## Text-based splitting
 
@@ -51,3 +59,9 @@ Divide your tables by a fixed number of rows and columns preserving the headers 
 !!! note
     
     👨‍💻 **Work-in-progress...** More examples to come!
+
+## Other examples
+
+### [Deprecated] - [How to read PDFs and analyze its content using several Visual Language Models](./pdf/pdf_with_vlm.md)
+
+Examples about how to read PDF files using PDFPlumber, MarkItDown and Docling frameworks, and read its multimedia content using a visual language model.

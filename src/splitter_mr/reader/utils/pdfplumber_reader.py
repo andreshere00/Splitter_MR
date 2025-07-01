@@ -7,6 +7,7 @@ from typing import Any, Dict, List, Optional, Tuple
 import pdfplumber
 
 from ...model import BaseModel
+from ...schema import DEFAULT_IMAGE_CAPTION_PROMPT
 
 
 class PDFPlumberReader:
@@ -123,8 +124,9 @@ class PDFPlumberReader:
         self,
         page,
         page_num: int,
+        prompt: Optional[str] = None,
         model: Optional[BaseModel] = None,
-        prompt: str = "Provide a short, descriptive caption for this image. Return only the caption, in emphasis markdown (e.g., *A cat sitting*).",
+        placeholder: str = "<!-- image -->",
     ) -> List[Dict[str, Any]]:
         """
         Extracts images from a PDF page as base64-encoded PNG data, with optional annotation via a model.
@@ -132,8 +134,8 @@ class PDFPlumberReader:
         Args:
             page: pdfplumber page object.
             page_num (int): Page number.
+            prompt (Optional[str]): Prompt for the annotation model.
             model (Optional[BaseModel]): Optional model to generate image captions/annotations.
-            prompt (str, optional): Prompt for the annotation model.
 
         Returns:
             List[Dict[str, Any]]: List of image block dicts, each containing image URI and annotation if available.
@@ -150,13 +152,12 @@ class PDFPlumberReader:
                 img_bytes = buf.getvalue()
                 img_b64 = base64.b64encode(img_bytes).decode()
                 img_uri = f"data:image/png;base64,{img_b64}"
-                image_description = "<!-- image -->"
+
+                image_description = placeholder
                 if model:
-                    annotation = model.extract_text(
-                        file=img_b64,
-                        prompt=prompt or (),  # noqa: W503
-                    )
-                    image_description = f"{image_description}\n{annotation}"
+                    annotation = model.extract_text(file=img_b64, prompt=prompt)
+                    image_description += f"\n{annotation}"
+
                 images.append(
                     {
                         "type": "image",
@@ -196,7 +197,12 @@ class PDFPlumberReader:
         return texts
 
     def extract_page_blocks(
-        self, page, page_num: int, prompt: str, model: Optional[BaseModel] = None
+        self,
+        page,
+        page_num: int,
+        prompt: Optional[str] = None,
+        model: Optional[BaseModel] = None,
+        placeholder: str = "<!-- image -->",
     ) -> List[Dict[str, Any]]:
         """
         Extracts all structural content blocks (tables, images, text) from a PDF page.
@@ -204,22 +210,26 @@ class PDFPlumberReader:
         Args:
             page: pdfplumber page object.
             page_num (int): Page number.
+            prompt (Optional[str]): Prompt for image annotation.
             model (Optional[BaseModel], optional): Model for image annotation.
-            prompt (str, optional): Prompt for image annotation.
 
         Returns:
             List[Dict[str, Any]]: List of all content block dicts, sorted by vertical position.
         """
         tables, table_bboxes = self.extract_tables(page, page_num)
-        images = self.extract_images(page, page_num, model=model, prompt=prompt)
-        texts = self.extract_text(page, page_num, table_bboxes)
+        images = self.extract_images(
+            page, page_num=page_num, model=model, prompt=prompt, placeholder=placeholder
+        )
+        texts = self.extract_text(
+            page=page, page_num=page_num, table_bboxes=table_bboxes
+        )
         blocks = tables + images + texts
         return sorted(blocks, key=lambda x: x["top"])
 
     def extract_pages_as_images(
         self,
         file_path: str,
-        resolution: int = 150,
+        resolution: int = 300,
         image_format: str = "PNG",
         return_base64: bool = True,
     ) -> List[str]:
@@ -231,8 +241,7 @@ class PDFPlumberReader:
             resolution (int): DPI for rendering (72-600).
             image_format (str): Pillow output format ("PNG", "JPEG", …).
             return_base64 (bool): If True (default) return base64 strings
-                                    (without the `data:image/*;base64,` prefix);
-                                    otherwise raw bytes.
+                (without the `data:image/*;base64,` prefix); otherwise raw bytes.
 
         Returns:
             List[str] | List[bytes]: One element per page in order.
@@ -284,7 +293,10 @@ class PDFPlumberReader:
         return "\n".join([header, separator] + rows)
 
     def blocks_to_markdown(
-        self, all_blocks: List[Dict[str, Any]], show_base64_images: bool = True
+        self,
+        all_blocks: List[Dict[str, Any]],
+        show_base64_images: bool = True,
+        placeholder: str = "<!-- image -->",
     ) -> str:
         """
         Converts a list of content blocks into Markdown, optionally embedding images and tables.
@@ -323,8 +335,7 @@ class PDFPlumberReader:
                         elif item.get("annotation"):
                             md_lines.append(f'{item["annotation"]}\n')
                         else:
-                            # Write an indicator that an image was omitted
-                            md_lines.append("\n<!-- image -->\n")
+                            md_lines.append(f"\n{placeholder}\n")
                     elif item["type"] == "table":
                         md_lines.append(self.table_to_markdown(item["content"]))
                         md_lines.append("")
@@ -342,12 +353,9 @@ class PDFPlumberReader:
     def describe_pages(
         self,
         file_path: str,
-        model: "BaseModel",
-        prompt: str = (
-            "Extract all the elements detected in the page, orderly. "
-            "Return only all the extracted content, always in markdown format."
-        ),
-        resolution: int = 512,
+        model: BaseModel,
+        prompt: Optional[str] = None,
+        resolution: Optional[int] = 300,
         **parameters,
     ) -> List[str]:
         """
@@ -357,9 +365,9 @@ class PDFPlumberReader:
             file_path (str): PDF to process.
             model (BaseModel): Any implementation of the provided BaseModel
                                interface (e.g. OpenAIVisionModel).
-            prompt (str): Instruction sent to the VLM.  Has the default
+            prompt (Optional[str]): Instruction sent to the VLM.  Has the default
                           requested in the spec.
-            resolution (int): DPI to rasterise pages before sending.
+            resolution (Optional[str]): DPI to rasterise pages before sending.
 
         Returns:
             List[str]: Markdown descriptions, one per page, in order.
@@ -383,9 +391,10 @@ class PDFPlumberReader:
     def read(
         self,
         file_path: str,
+        prompt: Optional[str] = None,
         model: Optional[BaseModel] = None,
-        prompt: str = "Provide a caption for the following image. Return the result as emphasis in markdown code format (e.g., *Description of the image*).",
         show_base64_images: bool = False,
+        placeholder: str = "<!-- image -->",
     ) -> str:
         """
         Reads a PDF file and returns extracted content as Markdown.
@@ -400,12 +409,19 @@ class PDFPlumberReader:
             str: Markdown-formatted string with structured content from the PDF.
         """
         all_blocks: List[Dict[str, Any]] = []
+        prompt = prompt or DEFAULT_IMAGE_CAPTION_PROMPT
         with pdfplumber.open(file_path) as pdf:
             for i, page in enumerate(pdf.pages, start=1):
                 all_blocks.extend(
-                    self.extract_page_blocks(page, i, model=model, prompt=prompt)
+                    self.extract_page_blocks(
+                        page=page,
+                        page_num=i,
+                        model=model,
+                        prompt=prompt,
+                        placeholder=placeholder,
+                    )
                 )
         markdown_test = self.blocks_to_markdown(
-            all_blocks, show_base64_images=show_base64_images
+            all_blocks, show_base64_images=show_base64_images, placeholder=placeholder
         )
         return markdown_test

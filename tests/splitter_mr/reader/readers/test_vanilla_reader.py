@@ -24,7 +24,7 @@ class DummyPDFPlumberReader:
         return "ELEMENT_WISE_PDF_TEXT"
 
     # full-page vision pipeline
-    def describe_pages(self, file_path, model, prompt, resolution=512, **kw):
+    def describe_pages(self, file_path, model, prompt, resolution=300, **kw):
         # record params so the test can inspect them
         self.last_kwargs = {
             "file_path": file_path,
@@ -422,3 +422,31 @@ def test_pdf_with_model_no_scan(tmp_path):
     assert out.text == "ELEMENT_WISE_PDF_TEXT"
     assert out.conversion_method == "pdf"
     assert out.ocr_method == model.model_name
+
+
+def test_pdf_custom_placeholder(tmp_path):
+    pdf_path = tmp_path / "doc.pdf"
+    pdf_path.write_bytes(b"%PDF-FAKE")
+    reader = VanillaReader()
+    custom_placeholder = "<!-- custom-img -->"
+    out = reader.read(str(pdf_path), placeholder=custom_placeholder)
+    # Our DummyPDFPlumberReader records kwargs
+    assert reader.pdf_reader.last_kwargs["placeholder"] == custom_placeholder
+
+
+def test_pdf_custom_placeholder_with_model(tmp_path):
+    pdf_path = tmp_path / "doc.pdf"
+    pdf_path.write_bytes(b"%PDF-FAKE")
+    model = DummyVisionModel()
+    reader = VanillaReader(model=model)
+    custom_placeholder = "<!-- myimg -->"
+    out = reader.read(str(pdf_path), model=model, placeholder=custom_placeholder)
+    assert reader.pdf_reader.last_kwargs["placeholder"] == custom_placeholder
+
+
+def test_pdf_default_placeholder(tmp_path):
+    pdf_path = tmp_path / "doc.pdf"
+    pdf_path.write_bytes(b"%PDF-FAKE")
+    reader = VanillaReader()
+    out = reader.read(str(pdf_path))
+    assert reader.pdf_reader.last_kwargs["placeholder"] == "<!-- image -->"

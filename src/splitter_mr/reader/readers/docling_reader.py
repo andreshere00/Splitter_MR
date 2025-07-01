@@ -6,7 +6,12 @@ from typing import Any, Optional
 from docling.document_converter import DocumentConverter
 
 from ...model import BaseModel
-from ...schema import ReaderOutput
+from ...schema import (
+    DEFAULT_EXTRACTION_PROMPT,
+    DEFAULT_IMAGE_CAPTION_PROMPT,
+    DOCLING_SUPPORTED_EXTENSIONS,
+    ReaderOutput,
+)
 from ..base_reader import BaseReader
 from ..utils import DoclingUtils
 from .vanilla_reader import VanillaReader
@@ -21,24 +26,7 @@ class DoclingReader(BaseReader):
     VanillaReader for unsupported extensions.
     """
 
-    SUPPORTED_EXTENSIONS = {
-        "md",
-        "markdown",
-        "pdf",
-        "docx",
-        "pptx",
-        "xlsx",
-        "html",
-        "htm",
-        "odt",
-        "rtf",
-        "jpg",
-        "jpeg",
-        "png",
-        "bmp",
-        "gif",
-        "tiff",
-    }
+    SUPPORTED_EXTENSIONS = DOCLING_SUPPORTED_EXTENSIONS
 
     _IMAGE_PATTERN = re.compile(
         r"!\[(?P<alt>[^\]]*?)\]"
@@ -50,7 +38,7 @@ class DoclingReader(BaseReader):
         Initialize the DoclingReader.
 
         Args:
-            model: Optional vision-language model for image captioning and VLM-based PDF analysis.
+            model: Optional vision-language model for image captioning and VLM-based PDF analyzis.
         """
         self.model = model
         self.client = None
@@ -65,27 +53,42 @@ class DoclingReader(BaseReader):
     def read(
         self,
         file_path: str,
-        *,
-        prompt: str = (
-            "Provide a short, descriptive caption for this image. "
-            "Return only the caption, in emphasis markdown (e.g., *A cat sitting*)."
-        ),
-        scan_pdf_pages: bool = False,
-        show_base64_images: bool = False,
         **kwargs: Any,
     ) -> ReaderOutput:
         """
-        Convert a document to Markdown, optionally captioning or placeholdering images.
+        Convert a document to Markdown, with advanced image and PDF handling. Use `scan_pdf_pages=True` (with a model)
+        to extract each PDF page with a VLM. Use a custom `prompt` for VLM-based image captioning or PDF extraction.
+        Set `show_base64_images=True` to embed images; `False` to replace with captions/placeholders. Note that it fallbacks
+        to VanillaReader for unsupported formats.
 
         Args:
-            file_path: Path or URL to the document.
-            prompt: Prompt for image captioning or page-level VLM.
-            scan_pdf_pages: If True and model provided, use VLM on full pages.
-            show_base64_images: If True, embed images; if False, replace with captions or placeholders.
-            **kwargs: Additional metadata (e.g., document_id).
+            file_path (str): Path or URL to the document.
+            **kwargs:
+                - `document_id (Optional[str])`: Unique document identifier.
+                    If not provided, a UUID will be generated.
+                - `metadata (Optional[Dict[str, Any]])`: Additional metadata, given in dictionary format.
+                    If not provided, no metadata is returned.
+                - `prompt (Optional[str])`: Prompt for image captioning or VLM extraction.
+                - `scan_pdf_pages (Optional[bool])`: If True (and model provided), extract PDFs page-by-page with VLM.
+                - `show_base64_images (Optional[bool])`: If True, embed base64 images in Markdown.
+                    If False, replace with captions or comments.
+                - `placeholder (Optional[str])`: placeholder to indicate where is located an image in the document.
 
         Returns:
-            ReaderOutput with Markdown text and metadata.
+            ReaderOutput: Contains Markdown text and metadata.
+
+        Example:
+            ```python
+            # Basic Markdown extraction:
+            reader = DoclingReader()
+            result = reader.read(file_path="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/lorem_ipsum.pdf")
+            print(output.text)
+            ```
+            ```python
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget purus non est porta
+            rutrum. Suspendisse euismod lectus laoreet sem pellentesque egestas et et sem.
+            Pellentesque ex felis, cursus ege...
+            ```
         """
         ext = os.path.splitext(file_path)[1].lower().lstrip(".")
         if ext not in self.SUPPORTED_EXTENSIONS:
@@ -94,14 +97,27 @@ class DoclingReader(BaseReader):
 
         if ext == "pdf":
             md = self._read_pdf(
-                file_path=file_path, prompt=prompt, scan_pdf_pages=scan_pdf_pages
+                file_path=file_path,
+                prompt=kwargs.get("prompt", DEFAULT_IMAGE_CAPTION_PROMPT),
+                scan_pdf_pages=kwargs.get("scan_pdf_pages", False),
             )
         else:
-            md = self._read_non_pdf(file_path=file_path, prompt=prompt)
+            md = self._read_non_pdf(
+                file_path=file_path,
+                prompt=kwargs.get("prompt", DEFAULT_EXTRACTION_PROMPT),
+            )
 
-        # Post-process images
+        # Image post-processing
+        text = self._process_images(
+            markdown=md,
+            prompt=kwargs.get("prompt", DEFAULT_IMAGE_CAPTION_PROMPT),
+            show_base64_images=kwargs.get("show_base64_images", False),
+            placeholder=kwargs.get("placeholder", "<!-- image -->"),
+        )
+
+        # Return output
         return ReaderOutput(
-            text=self._process_images(md, prompt, show_base64_images),
+            text=text,
             document_name=os.path.basename(file_path),
             document_path=file_path,
             document_id=kwargs.get("document_id", str(uuid.uuid4())),
@@ -111,12 +127,7 @@ class DoclingReader(BaseReader):
             metadata=kwargs.get("metadata"),
         )
 
-    def _read_pdf(
-        self,
-        file_path: str,
-        scan_pdf_pages: bool,
-        prompt: str = "Extract all the elements detected in the page, orderly. Return only all the extracted content, always in markdown format.",
-    ) -> str:
+    def _read_pdf(self, file_path: str, scan_pdf_pages: bool, prompt: str) -> str:
         """
         Extract Markdown from a PDF, using VLM or image pipeline.
 
@@ -137,15 +148,18 @@ class DoclingReader(BaseReader):
             )
             return pipeline.convert(str(file_path)).document.export_to_markdown()
 
-        pipeline = self._utils.get_pdf_pipeline(mode="image")
+        pipeline = self._utils.get_pdf_pipeline(
+            mode="image",
+            client=self.client,
+            model_name=self.model_name,
+            prompt=prompt,
+        )
         return pipeline.convert(str(file_path)).document.export_to_markdown(
             image_mode="embedded"
         )
 
     def _read_non_pdf(
-        self,
-        file_path: str,
-        prompt: str = "Extract all the elements detected in the page, orderly. Return only all the extracted content, always in markdown format.",
+        self, file_path: str, prompt: str = DEFAULT_EXTRACTION_PROMPT
     ) -> str:
         """
         Convert non-PDF documents via Docling or fallback converter.
@@ -172,7 +186,8 @@ class DoclingReader(BaseReader):
         self,
         markdown: str,
         show_base64_images: bool,
-        prompt: str = "Provide a caption for the following image. Return the result as emphasis in markdown code format (e.g., *Description of the image*).",
+        prompt: str,
+        placeholder: str = "<!-- image -->",
     ) -> str:
         """
         Handle embedded base64 images: caption, embed, or placeholder.
@@ -188,12 +203,18 @@ class DoclingReader(BaseReader):
         # Caption images if model available
         if self.model:
             markdown = self._IMAGE_PATTERN.sub(
-                lambda m: self._format_caption(m, prompt, show_base64_images), markdown
+                lambda m: self._format_caption(
+                    match=m,
+                    prompt=prompt,
+                    show_base64_images=show_base64_images,
+                    placeholder=placeholder,
+                ),
+                markdown,
             )
 
         # Replace remaining images if hiding
         if not show_base64_images:
-            markdown = self._IMAGE_PATTERN.sub("<!-- image -->", markdown)
+            markdown = self._IMAGE_PATTERN.sub(placeholder, markdown)
 
         return markdown
 
@@ -201,7 +222,8 @@ class DoclingReader(BaseReader):
         self,
         match: re.Match,
         show_base64_images: bool,
-        prompt: str = "Provide a caption for the following image. Return the result as emphasis in markdown code format (e.g., *Description of the image*).",
+        prompt: str,
+        placeholder: str = "<!-- image -->",
     ) -> str:
         """
         Generate caption for a base64 image match.
@@ -217,9 +239,11 @@ class DoclingReader(BaseReader):
         alt = match.group("alt")
         uri = match.group("uri")
         b64 = match.group("b64")
-        caption = (
-            f"\n<!-- image -->\n{self.model.extract_text(file=b64, prompt=prompt)}\n"
-        )
+
+        caption = f"\n{self.model.extract_text(
+            file=b64, 
+            prompt=prompt
+        )}"
         if show_base64_images:
-            return f"![{alt}]({uri})\n{caption}"  # keep image then caption
-        return caption  # caption only
+            return f"![{alt}]({uri})\n{caption}"
+        return f"{placeholder}\n{caption}"

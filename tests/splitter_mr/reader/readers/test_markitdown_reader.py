@@ -1,9 +1,11 @@
 import io
-from unittest.mock import MagicMock, patch
+from unittest.mock import ANY, MagicMock, patch
 
 import pytest
 
 from splitter_mr.reader import MarkItDownReader
+
+# Helpers
 
 
 def patch_vision_models():
@@ -24,6 +26,9 @@ def patch_vision_models():
         patch(f"{base}.AzureOpenAIVisionModel", DummyVisionModel),
         DummyVisionModel,
     )
+
+
+# Test cases
 
 
 def patch_pdf_pages(pages=1):
@@ -53,7 +58,7 @@ def test_markitdown_reader_reads_and_converts(tmp_path):
         result = reader.read(
             str(test_file), document_id="doc-1", metadata={"source": "unit test"}
         )
-        mock_md.convert.assert_called_once_with(str(test_file))
+        mock_md.convert.assert_called_once_with(str(test_file), llm_prompt=ANY)
         assert result.text == "# Converted Markdown!\nSome text."
         assert result.document_name == "foo.pdf"
         assert result.document_path == str(test_file)
@@ -125,7 +130,10 @@ def test_scan_pdf_pages_requires_pdf_extension(tmp_path):
     patch_oa, patch_az, DummyVisionModel = patch_vision_models()
     with patch_oa, patch_az:
         reader = MarkItDownReader(model=DummyVisionModel())
-        with pytest.raises(ValueError, match="scan_pdf_pages=True requires a PDF file"):
+        with pytest.raises(
+            ValueError,
+            match="To scan PDF pages, a PDF file and a vision model are required.",
+        ):
             reader.read(str(docx), scan_pdf_pages=True)
 
 
@@ -133,5 +141,79 @@ def test_scan_pdf_pages_requires_vision_model(tmp_path):
     pdf = tmp_path / "no_model.pdf"
     pdf.write_text("dummy")
     reader = MarkItDownReader()
-    with pytest.raises(ValueError, match="scan_pdf_pages=True requires a VisionModel"):
+    with pytest.raises(
+        ValueError,
+        match="To scan PDF pages, a PDF file and a vision model are required.",
+    ):
         reader.read(str(pdf), scan_pdf_pages=True)
+
+
+def test_scan_pdf_pages_splits_each_page(tmp_path):
+    """Test PDF is split and scanned page by page with VisionModel."""
+    pdf = tmp_path / "multi.pdf"
+    pdf.write_text("dummy pdf")
+    patch_oa, patch_az, DummyVisionModel = patch_vision_models()
+    with (
+        patch_pdf_pages(pages=3),
+        patch("splitter_mr.reader.readers.markitdown_reader.MarkItDown") as MockMID,
+        patch_oa,
+        patch_az,
+    ):
+        reader = MarkItDownReader(model=DummyVisionModel())
+        # Simulate each page conversion returning "page-md-X"
+        MockMID.return_value.convert.side_effect = [
+            MagicMock(text_content="PAGE-MD-1"),
+            MagicMock(text_content="PAGE-MD-2"),
+            MagicMock(text_content="PAGE-MD-3"),
+        ]
+        result = reader.read(str(pdf), scan_pdf_pages=True)
+        # Should call convert 3 times (one for each page)
+        assert MockMID.return_value.convert.call_count == 3
+        # Output contains all pages and the correct headings
+        assert "<!-- page 1 -->" in result.text
+        assert "<!-- page 2 -->" in result.text
+        assert "<!-- page 3 -->" in result.text
+        assert "PAGE-MD-1" in result.text
+        assert "PAGE-MD-2" in result.text
+        assert "PAGE-MD-3" in result.text
+        # Metadata should reflect scan mode
+        assert result.conversion_method == "markdown"
+        assert result.ocr_method == "gpt-4o-vision"
+
+
+def test_scan_pdf_pages_custom_prompt(tmp_path):
+    """Test that a custom prompt is passed for page scanning."""
+    pdf = tmp_path / "onepage.pdf"
+    pdf.write_text("pdf")
+    patch_oa, patch_az, DummyVisionModel = patch_vision_models()
+    with (
+        patch_pdf_pages(pages=1),
+        patch("splitter_mr.reader.readers.markitdown_reader.MarkItDown") as MockMID,
+        patch_oa,
+        patch_az,
+    ):
+        MockMID.return_value.convert.return_value = MagicMock(text_content="CUSTOM")
+        reader = MarkItDownReader(model=DummyVisionModel())
+        custom_prompt = "Describe this page in detail."
+        reader.read(str(pdf), scan_pdf_pages=True, prompt=custom_prompt)
+        # Should pass prompt to convert
+        args, kwargs = MockMID.return_value.convert.call_args
+        assert kwargs["llm_prompt"] == custom_prompt
+
+
+def test_scan_pdf_pages_no_model_raises(tmp_path):
+    pdf = tmp_path / "naked.pdf"
+    pdf.write_text("pdf")
+    reader = MarkItDownReader()
+    with pytest.raises(ValueError, match="vision model are required"):
+        reader.read(str(pdf), scan_pdf_pages=True)
+
+
+def test_scan_pdf_pages_wrong_extension_raises(tmp_path):
+    docx = tmp_path / "bad.docx"
+    docx.write_text("dummy")
+    patch_oa, patch_az, DummyVisionModel = patch_vision_models()
+    with patch_oa, patch_az:
+        reader = MarkItDownReader(model=DummyVisionModel())
+        with pytest.raises(ValueError, match="vision model are required"):
+            reader.read(str(docx), scan_pdf_pages=True)

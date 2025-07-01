@@ -1,6 +1,6 @@
 # SplitterMR
 
-<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/assets/splitter_mr_logo.svg" alt="SplitterMR logo" width=100%/>
+<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_logo.svg" alt="SplitterMR logo" width=100%/>
 
 ## Description
 
@@ -11,7 +11,7 @@
 >
 > You can now use vision-capable models (OpenAI Vision, Azure OpenAI Vision) to extract image descriptions and OCR text during file reading.
 > Pass a VLM model to any Reader class via the `model` parameter. 
-> - See [**documentation**](https://andreshere00.github.io/Splitter_MR/api_reference/reader/).
+> - See [**documentation**](https://andreshere00.github.io/Splitter_MR/api_reference/model/).
 
 ## Features
 
@@ -55,7 +55,7 @@ Main splitting methods include:
 
 ## Architecture
 
-![SplitterMR architecture diagram](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/assets/architecture_splitter_mr.svg)
+![SplitterMR architecture diagram](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/architecture_splitter_mr.svg)
 
 **SplitterMR** is designed around a modular pipeline that processes files from raw data all the way to chunked, LLM-ready text.
 
@@ -86,7 +86,7 @@ uv add splitter-mr
 ```
 
 > [!NOTE]
-> Python 3.12 or greater is required to use this library.
+> Python 3.11 or greater is required to use this library.
 
 ## How to use
 
@@ -164,22 +164,22 @@ from splitter_mr.model.models import AzureOpenAIVisionModel
 
 model = AzureOpenAIVisionModel()
 reader = VanillaReader(model=model)
-output = reader.read(file_path="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/lorem_ipsum.pdf", show_base64_images=False)
+output = reader.read(file_path="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/lorem_ipsum.pdf")
 print(output.text)
 ```
 
-So, in case that you want to read the images in a document, you only have to pass a model to the Reader component. Then, in the `read` method, you can specify if you want to show the images in Base64 format or not. 
+These VLMs can be used for captioning, annotation or text extraction. In fact, you can use these models to process the files as you want using the `prompt` parameter in the `read` method for every class which inherits from `BaseReader`. 
 
 !!! note
-    Showing the images encoded in base64 is a feature independent from using a VLM.
-
-This enables automatic image-to-text conversion in PDFs, DOCX, and PPTX using state-of-the-art VLMs. Currently, the supported models are OpenAI and Azure OpenAI.  Stay tuned for next models which will be implemented!
+    To see more details, consult documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/model/).
 
 ## Next features
 
+- [X] Add support to read PDF as scanned pages.
+- [X] Add support to change image placeholders.
 - [ ] Implement a method to split a document by pages (`PagedSplitter`).
 - [ ] Add support to read `xlsx`, `docx` and `pptx` files using `VanillaReader`. 
-- [ ] Implement a method to split by embedding similarity (`SemanticSplitter`).
+- [ ] Implement a method to split by embedding similarity > `SemanticSplitter`.
     - [ ] Add HuggingFace embeddings model support.
     - [ ] Add OpenAI embeddings model support.
     - [ ] Add Gemini embeddings model support.
@@ -190,6 +190,7 @@ This enables automatic image-to-text conversion in PDFs, DOCX, and PPTX using st
 - [ ] Add Claude Anthropic VLMs model support.
 - [ ] Modularize library into several sub-libraries.
 - [ ] Substitute dataclasses to `Pydantic` models.
+- [ ] Add support to generate output in JSON format.
 
 ## Contact
 

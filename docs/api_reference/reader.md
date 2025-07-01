@@ -54,6 +54,8 @@ Additionally, the file compatibility depending on the Reader class is given by t
     options:
       members_order: source
 
+`VanillaReader` uses a helper class to read PDF and use Visual Language Models. This class is `PDFPlumberReader`.
+
 ### DoclingReader
 
 ![Docling logo](../assets/docling_logo.png)
@@ -62,6 +64,8 @@ Additionally, the file compatibility depending on the Reader class is given by t
     handler: python
     options:
       members_order: source
+
+To execute pipelines, DoclingReader has a utils class, `DoclingUtils`.
 
 ### MarkItDownReader
 
