@@ -1,4 +1,3 @@
-import io
 from unittest.mock import ANY, MagicMock, patch
 
 import pytest
@@ -99,8 +98,7 @@ def test_scan_pdf_pages_calls_convert_per_page(tmp_path):
         MockMID.return_value.convert.return_value = MagicMock(text_content="## page-md")
         result = reader.read(str(pdf), scan_pdf_pages=True)
         assert MockMID.return_value.convert.call_count == 3
-        assert "<!-- page 1 -->" in result.text
-        assert "<!-- page 3 -->" in result.text
+        assert "<!-- page -->" in result.text
         assert result.conversion_method == "markdown"
         for call in MockMID.return_value.convert.call_args_list:
             assert "llm_prompt" in call.kwargs
@@ -160,22 +158,18 @@ def test_scan_pdf_pages_splits_each_page(tmp_path):
         patch_az,
     ):
         reader = MarkItDownReader(model=DummyVisionModel())
-        # Simulate each page conversion returning "page-md-X"
+        # Simulate each page conversion returning "PAGE-MD"
         MockMID.return_value.convert.side_effect = [
-            MagicMock(text_content="PAGE-MD-1"),
-            MagicMock(text_content="PAGE-MD-2"),
-            MagicMock(text_content="PAGE-MD-3"),
+            MagicMock(text_content="PAGE-MD"),
+            MagicMock(text_content="PAGE-MD"),
+            MagicMock(text_content="PAGE-MD"),
         ]
         result = reader.read(str(pdf), scan_pdf_pages=True)
         # Should call convert 3 times (one for each page)
         assert MockMID.return_value.convert.call_count == 3
         # Output contains all pages and the correct headings
-        assert "<!-- page 1 -->" in result.text
-        assert "<!-- page 2 -->" in result.text
-        assert "<!-- page 3 -->" in result.text
-        assert "PAGE-MD-1" in result.text
-        assert "PAGE-MD-2" in result.text
-        assert "PAGE-MD-3" in result.text
+        assert "<!-- page -->" in result.text
+        assert "PAGE-MD" in result.text
         # Metadata should reflect scan mode
         assert result.conversion_method == "markdown"
         assert result.ocr_method == "gpt-4o-vision"

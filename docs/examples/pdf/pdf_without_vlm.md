@@ -54,9 +54,7 @@ print(reader_output.text)
 ```
 
 ```md
----
-## Page 1
----
+<!-- page -->
 
 A sample PDF
 Converting PDF files to other formats, such as Markdown, is a surprisingly
@@ -66,7 +64,6 @@ documents, making them look the same across different devices and
 platforms. However, this design goal introduces several challenges when trying to
 extract and convert the underlying content into a more flexible, structured format
 like Markdown.
-
 
 <!-- image -->
 
@@ -90,10 +87,7 @@ results when converting to Markdown.
 An enumerate:
 1. One
 
-
----
-## Page 2
----
+<!-- page -->
 
 2. Two
 3. Three
@@ -130,10 +124,7 @@ standard Unicode characters. Extracting text reliably without corruption or data
 not always straightforward, especially for documents with special symbols or non-Latin
 scripts.
 
-
----
-## Page 3
----
+<!-- page -->
 
 | Name | Role | Email |
 | --- | --- | --- |
@@ -144,16 +135,15 @@ scripts.
 Conclusion
 While it may seem simple on the surface, converting PDFs to formats like
 Markdown involves a series of technical and interpretive challenges. Effective
-conversion tools must blend text extraction, document analyzis, and sometimes
+conversion tools must blend text extraction, document analysis, and sometimes
 machine learning techniques (such as OCR or structure recognition) to produce
 usable, readable, and faithful Markdown output. As a result, perfect conversion
 is rarely possible, and manual review and cleanup are often required.
 
-
 <!-- image -->
 ```
 
-As we can see from the [original file](https://github.com/andreshere00/Splitter_MR/blob/feature/main/https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/sample_pdf.pdf), all the text has been preserved. Bold, italics, etc. are not preserved, nor are text colors, headers, and font type. Despite that, the format is mostly plain text rather than markdown. In addition, we can observe that images are signaled by a `<!-- image -->` placeholder, which can be useful to identify where a image has been placed. The order of the document is preserved.
+As we can see from the [original file](https://github.com/andreshere00/Splitter_MR/blob/feature/main/https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/sample_pdf.pdf), all the text has been preserved. Bold, italics, etc. are not highlighted, nor are text colors, headers, and font type. Despite that, the format is mostly plain text rather than markdown. In addition, we can observe that images are signaled by a `<!-- image -->` placeholder, which can be useful to identify where a image has been placed. In the same way, pages are marked with another placeholder: `<!-- page -->`. The order of the document is preserved.
 
 Now, let's see how well the other readers handle markdown conversion:
 
@@ -286,7 +276,7 @@ Conclusion
 
 While it may seem simple on the surface, converting PDFs to formats like
 Markdown involves a series of technical and interpretive challenges. Effective
-conversion tools must blend text extraction, document analyzis, and sometimes
+conversion tools must blend text extraction, document analysis, and sometimes
 machine learning techniques (such as OCR or structure recognition) to produce
 usable, readable, and faithful Markdown output. As a result, perfect conversion
 is rarely possible, and manual review and cleanup are often required.
@@ -322,6 +312,7 @@ PDF files can contain a wide range of content types: plain text, styled text, im
 An enumerate:
 
 - 1. One
+<!-- page -->
 - 2. Two
 - 3. Three
 
@@ -351,6 +342,8 @@ Many PDFs use complex layouts with multiple columns, headers, footers, or sideba
 
 PDFs can use a variety of text encodings, embedded fonts, and even contain nonstandard Unicode characters. Extracting text reliably without corruption or data loss is not always straightforward, especially for documents with special symbols or non-Latin scripts.
 
+<!-- page -->
+
 | Name        | Role         | Email             |
 |-------------|--------------|-------------------|
 | Alice Smith | Developer    | alice@example.com |
@@ -359,7 +352,7 @@ PDFs can use a variety of text encodings, embedded fonts, and even contain nonst
 
 ## Conclusion
 
-While it may seem simple on the surface, converting PDFs to formats like Markdown involves a series of technical and interpretive challenges. Effective conversion tools must blend text extraction, document analyzis, and sometimes machine learning techniques (such as OCR or structure recognition) to produce usable, readable, and faithful Markdown output. As a result, perfect conversion is rarely possible, and manual review and cleanup are often required.
+While it may seem simple on the surface, converting PDFs to formats like Markdown involves a series of technical and interpretive challenges. Effective conversion tools must blend text extraction, document analysis, and sometimes machine learning techniques (such as OCR or structure recognition) to produce usable, readable, and faithful Markdown output. As a result, perfect conversion is rarely possible, and manual review and cleanup are often required.
 
 <!-- image -->
 ```
@@ -441,9 +434,9 @@ Finally, here we present a comparative table of each method, with the strengths 
 | **Text color & highlighting**            | no                     | no                        | no                         |
 | **Markdown tables**                      | **yes**                | no (txt format)           | **yes**                    |
 | **Markdown lists**                       | partial                | no                        | **yes**                    |
-| **Images**                               | **With placeholder**   | Without Placeholder       | **With placeholder**       |
-| **Formulas**                             | **yes**                | **yes**                   | **yes** (with placeholder) |
-| **Pagination**                           | **yes**                | no                        | no                         |
+| **Image placeholders**                               | **yes**   | no      | **yes**       |
+| **Formulas placeholders**                             | **no**                | **no**                   | **yes** |
+| **Pagination**                           | **yes**                | no                        | **yes**                         |
 | **Execution time**                       | low                    | **the lowest**            | the highest                |
 
 With this information, we know which method to use. However, there is an element that we have not yet analyzed: the description and annotation of images. Currently, all three methods can describe and annotate images using VLMs. To see how to do this, [jump to the next tutorial](./pdf_with_vlm.md).

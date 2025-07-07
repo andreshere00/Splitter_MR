@@ -11,7 +11,8 @@
     
     You can now use vision-capable models (OpenAI Vision, Azure OpenAI Vision) to extract image descriptions and OCR text during file reading.
     Pass a VLM model to any Reader class via the `model` parameter. 
-    - See [**documentation**](https://andreshere00.github.io/Splitter_MR/api_reference/model/).
+    
+    ➡️ See [**documentation**](https://andreshere00.github.io/Splitter_MR/api_reference/model/).
 
 
 ## Features
@@ -57,7 +58,7 @@ Main splitting methods include:
 
 ## Architecture
 
-![SplitterMR architecture diagram](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/architecture_splitter_mr.svg)
+![SplitterMR architecture diagram](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_architecture_diagram)
 
 **SplitterMR** is designed around a modular pipeline that processes files from raw data all the way to chunked, LLM-ready text.
 
@@ -179,8 +180,8 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 
 ## Next features
 
-- [X] Add support to read PDF as scanned pages.
-- [X] Add support to change image placeholders.
+- [ ] Add Pydantic models.
+- [ ] Add support to read formulas in DoclingReader.
 - [ ] Implement a method to split a document by pages (`PagedSplitter`).
 - [ ] Add support to read `xlsx`, `docx` and `pptx` files using `VanillaReader`. 
 - [ ] Implement a method to split by embedding similarity > `SemanticSplitter`.
@@ -193,8 +194,10 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 - [ ] Add Gemini VLMs model support.
 - [ ] Add Claude Anthropic VLMs model support.
 - [ ] Modularize library into several sub-libraries.
-- [ ] Substitute dataclasses to `Pydantic` models.
 - [ ] Add support to generate output in JSON format.
+- [X] Add support to read PDF as scanned pages.
+- [X] Add support to change image placeholders.
+- [X] Add support to change page placeholders.
 
 ## Contact
 

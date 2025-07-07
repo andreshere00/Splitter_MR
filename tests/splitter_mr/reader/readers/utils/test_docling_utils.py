@@ -1,211 +1,204 @@
 from types import SimpleNamespace
-from urllib.parse import parse_qs, urlparse
 
 import pytest
-from docling.datamodel.base_models import InputFormat
-from docling.datamodel.pipeline_options import ApiVlmOptions, PdfPipelineOptions
-from docling.document_converter import DocumentConverter
-from docling.pipeline.vlm_pipeline import VlmPipeline
 
-from splitter_mr.reader.utils.docling_utils import DoclingUtils
-
-# ---------------------------------------------------------------------------
-# Dummy client implementations
-# ---------------------------------------------------------------------------
+from splitter_mr.reader.utils.docling_utils import (
+    DoclingPipelineFactory,
+    get_vlm_url_and_headers,
+    markdown_pipeline,
+    page_image_pipeline,
+    vlm_pipeline,
+)
 
 
-class DummyAzureClient:  # noqa: D101 (docstring not critical for dummy)
+class DummyAzureClient:
     def __init__(
-        self,
-        *,
-        endpoint: str | None = None,
-        deployment: str | None = None,
-        version: str | None = None,
-        api_key: str = "key",
-    ) -> None:
+        self, endpoint="https://ep", deployment="dep", version="v1", api_key="key"
+    ):
         self._azure_endpoint = endpoint
         self._azure_deployment = deployment
         self._api_version = version
         self.api_key = api_key
 
 
-class DummyOpenAIClient:  # noqa: D101
-    def __init__(self, *, api_key: str = "key") -> None:
+class DummyOpenAIClient:
+    def __init__(self, api_key="oaikey"):
         self.api_key = api_key
 
 
-class UnknownClient(SimpleNamespace):  # noqa: D101
-    """A client type that is *not* recognised by DoclingUtils."""
+class DummyModel:
+    def __init__(self, model_name="mymodel", text="caption", client=None):
+        self.model_name = model_name
+        self._text = text
+        self._client = client or DummyOpenAIClient()
 
-    api_key: str = "unknown-key"
+    def get_client(self):
+        return self._client
+
+    def extract_text(self, prompt, file):
+        return f"{self._text}:prompt={prompt}"
 
 
-# ---------------------------------------------------------------------------
-# Global fixtures
-# ---------------------------------------------------------------------------
+class DummyPILImage:
+    def save(self, buf, format):
+        buf.write(b"\x89PNG\r\n\x1a\nfake")
 
 
 @pytest.fixture(autouse=True)
-def _patch_openai_types(monkeypatch):
-    """Patch the AzureOpenAI and OpenAI symbols *inside* docling_utils.
+def patch_docling(monkeypatch):
+    # Patch DocumentConverter to fake the convert result for all pipelines
+    class DummyPage:
+        def __init__(self):
+            self.image = SimpleNamespace(pil_image=DummyPILImage())
 
-    That way `isinstance(client, AzureOpenAI)` passes for our dummy clients
-    even though we do *not* have the real SDK in the test environment.
-    """
+    class DummyDoc:
+        def __init__(self, pages=None):
+            self.pages = {1: DummyPage(), 2: DummyPage()} if pages is None else pages
 
-    from splitter_mr.reader import utils as utils_pkg  # local import to grab module
+        def export_to_markdown(
+            self, image_mode=None, page_break_placeholder=None, image_placeholder=None
+        ):
+            return (
+                f"md-export-{image_mode}-{page_break_placeholder}-{image_placeholder}"
+            )
+
+    class DummyConvertResult:
+        def __init__(self, doc=None):
+            self.document = doc or DummyDoc()
 
     monkeypatch.setattr(
-        utils_pkg.docling_utils, "AzureOpenAI", DummyAzureClient, raising=False
+        "splitter_mr.reader.utils.docling_utils.DocumentConverter",
+        lambda *a, **kw: SimpleNamespace(convert=lambda path: DummyConvertResult()),
     )
-    monkeypatch.setattr(
-        utils_pkg.docling_utils, "OpenAI", DummyOpenAIClient, raising=False
-    )
-    yield  # allow the test to run
+    # Patch AzureOpenAI and OpenAI for isinstance checks
+    import splitter_mr.reader.utils.docling_utils as docling_utils
 
-
-# ---------------------------------------------------------------------------
-# Tests for get_vlm_url_and_headers
-# ---------------------------------------------------------------------------
+    docling_utils.AzureOpenAI = DummyAzureClient
+    docling_utils.OpenAI = DummyOpenAIClient
+    yield
 
 
 def test_get_vlm_url_and_headers_azure_success():
-    """A fully‑specified Azure client should yield a well‑formed URL + header."""
-
     client = DummyAzureClient(
-        endpoint="https://example.com/endpoint/",
-        deployment="dep",
-        version="v1",
-        api_key="testkey",
+        endpoint="https://myep", deployment="dep", version="2024-06-01", api_key="abc"
     )
-    url, headers = DoclingUtils.get_vlm_url_and_headers(client)
-
-    parsed = urlparse(url)
-    assert headers == {"Authorization": "Bearer testkey"}
-    assert parsed.scheme == "https"
-    assert parsed.netloc == "example.com"
-    assert parsed.path.endswith("/openai/deployments/dep/chat/completions")
-    assert parse_qs(parsed.query)["api-version"] == ["v1"]
+    url, headers = get_vlm_url_and_headers(client)
+    assert url.startswith("https://myep/openai/deployments/dep/chat/completions")
+    assert "api-version=2024-06-01" in url
+    assert headers == {"Authorization": "Bearer abc"}
 
 
-def test_get_vlm_url_and_headers_azure_missing_params():
-    """Missing any Azure parameter should raise ValueError."""
-
+def test_get_vlm_url_and_headers_azure_missing():
     client = DummyAzureClient(endpoint=None, deployment="dep", version="v1")
     with pytest.raises(ValueError):
-        DoclingUtils.get_vlm_url_and_headers(client)
+        get_vlm_url_and_headers(client)
 
 
-def test_get_vlm_url_and_headers_openai():
-    """An OpenAI client should map to the public chat completions endpoint."""
-
-    client = DummyOpenAIClient(api_key="openai-key")
-    url, headers = DoclingUtils.get_vlm_url_and_headers(client)
-
-    parsed = urlparse(url)
-    assert parsed.scheme == "https"
-    assert parsed.netloc == "api.openai.com"
-    assert parsed.path == "/v1/chat/completions"
-    assert headers == {"Authorization": "Bearer openai-key"}
+def test_get_vlm_url_and_headers_openai_success():
+    client = DummyOpenAIClient(api_key="OPENAIKEY")
+    url, headers = get_vlm_url_and_headers(client)
+    assert url.startswith("https://api.openai.com/v1/chat/completions")
+    assert headers == {"Authorization": "Bearer OPENAIKEY"}
 
 
 def test_get_vlm_url_and_headers_invalid_client():
-    """Any *other* client type should raise a ValueError (after header build)."""
+    class UnknownClient:
+        api_key = "whatever"
 
     with pytest.raises(ValueError):
-        DoclingUtils.get_vlm_url_and_headers(UnknownClient())
+        get_vlm_url_and_headers(UnknownClient())
 
 
-# ---------------------------------------------------------------------------
-# Tests for get_pdf_pipeline
-# ---------------------------------------------------------------------------
-
-
-def test_get_pdf_pipeline_image_mode(monkeypatch):
-    """Verify PdfPipelineOptions are plumbed through in image mode."""
-
-    captured: dict[str, object] = {}
-
-    def fake_converter_init(self, *, format_options=None, **_kwargs):  # noqa: D401,E501
-        captured["format_options"] = format_options
-        # DocumentConverter has no required side‑effects for these tests
-
-    monkeypatch.setattr(
-        DocumentConverter, "__init__", fake_converter_init, raising=True
+def test_page_image_pipeline_with_model(monkeypatch):
+    model = DummyModel(text="OUT")
+    out = page_image_pipeline(
+        file_path="dummy.pdf",
+        model=model,
+        prompt="PROMPT",
+        image_resolution=2.0,
+        show_base64_images=False,
+        page_placeholder="<!--PG-->",
     )
+    assert "<!--PG-->" in out
+    assert "OUT:prompt=PROMPT" in out
 
-    util = DoclingUtils()
-    converter = util.get_pdf_pipeline(
-        mode="image",
-        images_scale=3.0,
-        generate_page_images=False,
-        generate_picture_images=False,
+
+def test_page_image_pipeline_no_model_with_base64(monkeypatch):
+    out = page_image_pipeline(
+        file_path="dummy.pdf", model=None, show_base64_images=True
     )
-
-    # We still get *some* DocumentConverter instance back (constructor patched).
-    assert isinstance(converter, DocumentConverter)
-
-    fmt_opts = captured["format_options"]
-    assert InputFormat.PDF in fmt_opts
-
-    pdf_opt = fmt_opts[InputFormat.PDF]
-    assert isinstance(pdf_opt.pipeline_options, PdfPipelineOptions)
-    opts: PdfPipelineOptions = pdf_opt.pipeline_options
-    assert opts.images_scale == 3.0
-    assert opts.generate_page_images is False
-    assert opts.generate_picture_images is False
+    assert "data:image/png;base64," in out
 
 
-def test_get_pdf_pipeline_vlm_mode_requires_client():
-    """A client must be supplied for VLM mode."""
-
-    util = DoclingUtils()
+def test_page_image_pipeline_value_error():
     with pytest.raises(ValueError):
-        util.get_pdf_pipeline(mode="vlm", client=None)
+        page_image_pipeline("f.pdf", model=None, show_base64_images=False)
 
 
-def test_get_pdf_pipeline_vlm_mode(monkeypatch):
-    """Ensure VlmPipeline and ApiVlmOptions are wired in correctly."""
-
-    captured: dict[str, object] = {}
-
-    def fake_converter_init(self, *, format_options=None, **_kwargs):
-        captured["format_options"] = format_options
-
-    monkeypatch.setattr(
-        DocumentConverter, "__init__", fake_converter_init, raising=True
+def test_vlm_pipeline(monkeypatch):
+    model = DummyModel(model_name="VLMMODEL", client=DummyAzureClient(api_key="k2"))
+    out = vlm_pipeline(
+        file_path="x.pdf",
+        model=model,
+        prompt="PR",
+        page_placeholder="<!--PG-->",
+        image_placeholder="<!--IMG-->",
     )
+    assert out.startswith("md-export-")
 
-    azure = DummyAzureClient(
-        endpoint="https://ex.com/", deployment="d", version="v2", api_key="k"
+
+def test_vlm_pipeline_openai_client(monkeypatch):
+    model = DummyModel(model_name="XYZ", client=DummyOpenAIClient(api_key="opk"))
+    out = vlm_pipeline(file_path="x.pdf", model=model, prompt="someprompt")
+    assert out.startswith("md-export-")
+
+
+def test_markdown_pipeline_pdf(monkeypatch):
+    out = markdown_pipeline(
+        file_path="doc.pdf",
+        show_base64_images=True,
+        page_placeholder="<!--PAGE-->",
+        image_placeholder="<!--IMG-->",
+        image_resolution=1.23,
+        ext="pdf",
     )
-    util = DoclingUtils()
-    converter = util.get_pdf_pipeline(
-        mode="vlm",
-        client=azure,
-        model_name="mymodel",
-        prompt="my prompt",
-        timeout=42,
+    assert out.startswith("md-export-")
+
+
+def test_markdown_pipeline_nonpdf(monkeypatch):
+    out = markdown_pipeline(
+        file_path="doc.docx",
+        show_base64_images=False,
+        page_placeholder="PG",
+        image_placeholder="IMG",
+        ext="docx",
     )
-
-    assert isinstance(converter, DocumentConverter)
-
-    fmt_opts = captured["format_options"]
-    assert InputFormat.PDF in fmt_opts
-    pdf_opt = fmt_opts[InputFormat.PDF]
-
-    # The PDF option should point to the VLM pipeline class
-    assert pdf_opt.pipeline_cls is VlmPipeline
-
-    vlm_opts: ApiVlmOptions = pdf_opt.pipeline_options.vlm_options
-    assert vlm_opts.params["model"] == "mymodel"
-    assert vlm_opts.prompt == "my prompt"
-    assert vlm_opts.timeout == 42
+    assert out.startswith("md-export-")
 
 
-def test_get_pdf_pipeline_invalid_mode():
-    """Anything other than 'vlm' or 'image' should error."""
+def test_pipeline_factory_register_and_get():
+    def dummy(file_path, **kw):
+        return "ok"
 
-    util = DoclingUtils()
+    DoclingPipelineFactory.register("foo", dummy)
+    got = DoclingPipelineFactory.get("foo")
+    assert got is dummy
+
+
+def test_pipeline_factory_run():
+    def dummy(file_path, **kw):
+        return f"ran:{file_path}"
+
+    DoclingPipelineFactory.register("bar", dummy)
+    out = DoclingPipelineFactory.run("bar", "file.txt", arg1="v")
+    assert out == "ran:file.txt"
+
+
+def test_pipeline_factory_get_unregistered():
     with pytest.raises(ValueError):
-        util.get_pdf_pipeline(mode="bogus")
+        DoclingPipelineFactory.get("doesnotexist")
+
+
+def test_pipeline_factory_run_unregistered():
+    with pytest.raises(ValueError):
+        DoclingPipelineFactory.run("doesnotexist", "f.txt")

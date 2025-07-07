@@ -38,6 +38,7 @@ docutils==0.21.2
 easyocr==1.7.2
 et-xmlfile==2.0.0
 fastparquet==2024.11.0
+ffmpeg==1.4
 ffmpeg-downloader==0.4.0
 filelock==3.18.0
 filetype==1.2.0

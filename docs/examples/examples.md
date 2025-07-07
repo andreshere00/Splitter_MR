@@ -8,7 +8,7 @@ This section illustrates some use cases with **SplitterMR** to read documents an
 
 Read your PDF files using three frameworks: `PDFPlumber`, `MarkItDown` and `Docling`. 
 
-### [How to read a PDF file using Vanilla Reader for image processing](./pdf/pdf_markitdown_.md)
+### [How to read a PDF file using Vanilla Reader for image processing](./pdf/pdf_vanilla.md)
 
 Read your PDF files and analyze the content using PDFPlumber and Visual Language Models.
 
@@ -16,7 +16,7 @@ Read your PDF files and analyze the content using PDFPlumber and Visual Language
 
 Read your PDF files and analyze the content using Docling and Visual Language Models.
 
-### [How to read a PDF file using MarkItDown for image processing](./pdf/pdf_markitdown_.md)
+### [How to read a PDF file using MarkItDown for image processing](./pdf/pdf_markitdown.md)
 
 Read your PDF files and analyze the content using MarkItDown and Visual Language Models.
 

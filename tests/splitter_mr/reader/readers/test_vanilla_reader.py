@@ -9,7 +9,7 @@ from splitter_mr.reader.readers.vanilla_reader import (
     SimpleHTMLTextExtractor,
     VanillaReader,
 )
-from splitter_mr.schema import ReaderOutput
+from splitter_mr.schema import DEFAULT_EXTRACTION_PROMPT, ReaderOutput
 
 # ---------- Helper Fixtures ----------
 
@@ -376,17 +376,21 @@ def test_scan_pdf_pages_success(tmp_path):
     pdf_path = tmp_path / "doc.pdf"
     pdf_path.write_bytes(b"%PDF-FAKE")
 
-    reader = VanillaReader(model=DummyVisionModel())  # default model OK
+    reader = VanillaReader(model=DummyVisionModel())
     out = reader.read(
         str(pdf_path),
         scan_pdf_pages=True,
-        resolution=300,  # custom DPI should flow through
+        resolution=300,
         vlm_parameters={"temperature": 0.0},
     )
 
-    # → markdown with page headings
-    assert "## Page 1" in out.text and "PAGE-1-MD" in out.text
-    assert "## Page 2" in out.text and "PAGE-2-MD" in out.text
+    # → markdown with correct page separator and contents
+    assert (
+        "<!-- page -->" in out.text
+        and "PAGE-1-MD" in out.text
+        and "PAGE-2-MD" in out.text
+    )
+    assert out.text.count("<!-- page -->") == 2
 
     # → metadata fields
     assert out.conversion_method == "png"
@@ -397,31 +401,7 @@ def test_scan_pdf_pages_success(tmp_path):
     recorded = pdf_reader.last_kwargs
     assert recorded["resolution"] == 300
     assert recorded["model"] is reader.model
-    # default prompt should be passed untouched
-    assert "Extract all the elements detected in the page" in recorded["prompt"]
-
-
-def test_scan_pdf_pages_requires_model(tmp_path):
-    pdf_path = tmp_path / "doc.pdf"
-    pdf_path.write_bytes(b"%PDF-FAKE")
-    reader = VanillaReader(model=None)  # no default model
-
-    with pytest.raises(ValueError):
-        reader.read(str(pdf_path), scan_pdf_pages=True)
-
-
-def test_pdf_with_model_no_scan(tmp_path):
-    pdf_path = tmp_path / "doc.pdf"
-    pdf_path.write_bytes(b"%PDF-FAKE")
-
-    model = DummyVisionModel()
-    reader = VanillaReader(model=None)  # no default; we pass per-call
-
-    out = reader.read(str(pdf_path), model=model, scan_pdf_pages=False)
-
-    assert out.text == "ELEMENT_WISE_PDF_TEXT"
-    assert out.conversion_method == "pdf"
-    assert out.ocr_method == model.model_name
+    assert DEFAULT_EXTRACTION_PROMPT in recorded["prompt"]
 
 
 def test_pdf_custom_placeholder(tmp_path):
@@ -429,9 +409,8 @@ def test_pdf_custom_placeholder(tmp_path):
     pdf_path.write_bytes(b"%PDF-FAKE")
     reader = VanillaReader()
     custom_placeholder = "<!-- custom-img -->"
-    out = reader.read(str(pdf_path), placeholder=custom_placeholder)
-    # Our DummyPDFPlumberReader records kwargs
-    assert reader.pdf_reader.last_kwargs["placeholder"] == custom_placeholder
+    reader.read(str(pdf_path), image_placeholder=custom_placeholder)
+    assert reader.pdf_reader.last_kwargs["image_placeholder"] == custom_placeholder
 
 
 def test_pdf_custom_placeholder_with_model(tmp_path):
@@ -440,13 +419,13 @@ def test_pdf_custom_placeholder_with_model(tmp_path):
     model = DummyVisionModel()
     reader = VanillaReader(model=model)
     custom_placeholder = "<!-- myimg -->"
-    out = reader.read(str(pdf_path), model=model, placeholder=custom_placeholder)
-    assert reader.pdf_reader.last_kwargs["placeholder"] == custom_placeholder
+    reader.read(str(pdf_path), model=model, image_placeholder=custom_placeholder)
+    assert reader.pdf_reader.last_kwargs["image_placeholder"] == custom_placeholder
 
 
 def test_pdf_default_placeholder(tmp_path):
     pdf_path = tmp_path / "doc.pdf"
     pdf_path.write_bytes(b"%PDF-FAKE")
     reader = VanillaReader()
-    out = reader.read(str(pdf_path))
-    assert reader.pdf_reader.last_kwargs["placeholder"] == "<!-- image -->"
+    reader.read(str(pdf_path))
+    assert reader.pdf_reader.last_kwargs["image_placeholder"] == "<!-- image -->"

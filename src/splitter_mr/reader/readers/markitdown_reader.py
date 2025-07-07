@@ -45,6 +45,7 @@ class MarkItDownReader(BaseReader):
                     If not provided, no metadata is returned.
                 - `prompt (Optional[str])`: Prompt for image captioning or VLM extraction.
                 - `scan_pdf_pages (Optional[bool])`: If True (and model provided), extract PDFs page-by-page with VLM.
+                - page_placeholder (str): Markdown placeholder string for pages (default: "<!-- page -->").
 
         Returns:
             ReaderOutput: Dataclass defining the output structure for all readers.
@@ -82,14 +83,16 @@ class MarkItDownReader(BaseReader):
             return streams
 
         def _pdf_pages_to_markdown(
-            file_path, prompt: str = DEFAULT_EXTRACTION_PROMPT
+            file_path,
+            prompt: str = DEFAULT_EXTRACTION_PROMPT,
+            page_placeholder: str = "<!-- page -->",
         ) -> str:
             """Convert scanned PDF pages into markdown format"""
             page_md: list[str] = []
             for idx, page_stream in enumerate(
                 _pdf_pages_to_streams(file_path), start=1
             ):
-                page_md.append(f"<!-- page {idx} -->")
+                page_md.append(page_placeholder.replace("{page}", str(idx)))
                 result = md.convert(page_stream, llm_prompt=prompt)
                 page_md.append(result.text_content)
             markdown_text = "\n".join(page_md)
@@ -122,7 +125,11 @@ class MarkItDownReader(BaseReader):
                     "To scan PDF pages, a PDF file and a vision model are required."
                 )
 
-            markdown_text = _pdf_pages_to_markdown(file_path=file_path, prompt=prompt)
+            markdown_text = _pdf_pages_to_markdown(
+                file_path=file_path,
+                prompt=prompt,
+                page_placeholder=kwargs.get("page_placeholder", "<!-- page -->"),
+            )
             conversion_method = "markdown"
 
         # Regular conversion path

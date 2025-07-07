@@ -7,6 +7,8 @@
 - Add support to read and scan PDF by pages for all the readers, using the parameter `scan_pdf_images = True`. 
 - Add support to use different placeholders for images in Vanilla and Docling Readers.
 - Add support to split by pages for PDFs. 
+- Add three different pipelines to DoclingReader to process the document as PageImages, using VLM to provide image captioning and regularly.
+- Add three different pipelines to VanillaReader to process the document as PageImages, using VLM to provide image captioning and regularly.
 
 ### Bugs
 
@@ -16,6 +18,7 @@
 ### Documentation
 
 - Update examples.
+- Change MkDocs server to support both light and dark modes.
 
 ## v0.3.0
 

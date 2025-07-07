@@ -126,7 +126,7 @@ class PDFPlumberReader:
         page_num: int,
         prompt: Optional[str] = None,
         model: Optional[BaseModel] = None,
-        placeholder: str = "<!-- image -->",
+        image_placeholder: str = "<!-- image -->",
     ) -> List[Dict[str, Any]]:
         """
         Extracts images from a PDF page as base64-encoded PNG data, with optional annotation via a model.
@@ -153,7 +153,7 @@ class PDFPlumberReader:
                 img_b64 = base64.b64encode(img_bytes).decode()
                 img_uri = f"data:image/png;base64,{img_b64}"
 
-                image_description = placeholder
+                image_description = image_placeholder
                 if model:
                     annotation = model.extract_text(file=img_b64, prompt=prompt)
                     image_description += f"\n{annotation}"
@@ -202,7 +202,7 @@ class PDFPlumberReader:
         page_num: int,
         prompt: Optional[str] = None,
         model: Optional[BaseModel] = None,
-        placeholder: str = "<!-- image -->",
+        image_placeholder: str = "<!-- image -->",
     ) -> List[Dict[str, Any]]:
         """
         Extracts all structural content blocks (tables, images, text) from a PDF page.
@@ -218,7 +218,11 @@ class PDFPlumberReader:
         """
         tables, table_bboxes = self.extract_tables(page, page_num)
         images = self.extract_images(
-            page, page_num=page_num, model=model, prompt=prompt, placeholder=placeholder
+            page,
+            page_num=page_num,
+            model=model,
+            prompt=prompt,
+            image_placeholder=image_placeholder,
         )
         texts = self.extract_text(
             page=page, page_num=page_num, table_bboxes=table_bboxes
@@ -296,7 +300,8 @@ class PDFPlumberReader:
         self,
         all_blocks: List[Dict[str, Any]],
         show_base64_images: bool = True,
-        placeholder: str = "<!-- image -->",
+        image_placeholder: str = "<!-- image -->",
+        page_placeholder: str = "<!-- page -->",
     ) -> str:
         """
         Converts a list of content blocks into Markdown, optionally embedding images and tables.
@@ -304,6 +309,8 @@ class PDFPlumberReader:
         Args:
             all_blocks (List[Dict[str, Any]]): All content blocks, possibly across multiple pages.
             show_base64_images (bool): Whether to render images inline. If False, images are omitted or replaced with an indicator.
+            `image_placeholder (Optional[str])`: Placeholder string to use for omitted images in PDFs. Default is `"<!-- image -->"`.
+            `page_placeholder (Optional[str])`: Placeholder string for PDF page breaks. Default is `"<!-- page -->"`.
 
         Returns:
             str: Markdown document representing the extracted content.
@@ -311,7 +318,7 @@ class PDFPlumberReader:
         md_lines: List[str] = [""]
         all_blocks.sort(key=lambda x: (x["page"], x["top"]))
         for page, blocks in groupby(all_blocks, key=lambda x: x["page"]):
-            md_lines += ["\n---", f"## Page {page}", "---\n"]
+            md_lines += [page_placeholder + "\n"]
             last_type = None
             paragraph: List[str] = []
             for item in blocks:
@@ -335,7 +342,7 @@ class PDFPlumberReader:
                         elif item.get("annotation"):
                             md_lines.append(f'{item["annotation"]}\n')
                         else:
-                            md_lines.append(f"\n{placeholder}\n")
+                            md_lines.append(f"\n{image_placeholder}\n")
                     elif item["type"] == "table":
                         md_lines.append(self.table_to_markdown(item["content"]))
                         md_lines.append("")
@@ -394,7 +401,8 @@ class PDFPlumberReader:
         prompt: Optional[str] = None,
         model: Optional[BaseModel] = None,
         show_base64_images: bool = False,
-        placeholder: str = "<!-- image -->",
+        image_placeholder: str = "<!-- image -->",
+        page_placeholder: str = "<!-- page -->",
     ) -> str:
         """
         Reads a PDF file and returns extracted content as Markdown.
@@ -403,7 +411,9 @@ class PDFPlumberReader:
             file_path (str): Path to the PDF file.
             model (Optional[BaseModel], optional): Optional model for image annotation.
             prompt (str, optional): Prompt for the image annotation model.
-            show_base64_images (bool, optional): If True, images are included as base64 in Markdown. If False, they are omitted or replaced with a placeholder.
+            show_base64_images (bool, optional): If True, images are included as base64 in Markdown. If False, they are omitted or replaced with a image_placeholder.
+            `image_placeholder (Optional[str])`: Placeholder string to use for omitted images in PDFs. Default is `"<!-- image -->"`.
+            `page_placeholder (Optional[str])`: Placeholder string for PDF page breaks. Default is `"<!-- page -->"`.
 
         Returns:
             str: Markdown-formatted string with structured content from the PDF.
@@ -418,10 +428,13 @@ class PDFPlumberReader:
                         page_num=i,
                         model=model,
                         prompt=prompt,
-                        placeholder=placeholder,
+                        image_placeholder=image_placeholder,
                     )
                 )
         markdown_test = self.blocks_to_markdown(
-            all_blocks, show_base64_images=show_base64_images, placeholder=placeholder
+            all_blocks,
+            show_base64_images=show_base64_images,
+            image_placeholder=image_placeholder,
+            page_placeholder=page_placeholder,
         )
         return markdown_test

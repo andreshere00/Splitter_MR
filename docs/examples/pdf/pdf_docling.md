@@ -2,7 +2,7 @@
 
 As we have seen in previous examples, reading a PDF is not a simple task. In this case, we will see how to read the PDF using Docling framework, and connect this library into Visual Language Models to extract text or get annotations from images.
 
-## 1. Connect a Visual Language Models to Docling to read PDFs
+## Connecting to a VLM to extract text and analyze images
 
 To use a VLM to read images and get annotations, you can simply instantiate a model which inherits from a `BaseModel` class and pass that model into the Reader class:
 
@@ -10,7 +10,7 @@ To use a VLM to read images and get annotations, you can simply instantiate a mo
 from splitter_mr.model import AzureOpenAIVisionModel
 from splitter_mr.reader import DoclingReader
 
-file = "data/sample_pdf.pdf"
+file = "https://github.com/andreshere00/Splitter_MR/blob/main/data/sample_pdf.pdf"
 
 model = AzureOpenAIVisionModel()
 ```
@@ -52,9 +52,7 @@ Converting PDF files to other formats, such as Markdown, is a surprisingly compl
 Ilustración 1. SplitterMR logo.
 
 <!-- image -->
-
-*SplitterMR: Streamline your document processing for efficient, production-ready LLM applications.*
-
+*Caption: SplitterMR is a tool designed to segment and prepare textual documents for efficient processing in production-level large language model applications.*
 
 ## 1. Lack of Structural Information
 
@@ -67,6 +65,7 @@ PDF files can contain a wide range of content types: plain text, styled text, im
 An enumerate:
 
 - 1. One
+<!-- page -->
 - 2. Two
 - 3. Three
 
@@ -96,6 +95,8 @@ Many PDFs use complex layouts with multiple columns, headers, footers, or sideba
 
 PDFs can use a variety of text encodings, embedded fonts, and even contain nonstandard Unicode characters. Extracting text reliably without corruption or data loss is not always straightforward, especially for documents with special symbols or non-Latin scripts.
 
+<!-- page -->
+
 | Name        | Role         | Email             |
 |-------------|--------------|-------------------|
 | Alice Smith | Developer    | alice@example.com |
@@ -107,11 +108,12 @@ PDFs can use a variety of text encodings, embedded fonts, and even contain nonst
 While it may seem simple on the surface, converting PDFs to formats like Markdown involves a series of technical and interpretive challenges. Effective conversion tools must blend text extraction, document analysis, and sometimes machine learning techniques (such as OCR or structure recognition) to produce usable, readable, and faithful Markdown output. As a result, perfect conversion is rarely possible, and manual review and cleanup are often required.
 
 <!-- image -->
-
-*An iridescent hummingbird gracefully hovers in front of vibrant orange flowers, showcasing the beauty of nature in perfect harmony.*
+*Caption: A vibrant hummingbird hovering delicately in front of a bright orange flower, showcasing the beauty of nature and the intricate interplay between pollinators and plants.*
 ```
 
 As seen, all the images have been described using a caption. 
+
+## Experimenting with some keyword arguments
 
 In case that you have additional requirements to describe these images, you can provide a prompt via a `prompt` argument:
 
@@ -128,4 +130,59 @@ While it may seem simple on the surface, converting PDFs to formats like Markdow
 
 
 La imagen muestra un colibrí de plumaje verde brillante posado cerca de una flor naranja. El colibrí se encuentra en vuelo, con sus alas extendidas, mientras recoge néctar de la flor. El fondo es difuso, lo que resalta la belleza del ave y la flor.
+```
+
+You can read the PDF scanning the pages as images and extracting its content. To do so, enable the option `scan_pdf_pages = True`. In case that you want to change the placeholder, you can do it passing the keyword argument `placeholder = <your desired placeholder>`.
+
+Finally, it could be interesting extract the markdown text with the images as embedded content. In that case, activate the option `show_base64_images`. In that case, it is not necessary to pass the model to the Reader class.
+
+```python
+docling_reader = DoclingReader()
+docling_output = docling_reader.read(file, show_base64_images = True)
+
+print(docling_output.text)
+```
+```python
+...
+## Conclusion
+
+While it may seem simple on the surface, converting PDFs to formats like Markdown involves a series of technical and interpretive challenges. Effective conversion tools must blend text extraction, document analysis, and sometimes machine learning techniques (such as OCR or structure recognition) to produce usable, readable, and faithful Markdown output. As a result, perfect conversion is rarely possible, and manual review and cleanup are often required.
+
+![Image](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAasAAAEd...)
+```
+
+Of course, remember that the use of a VLM is not mandatory, and you can read the PDF obtaining most of the information.
+
+## Complete script
+
+```python
+from splitter_mr.model import AzureOpenAIVisionModel
+from splitter_mr.reader import DoclingReader
+
+file = "https://github.com/andreshere00/Splitter_MR/blob/main/data/sample_pdf.pdf"
+
+model = AzureOpenAIVisionModel()
+docling_reader = DoclingReader(model = model)
+
+# 1. Read PDF using a Visual Language Model
+
+docling_output = docling_reader.read(file)
+print(docling_output)  # Get Docling ReaderOutput
+print(docling_output.text)  # Get text attribute from Docling Reader
+
+# 2. Describe the images using a custom prompt
+
+docling_output = docling_reader.read(file, prompt = "Describe the image briefly in Spanish.")
+print(docling_output.text)
+
+# 3. Scan PDF pages 
+
+docling_output = docling_reader.read(file, scan_pdf_pages = True)
+print(docling_output.text)
+
+# 4. Extract images as embedded content
+
+docling_reader = DoclingReader()
+docling_output = docling_reader.read(file, show_base64_images = True)
+print(docling_output.text)
 ```

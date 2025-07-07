@@ -123,11 +123,9 @@ DOCLING_SUPPORTED_EXTENSIONS: set[str] = {
 }
 
 DEFAULT_EXTRACTION_PROMPT: str = (
-    "Extract all the elements detected in the page, orderly. "
-    "Return only all the extracted content, always in markdown format."
+    "Extract all the elements (text, formulas, tables, images, etc.) detected in the page in markdown format, orderly. Return ONLY the extracted content, in markdown format."
 )
 
 DEFAULT_IMAGE_CAPTION_PROMPT: str = (
-    "Provide a caption for the following resource. "
-    "Return the result as emphasis in markdown code format (e.g., *Description of the image*)."
+    "Provide a caption describing the following resource. Return the output with the following format: *Caption: <A brief description>*."
 )

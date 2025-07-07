@@ -1,4 +1,4 @@
-from .docling_utils import DoclingUtils
+from .docling_utils import DoclingPipelineFactory
 from .pdfplumber_reader import PDFPlumberReader
 
-__all__ = [DoclingUtils, PDFPlumberReader]
+__all__ = [DoclingPipelineFactory, PDFPlumberReader]

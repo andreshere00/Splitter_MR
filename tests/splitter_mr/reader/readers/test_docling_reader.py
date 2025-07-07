@@ -1,165 +1,172 @@
+import uuid
+import warnings
 from types import SimpleNamespace
 
 import pytest
-from docling.document_converter import DocumentConverter
 
-from splitter_mr.model import BaseModel
-from splitter_mr.reader import DoclingReader, VanillaReader
-from splitter_mr.reader.utils import DoclingUtils
+from splitter_mr.reader.readers.docling_reader import DoclingReader
+from splitter_mr.reader.readers.vanilla_reader import VanillaReader
+from splitter_mr.reader.utils import DoclingPipelineFactory
 from splitter_mr.schema import ReaderOutput
 
 
-class DummyPipeline:
-    def __init__(self, output):
-        self.output = output
-
-    def convert(self, path, **kwargs):
-        return SimpleNamespace(
-            document=SimpleNamespace(
-                export_to_markdown=lambda image_mode=None: self.output
-            )
-        )
-
-
-class DummyModel(BaseModel):
-    def __init__(self, text):
-        self.model_name = "dummy"
+# Dummy Model for tests
+class DummyModel:
+    def __init__(self, model_name="dummy"):
+        self.model_name = model_name
         self._client = SimpleNamespace(
-            _azure_endpoint="https://endpoint",
+            _azure_endpoint="https://example.com",
             _azure_deployment="dep",
             _api_version="v1",
             api_key="key",
         )
-        self._text = text
 
     def get_client(self):
         return self._client
 
-    def extract_text(self, file, prompt):
-        return self._text
-
 
 @pytest.fixture(autouse=True)
-def patch_docling_utils(monkeypatch):
-    """Mock get_pdf_pipeline to return dummy pipelines based on mode"""
-
-    def fake_get_pdf_pipeline(
-        self, mode, client=None, model_name=None, prompt=None, **kwargs
-    ):
-        if mode == "vlm":
-            return DummyPipeline(output="# VLM OUTPUT")
-        elif mode == "image":
-            return DummyPipeline(output="![alt](data:image/png;base64,AAA)")
-        raise ValueError(mode)
-
-    monkeypatch.setattr(DoclingUtils, "get_pdf_pipeline", fake_get_pdf_pipeline)
+def patch_pipeline(monkeypatch):
+    """Patch DoclingPipelineFactory.run and VanillaReader.read for all tests."""
+    monkeypatch.setattr(
+        DoclingPipelineFactory,
+        "run",
+        lambda name, path, **kwargs: f"{name}-pipeline-{kwargs.get('prompt', '')}",
+    )
+    monkeypatch.setattr(
+        VanillaReader,
+        "read",
+        lambda self, file_path, **kwargs: ReaderOutput(
+            text="vanilla-output",
+            document_name="file.xyz",
+            document_path=file_path,
+            document_id="id",
+            conversion_method="vanilla",
+            reader_method="vanilla",
+            ocr_method=None,
+            metadata={},
+        ),
+    )
     yield
 
 
-def fake_get_pdf_pipeline(
-    self, mode, client=None, model_name=None, prompt=None, **kwargs
-):
-    if mode == "vlm":
-        return DummyPipeline(output="# VLM OUTPUT")
-    elif mode == "image":
-        # Esta salida debe contener una imagen base64 para que _process_images funcione bien
-        return DummyPipeline(output="![alt](data:image/png;base64,AAA)")
-    raise ValueError(mode)
-
-
-def test_unsupported_extension(monkeypatch, tmp_path):
-    path = tmp_path / "file.xyz"
-    path.write_text("dummy")
-    # Mock VanillaReader.read
-    called = {}
-
-    def fake_vr_read(self, file_path, **kwargs):
-        called["args"] = (file_path, kwargs)
-        return ReaderOutput(
-            text="vr",
-            document_name="file.xyz",
-            document_path=str(path),
-            document_id="id",
-            conversion_method="",
-            reader_method="",
-            ocr_method=None,
-            metadata=None,
-        )
-
-    monkeypatch.setattr(VanillaReader, "read", fake_vr_read)
-
-    reader = DoclingReader()
-    out = reader.read(str(path))
-    assert out.text == "vr"
-    assert called["args"][0] == str(path)
-
-
-def test_read_pdf_without_model(monkeypatch, tmp_path):
-    path = tmp_path / "doc.pdf"
-    path.write_bytes(b"%PDF-1.4")
-
-    reader = DoclingReader(model=None)
-    # no model, so _read_pdf returns image pipeline output
-    md = reader._read_pdf(str(path), prompt="p", scan_pdf_pages=False)
-    assert md == "![alt](data:image/png;base64,AAA)"
-
-    # process_images without model and hiding images
-    processed = reader._process_images(md, prompt="p", show_base64_images=False)
-    assert processed == "<!-- image -->"
-
-    # keep images when show_base64_images True
-    processed2 = reader._process_images(md, prompt="p", show_base64_images=True)
-    # no model, skip caption, hide still applies? actually only caption for model
-    assert "data:image/png" in processed2
-
-
-def test_read_pdf_with_model_vlm(monkeypatch, tmp_path):
-    path = tmp_path / "doc.pdf"
-    path.write_bytes(b"%PDF")
-
-    model = DummyModel(text="caption")
-    reader = DoclingReader(model=model)
-    out_text = reader._read_pdf(str(path), prompt="p", scan_pdf_pages=True)
-    assert out_text == "# VLM OUTPUT"
-
-
-def test_read_non_pdf_with_and_without_model(monkeypatch, tmp_path):
-    # create dummy txt file
-    path = tmp_path / "a.txt"
-    path.write_text("text")
-    # monkeypatch DocumentConverter
-    monkeypatch.setattr(
-        DocumentConverter,
-        "convert",
-        lambda self, fp: SimpleNamespace(
-            document=SimpleNamespace(export_to_markdown=lambda: "md")
-        ),
-    )
-
-    # without model
+def test_init_with_and_without_model():
     reader1 = DoclingReader()
-    md1 = reader1._read_non_pdf(str(path), prompt="p")
-    assert md1 == "md"
+    assert reader1.model is None
+    assert reader1.client is None
+    assert reader1.model_name is None
 
-    # with model
-    model = DummyModel(text="x")
+    model = DummyModel("abc")
     reader2 = DoclingReader(model=model)
-    md2 = reader2._read_non_pdf(str(path), prompt="p")
-    assert md2 == "# VLM OUTPUT"
+    assert reader2.model is model
+    assert reader2.client == model.get_client()
+    assert reader2.model_name == "abc"
 
 
-def test_format_caption_keeps_and_captions(monkeypatch):
-    model = DummyModel(text="hello")
-    reader = DoclingReader(model=model)
-    b64 = "AAA"
-    uri = f"data:image/png;base64,{b64}"
-    alt = "alt"
-    md = f"![{alt}]({uri})"
-    # caption only
-    out1 = reader._process_images(md, prompt="p", show_base64_images=False)
-    assert "hello" in out1
-    assert "<!-- image -->" in out1
-    # keep image
-    out2 = reader._process_images(md, prompt="p", show_base64_images=True)
-    assert "![alt](" in out2
-    assert "hello" in out2
+def test_unsupported_extension_warns(monkeypatch):
+    reader = DoclingReader()
+    # Not in supported ext
+    with warnings.catch_warnings(record=True) as w:
+        out = reader.read("foo.unsupported")
+        assert isinstance(out, ReaderOutput)
+        assert out.text == "vanilla-output"
+        assert any("Unsupported extension" in str(warn.message) for warn in w)
+
+
+def test_pdf_scan_pdf_pages(monkeypatch):
+    model = DummyModel()
+    reader = DoclingReader(model)
+    out = reader.read("x.pdf", scan_pdf_pages=True, prompt="foo")
+    # Uses 'page_image' pipeline and passes arguments
+    assert out.text.startswith("page_image-pipeline-foo")
+    assert out.document_name == "x.pdf"
+    assert out.conversion_method == "markdown"
+    assert out.reader_method == "docling"
+    assert out.ocr_method == model.model_name
+
+
+def test_pdf_with_model_no_scan(monkeypatch):
+    model = DummyModel()
+    reader = DoclingReader(model)
+    with warnings.catch_warnings(record=True) as w:
+        out = reader.read("y.pdf", prompt="my prompt", show_base64_images=True)
+        # Should raise a warning about base64 images with model
+        assert any("base64 images are not rendered" in str(warn.message) for warn in w)
+    # Uses 'vlm' pipeline
+    assert out.text.startswith("vlm-pipeline-my prompt")
+    assert out.ocr_method == model.model_name
+
+
+def test_pdf_without_model(monkeypatch):
+    reader = DoclingReader(model=None)
+    out = reader.read("abc.pdf", show_base64_images=True)
+    # Should use markdown pipeline
+    assert out.text.startswith("markdown-pipeline-")
+    assert out.reader_method == "docling"
+
+
+def test_nonpdf_with_model(monkeypatch):
+    # Key fix: The output is still "markdown-pipeline-", model is NOT used for pipeline selection.
+    model = DummyModel()
+    reader = DoclingReader(model)
+    out = reader.read("file.md", show_base64_images=True)
+    assert out.text.startswith("markdown-pipeline-")
+    # However, ocr_method should reflect the model's name
+    assert out.ocr_method == model.model_name
+    assert out.reader_method == "docling"
+
+
+def test_nonpdf_without_model(monkeypatch):
+    reader = DoclingReader()
+    out = reader.read("file.md", show_base64_images=True)
+    assert out.text.startswith("markdown-pipeline-")
+    assert out.ocr_method is None
+    assert out.reader_method == "docling"
+
+
+def test_metadata_and_docid_passthrough(monkeypatch):
+    reader = DoclingReader()
+    custom_id = str(uuid.uuid4())
+    meta = {"x": 1}
+    out = reader.read("abc.pdf", document_id=custom_id, metadata=meta)
+    assert out.document_id == custom_id
+    assert out.metadata == meta
+
+
+def test__select_pipeline_pdf_scan_pdf_pages():
+    model = DummyModel()
+    reader = DoclingReader(model)
+    pipeline, args = reader._select_pipeline(
+        "doc.pdf", "pdf", scan_pdf_pages=True, prompt="x"
+    )
+    assert pipeline == "page_image"
+    assert args["model"] == model
+    assert args["prompt"] == "x"
+
+
+def test__select_pipeline_pdf_with_model_no_scan():
+    model = DummyModel()
+    reader = DoclingReader(model)
+    pipeline, args = reader._select_pipeline(
+        "doc.pdf", "pdf", scan_pdf_pages=False, prompt="y", show_base64_images=True
+    )
+    assert pipeline == "vlm"
+    assert args["model"] == model
+    assert args["prompt"] == "y"
+
+
+def test__select_pipeline_pdf_without_model():
+    reader = DoclingReader()
+    pipeline, args = reader._select_pipeline("doc.pdf", "pdf")
+    assert pipeline == "markdown"
+    assert args["show_base64_images"] is False
+
+
+def test__select_pipeline_nonpdf():
+    reader = DoclingReader()
+    pipeline, args = reader._select_pipeline(
+        "file.html", "html", show_base64_images=True
+    )
+    assert pipeline == "markdown"
+    assert args["show_base64_images"] is True
+    assert args["ext"] == "html"

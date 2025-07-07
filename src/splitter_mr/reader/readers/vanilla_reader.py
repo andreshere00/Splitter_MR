@@ -68,7 +68,8 @@ class VanillaReader(BaseReader):
                 - `vlm_parameters (Optional[Dict[str, Any]])`:
                     Extra kwargs forwarded verbatim to `model.extract_text`.
                 - `resolution (Optional[int])`: DPI used when rasterising PDF pages for vision models. Default is 300.
-                - `placeholder (Optional[str])`: Placeholder string to use for omitted images in PDFs. Default is `"<!-- image -->"`.
+                - `image_placeholder (Optional[str])`: Placeholder string to use for omitted images in PDFs. Default is `"<!-- image -->"`.
+                - `page_placeholder (Optional[str])`: Placeholder string for PDF page breaks. Default is `"<!-- page -->"`.
 
         Returns:
             ReaderOutput: Dataclass defining the output structure for all readers.
@@ -149,6 +150,9 @@ class VanillaReader(BaseReader):
                         vlm_parameters: Dict[str, Any] = kwargs.get(
                             "vlm_parameters", {}
                         )
+                        page_placeholder = kwargs.get(
+                            "page_placeholder", "<!-- page -->"
+                        )
 
                         page_markdowns: List[str] = self.pdf_reader.describe_pages(
                             file_path=document_source,
@@ -160,8 +164,8 @@ class VanillaReader(BaseReader):
 
                         # Join pages under clear headings
                         joined_pages = []
-                        for i, md in enumerate(page_markdowns, start=1):
-                            joined_pages.append(f"## Page {i}\n\n{md}")
+                        for _, md in enumerate(page_markdowns, start=1):
+                            joined_pages.append(f"{page_placeholder}\n\n{md}")
                         text = "\n\n---\n\n".join(joined_pages)
 
                         conversion_method = "png"
@@ -172,7 +176,12 @@ class VanillaReader(BaseReader):
                         pdf_reader = self.pdf_reader
                         model = kwargs.get("model", self.model)
 
-                        placeholder = kwargs.get("placeholder", "<!-- image -->")
+                        image_placeholder = kwargs.get(
+                            "image_placeholder", "<!-- image -->"
+                        )
+                        page_placeholder = kwargs.get(
+                            "page_placeholder", "<!-- page -->"
+                        )
 
                         if model is not None:
                             text = pdf_reader.read(
@@ -183,7 +192,8 @@ class VanillaReader(BaseReader):
                                 show_base64_images=kwargs.get(
                                     "show_base64_images", False
                                 ),
-                                placeholder=placeholder,
+                                image_placeholder=image_placeholder,
+                                page_placeholder=page_placeholder,
                             )
                             ocr_method = model.model_name
                         else:
@@ -192,7 +202,8 @@ class VanillaReader(BaseReader):
                                 show_base64_images=kwargs.get(
                                     "show_base64_images", False
                                 ),
-                                placeholder=placeholder,
+                                image_placeholder=image_placeholder,
+                                page_placeholder=page_placeholder,
                             )
                         conversion_method = "pdf"
 
