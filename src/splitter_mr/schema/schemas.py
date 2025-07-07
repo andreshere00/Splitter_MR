@@ -123,7 +123,7 @@ DOCLING_SUPPORTED_EXTENSIONS: set[str] = {
 }
 
 DEFAULT_EXTRACTION_PROMPT: str = (
-    "Extract all the elements (text, formulas, tables, images, etc.) detected in the page in markdown format, orderly. Return ONLY the extracted content, in markdown format."
+    "Extract all the elements (text, formulas, tables, images, etc.) detected in the page in markdown format, orderly. Return ONLY the extracted content, with no previous placeholders."
 )
 
 DEFAULT_IMAGE_CAPTION_PROMPT: str = (

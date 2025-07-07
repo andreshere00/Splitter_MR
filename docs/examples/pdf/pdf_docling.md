@@ -1,16 +1,77 @@
 # **Example:** Read PDF documents with images using Docling Reader
 
-As we have seen in previous examples, reading a PDF is not a simple task. In this case, we will see how to read the PDF using Docling framework, and connect this library into Visual Language Models to extract text or get annotations from images.
+As we have seen in previous examples, reading a PDF is not a simple task. In this case, we will see how to read a PDF using Docling framework, and connect this library into Visual Language Models to extract text or get annotations from images.
 
 ## Connecting to a VLM to extract text and analyze images
 
-To use a VLM to read images and get annotations, you can simply instantiate a model which inherits from a `BaseModel` class and pass that model into the Reader class:
+For this example, we will use the same document as the (previous tutorial)[https://github.com/andreshere00/Splitter_MR/blob/main/data/sample_pdf.pdf].
+
+To use a VLM to read images and get annotations, you can simply instantiate a model which inherits from a `BaseModel` class and pass that model into the Reader class. 
+
+Currently, two models are supported: one from **OpenAI** and one from an **Azure** **OpenAI** deployment. After choosing a model, you simply need to instantiate the `BaseModel` class, which implements one of these VLMs.
+
+Before that, you should provide some environment variables (these variables should be saved in a `.env` file in the directory where the Python script will be executed):
+
+<details> <summary>Environment variables definition</summary>
+    
+    <h3>For <code>OpenAI</code>:</h3>
+
+    ```txt
+    OPENAI_API_KEY=<your-api-key>
+    ```
+
+    <h3>For <code>AzureOpenAI</code>:</h3>
+
+    ```txt
+    AZURE_OPENAI_API_KEY=<your-api-key>
+    AZURE_OPENAI_ENDPOINT=<your-endpoint>
+    AZURE_OPENAI_API_VERSION=<your-api-version>
+    AZURE_OPENAI_DEPLOYMENT=<your-model-name>
+    ```
+</details>
+
+So, the models can be loaded as follows:
+
+<details> <summary><code>OpenAI</code> and <code>AzureOpenAI</code> implementation example</summary>
+
+    <h3>For <code>OpenAI</code></h3>
+
+    ```python
+    import os
+    from splitter_mr.model import OpenAIVisionModel
+
+    api_key = os.getenv("OPENAI_API_KEY")
+
+    model = OpenAIVisionModel(api_key=api_key)
+    ```
+
+    <h3>For <code>AzureOpenAI</code></h3>
+
+    ```python
+    import os
+    from splitter_mr.model import AzureOpenAIVisionModel
+
+    azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
+    azure_api_key = os.getenv("AZURE_OPENAI_API_KEY")
+    api_version = os.getenv("AZURE_OPENAI_API_VERSION")
+    azure_deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT")
+
+    model = AzureOpenAIVisionModel(
+        azure_api_key=azure_api_key,
+        azure_endpoint=azure_endpoint,
+        api_version=api_version,
+        azure_deployment=azure_deployment
+    )
+    ```
+</details>
+
+Alternatively, you can instantiate the model and if the `.env` is present, the variables will be get automatically:
 
 ```python
 from splitter_mr.model import AzureOpenAIVisionModel
 from splitter_mr.reader import DoclingReader
 
-file = "https://github.com/andreshere00/Splitter_MR/blob/main/data/sample_pdf.pdf"
+file = "data/sample_pdf.pdf"
 
 model = AzureOpenAIVisionModel()
 ```
@@ -159,7 +220,7 @@ Of course, remember that the use of a VLM is not mandatory, and you can read the
 from splitter_mr.model import AzureOpenAIVisionModel
 from splitter_mr.reader import DoclingReader
 
-file = "https://github.com/andreshere00/Splitter_MR/blob/main/data/sample_pdf.pdf"
+file = "data/sample_pdf.pdf"
 
 model = AzureOpenAIVisionModel()
 docling_reader = DoclingReader(model = model)
@@ -186,3 +247,6 @@ docling_reader = DoclingReader()
 docling_output = docling_reader.read(file, show_base64_images = True)
 print(docling_output.text)
 ```
+
+!!! note
+    For more on available options, see the [**DoclingReader class documentation**](../../api_reference/reader.md#doclingreader).

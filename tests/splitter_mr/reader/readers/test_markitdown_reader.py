@@ -122,30 +122,6 @@ def test_scan_pdf_pages_uses_custom_prompt(tmp_path):
         assert kwargs["llm_prompt"] == custom_prompt
 
 
-def test_scan_pdf_pages_requires_pdf_extension(tmp_path):
-    docx = tmp_path / "bad.docx"
-    docx.write_text("dummy")
-    patch_oa, patch_az, DummyVisionModel = patch_vision_models()
-    with patch_oa, patch_az:
-        reader = MarkItDownReader(model=DummyVisionModel())
-        with pytest.raises(
-            ValueError,
-            match="To scan PDF pages, a PDF file and a vision model are required.",
-        ):
-            reader.read(str(docx), scan_pdf_pages=True)
-
-
-def test_scan_pdf_pages_requires_vision_model(tmp_path):
-    pdf = tmp_path / "no_model.pdf"
-    pdf.write_text("dummy")
-    reader = MarkItDownReader()
-    with pytest.raises(
-        ValueError,
-        match="To scan PDF pages, a PDF file and a vision model are required.",
-    ):
-        reader.read(str(pdf), scan_pdf_pages=True)
-
-
 def test_scan_pdf_pages_splits_each_page(tmp_path):
     """Test PDF is split and scanned page by page with VisionModel."""
     pdf = tmp_path / "multi.pdf"
@@ -193,21 +169,3 @@ def test_scan_pdf_pages_custom_prompt(tmp_path):
         # Should pass prompt to convert
         args, kwargs = MockMID.return_value.convert.call_args
         assert kwargs["llm_prompt"] == custom_prompt
-
-
-def test_scan_pdf_pages_no_model_raises(tmp_path):
-    pdf = tmp_path / "naked.pdf"
-    pdf.write_text("pdf")
-    reader = MarkItDownReader()
-    with pytest.raises(ValueError, match="vision model are required"):
-        reader.read(str(pdf), scan_pdf_pages=True)
-
-
-def test_scan_pdf_pages_wrong_extension_raises(tmp_path):
-    docx = tmp_path / "bad.docx"
-    docx.write_text("dummy")
-    patch_oa, patch_az, DummyVisionModel = patch_vision_models()
-    with patch_oa, patch_az:
-        reader = MarkItDownReader(model=DummyVisionModel())
-        with pytest.raises(ValueError, match="vision model are required"):
-            reader.read(str(docx), scan_pdf_pages=True)

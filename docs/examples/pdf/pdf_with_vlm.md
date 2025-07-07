@@ -1,5 +1,8 @@
 # **Example**: Reading files with Visual Language Models to Provide Image Annotations
 
+!!! warning
+    This tutorial will be redo and **deprecated** soon. Stay aware to updates!
+
 When reading a PDF file or other files which contains images, it can be useful to provide descriptive text alongside those images. Since images in a Markdown file are typically rendered by encoding them in base64 format, you may alternatively want to include a description of each image instead. 
 
 This is where **Visual Language Models (VLMs)** come in—to analyze and describe images automatically. In this tutorial, we'll show how to use these models with the library.

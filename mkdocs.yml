@@ -41,6 +41,7 @@ nav:
       - Split Markdown and HTML files by headers: examples/schema/header_splitter.md
     - Reading:
       - Read PDFs without VLMs: examples/pdf/pdf_without_vlm.md
+      - Read PDFs using VLMs: examples/pdf/pdf_with_vlm.md
       - Read files with VanillaReader using VLMs: examples/pdf/pdf_vanilla.md
       - Read files with Docling using VLMs: examples/pdf/pdf_docling.md
       - Read files with MarkItDown using VLMs: examples/pdf/pdf_markitdown.md
