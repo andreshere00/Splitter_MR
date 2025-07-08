@@ -94,7 +94,95 @@ print(output.text)
 As observed, all the images have been described by the LLM:
 
 ```md
+<!-- page -->
 
+A sample PDF
+Converting PDF files to other formats, such as Markdown, is a surprisingly
+complex task due to the nature of the PDF format itself. PDF (Portable
+Document Format) was designed primarily for preserving the visual layout of
+documents, making them look the same across different devices and
+platforms. However, this design goal introduces several challenges when trying to
+extract and convert the underlying content into a more flexible, structured format
+like Markdown.
+
+<!-- image -->
+*Caption: SplitterMR: A tool designed to efficiently chunk document text for seamless integration into production-ready large language model applications.*
+
+Ilustración 1. SplitterMR logo.
+1. Lack of Structural Information
+Unlike formats such as HTML or DOCX, PDFs generally do not store
+information about the logical structure of the document—such as
+headings, paragraphs, lists, or tables. Instead, PDFs are often a collection
+of text blocks, images, and graphical elements placed at specific
+coordinates on a page. This makes it difficult to accurately infer the
+intended structure, such as determining what text is a heading versus a
+regular paragraph.
+2. Variability in PDF Content
+PDF files can contain a wide range of content types: plain text, styled text,
+images, tables, embedded fonts, and even vector graphics. Some PDFs
+are generated programmatically and have relatively clean underlying text,
+while others may be created from scans, resulting in image-based (non-
+selectable) content that requires OCR (Optical Character Recognition) for
+extraction. The variability in how PDFs are produced leads to inconsistent
+results when converting to Markdown.
+An enumerate:
+1. One
+
+<!-- page -->
+
+2. Two
+3. Three
+3. Preservation of Formatting
+Markdown is a lightweight markup language that supports basic formatting—
+such as headings, bold, italics, links, images, and lists. However, it does not
+support all the visual and layout options available in PDF, such as columns,
+custom fonts, footnotes, floating images, and complex tables. Deciding how (or
+whether) to preserve these elements can be difficult, and often requires trade-
+offs between fidelity and simplicity.
+𝑥2,
+𝑓(𝑥)
+= 𝑥 ∈ [0,1]
+An example list:
+• Element 1
+• Element 2
+• Element 3
+4. Table and Image Extraction
+Tables and images in PDFs present a particular challenge. Tables are often
+visually represented using lines and spacing, with no underlying indication that
+a group of text blocks is actually a table. Extracting these and converting them
+to Markdown tables (which have a much simpler syntax) is error-prone.
+Similarly, extracting images from a PDF and re-inserting them in a way that
+makes sense in Markdown requires careful handling.
+This is a cite.
+5. Multicolumn Layouts and Flowing Text
+Many PDFs use complex layouts with multiple columns, headers, footers, or sidebars.
+Converting these layouts to a single-flowing Markdown document requires decisions
+about reading order and content hierarchy. It's easy to end up with text in the wrong
+order or to lose important contextual information.
+6. Encoding and Character Set Issues
+PDFs can use a variety of text encodings, embedded fonts, and even contain non-
+standard Unicode characters. Extracting text reliably without corruption or data loss is
+not always straightforward, especially for documents with special symbols or non-Latin
+scripts.
+
+<!-- page -->
+
+| Name | Role | Email |
+| --- | --- | --- |
+| Alice Smith | Developer | alice@example.com |
+| Bob Johnson | Designer | bob@example.com |
+| Carol White | Project Lead | carol@example.com |
+
+Conclusion
+While it may seem simple on the surface, converting PDFs to formats like
+Markdown involves a series of technical and interpretive challenges. Effective
+conversion tools must blend text extraction, document analysis, and sometimes
+machine learning techniques (such as OCR or structure recognition) to produce
+usable, readable, and faithful Markdown output. As a result, perfect conversion
+is rarely possible, and manual review and cleanup are often required.
+
+<!-- image -->
+*Caption: A vibrant hummingbird gracefully hovers in front of a bright yellow flower, showcasing its dazzling plumage and agility as it seeks nectar.*
 ```
 
 ## Experimenting with some keyword arguments
@@ -107,12 +195,142 @@ output = reader.read(file_path = file, show_base64_images = True)
 print(output.text)
 ```
 
-In addition, you can modify how the image and page placeholders are generated with the options `image_placeholder` and `page_placeholder`:
+```md
+<!-- page -->
+
+A sample PDF
+Converting PDF files to other formats, such as Markdown, is a surprisingly
+complex task due to the nature of the PDF format itself. PDF (Portable
+Document Format) was designed primarily for preserving the visual layout of
+documents, making them look the same across different devices and
+platforms. However, this design goal introduces several challenges when trying to
+extract and convert the underlying content into a more flexible, structured format
+like Markdown.
+
+![Image page 1](data:image/png;base64,iVBORw0KG...=)
+
+...
+
+<!-- page -->
+
+...
+
+<!-- page -->
+
+| Name | Role | Email |
+| --- | --- | --- |
+| Alice Smith | Developer | alice@example.com |
+| Bob Johnson | Designer | bob@example.com |
+| Carol White | Project Lead | carol@example.com |
+
+Conclusion
+While it may seem simple on the surface, converting PDFs to formats like
+Markdown involves a series of technical and interpretive challenges. Effective
+conversion tools must blend text extraction, document analysis, and sometimes
+machine learning techniques (such as OCR or structure recognition) to produce
+usable, readable, and faithful Markdown output. As a result, perfect conversion
+is rarely possible, and manual review and cleanup are often required.
+
+![Image page 3](data:image/png;base64,iVBORw0KGgo..)
+
+```
+
+In addition, you can modify how the image and page placeholders are generated with the options `image_placeholder` and `page_placeholder`. In this case, we don't use the model since it is not needed.
 
 ```python
 reader = VanillaReader()
 output = reader.read(file_path = file, image_placeholder = "## Image", page_placeholder = "## Page")
 print(output.text)
+```
+
+```md
+## Page
+
+A sample PDF
+Converting PDF files to other formats, such as Markdown, is a surprisingly
+complex task due to the nature of the PDF format itself. PDF (Portable
+Document Format) was designed primarily for preserving the visual layout of
+documents, making them look the same across different devices and
+platforms. However, this design goal introduces several challenges when trying to
+extract and convert the underlying content into a more flexible, structured format
+like Markdown.
+
+## Image
+
+Ilustración 1. SplitterMR logo.
+1. Lack of Structural Information
+Unlike formats such as HTML or DOCX, PDFs generally do not store
+information about the logical structure of the document—such as
+headings, paragraphs, lists, or tables. Instead, PDFs are often a collection
+of text blocks, images, and graphical elements placed at specific
+coordinates on a page. This makes it difficult to accurately infer the
+intended structure, such as determining what text is a heading versus a
+regular paragraph.
+2. Variability in PDF Content
+PDF files can contain a wide range of content types: plain text, styled text,
+images, tables, embedded fonts, and even vector graphics. Some PDFs
+are generated programmatically and have relatively clean underlying text,
+while others may be created from scans, resulting in image-based (non-
+selectable) content that requires OCR (Optical Character Recognition) for
+extraction. The variability in how PDFs are produced leads to inconsistent
+results when converting to Markdown.
+An enumerate:
+1. One
+
+## Page
+
+2. Two
+3. Three
+3. Preservation of Formatting
+Markdown is a lightweight markup language that supports basic formatting—
+such as headings, bold, italics, links, images, and lists. However, it does not
+support all the visual and layout options available in PDF, such as columns,
+custom fonts, footnotes, floating images, and complex tables. Deciding how (or
+whether) to preserve these elements can be difficult, and often requires trade-
+offs between fidelity and simplicity.
+𝑥2,
+𝑓(𝑥)
+= 𝑥 ∈ [0,1]
+An example list:
+• Element 1
+• Element 2
+• Element 3
+4. Table and Image Extraction
+Tables and images in PDFs present a particular challenge. Tables are often
+visually represented using lines and spacing, with no underlying indication that
+a group of text blocks is actually a table. Extracting these and converting them
+to Markdown tables (which have a much simpler syntax) is error-prone.
+Similarly, extracting images from a PDF and re-inserting them in a way that
+makes sense in Markdown requires careful handling.
+This is a cite.
+5. Multicolumn Layouts and Flowing Text
+Many PDFs use complex layouts with multiple columns, headers, footers, or sidebars.
+Converting these layouts to a single-flowing Markdown document requires decisions
+about reading order and content hierarchy. It's easy to end up with text in the wrong
+order or to lose important contextual information.
+6. Encoding and Character Set Issues
+PDFs can use a variety of text encodings, embedded fonts, and even contain non-
+standard Unicode characters. Extracting text reliably without corruption or data loss is
+not always straightforward, especially for documents with special symbols or non-Latin
+scripts.
+
+## Page
+
+| Name | Role | Email |
+| --- | --- | --- |
+| Alice Smith | Developer | alice@example.com |
+| Bob Johnson | Designer | bob@example.com |
+| Carol White | Project Lead | carol@example.com |
+
+Conclusion
+While it may seem simple on the surface, converting PDFs to formats like
+Markdown involves a series of technical and interpretive challenges. Effective
+conversion tools must blend text extraction, document analysis, and sometimes
+machine learning techniques (such as OCR or structure recognition) to produce
+usable, readable, and faithful Markdown output. As a result, perfect conversion
+is rarely possible, and manual review and cleanup are often required.
+
+## Image
 ```
 
 But one of the most important features is to scan the PDF as PageImages, to analyse every page with a VLM to extract the content. In order to do that, you can simply activate the option `scan_pdf_pages`. 
@@ -123,12 +341,156 @@ output = reader.read(file_path = file, scan_pdf_pages = True)
 print(output.text)
 ```
 
+```md
+<!-- page -->
+
+# A sample PDF
+
+Converting PDF files to other formats, such as Markdown, is a surprisingly complex task due to the nature of the PDF format itself. PDF (Portable Document Format) was designed primarily for preserving the visual layout of documents, making them look the same across different devices and platforms. However, this design goal introduces several challenges when trying to extract and convert the underlying content into a more flexible, structured format like Markdown.
+
+![Illustración 1. SplitterMR logo](https://dummyimage.com/600x400/000/fff)
+
+## 1. Lack of Structural Information
+
+Unlike formats such as HTML or DOCX, PDFs generally do not store information about the logical structure of the document—such as headings, paragraphs, lists, or tables. Instead, PDFs are often a collection of text blocks, images, and graphical elements placed at specific coordinates on a page. This makes it difficult to accurately infer the intended structure, such as determining what text is a heading versus a regular paragraph.
+
+## 2. Variability in PDF Content
+
+PDF files can contain a wide range of content types: plain text, styled text, images, tables, embedded fonts, and even vector graphics. Some PDFs are generated programmatically and have relatively clean underlying text, while others may be created from scans, resulting in image-based (non-selectable) content that requires OCR (Optical Character Recognition) for extraction. The variability in how PDFs are produced leads to inconsistent results when converting to Markdown.
+
+### An enumerate:
+1. One
+
+---
+
+<!-- page -->
+
+1. Two  
+2. Three  
+
+## 3. Preservation of Formatting  
+Markdown is a lightweight markup language that supports basic formatting – such as headings, bold, italics, links, images, and lists. However, it does not support all the visual and layout options available in PDF, such as columns, custom fonts, footnotes, floating images, and complex tables. Deciding how (or whether) to preserve these elements can be difficult, and often requires trade-offs between fidelity and simplicity.
+
+$$f(x) = x^2, \quad x \in [0,1]$$
+
+### An example list:
+- Element 1
+- Element 2
+- Element 3  
+
+## 4. Table and Image Extraction  
+Tables and images in PDFs present a particular challenge. Tables are often visually represented using lines and spacing, with no underlying indication that a group of text blocks is actually a table. Extracting these and converting them to Markdown tables (which have a much simpler syntax) is error-prone. Similarly, extracting images from a PDF and re-inserting them in a way that makes sense in Markdown requires careful handling.
+
+---
+
+This is a cite.
+
+## 5. Multicolumn Layouts and Flowing Text  
+Many PDFs use complex layouts with multiple columns, headers, footers, or sidebars. Converting these layouts to a single-flowing Markdown document requires decisions about reading order and content hierarchy. It's easy to end up with text in the wrong order or to lose important contextual information.  
+
+## 6. Encoding and Character Set Issues  
+PDFs can use a variety of text encodings, embedded fonts, and even contain non-standard Unicode characters. Extracting text reliably without corruption or data loss is not always straightforward, especially for documents with special symbols or non-Latin scripts.
+
+---
+
+<!-- page -->
+
+| Name          | Role        | Email                |
+|---------------|-------------|----------------------|
+| Alice Smith   | Developer   | alice@example.com    |
+| Bob Johnson    | Designer    | bob@example.com      |
+| Carol White   | Project Lead| carol@example.com    |
+
+## Conclusion
+
+While it may seem simple on the surface, converting PDFs to formats like Markdown involves a series of technical and interpretive challenges. Effective conversion tools must blend text extraction, document analysis, and sometimes machine learning techniques (such as OCR or structure recognition) to produce usable, readable, and faithful Markdown output. As a result, perfect conversion is rarely possible, and manual review and cleanup are often required.
+
+![Hummingbird](<image_url_here>)
+```
+
 Remember that you can always customize the prompt to get one or other results using the parameter `prompt`:
 
 ```python
 reader = VanillaReader(model = model)
 output = reader.read(file_path = file, prompt = "Extract the content of this resource in html format")
 print(output.text)
+```
+
+```md
+<!-- page -->
+
+A sample PDF
+...
+
+<!-- image -->
+Here is the content you requested in HTML format:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SplitterMR</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 50px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        h1 {
+            color: #333;
+            font-size: 24px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <img src="https://www.example.com/path/to/your/logo.png" alt="SplitterMR Logo">
+    <h1>SplitterMR</h1>
+    <p>Chunk your documents text for production-ready LLM applications.</p>
+</body>
+</html>
+```
+
+...
+
+<!-- image -->
+Here is the content extracted in HTML format:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hummingbird</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+        img {
+            width: 590px;
+            height: 886px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <img src="data:image/gif;base64,R0lGODlhBQAIAFIAAAAAAP///4G+tobTzGWShbxPetW2tZasWJiYgA2pQAAOw==" alt="Hummingbird">
+</body>
+</html>
 ```
 
 To sum up, we can see that `VanillaReader` is a good option to extract rapidly and efficiently the text content for a PDF file. Remember that you can customize how the extraction is performed. But remember to consult other reading options in the [Developer guide](../../api_reference/reader.md) or [other tutorials](../examples.md).

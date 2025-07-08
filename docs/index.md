@@ -59,7 +59,7 @@ Main splitting methods include:
 ## Architecture
 
 ![SplitterMR architecture diagram](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_architecture_diagram.svg#gh-light-mode-only)
-![SplitterMR architecture diagram](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_architecture_diagram.svg#gh-dark-mode-only)
+![SplitterMR architecture diagram](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_architecture_diagram_white.svg#gh-dark-mode-only)
 
 **SplitterMR** is designed around a modular pipeline that processes files from raw data all the way to chunked, LLM-ready text.
 
@@ -127,7 +127,6 @@ ReaderOutput(
 !!! note
     Note that you can read from an URL, a variable and from a `file_path`. See [Developer guide](https://andreshere00.github.io/Splitter_MR/api_reference/reader/).
 
-
 ### Split text
 
 To split the text, first import the class that implements your desired splitting strategy (e.g., by characters, recursively, by headers, etc.). Then, create an instance of this class and call its `split` method, which is defined in the `BaseSplitter` class.
@@ -170,7 +169,7 @@ from splitter_mr.model.models import AzureOpenAIVisionModel
 
 model = AzureOpenAIVisionModel()
 reader = VanillaReader(model=model)
-output = reader.read(file_path="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/lorem_ipsum.pdf")
+output = reader.read(file_path="data/lorem_ipsum.pdf")
 print(output.text)
 ```
 
