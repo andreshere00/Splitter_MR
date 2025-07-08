@@ -1,18 +1,19 @@
 # SplitterMR
 
-<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_logo.svg" alt="SplitterMR logo" width=100%/>
+<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_logo.svg#gh-light-mode-only" alt="SplitterMR logo" width=100%/>
+<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_logo_white.svg#gh-dark-mode-only" alt="SplitterMR logo" width=100%/>
 
 ## Description
 
 **SplitterMR** is a library for chunking data into convenient text blocks compatible with your LLM applications.
 
-> [!IMPORTANT]
-> **Vision Language Model (VLM) support!**
->
-> You can now use vision-capable models (OpenAI Vision, Azure OpenAI Vision) to extract image descriptions and OCR text during file reading.
-> Pass a VLM model to any Reader class via the `model` parameter. 
-> 
-> ➡️ See [**documentation**](https://andreshere00.github.io/Splitter_MR/api_reference/model/).
+!!! important
+    **Vision Language Model (VLM) support!**
+    
+    You can now use vision-capable models (OpenAI Vision, Azure OpenAI Vision) to extract image descriptions and OCR text during file reading. Pass a VLM model to any Reader class via the `model` parameter. 
+    
+    ➡️ See [**documentation**](https://andreshere00.github.io/Splitter_MR/api_reference/model/).
+
 
 ## Features
 
@@ -50,13 +51,15 @@ Main splitting methods include:
 | **HeaderSplitter**        | Splits Markdown or HTML documents into chunks using header levels (e.g., `#`, `##`, or `<h1>`, `<h2>`). Uses configurable headers for chunking. <br> **Parameters:** `headers_to_split_on` (list of headers and semantic names), `chunk_size` (unused, for compatibility). <br> **Compatible with:** Markdown, HTML.                                                                                                                                                                            |
 | **Code Splitter**         | Splits source code files into programmatically meaningful chunks (functions, classes, methods, etc.), aware of the syntax of the specified programming language (e.g., Python, Java, Kotlin). Uses language-aware logic to avoid splitting inside code blocks. <br> **Parameters:** `chunk_size` (max chars per chunk), `language` (programming language as string, e.g., `"python"`, `"java"`). <br> **Compatible with:** Source code files (Python, Java, Kotlin, C++, JavaScript, Go, etc.). |
 
-> [!WARNING]
-> **PagedSplitter** and **Semantic Splitter** are **not fully implemented yet**. 
-> Stay aware to updates!
+!!! warning
+    **PagedSplitter** and **Semantic Splitter** are **not fully implemented yet**. 
+    Stay aware to updates!
+
 
 ## Architecture
 
-![SplitterMR architecture diagram](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_architecture_diagram)
+![SplitterMR architecture diagram](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_architecture_diagram.svg#gh-light-mode-only)
+![SplitterMR architecture diagram](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_architecture_diagram.svg#gh-dark-mode-only)
 
 **SplitterMR** is designed around a modular pipeline that processes files from raw data all the way to chunked, LLM-ready text.
 
@@ -86,8 +89,9 @@ We strongly recommend installing it using a python package management tool such 
 uv add splitter-mr
 ```
 
-> [!NOTE]
-> Python 3.11 or greater is required to use this library.
+!!! note
+    Python 3.11 or greater is required to use this library.
+
 
 ## How to use
 
@@ -120,8 +124,9 @@ ReaderOutput(
     )
 ```
 
-> [!NOTE]
-> Note that you can read from an URL, a variable and from a `file_path`. See [Developer guide](https://andreshere00.github.io/Splitter_MR/api_reference/reader/).
+!!! note
+    Note that you can read from an URL, a variable and from a `file_path`. See [Developer guide](https://andreshere00.github.io/Splitter_MR/api_reference/reader/).
+
 
 ### Split text
 

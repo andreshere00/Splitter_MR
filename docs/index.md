@@ -1,6 +1,7 @@
 # SplitterMR
 
-<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_logo.svg" alt="SplitterMR logo" width=100%/>
+<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_logo.svg#gh-light-mode-only" alt="SplitterMR logo" width=100%/>
+<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_logo_white.svg#gh-dark-mode-only" alt="SplitterMR logo" width=100%/>
 
 ## Description
 
@@ -9,8 +10,7 @@
 !!! important
     **Vision Language Model (VLM) support!**
     
-    You can now use vision-capable models (OpenAI Vision, Azure OpenAI Vision) to extract image descriptions and OCR text during file reading.
-    Pass a VLM model to any Reader class via the `model` parameter. 
+    You can now use vision-capable models (OpenAI Vision, Azure OpenAI Vision) to extract image descriptions and OCR text during file reading. Pass a VLM model to any Reader class via the `model` parameter. 
     
     ➡️ See [**documentation**](https://andreshere00.github.io/Splitter_MR/api_reference/model/).
 
@@ -58,7 +58,8 @@ Main splitting methods include:
 
 ## Architecture
 
-![SplitterMR architecture diagram](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_architecture_diagram)
+![SplitterMR architecture diagram](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_architecture_diagram.svg#gh-light-mode-only)
+![SplitterMR architecture diagram](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_architecture_diagram.svg#gh-dark-mode-only)
 
 **SplitterMR** is designed around a modular pipeline that processes files from raw data all the way to chunked, LLM-ready text.
 

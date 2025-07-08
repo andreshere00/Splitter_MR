@@ -2,9 +2,9 @@
 
 Welcome to the **SplitterMR Python API** reference.
 
-![SplitterMR architecture diagram](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_architecture_diagram#only-light)
+![SplitterMR architecture diagram](../assets/splitter_mr_architecture_diagram.svg#gh-light-mode-only)
 
-![SplitterMR architecture diagram](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_architecture_diagram_white#only-dark)
+![SplitterMR architecture diagram](../assets/splitter_mr_architecture_diagram_white.svg#gh-dark-mode-only)
 
 ## Documentation
 
