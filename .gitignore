@@ -188,7 +188,7 @@ cython_debug/
 
 # Cursor
 #  Cursor is an AI-powered code editor. `.cursorignore` specifies files/directories to
-#  exclude from AI features like autocomplete and code analysis. Recommended for sensitive data
+#  exclude from AI features like autocomplete and code analyzis. Recommended for sensitive data
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
@@ -201,3 +201,6 @@ tmp/*
 # Notebooks
 notebooks/*
 notebooks/
+
+# Visual Studio Code settings
+.vscode

@@ -1,171 +1,172 @@
-import os
 import uuid
-from pathlib import Path
-from unittest.mock import MagicMock, patch
+import warnings
+from types import SimpleNamespace
 
 import pytest
-from openai import AzureOpenAI, OpenAI
 
-from splitter_mr.model.base_model import BaseModel
 from splitter_mr.reader.readers.docling_reader import DoclingReader
+from splitter_mr.reader.readers.vanilla_reader import VanillaReader
+from splitter_mr.reader.utils import DoclingPipelineFactory
 from splitter_mr.schema import ReaderOutput
 
-# Helpers
 
-
-class ConcreteModel(BaseModel):
-    def __init__(self, model_name="dummy-model"):
+# Dummy Model for tests
+class DummyModel:
+    def __init__(self, model_name="dummy"):
         self.model_name = model_name
+        self._client = SimpleNamespace(
+            _azure_endpoint="https://example.com",
+            _azure_deployment="dep",
+            _api_version="v1",
+            api_key="key",
+        )
 
     def get_client(self):
-        return self
-
-    def extract_text(self, *a, **kw):
-        pass
+        return self._client
 
 
-@pytest.fixture
-def patch_vlm(monkeypatch):
+@pytest.fixture(autouse=True)
+def patch_pipeline(monkeypatch):
+    """Patch DoclingPipelineFactory.run and VanillaReader.read for all tests."""
     monkeypatch.setattr(
-        DoclingReader,
-        "_get_vlm_url_and_headers",
-        lambda self, client: ("https://dummy", {"Authorization": "Bearer dummy"}),
+        DoclingPipelineFactory,
+        "run",
+        lambda name, path, **kwargs: f"{name}-pipeline-{kwargs.get('prompt', '')}",
     )
-
-
-class StubAzure(AzureOpenAI):
-    def __init__(self):
-        pass
-
-    api_key = "stub"
-
-
-class StubOpenAI(OpenAI):
-    def __init__(self):
-        pass
-
-    api_key = "stub"
-
-
-class DummyModel(BaseModel):
-    def __init__(self, model_name="dummy-model"):
-        self.api_key = "dummy-key"
-        self.model_name = model_name
-        self._azure_deployment = "dummy-deployment"
-        self._azure_endpoint = "https://dummy-endpoint.com"
-        self._api_version = "2025-01-01-preview"
-
-    def get_client(self):
-        return self
-
-    def extract_text(self, *a, **kw):
-        pass
-
-
-@pytest.fixture
-def dummy_pdf_path(tmp_path):
-    p = tmp_path / "test.pdf"
-    p.write_bytes(b"%PDF-1.4 test content")
-    return str(p)
-
-
-@pytest.fixture
-def unsupported_file_path(tmp_path):
-    p = tmp_path / "test.txt"
-    p.write_text("Not supported extension.")
-    return str(p)
-
-
-@pytest.fixture
-def dummy_model():
-    return DummyModel()
-
-
-# Test cases
-
-
-def test_dummy_model_instantiable_and_methods_work():
-    model = ConcreteModel()
-    assert model.get_client() is model
-
-
-def test_init_with_and_without_model(dummy_model):
-    reader = DoclingReader(model=dummy_model)
-    assert reader.model is dummy_model
-    assert reader.api_key == "dummy-key"
-    reader_no_model = DoclingReader()
-    assert reader_no_model.model is None
-
-
-def test_supported_extensions_check(dummy_model, dummy_pdf_path):
-    reader = DoclingReader(model=dummy_model)
-    assert Path(dummy_pdf_path).suffix.lstrip(".") in reader.SUPPORTED_EXTENSIONS
-
-
-def test_unsupported_extensions_triggers_vanilla(monkeypatch, unsupported_file_path):
-    reader = DoclingReader()
-    called = {}
-
-    def fake_vanilla_read(file_path, **kwargs):
-        called["called"] = True
-        return ReaderOutput(
-            text="Fallback text",
-            document_name=os.path.basename(file_path),
+    monkeypatch.setattr(
+        VanillaReader,
+        "read",
+        lambda self, file_path, **kwargs: ReaderOutput(
+            text="vanilla-output",
+            document_name="file.xyz",
             document_path=file_path,
-            document_id=str(uuid.uuid4()),
+            document_id="id",
             conversion_method="vanilla",
             reader_method="vanilla",
             ocr_method=None,
-            metadata=None,
-        )
-
-    monkeypatch.setattr(
-        "splitter_mr.reader.readers.docling_reader.VanillaReader",
-        lambda: MagicMock(read=fake_vanilla_read),
+            metadata={},
+        ),
     )
-    out = reader.read(unsupported_file_path)
-    assert called["called"]
-    assert out.conversion_method == "vanilla"
+    yield
 
 
-@patch("splitter_mr.reader.readers.docling_reader.DocumentConverter")
-def test_read_success_with_mocked_docling(
-    mock_docconv, dummy_model, dummy_pdf_path, patch_vlm
-):
-    reader = DoclingReader(model=dummy_model)
-    fake_result = MagicMock()
-    fake_result.document.export_to_markdown.return_value = "# Hello"
-    mock_docconv.return_value.convert.return_value = fake_result
-    out = reader.read(dummy_pdf_path)
-    assert out.text == "# Hello"
+def test_init_with_and_without_model():
+    reader1 = DoclingReader()
+    assert reader1.model is None
+    assert reader1.client is None
+    assert reader1.model_name is None
+
+    model = DummyModel("abc")
+    reader2 = DoclingReader(model=model)
+    assert reader2.model is model
+    assert reader2.client == model.get_client()
+    assert reader2.model_name == "abc"
 
 
-@patch("splitter_mr.reader.readers.docling_reader.DocumentConverter")
-def test_read_missing_file_raises(mock_docconv, dummy_model, patch_vlm):
-    reader = DoclingReader(model=dummy_model)
-    mock_docconv.return_value.convert.side_effect = FileNotFoundError
-    with pytest.raises(FileNotFoundError):
-        reader.read("missing.pdf")
+def test_unsupported_extension_warns(monkeypatch):
+    reader = DoclingReader()
+    # Not in supported ext
+    with warnings.catch_warnings(record=True) as w:
+        out = reader.read("foo.unsupported")
+        assert isinstance(out, ReaderOutput)
+        assert out.text == "vanilla-output"
+        assert any("Unsupported extension" in str(warn.message) for warn in w)
 
 
-def test_get_vlm_url_and_headers_for_azure(dummy_model):
-    reader = DoclingReader(model=dummy_model)
-    reader._azure_deployment = "dep"
-    reader._azure_endpoint = "https://azure.endpoint"
-    reader._api_version = "v2025"
+def test_pdf_scan_pdf_pages(monkeypatch):
+    model = DummyModel()
+    reader = DoclingReader(model)
+    out = reader.read("x.pdf", scan_pdf_pages=True, prompt="foo")
+    # Uses 'page_image' pipeline and passes arguments
+    assert out.text.startswith("page_image-pipeline-foo")
+    assert out.document_name == "x.pdf"
+    assert out.conversion_method == "markdown"
+    assert out.reader_method == "docling"
+    assert out.ocr_method == model.model_name
 
-    url, hdr = reader._get_vlm_url_and_headers(StubAzure())
-    assert "azure.endpoint" in url
-    assert hdr["Authorization"].startswith("Bearer")
+
+def test_pdf_with_model_no_scan(monkeypatch):
+    model = DummyModel()
+    reader = DoclingReader(model)
+    with warnings.catch_warnings(record=True) as w:
+        out = reader.read("y.pdf", prompt="my prompt", show_base64_images=True)
+        # Should raise a warning about base64 images with model
+        assert any("base64 images are not rendered" in str(warn.message) for warn in w)
+    # Uses 'vlm' pipeline
+    assert out.text.startswith("vlm-pipeline-my prompt")
+    assert out.ocr_method == model.model_name
 
 
-def test_get_vlm_url_and_headers_for_openai(dummy_model, monkeypatch):
-    reader = DoclingReader(model=dummy_model)
-    monkeypatch.setattr(
-        DoclingReader,
-        "_get_vlm_url_and_headers",
-        DoclingReader.__dict__["_get_vlm_url_and_headers"],
-        raising=False,
+def test_pdf_without_model(monkeypatch):
+    reader = DoclingReader(model=None)
+    out = reader.read("abc.pdf", show_base64_images=True)
+    # Should use markdown pipeline
+    assert out.text.startswith("markdown-pipeline-")
+    assert out.reader_method == "docling"
+
+
+def test_nonpdf_with_model(monkeypatch):
+    # Key fix: The output is still "markdown-pipeline-", model is NOT used for pipeline selection.
+    model = DummyModel()
+    reader = DoclingReader(model)
+    out = reader.read("file.md", show_base64_images=True)
+    assert out.text.startswith("markdown-pipeline-")
+    # However, ocr_method should reflect the model's name
+    assert out.ocr_method == model.model_name
+    assert out.reader_method == "docling"
+
+
+def test_nonpdf_without_model(monkeypatch):
+    reader = DoclingReader()
+    out = reader.read("file.md", show_base64_images=True)
+    assert out.text.startswith("markdown-pipeline-")
+    assert out.ocr_method is None
+    assert out.reader_method == "docling"
+
+
+def test_metadata_and_docid_passthrough(monkeypatch):
+    reader = DoclingReader()
+    custom_id = str(uuid.uuid4())
+    meta = {"x": 1}
+    out = reader.read("abc.pdf", document_id=custom_id, metadata=meta)
+    assert out.document_id == custom_id
+    assert out.metadata == meta
+
+
+def test__select_pipeline_pdf_scan_pdf_pages():
+    model = DummyModel()
+    reader = DoclingReader(model)
+    pipeline, args = reader._select_pipeline(
+        "doc.pdf", "pdf", scan_pdf_pages=True, prompt="x"
     )
-    url, hdr = reader._get_vlm_url_and_headers(StubOpenAI())
-    assert "api.openai.com" in url and hdr["Authorization"].startswith("Bearer")
+    assert pipeline == "page_image"
+    assert args["model"] == model
+    assert args["prompt"] == "x"
+
+
+def test__select_pipeline_pdf_with_model_no_scan():
+    model = DummyModel()
+    reader = DoclingReader(model)
+    pipeline, args = reader._select_pipeline(
+        "doc.pdf", "pdf", scan_pdf_pages=False, prompt="y", show_base64_images=True
+    )
+    assert pipeline == "vlm"
+    assert args["model"] == model
+    assert args["prompt"] == "y"
+
+
+def test__select_pipeline_pdf_without_model():
+    reader = DoclingReader()
+    pipeline, args = reader._select_pipeline("doc.pdf", "pdf")
+    assert pipeline == "markdown"
+    assert args["show_base64_images"] is False
+
+
+def test__select_pipeline_nonpdf():
+    reader = DoclingReader()
+    pipeline, args = reader._select_pipeline(
+        "file.html", "html", show_base64_images=True
+    )
+    assert pipeline == "markdown"
+    assert args["show_base64_images"] is True
+    assert args["ext"] == "html"

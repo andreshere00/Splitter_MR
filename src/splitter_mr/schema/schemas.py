@@ -46,7 +46,7 @@ class SplitterOutput:
     metadata: Optional[Dict[str, Any]] = field(default_factory=dict)
 
 
-LANGUAGES: str = {
+LANGUAGES: set[str] = {
     "lua",
     "java",
     "ts",
@@ -102,3 +102,30 @@ LANGUAGES: str = {
     "pl",
     "pm",
 }
+
+DOCLING_SUPPORTED_EXTENSIONS: set[str] = {
+    "md",
+    "markdown",
+    "pdf",
+    "docx",
+    "pptx",
+    "xlsx",
+    "html",
+    "htm",
+    "odt",
+    "rtf",
+    "jpg",
+    "jpeg",
+    "png",
+    "bmp",
+    "gif",
+    "tiff",
+}
+
+DEFAULT_EXTRACTION_PROMPT: str = (
+    "Extract all the elements (text, formulas, tables, images, etc.) detected in the page in markdown format, orderly. Return ONLY the extracted content, with no previous placeholders."
+)
+
+DEFAULT_IMAGE_CAPTION_PROMPT: str = (
+    "Provide a caption describing the following resource. Return the output with the following format: *Caption: <A brief description>*."
+)

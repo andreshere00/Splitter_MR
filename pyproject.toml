@@ -7,10 +7,11 @@ authors = [
 ]
 license = { file = "LICENSE" }
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.11"
 dependencies = [
     "docling>=2.15.1",
     "fastparquet>=2024.11.0",
+    "ffmpeg>=1.4",
     "ffmpeg-downloader>=0.4.0",
     "langchain-text-splitters>=0.3.8",
     "markitdown[all]>=0.1.2",
@@ -19,6 +20,7 @@ dependencies = [
     "openpyxl>=3.1.5",
     "pdfplumber>=0.11.7",
     "poethepoet>=0.35.0",
+    "pymupdf>=1.26.1",
     "pyyaml>=6.0.2",
     "spacy>=3.8.7",
     "tiktoken>=0.9.0",

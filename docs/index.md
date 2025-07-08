@@ -1,6 +1,7 @@
 # SplitterMR
 
-<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/assets/splitter_mr_logo.svg" alt="SplitterMR logo" width=100%/>
+<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_logo.svg#gh-light-mode-only" alt="SplitterMR logo" width=100%/>
+<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_logo_white.svg#gh-dark-mode-only" alt="SplitterMR logo" width=100%/>
 
 ## Description
 
@@ -9,9 +10,9 @@
 !!! important
     **Vision Language Model (VLM) support!**
     
-    You can now use vision-capable models (OpenAI Vision, Azure OpenAI Vision) to extract image descriptions and OCR text during file reading.
-    Pass a VLM model to any Reader class via the `model` parameter. 
-    - See [**documentation**](https://andreshere00.github.io/Splitter_MR/api_reference/reader/).
+    You can now use vision-capable models (OpenAI Vision, Azure OpenAI Vision) to extract image descriptions and OCR text during file reading. Pass a VLM model to any Reader class via the `model` parameter. 
+    
+    ➡️ See [**documentation**](https://andreshere00.github.io/Splitter_MR/api_reference/model/).
 
 
 ## Features
@@ -24,7 +25,7 @@ Currently, there are supported three readers: `VanillaReader`, and `MarkItDownRe
 
 | **Reader**         | **Unstructured files & PDFs**    | **MS Office suite files**         | **Tabular data**        | **Files with hierarchical schema**      | **Image files**                  | **Markdown conversion** |
 |--------------------|----------------------------------|-----------------------------------|-------------------------|----------------------------------------|----------------------------------|----------------------------------|
-| **`VanillaReader`**      | `txt`, `md`                    | `xlsx`                                 | `csv`, `tsv`, `parquet`| `json`, `yaml`, `html`, `xml`          | - | No |----------------------------------| –                                |
+| **`VanillaReader`**      | `txt`, `md`, `pdf`                  | `xlsx`                                 | `csv`, `tsv`, `parquet`| `json`, `yaml`, `html`, `xml`          | - | Partial |----------------------------------| –                                |
 | **`MarkItDownReader`**   | `txt`, `md`, `pdf`               | `docx`, `xlsx`, `pptx`            | `csv`, `tsv`                  | `json`, `html`, `xml`                  | `jpg`, `png`, `pneg`             | Yes |
 | **`DoclingReader`**      | `txt`, `md`, `pdf`                     | `docx`, `xlsx`, `pptx`            | –                 | `html`, `xhtml`                        | `png`, `jpeg`, `tiff`, `bmp`, `webp` | Yes |
 
@@ -44,7 +45,6 @@ Main splitting methods include:
 | **Token Splitter**        | Splits text into chunks based on the number of tokens, using various tokenization models (e.g., tiktoken, spaCy, NLTK). Useful for ensuring chunks are compatible with LLM context limits. <br> **Parameters:** `chunk_size` (max tokens per chunk), `model_name` (tokenizer/model, e.g., `"tiktoken/cl100k_base"`, `"spacy/en_core_web_sm"`, `"nltk/punkt"`), `language` (for NLTK). <br> **Compatible with:** Text.                                                                           |
 | **Paged Splitter**        | **WORK IN PROGRESS**. Splits text by pages for documents that have page structure. Each chunk contains a specified number of pages, with optional word overlap. <br> **Parameters:** `num_pages` (pages per chunk), `chunk_overlap` (overlapping words). <br> **Compatible with:** Word, PDF, Excel, PowerPoint.                                                                                                                                                                                |
 | **Row/Column Splitter**   | For tabular formats, splits data by a set number of rows or columns per chunk, with possible overlap. Row-based and column-based splitting are mutually exclusive. <br> **Parameters:** `num_rows`, `num_cols` (rows/columns per chunk), `overlap` (overlapping rows or columns). <br> **Compatible with:** Tabular formats (csv, tsv, parquet, flat json).                                                                                                                                     |
-| **Schema Based Splitter** | **WORK IN PROGRESS**. Splits hierarchical documents (XML, HTML) based on element tags or keys, preserving the schema/structure. Splitting can be done on a specified or inferred parent key/tag. <br> **Parameters:** `chunk_size` (approx. max chars per chunk), `key` (optional parent key or tag). <br> **Compatible with:** XML, HTML.                                                                                                                                                      |
 | **JSON Splitter**         | Recursively splits JSON documents into smaller sub-structures that preserve the original JSON schema. <br> **Parameters:** `max_chunk_size` (max chars per chunk), `min_chunk_size` (min chars per chunk). <br> **Compatible with:** JSON.                                                                                                                                                                                                                                                      |
 | **Semantic Splitter**     | **WORK IN PROGRESS**. Splits text into chunks based on semantic similarity, using an embedding model and a max tokens parameter. Useful for meaningful semantic groupings. <br> **Parameters:** `embedding_model` (model for embeddings), `max_tokens` (max tokens per chunk). <br> **Compatible with:** Text.                                                                                                                                                                                  |
 | **HTMLTagSplitter**       | Splits HTML content based on a specified tag, or automatically detects the most frequent and shallowest tag if not specified. Each chunk is a complete HTML fragment for that tag. <br> **Parameters:** `chunk_size` (max chars per chunk), `tag` (HTML tag to split on, optional). <br> **Compatible with:** HTML.                                                                                                                                                                             |
@@ -52,13 +52,14 @@ Main splitting methods include:
 | **Code Splitter**         | Splits source code files into programmatically meaningful chunks (functions, classes, methods, etc.), aware of the syntax of the specified programming language (e.g., Python, Java, Kotlin). Uses language-aware logic to avoid splitting inside code blocks. <br> **Parameters:** `chunk_size` (max chars per chunk), `language` (programming language as string, e.g., `"python"`, `"java"`). <br> **Compatible with:** Source code files (Python, Java, Kotlin, C++, JavaScript, Go, etc.). |
 
 !!! warning
-    **Schema Based Splitter**, **PagedSplitter** amd **Semantic Splitter** are **not fully implemented yet**. 
+    **PagedSplitter** and **Semantic Splitter** are **not fully implemented yet**. 
     Stay aware to updates!
 
 
 ## Architecture
 
-![SplitterMR architecture diagram](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/assets/architecture_splitter_mr.svg)
+![SplitterMR architecture diagram](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_architecture_diagram.svg#gh-light-mode-only)
+![SplitterMR architecture diagram](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_architecture_diagram_white.svg#gh-dark-mode-only)
 
 **SplitterMR** is designed around a modular pipeline that processes files from raw data all the way to chunked, LLM-ready text.
 
@@ -89,7 +90,7 @@ uv add splitter-mr
 ```
 
 !!! note
-    Python 3.12 or greater is required to use this library.
+    Python 3.11 or greater is required to use this library.
 
 
 ## How to use
@@ -125,7 +126,6 @@ ReaderOutput(
 
 !!! note
     Note that you can read from an URL, a variable and from a `file_path`. See [Developer guide](https://andreshere00.github.io/Splitter_MR/api_reference/reader/).
-
 
 ### Split text
 
@@ -169,22 +169,22 @@ from splitter_mr.model.models import AzureOpenAIVisionModel
 
 model = AzureOpenAIVisionModel()
 reader = VanillaReader(model=model)
-output = reader.read(file_path="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/test_1.pdf", show_images=False)
+output = reader.read(file_path="data/lorem_ipsum.pdf")
 print(output.text)
 ```
 
-So, in case that you want to read the images in a document, you only have to pass a model to the Reader component. Then, in the `read` method, you can specify if you want to show the images in Base64 format or not. 
+These VLMs can be used for captioning, annotation or text extraction. In fact, you can use these models to process the files as you want using the `prompt` parameter in the `read` method for every class which inherits from `BaseReader`. 
 
 !!! note
-    Showing the images encoded in base64 is a feature independent from using a VLM.
-
-This enables automatic image-to-text conversion in PDFs, DOCX, and PPTX using state-of-the-art VLMs. Currently, the supported models are OpenAI and Azure OpenAI.  Stay tuned for next models which will be implemented!
+    To see more details, consult documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/model/).
 
 ## Next features
 
+- [ ] Add Pydantic models.
+- [ ] Add support to read formulas in DoclingReader.
 - [ ] Implement a method to split a document by pages (`PagedSplitter`).
 - [ ] Add support to read `xlsx`, `docx` and `pptx` files using `VanillaReader`. 
-- [ ] Implement a method to split by embedding similarity (`SemanticSplitter`).
+- [ ] Implement a method to split by embedding similarity > `SemanticSplitter`.
     - [ ] Add HuggingFace embeddings model support.
     - [ ] Add OpenAI embeddings model support.
     - [ ] Add Gemini embeddings model support.
@@ -194,7 +194,10 @@ This enables automatic image-to-text conversion in PDFs, DOCX, and PPTX using st
 - [ ] Add Gemini VLMs model support.
 - [ ] Add Claude Anthropic VLMs model support.
 - [ ] Modularize library into several sub-libraries.
-- [ ] Substitute dataclasses to `Pydantic` models.
+- [ ] Add support to generate output in JSON format.
+- [X] Add support to read PDF as scanned pages.
+- [X] Add support to change image placeholders.
+- [X] Add support to change page placeholders.
 
 ## Contact
 

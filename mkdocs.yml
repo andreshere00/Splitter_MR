@@ -1,9 +1,24 @@
 site_name: SplitterMR Docs
+repo_url: https://github.com/andreshere00/Splitter_MR
+repo_name: andreshere00/Splitter_MR
 theme:
   name: material
-  logo: assets/splitter_mr_logo_white.svg
+  logo: assets/splitter_mr_logo_reduced_white.svg
+  icon:
+    repo: fontawesome/brands/git-alt
   features:
     - content.code.copy
+  palette: 
+    # Palette toggle for light mode
+    - scheme: default
+      toggle:
+        icon: material/brightness-7 
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
 
 nav:
   - Home: index.md
@@ -14,6 +29,12 @@ nav:
     - Models: api_reference/model.md
   - Examples:
     - Overview: examples/examples.md
+    - Reading:
+      - Read PDFs without VLMs: examples/pdf/pdf_without_vlm.md
+      - Read PDFs using VLMs: examples/pdf/pdf_with_vlm.md
+      - Read files with VanillaReader using VLMs: examples/pdf/pdf_vanilla.md
+      - Read files with Docling using VLMs: examples/pdf/pdf_docling.md
+      - Read files with MarkItDown using VLMs: examples/pdf/pdf_markitdown.md
     - Text-based splitting:
       - Split by grammatical groups: examples/text/fixed_splitter.md
       - Split by characters recursively: examples/text/recursive_character_splitter.md
@@ -24,9 +45,6 @@ nav:
       - Split JSON recursively: examples/schema/json_splitter.md
       - Split tables by rows or columns: examples/schema/row_column_splitter.md
       - Split Markdown and HTML files by headers: examples/schema/header_splitter.md
-    - Reading:
-      - Read PDFs without VLMs: examples/pdf/pdf_without_vlm.md
-      - Read files with VLMs: examples/pdf/pdf_with_vlm.md
   - CHANGELOG: CHANGELOG.md
 
 extra_css:
