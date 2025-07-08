@@ -1,11 +1,13 @@
 import base64
 from collections import defaultdict
+from io import BytesIO
 from itertools import groupby
 from typing import Any, Dict, List, Optional, Tuple
 
 import pdfplumber
 
-from ....model import BaseModel
+from ...model import BaseModel
+from ...schema import DEFAULT_IMAGE_CAPTION_PROMPT
 
 
 class PDFPlumberReader:
@@ -24,7 +26,7 @@ class PDFPlumberReader:
     Example:
         ```python
         reader = PDFPlumberReader()
-        markdown = reader.read("example.pdf", show_images=True)
+        markdown = reader.read("example.pdf", show_base64_images=True)
         print(markdown)
         ```
     """
@@ -119,7 +121,12 @@ class PDFPlumberReader:
         return tables, table_bboxes
 
     def extract_images(
-        self, page, page_num: int, model: Optional[BaseModel] = None, prompt: str = None
+        self,
+        page,
+        page_num: int,
+        prompt: Optional[str] = None,
+        model: Optional[BaseModel] = None,
+        image_placeholder: str = "<!-- image -->",
     ) -> List[Dict[str, Any]]:
         """
         Extracts images from a PDF page as base64-encoded PNG data, with optional annotation via a model.
@@ -127,8 +134,8 @@ class PDFPlumberReader:
         Args:
             page: pdfplumber page object.
             page_num (int): Page number.
+            prompt (Optional[str]): Prompt for the annotation model.
             model (Optional[BaseModel]): Optional model to generate image captions/annotations.
-            prompt (str, optional): Prompt for the annotation model.
 
         Returns:
             List[Dict[str, Any]]: List of image block dicts, each containing image URI and annotation if available.
@@ -145,20 +152,19 @@ class PDFPlumberReader:
                 img_bytes = buf.getvalue()
                 img_b64 = base64.b64encode(img_bytes).decode()
                 img_uri = f"data:image/png;base64,{img_b64}"
-                annotation = None
+
+                image_description = image_placeholder
                 if model:
-                    annotation = model.extract_text(
-                        file=img_b64,
-                        prompt=prompt
-                        or "Provide a descriptive and short caption for this image. Start always `> **Caption:** `",  # noqa: W503
-                    )
+                    annotation = model.extract_text(file=img_b64, prompt=prompt)
+                    image_description += f"\n{annotation}"
+
                 images.append(
                     {
                         "type": "image",
                         "top": img["top"],
                         "bottom": img["bottom"],
                         "content": img_uri,
-                        "annotation": annotation,
+                        "annotation": image_description,
                         "page": page_num,
                     }
                 )
@@ -194,8 +200,9 @@ class PDFPlumberReader:
         self,
         page,
         page_num: int,
-        model: "Optional[BaseModel]" = None,
-        prompt: str = None,
+        prompt: Optional[str] = None,
+        model: Optional[BaseModel] = None,
+        image_placeholder: str = "<!-- image -->",
     ) -> List[Dict[str, Any]]:
         """
         Extracts all structural content blocks (tables, images, text) from a PDF page.
@@ -203,17 +210,59 @@ class PDFPlumberReader:
         Args:
             page: pdfplumber page object.
             page_num (int): Page number.
+            prompt (Optional[str]): Prompt for image annotation.
             model (Optional[BaseModel], optional): Model for image annotation.
-            prompt (str, optional): Prompt for image annotation.
 
         Returns:
             List[Dict[str, Any]]: List of all content block dicts, sorted by vertical position.
         """
         tables, table_bboxes = self.extract_tables(page, page_num)
-        images = self.extract_images(page, page_num, model=model, prompt=prompt)
-        texts = self.extract_text(page, page_num, table_bboxes)
+        images = self.extract_images(
+            page,
+            page_num=page_num,
+            model=model,
+            prompt=prompt,
+            image_placeholder=image_placeholder,
+        )
+        texts = self.extract_text(
+            page=page, page_num=page_num, table_bboxes=table_bboxes
+        )
         blocks = tables + images + texts
         return sorted(blocks, key=lambda x: x["top"])
+
+    def extract_pages_as_images(
+        self,
+        file_path: str,
+        resolution: int = 300,
+        image_format: str = "PNG",
+        return_base64: bool = True,
+    ) -> List[str]:
+        """
+        Render every page of *file_path* to an image.
+
+        Args:
+            file_path (str): PDF to rasterise.
+            resolution (int): DPI for rendering (72-600).
+            image_format (str): Pillow output format ("PNG", "JPEG", …).
+            return_base64 (bool): If True (default) return base64 strings
+                (without the `data:image/*;base64,` prefix); otherwise raw bytes.
+
+        Returns:
+            List[str] | List[bytes]: One element per page in order.
+        """
+        pages_data: List[str] = []
+        with pdfplumber.open(file_path) as pdf:
+            for page in pdf.pages:
+                page_img = page.to_image(resolution=resolution)
+                buf = BytesIO()
+                page_img.save(buf, format=image_format)
+                data_bytes = buf.getvalue()
+                pages_data.append(
+                    base64.b64encode(data_bytes).decode()
+                    if return_base64
+                    else data_bytes
+                )
+        return pages_data
 
     def table_to_markdown(self, table: List[List[Any]]) -> str:
         """
@@ -248,14 +297,20 @@ class PDFPlumberReader:
         return "\n".join([header, separator] + rows)
 
     def blocks_to_markdown(
-        self, all_blocks: List[Dict[str, Any]], show_images: bool = True
+        self,
+        all_blocks: List[Dict[str, Any]],
+        show_base64_images: bool = True,
+        image_placeholder: str = "<!-- image -->",
+        page_placeholder: str = "<!-- page -->",
     ) -> str:
         """
         Converts a list of content blocks into Markdown, optionally embedding images and tables.
 
         Args:
             all_blocks (List[Dict[str, Any]]): All content blocks, possibly across multiple pages.
-            show_images (bool): Whether to render images inline. If False, images are omitted or replaced with an indicator.
+            show_base64_images (bool): Whether to render images inline. If False, images are omitted or replaced with an indicator.
+            `image_placeholder (Optional[str])`: Placeholder string to use for omitted images in PDFs. Default is `"<!-- image -->"`.
+            `page_placeholder (Optional[str])`: Placeholder string for PDF page breaks. Default is `"<!-- page -->"`.
 
         Returns:
             str: Markdown document representing the extracted content.
@@ -263,7 +318,7 @@ class PDFPlumberReader:
         md_lines: List[str] = [""]
         all_blocks.sort(key=lambda x: (x["page"], x["top"]))
         for page, blocks in groupby(all_blocks, key=lambda x: x["page"]):
-            md_lines += ["\n---", f"## Page {page}", "---\n"]
+            md_lines += [page_placeholder + "\n"]
             last_type = None
             paragraph: List[str] = []
             for item in blocks:
@@ -280,15 +335,14 @@ class PDFPlumberReader:
                         md_lines.append("")
                         paragraph = []
                     if item["type"] == "image":
-                        if show_images:
+                        if show_base64_images:
                             md_lines.append(
                                 f'![Image page {item["page"]}]({item["content"]})\n'
                             )
                         elif item.get("annotation"):
                             md_lines.append(f'{item["annotation"]}\n')
                         else:
-                            # Write an indicator that an image was omitted
-                            md_lines.append("\n--- ![Image]() ---\n")
+                            md_lines.append(f"\n{image_placeholder}\n")
                     elif item["type"] == "table":
                         md_lines.append(self.table_to_markdown(item["content"]))
                         md_lines.append("")
@@ -303,12 +357,52 @@ class PDFPlumberReader:
                 clean_lines.append(line)
         return "\n".join(clean_lines)
 
+    def describe_pages(
+        self,
+        file_path: str,
+        model: BaseModel,
+        prompt: Optional[str] = None,
+        resolution: Optional[int] = 300,
+        **parameters,
+    ) -> List[str]:
+        """
+        Uses a Vision-Language Model (VLM) to describe each full PDF page.
+
+        Args:
+            file_path (str): PDF to process.
+            model (BaseModel): Any implementation of the provided BaseModel
+                               interface (e.g. OpenAIVisionModel).
+            prompt (Optional[str]): Instruction sent to the VLM.  Has the default
+                          requested in the spec.
+            resolution (Optional[str]): DPI to rasterise pages before sending.
+
+        Returns:
+            List[str]: Markdown descriptions, one per page, in order.
+        """
+        page_images_b64 = self.extract_pages_as_images(
+            file_path=file_path, resolution=resolution, return_base64=True
+        )
+
+        descriptions: List[str] = []
+        for i, img_b64 in enumerate(page_images_b64, start=1):
+            try:
+                description = model.extract_text(
+                    file=img_b64, prompt=prompt, **parameters
+                )
+            except Exception as e:
+                description = f"**Error on page {i}:** {e}"
+            descriptions.append(description)
+
+        return descriptions
+
     def read(
         self,
         file_path: str,
+        prompt: Optional[str] = None,
         model: Optional[BaseModel] = None,
-        prompt: str = "Provide a descriptive and short caption for this image. Start always `> **Caption:** `",
-        show_images: bool = False,
+        show_base64_images: bool = False,
+        image_placeholder: str = "<!-- image -->",
+        page_placeholder: str = "<!-- page -->",
     ) -> str:
         """
         Reads a PDF file and returns extracted content as Markdown.
@@ -317,16 +411,30 @@ class PDFPlumberReader:
             file_path (str): Path to the PDF file.
             model (Optional[BaseModel], optional): Optional model for image annotation.
             prompt (str, optional): Prompt for the image annotation model.
-            show_images (bool, optional): If True, images are included as base64 in Markdown. If False, they are omitted or replaced with a placeholder.
+            show_base64_images (bool, optional): If True, images are included as base64 in Markdown. If False, they are omitted or replaced with a image_placeholder.
+            `image_placeholder (Optional[str])`: Placeholder string to use for omitted images in PDFs. Default is `"<!-- image -->"`.
+            `page_placeholder (Optional[str])`: Placeholder string for PDF page breaks. Default is `"<!-- page -->"`.
 
         Returns:
             str: Markdown-formatted string with structured content from the PDF.
         """
         all_blocks: List[Dict[str, Any]] = []
+        prompt = prompt or DEFAULT_IMAGE_CAPTION_PROMPT
         with pdfplumber.open(file_path) as pdf:
             for i, page in enumerate(pdf.pages, start=1):
                 all_blocks.extend(
-                    self.extract_page_blocks(page, i, model=model, prompt=prompt)
+                    self.extract_page_blocks(
+                        page=page,
+                        page_num=i,
+                        model=model,
+                        prompt=prompt,
+                        image_placeholder=image_placeholder,
+                    )
                 )
-        markdown_test = self.blocks_to_markdown(all_blocks, show_images=show_images)
+        markdown_test = self.blocks_to_markdown(
+            all_blocks,
+            show_base64_images=show_base64_images,
+            image_placeholder=image_placeholder,
+            page_placeholder=page_placeholder,
+        )
         return markdown_test

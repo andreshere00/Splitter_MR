@@ -47,25 +47,32 @@ Additionally, the file compatibility depending on the Reader class is given by t
 
 ### VanillaReader
 
-<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/vanilla_reader.svg" alt="Vanilla Reader logo" width=100%/>
+![VanillaReader logo](../assets/vanilla_reader_button.svg#gh-light-mode-only)
+![VanillaReader logo](../assets/vanilla_reader_button_white.svg#gh-dark-mode-only)
 
 ::: splitter_mr.reader.readers.vanilla_reader
     handler: python
     options:
       members_order: source
 
+`VanillaReader` uses a helper class to read PDF and use Visual Language Models. This class is `PDFPlumberReader`.
+
 ### DoclingReader
 
-![Docling logo](../assets/docling_logo.png)
+![DoclingReader logo](../assets/docling_reader_button.svg#gh-light-mode-only)
+![DoclingReader logo](../assets/docling_reader_button_white.svg#gh-dark-mode-only)
 
 ::: splitter_mr.reader.readers.docling_reader
     handler: python
     options:
       members_order: source
 
+To execute pipelines, DoclingReader has a utils class, `DoclingUtils`.
+
 ### MarkItDownReader
 
-![MarkItDown logo](../assets/markitdown_logo.png)
+![MarkItDownReader logo](../assets/markitdown_reader_button.svg#gh-light-mode-only)
+![MarkItDownReader logo](../assets/markitdown_reader_button_white.svg#gh-dark-mode-only)
 
 ::: splitter_mr.reader.readers.markitdown_reader
     handler: python

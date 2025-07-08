@@ -1,5 +1,8 @@
 # **Example**: Reading files with Visual Language Models to Provide Image Annotations
 
+!!! warning
+    This tutorial will be redo and **deprecated** soon. Stay aware to updates!
+
 When reading a PDF file or other files which contains images, it can be useful to provide descriptive text alongside those images. Since images in a Markdown file are typically rendered by encoding them in base64 format, you may alternatively want to include a description of each image instead. 
 
 This is where **Visual Language Models (VLMs)** come in—to analyze and describe images automatically. In this tutorial, we'll show how to use these models with the library.
@@ -255,13 +258,13 @@ Here’s a corrected and slightly clarified version:
 
 ## Conclusion
 
-Although all three methods can read files from various sources, they differ significantly in how VLM analysis is implemented:
+Although all three methods can read files from various sources, they differ significantly in how VLM analyzis is implemented:
 
-* **`VanillaReader`** extracts graphical files from the input and uses a VLM to provide descriptions for these resources. Currently, it is only compatible with PDFs, and the VLM analysis and PDF reading logic are separated. It is the most scalable method for reading files, as it performs a call for every graphical resource in your PDF. However, this can become expensive for documents with a large number of images.
+* **`VanillaReader`** extracts graphical files from the input and uses a VLM to provide descriptions for these resources. Currently, it is only compatible with PDFs, and the VLM analyzis and PDF reading logic are separated. It is the most scalable method for reading files, as it performs a call for every graphical resource in your PDF. However, this can become expensive for documents with a large number of images.
 
 * **`MarkItDownReader`** can only transform images into Markdown descriptions. Supported image formats include `png`, `jpg`, `jpeg`, and `svg`. It cannot provide hybrid methods for reading PDFs with image annotations. While it is fast and cost-effective, it can only process one file at a time and is limited to OpenAI models.
 
-* **`DoclingReader`** can read any file you provide using VLMs. If given a PDF, it reads the entire document with the VLM; the same applies to images and other graphical resources. However, it does not distinguish between text and image content, as the analysis is multimodal. As a result, in some cases, it cannot provide specific descriptions for images but instead analyzes the whole document.
+* **`DoclingReader`** can read any file you provide using VLMs. If given a PDF, it reads the entire document with the VLM; the same applies to images and other graphical resources. However, it does not distinguish between text and image content, as the analyzis is multimodal. As a result, in some cases, it cannot provide specific descriptions for images but instead analyzes the whole document.
 
 Again, using one or another method depends on your needs!
 

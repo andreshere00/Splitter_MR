@@ -1,10 +1,30 @@
 # v0.3.x
 
+## v0.3.1
+
+### Features
+
+- Add support to read and scan PDF by pages for all the readers, using the parameter `scan_pdf_images = True`. 
+- Add support to use different placeholders for images in Vanilla and Docling Readers.
+- Add support to split by pages for PDFs. 
+- Add three different pipelines to DoclingReader to process the document as PageImages, using VLM to provide image captioning and regularly.
+- Add three different pipelines to VanillaReader to process the document as PageImages, using VLM to provide image captioning and regularly.
+
+### Bugs
+
+- Change how the arguments are passed to every Reader to enhance robutsness.
+- Add new test cases.
+
+### Documentation
+
+- Update examples.
+- Change MkDocs server to support both light and dark modes.
+
 ## v0.3.0
 
 ### Features
 
-- Implement `AzureOpenAI` and `OpenAI` Visual Models to analyse graphical resources in PDF files.
+- Implement `AzureOpenAI` and `OpenAI` Visual Models to analyze graphical resources in PDF files.
 - Add support to read PDF files to VanillaReader using `PDFPlumber`.
 
 ### Documentation

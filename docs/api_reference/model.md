@@ -25,7 +25,8 @@ All models inherit from `BaseModel` and provide the same interface for extractin
 
 ### OpenAIVisionModel
 
-<img alt="OpenAI logo" src = "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg" width = 50%>
+![OpenAIVisionModel logo](../assets/openai_vision_model_button.svg#gh-light-mode-only)
+![OpenAIVisionModel logo](../assets/openai_vision_model_button_white.svg#gh-dark-mode-only)
 
 ::: src.splitter_mr.model.models.openai_model
     handler: python
@@ -34,7 +35,9 @@ All models inherit from `BaseModel` and provide the same interface for extractin
 
 ### AzureOpenAIVisionModel
 
-<img alt="OpenAI logo" src = "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg" width = 50%>
+![OpenAIVisionModel logo](../assets/azure_openai_vision_model_button.svg#gh-light-mode-only)
+![OpenAIVisionModel logo](../assets/azure_openai_vision_model_button_white.svg#gh-dark-mode-only)
+
 
 ::: src.splitter_mr.model.models.azure_openai_model
     handler: python
