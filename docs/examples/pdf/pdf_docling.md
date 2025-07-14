@@ -1,5 +1,10 @@
 # **Example:** Read PDF documents with images using Docling Reader
 
+<p style="text-align:center;">
+<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/docling_reader_button.svg#only-light" alt="DoclingReader logo">
+<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/docling_reader_button_white.svg#only-dark" alt="DoclingReader logo">
+</p>
+
 As we have seen in previous examples, reading a PDF is not a simple task. In this case, we will see how to read a PDF using Docling framework, and connect this library into Visual Language Models to extract text or get annotations from images.
 
 ## Connecting to a VLM to extract text and analyze images

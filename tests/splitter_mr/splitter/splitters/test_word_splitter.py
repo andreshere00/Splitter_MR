@@ -1,4 +1,5 @@
 import pytest
+from pydantic import ValidationError
 
 from splitter_mr.schema import ReaderOutput
 from splitter_mr.splitter import WordSplitter
@@ -76,5 +77,5 @@ def test_output_contains_metadata(reader_output):
 def test_empty_text():
     splitter = WordSplitter(chunk_size=5, chunk_overlap=0)
     reader_output = ReaderOutput(text="")
-    result = splitter.split(reader_output)
-    assert result.chunks == []
+    with pytest.raises(ValidationError):
+        splitter.split(reader_output)

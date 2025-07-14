@@ -1,4 +1,15 @@
-# v0.3.x
+# **v0.3.x**
+
+## v0.3.2
+
+### Features
+
+- Add `Pydantic` models to validate inputs and outputs for `BaseReader` and `BaseSplitter` objects.
+- Refactor models to modularize into constants, pydantic models and prompts.
+
+### Documentation
+
+- Update `README.md` to handle notes and warnings.
 
 ## v0.3.1
 
@@ -45,7 +56,7 @@
 - Change `HTMLTagSplitter` to take the headers if a table is provided.
 - Change `HeaderSplitter` to preserve headers in chunks.
 
-# v0.2.x
+# **v0.2.x**
 
 ## v0.2.2
 
@@ -107,7 +118,7 @@ Use `.to_dict()` on output if a dictionary is required.
 
 > Update any custom splitter/reader implementations to use the new output dataclasses.
 
-# v0.1.x
+# **v0.1.x**
 
 ## v0.1.3
 
