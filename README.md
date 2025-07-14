@@ -60,29 +60,31 @@ Main splitting methods include:
 ![SplitterMR architecture diagram](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_architecture_diagram.svg#gh-light-mode-only)
 ![SplitterMR architecture diagram](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_architecture_diagram_white.svg#gh-dark-mode-only)
 
-**SplitterMR** is designed around a modular pipeline that processes files from raw data all the way to chunked, LLM-ready text.
+**SplitterMR** is designed around a modular pipeline that processes files from raw data all the way to chunked, LLM-ready text. There are three main components: Readers, Models and Splitters.
 
-- **Reading**
-    - A **`BaseReader`** implementation reads the (optionally converted) file.
+- **Readers**
+    - The **`BaseReader`** components read a file and optionally converts to other formats to subsequently conduct a splitting strategy.
     - Supported readers (e.g., **`VanillaReader`**, **`MarkItDownReader`**, **`DoclingReader`**) produce a `ReaderOutput` dictionary containing:
         - **Text** content (in `markdown`, `text`, `json` or another format).
         - Document **metadata**.
         - **Conversion** method.
-- **Splitting**
-    - A **`BaseSplitter`** implementation takes the **`ReaderOutput`** and divides the text into meaningful chunks for LLM or other downstream use.
+- **Models:**
+    - The **`BaseModel`** component is used to read non-text content using a Visual Language Model (VLM).
+    - Supported models are `AzureOpenAI` and `OpenAI`, but more models will be available soon.
+    - All the models have a `extract_text` method which returns the LLM response based on a prompt, the client and the model parameters.
+- **Splitters**
+    - The **`BaseSplitter`** components take the **`ReaderOutput`** text content and divide that text into meaningful chunks for LLM or other downstream use.
     - Splitter classes (e.g., **`CharacterSplitter`**, **`SentenceSplitter`**, **`RecursiveSplitter`**, etc.) allow flexible chunking strategies with optional overlap and rich configuration.
-
-**And that's it!** Your data is now prepared to be used in several LLM applications.
 
 ## How to install
 
-Currently, the package can be installed executing the following instruction:
+Package is published on [PyPi](https://pypi.org/project/splitter-mr/). To install it, you can use the official Python package manager:
 
 ```python
 pip install splitter-mr
 ```
 
-We strongly recommend installing it using a python package management tool such as [`uv`](https://docs.astral.sh/uv/):
+Alternatively, you can install it using other Python package management tools such as [`uv`](https://docs.astral.sh/uv/), [Conda](https://anaconda.org/anaconda/conda) or [Poetry](https://python-poetry.org/):
 
 ```python
 uv add splitter-mr
@@ -90,7 +92,6 @@ uv add splitter-mr
 
 > [!NOTE]
 > **Python 3.11 or greater** is required to use this library.
-
 
 ## How to use
 
@@ -150,8 +151,7 @@ SplitterOutput(
     reader_method='vanilla', 
     ocr_method=None, 
     split_method='character_splitter', 
-    split_params={'chunk_size': 50, 
-    'chunk_overlap': 10}, 
+    split_params={'chunk_size': 50, 'chunk_overlap': 10}, 
     metadata={}
     )
 ```
@@ -179,10 +179,10 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 
 ## Next features
 
-- [ ] Add Pydantic models.
-- [ ] Add support to read formulas in DoclingReader.
+- [ ] Modularize library into several sub-libraries.
 - [ ] Implement a method to split a document by pages (`PagedSplitter`).
 - [ ] Add support to read `xlsx`, `docx` and `pptx` files using `VanillaReader`. 
+- [ ] Add support to read formulas in DoclingReader.
 - [ ] Implement a method to split by embedding similarity > `SemanticSplitter`.
     - [ ] Add HuggingFace embeddings model support.
     - [ ] Add OpenAI embeddings model support.
@@ -192,15 +192,16 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 - [ ] Add HuggingFace VLMs model support.
 - [ ] Add Gemini VLMs model support.
 - [ ] Add Claude Anthropic VLMs model support.
-- [ ] Modularize library into several sub-libraries.
 - [ ] Add support to generate output in JSON format.
 - [X] Add support to read PDF as scanned pages.
 - [X] Add support to change image placeholders.
 - [X] Add support to change page placeholders.
+- [X] Add Pydantic models.
 
 ## Contact
 
-If you want to collaborate, please, send me a mail to the following address: [andresherencia2000@gmail.com](mailto:andresherencia2000@gmail.com).
+If you want to collaborate, please contact me through the following media: 
 
+- [My mail](mailto:andresherencia2000@gmail.com).
 - [My LinkedIn](https://linkedin.com/in/andres-herencia)
 - [PyPI package](https://pypi.org/project/splitter-mr/)
