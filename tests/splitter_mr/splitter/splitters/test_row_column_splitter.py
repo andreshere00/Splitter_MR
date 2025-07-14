@@ -1,5 +1,6 @@
 import pandas as pd
 import pytest
+from pydantic import ValidationError
 
 from splitter_mr.schema import ReaderOutput
 from splitter_mr.splitter.splitters.row_column_splitter import RowColumnSplitter
@@ -204,10 +205,8 @@ def test_chunk_size_with_overlap():
 def test_empty_input():
     splitter = RowColumnSplitter(num_rows=2)
     reader_output = make_reader_output("", "markdown")
-    output = splitter.split(reader_output)
-    # Should return one chunk, possibly empty
-    assert len(output.chunks) == 0
-    assert output.chunks == []
+    with pytest.raises(ValidationError):
+        splitter.split(reader_output)
 
 
 def test_missing_headers():

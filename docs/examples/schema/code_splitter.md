@@ -131,7 +131,7 @@ class CodeSplitter(BaseSplitter):
 Remember that you have plenty of programming languages available: JavaScript, Go, Rust, Java, etc. Currently, the available programming languages are:
 
 ```python
-LANGUAGES: str = {
+SUPPORTED_PROGRAMMING_LANGUAGES: str = {
     'lua',
     'java',
     'ts', 'tsx',

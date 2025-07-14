@@ -85,9 +85,8 @@ def test_read_json_file(tmp_path):
 
     reader = VanillaReader()
     out = reader.read(str(path))
-    assert (
-        json.loads(out.text)["foo"] == "bar" or out.text["foo"] == "bar"
-    )  # Handles both str and dict
+    val = json.loads(out.text)
+    assert val["foo"] == "bar"
 
 
 def test_read_yaml_file(tmp_path):
@@ -97,9 +96,9 @@ def test_read_yaml_file(tmp_path):
 
     reader = VanillaReader()
     out = reader.read(str(path))
-    # YAML is loaded, so out.text should be dict
-    assert isinstance(out.text, dict)
-    assert out.text["a"] == 123
+    val = yaml.safe_load(out.text)
+    assert isinstance(val, dict)
+    assert val["a"] == 123
     assert out.conversion_method == "json"
 
 
@@ -116,7 +115,7 @@ def test_read_parquet_file(monkeypatch, tmp_path):
     df = pd.DataFrame({"x": [1], "y": [2]})
     monkeypatch.setattr(pd, "read_parquet", lambda fp: df)
     path = tmp_path / "data.parquet"
-    path.write_text("dummy")  # Content not used
+    path.write_text("dummy")
 
     reader = VanillaReader()
     out = reader.read(str(path))
@@ -128,7 +127,7 @@ def test_read_excel_file(monkeypatch, tmp_path):
     df = pd.DataFrame({"x": [1], "y": [2]})
     monkeypatch.setattr(pd, "read_excel", lambda *a, **k: df)
     path = tmp_path / "data.xlsx"
-    path.write_text("dummy")  # Content not used
+    path.write_text("dummy")
     reader = VanillaReader()
     out = reader.read(str(path))
     assert "x,y" in out.text
@@ -153,11 +152,12 @@ def test_read_unsupported_extension(tmp_path):
 
 
 def test_read_txt_file_with_languages(tmp_path, monkeypatch):
-    # Simulate file in LANGUAGES
+    # Simulate file in SUPPORTED_PROGRAMMING_LANGUAGES
     path = tmp_path / "doc.en"
     path.write_text("Hello")
     monkeypatch.setattr(
-        "splitter_mr.reader.readers.vanilla_reader.LANGUAGES", ["en", "fr"]
+        "splitter_mr.reader.readers.vanilla_reader.SUPPORTED_PROGRAMMING_LANGUAGES",
+        ["en", "fr"],
     )
     reader = VanillaReader()
     out = reader.read(str(path))
@@ -214,7 +214,8 @@ def test_read_url_json(monkeypatch):
     monkeypatch.setattr(reader, "is_valid_file_path", lambda p: False)
     monkeypatch.setattr(reader, "is_url", lambda p: True)
     out = reader.read(url)
-    assert out.text == {"k": "v"}
+    val = json.loads(out.text)
+    assert val["k"] == "v"
 
 
 # ---------- file_path but actually JSON string ----------
@@ -226,7 +227,8 @@ def test_read_file_path_as_json(monkeypatch):
     monkeypatch.setattr(reader, "is_valid_file_path", lambda p: False)
     monkeypatch.setattr(reader, "is_url", lambda p: False)
     out = reader.read(s)
-    assert out.text["foo"] == 3
+    val = json.loads(out.text)
+    assert val["foo"] == 3
 
 
 # ---------- file_path but actually YAML string ----------
@@ -238,7 +240,8 @@ def test_read_file_path_as_yaml(monkeypatch):
     monkeypatch.setattr(reader, "is_valid_file_path", lambda p: False)
     monkeypatch.setattr(reader, "is_url", lambda p: False)
     out = reader.read(s)
-    assert out.text["foo"] == "bar"
+    val = yaml.safe_load(out.text)
+    assert val["foo"] == "bar"
 
 
 # ---------- explicit file_url ----------
@@ -288,7 +291,8 @@ def test_explicit_file_url_json(monkeypatch):
     )
     reader = VanillaReader()
     out = reader.read(file_url=url)
-    assert out.text == {"x": "y"}
+    val = json.loads(out.text)
+    assert val["x"] == "y"
 
 
 # ---------- explicit json_document ----------
@@ -297,7 +301,8 @@ def test_explicit_file_url_json(monkeypatch):
 def test_explicit_json_document():
     reader = VanillaReader()
     out = reader.read(json_document='{"foo": "bar"}', document_name="abc")
-    assert out.text["foo"] == "bar"
+    val = json.loads(out.text)
+    assert val["foo"] == "bar"
     assert out.document_name == "abc"
     assert out.conversion_method == "json"
 
@@ -305,7 +310,8 @@ def test_explicit_json_document():
 def test_explicit_json_document_dict():
     reader = VanillaReader()
     out = reader.read(json_document={"x": 1})
-    assert out.text["x"] == 1
+    val = json.loads(out.text)
+    assert val["x"] == 1
     assert out.conversion_method == "json"
 
 
@@ -315,14 +321,16 @@ def test_explicit_json_document_dict():
 def test_explicit_text_document_json():
     reader = VanillaReader()
     out = reader.read(text_document="[1,2,3]")
-    assert out.text == [1, 2, 3]
+    val = json.loads(out.text)
+    assert val == [1, 2, 3]
     assert out.conversion_method == "json"
 
 
 def test_explicit_text_document_yaml():
     reader = VanillaReader()
     out = reader.read(text_document="a: 1")
-    assert out.text["a"] == 1
+    val = yaml.safe_load(out.text)
+    assert val["a"] == 1
     assert out.conversion_method == "json"
 
 

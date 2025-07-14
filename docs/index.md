@@ -9,9 +9,9 @@
 
 !!! important
     **Vision Language Model (VLM) support!**
-    
+     
     You can now use vision-capable models (OpenAI Vision, Azure OpenAI Vision) to extract image descriptions and OCR text during file reading. Pass a VLM model to any Reader class via the `model` parameter. 
-    
+      
     ➡️ See [**documentation**](https://andreshere00.github.io/Splitter_MR/api_reference/model/).
 
 
@@ -90,7 +90,8 @@ uv add splitter-mr
 ```
 
 !!! note
-    Python 3.11 or greater is required to use this library.
+    **Python 3.11 or greater** is required to use this library.
+
 
 
 ## How to use
@@ -126,6 +127,7 @@ ReaderOutput(
 
 !!! note
     Note that you can read from an URL, a variable and from a `file_path`. See [Developer guide](https://andreshere00.github.io/Splitter_MR/api_reference/reader/).
+
 
 ### Split text
 
@@ -177,6 +179,7 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 
 !!! note
     To see more details, consult documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/model/).
+
 
 ## Next features
 

@@ -16,7 +16,6 @@ The **Splitter** component implements the main functionality of this library. Th
 | **Token Splitter**        | Splits text into chunks based on the number of tokens, using various tokenization models (e.g., tiktoken, spaCy, NLTK). Useful for ensuring chunks are compatible with LLM context limits. <br> **Parameters:** `chunk_size` (max tokens per chunk), `model_name` (tokenizer/model, e.g., `"tiktoken/cl100k_base"`, `"spacy/en_core_web_sm"`, `"nltk/punkt"`), `language` (for NLTK). <br> **Compatible with:** Text.                                                                           |
 | **Paged Splitter**        | **WORK IN PROGRESS**. Splits text by pages for documents that have page structure. Each chunk contains a specified number of pages, with optional word overlap. <br> **Parameters:** `num_pages` (pages per chunk), `chunk_overlap` (overlapping words). <br> **Compatible with:** Word, PDF, Excel, PowerPoint.                                                                                                                                                                                |
 | **Row/Column Splitter**   | For tabular formats, splits data by a set number of rows or columns per chunk, with possible overlap. Row-based and column-based splitting are mutually exclusive. <br> **Parameters:** `num_rows`, `num_cols` (rows/columns per chunk), `overlap` (overlapping rows or columns). <br> **Compatible with:** Tabular formats (csv, tsv, parquet, flat json).                                                                                                                                     |
-| **Schema Based Splitter** | **WORK IN PROGRESS**. Splits hierarchical documents (XML, HTML) based on element tags or keys, preserving the schema/structure. Splitting can be done on a specified or inferred parent key/tag. <br> **Parameters:** `chunk_size` (approx. max chars per chunk), `key` (optional parent key or tag). <br> **Compatible with:** XML, HTML.                                                                                                                                                      |
 | **JSON Splitter**         | Recursively splits JSON documents into smaller sub-structures that preserve the original JSON schema. <br> **Parameters:** `max_chunk_size` (max chars per chunk), `min_chunk_size` (min chars per chunk). <br> **Compatible with:** JSON.                                                                                                                                                                                                                                                      |
 | **Semantic Splitter**     | **WORK IN PROGRESS**. Splits text into chunks based on semantic similarity, using an embedding model and a max tokens parameter. Useful for meaningful semantic groupings. <br> **Parameters:** `embedding_model` (model for embeddings), `max_tokens` (max tokens per chunk). <br> **Compatible with:** Text.                                                                                                                                                                                  |
 | **HTMLTagSplitter**       | Splits HTML content based on a specified tag, or automatically detects the most frequent and shallowest tag if not specified. Each chunk is a complete HTML fragment for that tag. <br> **Parameters:** `chunk_size` (max chars per chunk), `tag` (HTML tag to split on, optional). <br> **Compatible with:** HTML.                                                                                                                                                                             |
@@ -25,11 +24,11 @@ The **Splitter** component implements the main functionality of this library. Th
 
 
 !!! warning
-    **Schema Based Splitter**, **PagedSplitter** amd **Semantic Splitter** are **not fully implemented yet**. Stay aware to updates.
+    **PagedSplitter** amd **Semantic Splitter** are **not fully implemented yet**. Stay aware to updates.
 
 ### Output format
 
-::: splitter_mr.schema.schemas.SplitterOutput
+::: splitter_mr.schema.models.SplitterOutput
     handler: python
     options:
       members_order: source
@@ -123,12 +122,6 @@ The **Splitter** component implements the main functionality of this library. Th
 ### PagedSplitter
 
 Splits text by pages for documents that have page structure. Each chunk contains a specified number of pages, with optional word overlap.
-
-> Coming soon!
-
-### SchemaBasedSplitter
-
-Splits hierarchical documents (XML, HTML) based on element tags or keys, preserving the schema/structure. Splitting can be done on a specified or inferred parent key/tag.
 
 > Coming soon!
 

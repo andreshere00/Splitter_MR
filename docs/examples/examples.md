@@ -2,24 +2,6 @@
 
 This section illustrates some use cases with **SplitterMR** to read documents and split them into smaller chunks.
 
-## Reading files
-
-### [How to read a PDF file without image processing](./pdf/pdf_without_vlm.md)
-
-Read your PDF files using three frameworks: `PDFPlumber`, `MarkItDown` and `Docling`. 
-
-### [How to read a PDF file using Vanilla Reader for image processing](./pdf/pdf_vanilla.md)
-
-Read your PDF files and analyze the content using PDFPlumber and Visual Language Models.
-
-### [How to read a PDF file using Docling for image processing](./pdf/pdf_docling.md)
-
-Read your PDF files and analyze the content using Docling and Visual Language Models.
-
-### [How to read a PDF file using MarkItDown for image processing](./pdf/pdf_markitdown.md)
-
-Read your PDF files and analyze the content using MarkItDown and Visual Language Models.
-
 ## Text-based splitting
 
 ### [How to split recusively](./text/recursive_character_splitter.md)
@@ -55,6 +37,24 @@ Divide your scripts written in Java, Javascript, Python, Go and many more progra
 ### [How to split your tables into smaller tables](./schema/row_column_splitter.md)
 
 Divide your tables by a fixed number of rows and columns preserving the headers and overall structure.
+
+## Reading files
+
+### [How to read a PDF file without image processing](./pdf/pdf_without_vlm.md)
+
+Read your PDF files using three frameworks: `PDFPlumber`, `MarkItDown` and `Docling`. 
+
+### [How to read a PDF file using Vanilla Reader for image processing](./pdf/pdf_vanilla.md)
+
+Read your PDF files and analyze the content using PDFPlumber and Visual Language Models.
+
+### [How to read a PDF file using Docling for image processing](./pdf/pdf_docling.md)
+
+Read your PDF files and analyze the content using Docling and Visual Language Models.
+
+### [How to read a PDF file using MarkItDown for image processing](./pdf/pdf_markitdown.md)
+
+Read your PDF files and analyze the content using MarkItDown and Visual Language Models.
 
 !!! note
     

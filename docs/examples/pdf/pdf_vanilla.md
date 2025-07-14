@@ -1,6 +1,11 @@
 # **Example:** Read PDF documents with images using Vanilla Reader
 
-In this tutorial we will see how to read a PDF using our custom component, which is based on **PDFPlumber**. Then, we will connect this reader component into Visual Language Models to extract text or get annotations from images inside the PDF. In addition, we will explore which options we have to analyse and extract the content of the PDF in a custom, fast and a comprehensive way. Let's dive in.
+<p style="text-align:center;">
+<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/vanilla_reader_button.svg#only-light" alt="VanillaReader logo">
+<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/vanilla_reader_button_white.svg#only-dark" alt="VanillaReader logo">
+</p>
+
+In this tutorial we will see how to read a PDF using our custom component, which is based on **PDFPlumber**. Then, we will connect this reader component into Visual Language Models to extract text or get annotations from images inside the PDF. In addition, we will explore which options we have to analyze and extract the content of the PDF in a custom, fast and a comprehensive way. Let's dive in.
 
 !!! note
     Remember that you can access to the complete documentation of this Reader Component in the [**Developer Guide**](../../api_reference/reader.md#vanillareader).
@@ -235,7 +240,7 @@ is rarely possible, and manual review and cleanup are often required.
 
 ```
 
-In addition, you can modify how the image and page placeholders are generated with the options `image_placeholder` and `page_placeholder`. In this case, we don't use the model since it is not needed.
+In addition, you can modify how the image and page placeholders are generated with the options `image_placeholder` and `page_placeholder`. *Note that in this case we are not using any VLM*.
 
 ```python
 reader = VanillaReader()
@@ -333,7 +338,7 @@ is rarely possible, and manual review and cleanup are often required.
 ## Image
 ```
 
-But one of the most important features is to scan the PDF as PageImages, to analyse every page with a VLM to extract the content. In order to do that, you can simply activate the option `scan_pdf_pages`. 
+But one of the most important features is to scan the PDF as PageImages, to analyze every page with a VLM to extract the content. In order to do that, you can simply activate the option `scan_pdf_pages`. 
 
 ```python
 reader = VanillaReader(model = model)
@@ -416,16 +421,14 @@ output = reader.read(file_path = file, prompt = "Extract the content of this res
 print(output.text)
 ```
 
-```md
+```html
 <!-- page -->
 
 A sample PDF
 ...
 
 <!-- image -->
-Here is the content you requested in HTML format:
 
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -456,14 +459,11 @@ Here is the content you requested in HTML format:
     <p>Chunk your documents text for production-ready LLM applications.</p>
 </body>
 </html>
-```
 
 ...
 
 <!-- image -->
-Here is the content extracted in HTML format:
 
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>

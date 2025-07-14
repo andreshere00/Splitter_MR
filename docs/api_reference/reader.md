@@ -29,7 +29,7 @@ Additionally, the file compatibility depending on the Reader class is given by t
 
 ### Output format
 
-::: splitter_mr.schema.schemas.ReaderOutput
+::: splitter_mr.schema.models.ReaderOutput
     handler: python
     options:
       members_order: source

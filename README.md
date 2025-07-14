@@ -7,13 +7,12 @@
 
 **SplitterMR** is a library for chunking data into convenient text blocks compatible with your LLM applications.
 
-!!! important
-    **Vision Language Model (VLM) support!**
-    
-    You can now use vision-capable models (OpenAI Vision, Azure OpenAI Vision) to extract image descriptions and OCR text during file reading. Pass a VLM model to any Reader class via the `model` parameter. 
-    
-    ➡️ See [**documentation**](https://andreshere00.github.io/Splitter_MR/api_reference/model/).
-
+> [!IMPORTANT]
+> **Vision Language Model (VLM) support!**
+>  
+> You can now use vision-capable models (OpenAI Vision, Azure OpenAI Vision) to extract image descriptions and OCR text during file reading. Pass a VLM model to any Reader class via the `model` parameter. 
+>   
+> ➡️ See [**documentation**](https://andreshere00.github.io/Splitter_MR/api_reference/model/).
 
 ## Features
 
@@ -89,8 +88,8 @@ We strongly recommend installing it using a python package management tool such 
 uv add splitter-mr
 ```
 
-!!! note
-    Python 3.11 or greater is required to use this library.
+> [!NOTE]
+> **Python 3.11 or greater** is required to use this library.
 
 
 ## How to use
@@ -124,8 +123,8 @@ ReaderOutput(
     )
 ```
 
-!!! note
-    Note that you can read from an URL, a variable and from a `file_path`. See [Developer guide](https://andreshere00.github.io/Splitter_MR/api_reference/reader/).
+> [!NOTE]
+> Note that you can read from an URL, a variable and from a `file_path`. See [Developer guide](https://andreshere00.github.io/Splitter_MR/api_reference/reader/).
 
 ### Split text
 
@@ -175,8 +174,8 @@ print(output.text)
 
 These VLMs can be used for captioning, annotation or text extraction. In fact, you can use these models to process the files as you want using the `prompt` parameter in the `read` method for every class which inherits from `BaseReader`. 
 
-!!! note
-    To see more details, consult documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/model/).
+> [!NOTE]
+> To see more details, consult documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/model/).
 
 ## Next features
 
