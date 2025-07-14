@@ -1,3 +1,4 @@
+import json
 import os
 import uuid
 from html.parser import HTMLParser
@@ -12,7 +13,7 @@ from ...model import BaseModel
 from ...schema import (
     DEFAULT_EXTRACTION_PROMPT,
     DEFAULT_IMAGE_CAPTION_PROMPT,
-    LANGUAGES,
+    SUPPORTED_PROGRAMMING_LANGUAGES,
     ReaderOutput,
 )
 from ..base_reader import BaseReader
@@ -98,6 +99,19 @@ class VanillaReader(BaseReader):
             Pellentesque ex felis, cursus ege...
             ```
         """
+
+        def _ensure_str(val):
+            if isinstance(val, (dict, list)):
+                try:
+                    return json.dumps(val, indent=2, ensure_ascii=False)
+                except Exception:
+                    try:
+                        return yaml.safe_dump(val, allow_unicode=True)
+                    except Exception:
+                        return str(val)
+            if val is None:
+                return ""
+            return str(val)
 
         SOURCE_PRIORITY = [
             "file_path",
@@ -234,7 +248,7 @@ class VanillaReader(BaseReader):
                         pd.read_excel(document_source, engine="openpyxl").to_csv()
                     )
                     conversion_method = ext
-                elif ext in LANGUAGES:
+                elif ext in SUPPORTED_PROGRAMMING_LANGUAGES:
                     with open(document_source, "r", encoding="utf-8") as f:
                         text = f.read()
                     conversion_method = "txt"
@@ -349,9 +363,10 @@ class VanillaReader(BaseReader):
 
         metadata = kwargs.get("metadata") or {}
         document_id = kwargs.get("document_id", str(uuid.uuid4()))
+        document_path = document_path or ""
 
         return ReaderOutput(
-            text=text,
+            text=_ensure_str(text),
             document_name=document_name,
             document_path=document_path,
             document_id=document_id,

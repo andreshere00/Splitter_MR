@@ -2,6 +2,7 @@ import json
 from unittest.mock import patch
 
 import pytest
+from pydantic import ValidationError
 
 from splitter_mr.schema import ReaderOutput
 from splitter_mr.splitter import RecursiveJSONSplitter
@@ -77,5 +78,5 @@ def test_empty_text():
         mock_splitter.split_json.return_value = []
         splitter = RecursiveJSONSplitter(chunk_size=100, min_chunk_size=10)
         reader_output = ReaderOutput(text=json.dumps({}))
-        result = splitter.split(reader_output)
-        assert result.chunks == []
+        with pytest.raises(ValidationError):
+            splitter.split(reader_output)

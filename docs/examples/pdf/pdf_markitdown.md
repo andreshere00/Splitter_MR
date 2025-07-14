@@ -1,5 +1,10 @@
 # **Example:** Reading PDF Documents with Images using MarkItDownReader
 
+<p style="text-align:center;">
+<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/markitdown_reader_button.svg#only-light" alt="MarkItDownReader logo">
+<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/markitdown_reader_button_white.svg#only-dark" alt="MarkItDownReader logo">
+</p>
+
 As we have seen in previous examples, reading a PDF is not a simple task. In this case, we will see how to read a PDF using **MarkItDown** framework, and connect this library into Visual Language Models to extract text or get annotations from images.
 
 ## How to connect a VLM to MarkItDownReader

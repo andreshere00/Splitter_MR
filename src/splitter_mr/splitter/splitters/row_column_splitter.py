@@ -203,7 +203,7 @@ class RowColumnSplitter(BaseSplitter):
                 "num_cols": self.num_cols,
                 "chunk_overlap": self.chunk_overlap,
             },
-            metadata=meta_per_chunk,
+            metadata={"chunks": meta_per_chunk},
         )
         return output
 

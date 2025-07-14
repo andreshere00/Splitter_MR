@@ -1,6 +1,6 @@
 # **Example**: Splitting Tabular Data with `RowColumnSplitter`
 
-Tabular files such as CSVs, TSVs, or Markdown tables are ubiquitous in business and data workflows, but can become too large for direct LLM ingestion, annotation, or analyzis. **SplitterMR’s `RowColumnSplitter` provides flexible chunking for tabular data, letting you split tables by rows, columns, or character size—while preserving the structural integrity of each chunk.**
+Tabular files such as CSVs, TSVs, or Markdown tables are ubiquitous in business and data workflows, but can become too large for direct LLM ingestion, annotation, or analysis. **SplitterMR’s `RowColumnSplitter` provides flexible chunking for tabular data, letting you split tables by rows, columns, or character size—while preserving the structural integrity of each chunk.**
 
 ![Tabular data example](https://cdn.prod.website-files.com/5ec4696a9b6d337d51632638/66a13775bfe37ea3ea11bbdf_666b29d252001a163f5260a4_65af215b95aef7ce55d2a923_Screenshot%2525202024-01-22%252520at%2525209.13.25%2525E2%252580%2525AFPM.png)
 
@@ -189,7 +189,7 @@ The output is a table with an overlapping row column:
 
 * For splitting large tabular datasets into LLM-friendly or context-aware chunks.
 * For preserving row/column integrity in `csv`/`tsv`/`markdown` data.
-* When you need easy chunking with overlap for annotation, document search, or analyzis.
+* When you need easy chunking with overlap for annotation, document search, or analysis.
 
 ## Complete script
 
