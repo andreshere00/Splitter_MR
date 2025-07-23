@@ -1,5 +1,11 @@
 # **v0.3.x**
 
+## v0.3.3
+
+### Features
+
+- Add a method to convert variables to a `ReaderOutput` object.
+
 ## v0.3.2
 
 ### Features
