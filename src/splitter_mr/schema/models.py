@@ -16,6 +16,7 @@ class ReaderOutput(BaseModel):
         conversion_method: The method used for document conversion.
         reader_method: The method used for reading the document.
         ocr_method: The OCR method used, if any.
+        page_placeholder: The placeholder use to identify each page, if used.
         metadata: Additional metadata associated with the document.
     """
 
