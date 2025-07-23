@@ -1,5 +1,6 @@
+import json
 import uuid
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
@@ -15,6 +16,7 @@ class ReaderOutput(BaseModel):
         conversion_method: The method used for document conversion.
         reader_method: The method used for reading the document.
         ocr_method: The OCR method used, if any.
+        page_placeholder: The placeholder use to identify each page, if used.
         metadata: Additional metadata associated with the document.
     """
 
@@ -25,6 +27,7 @@ class ReaderOutput(BaseModel):
     conversion_method: Optional[str] = None
     reader_method: Optional[str] = None
     ocr_method: Optional[str] = None
+    page_placeholder: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = Field(default_factory=dict)
 
     @field_validator("document_id", mode="before")
@@ -40,17 +43,51 @@ class ReaderOutput(BaseModel):
         document_id = v or str(uuid.uuid4())
         return document_id
 
-    @classmethod
-    def from_text(cls, s: str) -> "ReaderOutput":
-        """Create a ReaderOutput from a text string, with all other fields set to their defaults.
+    def from_variable(
+        self, variable: Union[str, Dict[str, Any]], variable_name: str
+    ) -> "ReaderOutput":
+        """
+        Generate a new ReaderOutput object from a variable (str or dict).
 
         Args:
-            s (str): The text content to store in the ReaderOutput.
+            variable (Union[str, Dict[str, Any]]): The variable to use as text.
+            variable_name (str): The name for document_name.
 
         Returns:
-            ReaderOutput: An instance of ReaderOutput with the given text.
+            ReaderOutput: The new ReaderOutput object.
         """
-        return cls(text=s)
+        if isinstance(variable, dict):
+            text = json.dumps(variable, ensure_ascii=False, indent=2)
+            conversion_method = "json"
+            metadata = {"details": "Generated from a json variable"}
+        elif isinstance(variable, str):
+            text = variable
+            conversion_method = "txt"
+            metadata = {"details": "Generated from a str variable"}
+        else:
+            raise ValueError("Variable must be either a string or a dictionary.")
+
+        return ReaderOutput(
+            text=text,
+            document_name=variable_name,
+            document_path="",
+            conversion_method=conversion_method,
+            reader_method="vanilla",
+            ocr_method=None,
+            page_placeholder=None,
+            metadata=metadata,
+        )
+
+    def append_metadata(self, metadata: Dict[str, Any]) -> None:
+        """
+        Append (update) the metadata dictionary with new key-value pairs.
+
+        Args:
+            metadata (Dict[str, Any]): The metadata to add or update.
+        """
+        if self.metadata is None:
+            self.metadata = {}
+        self.metadata.update(metadata)
 
 
 class SplitterOutput(BaseModel):
@@ -119,3 +156,14 @@ class SplitterOutput(BaseModel):
             SplitterOutput: An instance of SplitterOutput with the given chunks.
         """
         return cls(chunks=chunks)
+
+    def append_metadata(self, metadata: Dict[str, Any]) -> None:
+        """
+        Append (update) the metadata dictionary with new key-value pairs.
+
+        Args:
+            metadata (Dict[str, Any]): The metadata to add or update.
+        """
+        if self.metadata is None:
+            self.metadata = {}
+        self.metadata.update(metadata)
