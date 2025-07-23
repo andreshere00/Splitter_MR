@@ -142,6 +142,7 @@ class MarkItDownReader(BaseReader):
 
         md, ocr_method = self._get_markitdown()
 
+        # Process text
         if self.model is not None:
             markdown_text = self._pdf_pages_to_markdown(
                 file_path=file_path,
@@ -154,6 +155,13 @@ class MarkItDownReader(BaseReader):
             markdown_text = md.convert(file_path, llm_prompt=prompt).text_content
             conversion_method = "json" if ext == "json" else "markdown"
 
+        page_placeholder_value = (
+            page_placeholder
+            if page_placeholder and page_placeholder in markdown_text
+            else None
+        )
+
+        # Return output
         return ReaderOutput(
             text=markdown_text,
             document_name=os.path.basename(file_path),
@@ -162,5 +170,6 @@ class MarkItDownReader(BaseReader):
             conversion_method=conversion_method,
             reader_method="markitdown",
             ocr_method=ocr_method,
+            page_placeholder=page_placeholder_value,
             metadata=kwargs.get("metadata", {}),
         )

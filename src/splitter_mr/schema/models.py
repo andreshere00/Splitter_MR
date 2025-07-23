@@ -26,6 +26,7 @@ class ReaderOutput(BaseModel):
     conversion_method: Optional[str] = None
     reader_method: Optional[str] = None
     ocr_method: Optional[str] = None
+    page_placeholder: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = Field(default_factory=dict)
 
     @field_validator("document_id", mode="before")
@@ -72,8 +73,20 @@ class ReaderOutput(BaseModel):
             conversion_method=conversion_method,
             reader_method="vanilla",
             ocr_method=None,
+            page_placeholder=None,
             metadata=metadata,
         )
+
+    def append_metadata(self, metadata: Dict[str, Any]) -> None:
+        """
+        Append (update) the metadata dictionary with new key-value pairs.
+
+        Args:
+            metadata (Dict[str, Any]): The metadata to add or update.
+        """
+        if self.metadata is None:
+            self.metadata = {}
+        self.metadata.update(metadata)
 
 
 class SplitterOutput(BaseModel):
@@ -142,3 +155,14 @@ class SplitterOutput(BaseModel):
             SplitterOutput: An instance of SplitterOutput with the given chunks.
         """
         return cls(chunks=chunks)
+
+    def append_metadata(self, metadata: Dict[str, Any]) -> None:
+        """
+        Append (update) the metadata dictionary with new key-value pairs.
+
+        Args:
+            metadata (Dict[str, Any]): The metadata to add or update.
+        """
+        if self.metadata is None:
+            self.metadata = {}
+        self.metadata.update(metadata)

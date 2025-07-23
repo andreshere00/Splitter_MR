@@ -9,6 +9,8 @@ from splitter_mr.reader.readers.vanilla_reader import VanillaReader
 from splitter_mr.reader.utils import DoclingPipelineFactory
 from splitter_mr.schema import ReaderOutput
 
+# Helpers
+
 
 # Dummy Model for tests
 class DummyModel:
@@ -48,6 +50,9 @@ def patch_pipeline(monkeypatch):
         ),
     )
     yield
+
+
+# Test cases
 
 
 def test_init_with_and_without_model():
@@ -170,3 +175,49 @@ def test__select_pipeline_nonpdf():
     assert pipeline == "markdown"
     assert args["show_base64_images"] is True
     assert args["ext"] == "html"
+
+
+@pytest.mark.parametrize(
+    "text, page_placeholder, expected",
+    [
+        ("hello <!-- page --> world", "<!-- page -->", "<!-- page -->"),
+        ("no placeholder here", "<!-- page -->", None),
+        ("PAGEBREAK", "PAGEBREAK", "PAGEBREAK"),
+        ("some\ntext\n", "NON_EXISTENT", None),
+        ("a\nb\nc", "", None),
+    ],
+)
+def test_page_placeholder_detection(monkeypatch, text, page_placeholder, expected):
+    """Check if page_placeholder attribute is set correctly in ReaderOutput."""
+
+    # Patch DoclingPipelineFactory.run to produce the desired output text
+    monkeypatch.setattr(
+        DoclingPipelineFactory, "run", lambda name, path, **kwargs: text
+    )
+
+    reader = DoclingReader()
+    out = reader.read("x.pdf", page_placeholder=page_placeholder)
+    assert out.page_placeholder == expected
+
+
+def test_page_placeholder_default(monkeypatch):
+    """Check default placeholder detection works."""
+    output_text = "foo <!-- page --> bar"
+    monkeypatch.setattr(
+        DoclingPipelineFactory, "run", lambda name, path, **kwargs: output_text
+    )
+    reader = DoclingReader()
+    # No page_placeholder passed, so default should be used and found in output
+    out = reader.read("z.pdf")
+    assert out.page_placeholder == "<!-- page -->"
+
+
+def test_page_placeholder_none_when_absent(monkeypatch):
+    """If output has no placeholder, attribute should be None."""
+    output_text = "plain output, no page marker"
+    monkeypatch.setattr(
+        DoclingPipelineFactory, "run", lambda name, path, **kwargs: output_text
+    )
+    reader = DoclingReader()
+    out = reader.read("a.pdf", page_placeholder="<!-- page -->")
+    assert out.page_placeholder is None
