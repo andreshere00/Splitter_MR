@@ -56,7 +56,8 @@ class DoclingReader(BaseReader):
             **kwargs: Keyword arguments to control extraction, including:
                 - prompt (str): Prompt for image captioning or VLM-based PDF extraction.
                 - scan_pdf_pages (bool): If True (and model provided), analyze each PDF page via VLM.
-                - show_base64_images (bool): If True, embed base64 images in Markdown; if False, use image placeholders.
+                - show_base64_images (bool): If True, embed base64 images in Markdown; if False, use
+                    image placeholders.
                 - page_placeholder (str): Placeholder for page breaks in output Markdown.
                 - image_placeholder (str): Placeholder for image locations in output Markdown.
                 - image_resolution (float): Resolution scaling factor for image extraction.
@@ -68,7 +69,8 @@ class DoclingReader(BaseReader):
 
         Raises:
             Warning: If a file extension is unsupported, falls back to VanillaReader and emits a warning.
-            ValueError: If PDF pipeline requirements are not satisfied (e.g., neither model nor show_base64_images provided).
+            ValueError: If PDF pipeline requirements are not satisfied (e.g., neither model nor
+                show_base64_images provided).
         """
 
         ext = os.path.splitext(file_path)[1].lower().lstrip(".")
@@ -80,7 +82,11 @@ class DoclingReader(BaseReader):
         pipeline_name, pipeline_args = self._select_pipeline(file_path, ext, **kwargs)
         md = DoclingPipelineFactory.run(pipeline_name, file_path, **pipeline_args)
 
-        # TODO: Image post-processing, if needed.
+        page_placeholder = pipeline_args.get("page_placeholder", "")
+        page_placeholder_value = (
+            page_placeholder if page_placeholder and page_placeholder in md else None
+        )
+
         text = md
 
         return ReaderOutput(
@@ -91,6 +97,7 @@ class DoclingReader(BaseReader):
             conversion_method="markdown",
             reader_method="docling",
             ocr_method=self.model_name,
+            page_placeholder=page_placeholder_value,
             metadata=kwargs.get("metadata", {}),
         )
 

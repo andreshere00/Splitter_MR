@@ -5,6 +5,12 @@
 ### Features
 
 - Add a method to convert variables to a `ReaderOutput` object.
+- Add a `paged` attribute to the `ReaderOutput` object to distinguish when a file has been read by pages, and identified using a page placeholder.
+- Add new **Splitter**: `PageSplitter`.
+
+### Documentation
+
+- Add documentation for the **PageSplitter**.
 
 ## v0.3.2
 
