@@ -1,5 +1,6 @@
+import json
 import uuid
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
@@ -40,17 +41,39 @@ class ReaderOutput(BaseModel):
         document_id = v or str(uuid.uuid4())
         return document_id
 
-    @classmethod
-    def from_text(cls, s: str) -> "ReaderOutput":
-        """Create a ReaderOutput from a text string, with all other fields set to their defaults.
+    def from_variable(
+        self, variable: Union[str, Dict[str, Any]], variable_name: str
+    ) -> "ReaderOutput":
+        """
+        Generate a new ReaderOutput object from a variable (str or dict).
 
         Args:
-            s (str): The text content to store in the ReaderOutput.
+            variable (Union[str, Dict[str, Any]]): The variable to use as text.
+            variable_name (str): The name for document_name.
 
         Returns:
-            ReaderOutput: An instance of ReaderOutput with the given text.
+            ReaderOutput: The new ReaderOutput object.
         """
-        return cls(text=s)
+        if isinstance(variable, dict):
+            text = json.dumps(variable, ensure_ascii=False, indent=2)
+            conversion_method = "json"
+            metadata = {"details": "Generated from a json variable"}
+        elif isinstance(variable, str):
+            text = variable
+            conversion_method = "txt"
+            metadata = {"details": "Generated from a str variable"}
+        else:
+            raise ValueError("Variable must be either a string or a dictionary.")
+
+        return ReaderOutput(
+            text=text,
+            document_name=variable_name,
+            document_path="",
+            conversion_method=conversion_method,
+            reader_method="vanilla",
+            ocr_method=None,
+            metadata=metadata,
+        )
 
 
 class SplitterOutput(BaseModel):
