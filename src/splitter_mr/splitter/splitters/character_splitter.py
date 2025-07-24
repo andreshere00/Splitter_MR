@@ -97,7 +97,7 @@ class CharacterSplitter(BaseSplitter):
             ocr_method=reader_output.ocr_method,
             split_method="character_splitter",
             split_params={
-                "chunk_size": chunk_size,
+                "chunk_size": self.chunk_size,
                 "chunk_overlap": self.chunk_overlap,
             },
             metadata=metadata,

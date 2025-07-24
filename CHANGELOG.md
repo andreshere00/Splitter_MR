@@ -6,16 +6,7 @@
 
 - Add a method to convert variables to a `ReaderOutput` object.
 - Add a `page_placeholder` attribute to the `ReaderOutput` object to distinguish when a file has been read by pages and which placeholder is.
-
-TBD
-
-### Documentation
-
-TBD
-
-### Fixed
-
-TBD
+- Add an splitter method which split by pages for supported documents: `PageSplitter`. 
 
 ### Developer features
 
