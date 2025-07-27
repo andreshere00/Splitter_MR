@@ -1,0 +1,1729 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../recursive_character_splitter/">
+      
+      
+        <link rel="next" href="../paged_splitter/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Split by tokens - SplitterMR Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../../assets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#example-split-a-document-by-tokens-with-tokensplitter-spacy-nltk-tiktoken" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="SplitterMR Docs" class="md-header__button md-logo" aria-label="SplitterMR Docs" data-md-component="logo">
+      
+  <img src="../../../assets/splitter_mr_logo_reduced_white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SplitterMR Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Split by tokens
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/andreshere00/Splitter_MR" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    andreshere00/Splitter_MR
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="SplitterMR Docs" class="md-nav__button md-logo" aria-label="SplitterMR Docs" data-md-component="logo">
+      
+  <img src="../../../assets/splitter_mr_logo_reduced_white.svg" alt="logo">
+
+    </a>
+    SplitterMR Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/andreshere00/Splitter_MR" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    andreshere00/Splitter_MR
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Developer Guide
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Developer Guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api_reference/api_reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api_reference/reader/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Readers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api_reference/splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Splitters
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api_reference/model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Models
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Examples
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Examples
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Reading
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Reading
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pdf/pdf_without_vlm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Read PDFs without VLMs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pdf/pdf_with_vlm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Read PDFs using VLMs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pdf/pdf_vanilla/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Read files with VanillaReader using VLMs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pdf/pdf_docling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Read files with Docling using VLMs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pdf/pdf_markitdown/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Read files with MarkItDown using VLMs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Text-based splitting
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            Text-based splitting
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fixed_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by grammatical groups
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recursive_character_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by characters recursively
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Split by tokens
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by tokens
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-read-the-text-using-a-reader" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1: Read the Text Using a Reader
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-split-the-document-by-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Split the Document by Tokens
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Split the Document by Tokens">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-split-by-tokens-using-spacy" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1. Split by Tokens Using SpaCy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-split-by-tokens-using-nltk" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2. Split by Tokens Using NLTK
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-split-by-tokens-using-tiktoken-openai" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3. Split by Tokens Using tiktoken (OpenAI)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extra-split-by-tokens-in-other-languages-eg-spanish" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extra: Split by Tokens in Other Languages (e.g., Spanish)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Extra: Split by Tokens in Other Languages (e.g., Spanish)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#split-spanish-by-tokens-using-spacy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Split Spanish by Tokens Using SpaCy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#split-spanish-by-tokens-using-nltk" class="md-nav__link">
+    <span class="md-ellipsis">
+      Split Spanish by Tokens Using NLTK
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complete Script
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      Available models
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Available models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nltk-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      NLTK Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tiktoken-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tiktoken Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spacy-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      spaCy Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../paged_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by pages
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Schema-based splitting
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            Schema-based splitting
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../schema/html_tag_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by HTML Tags
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../schema/code_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../schema/json_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split JSON recursively
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../schema/row_column_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split tables by rows or columns
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../schema/header_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split Markdown and HTML files by headers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CHANGELOG
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-read-the-text-using-a-reader" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1: Read the Text Using a Reader
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-split-the-document-by-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Split the Document by Tokens
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Split the Document by Tokens">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-split-by-tokens-using-spacy" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1. Split by Tokens Using SpaCy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-split-by-tokens-using-nltk" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2. Split by Tokens Using NLTK
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-split-by-tokens-using-tiktoken-openai" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3. Split by Tokens Using tiktoken (OpenAI)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extra-split-by-tokens-in-other-languages-eg-spanish" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extra: Split by Tokens in Other Languages (e.g., Spanish)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Extra: Split by Tokens in Other Languages (e.g., Spanish)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#split-spanish-by-tokens-using-spacy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Split Spanish by Tokens Using SpaCy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#split-spanish-by-tokens-using-nltk" class="md-nav__link">
+    <span class="md-ellipsis">
+      Split Spanish by Tokens Using NLTK
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complete Script
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      Available models
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Available models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nltk-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      NLTK Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tiktoken-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tiktoken Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spacy-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      spaCy Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="example-split-a-document-by-tokens-with-tokensplitter-spacy-nltk-tiktoken"><strong>Example</strong>: Split a Document by Tokens with <code>TokenSplitter</code> (SpaCy, NLTK, tiktoken)<a class="headerlink" href="#example-split-a-document-by-tokens-with-tokensplitter-spacy-nltk-tiktoken" title="Permanent link">&para;</a></h1>
+<p>In this example, we will use several popular NLP libraries to split a text document into token-based chunks. A token is the minimal lexical unit in which a text is divided into. Tokenization can be performed in many ways: by words, by characters, by lemmas, etc. One of the most common methods is by sub-words. </p>
+<p>Observe the following example:</p>
+<p><img alt="Tokenization illustration" src="https://miro.medium.com/v2/resize:fit:1400/1*8QoeQNDcgwHjrS4AcX3V8g.png" /></p>
+<p>Every Large Language Model uses tokenizers to process a large text into comprehensive lexical units . Hence, split by tokens could be a suitable option to produce chunks of a fixed length compatible with the LLM context window. So, in this tutorial we show how to split the text using three tokenizers: <strong>SpaCy</strong>, <strong>NLTK</strong>, and <strong>tiktoken</strong> (OpenAI tokenization). Let's see!</p>
+<hr />
+<h2 id="step-1-read-the-text-using-a-reader">Step 1: Read the Text Using a Reader<a class="headerlink" href="#step-1-read-the-text-using-a-reader" title="Permanent link">&para;</a></h2>
+<p>We will start by reading a text file using the <code>MarkItDownReader</code>. Remember that you can use any other compatible <a href="../../../api_reference/reader/">Reader</a>. Simply, instantiate a Reader object and use the <code>read</code> method. Provide as an argument the file to be read, which can be an URL, variable or path</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">MarkItDownReader</span>
+
+<span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/my_wonderful_family.txt&quot;</span>
+<span class="n">reader</span> <span class="o">=</span> <span class="n">MarkItDownReader</span><span class="p">()</span>
+<span class="n">reader_output</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+</code></pre></div>
+<p>The output is a <code>ReaderOutput</code> object:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">ReaderOutput</span><span class="p">(</span>
+    <span class="n">text</span><span class="o">=</span><span class="s1">&#39;My Wonderful Family</span><span class="se">\n</span><span class="s1">I live in a house near the mountains. ...&#39;</span><span class="p">,</span>
+    <span class="n">document_name</span><span class="o">=</span><span class="s1">&#39;my_wonderful_family.txt&#39;</span><span class="p">,</span>
+    <span class="n">document_path</span><span class="o">=</span><span class="s1">&#39;https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/my_wonderful_family.txt&#39;</span><span class="p">,</span>
+    <span class="n">document_id</span><span class="o">=</span><span class="s1">&#39;9a72ac14-0fad-41ab-992f-3aaf2fa97afd&#39;</span><span class="p">,</span>
+    <span class="n">conversion_method</span><span class="o">=</span><span class="s1">&#39;markdown&#39;</span><span class="p">,</span>
+    <span class="n">reader_method</span><span class="o">=</span><span class="s1">&#39;markitdown&#39;</span><span class="p">,</span>
+    <span class="n">ocr_method</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">metadata</span><span class="o">=</span><span class="p">{}</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>To see only the document text, you can access to the <code>text</code> attribute of this object:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="n">reader_output</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>My Wonderful Family
+I live in a house near the mountains. I have two brothers and one sister, and I was born last. My father teaches mathematics, and my mother is a nurse at a big hospital. My brothers are very smart and work hard in school. My sister is a nervous girl, but she is very kind. My grandmother also lives with us. She came from Italy when I was two years old. She has grown old, but she is still very strong. She cooks the best food!
+
+My family is very important to me. We do lots of things together. My brothers and I like to go on long walks in the mountains. My sister likes to cook with my grandmother. On the weekends we all play board games together. We laugh and always have a good time. I love my family very much.
+</code></pre></div>
+<hr />
+<h2 id="step-2-split-the-document-by-tokens">Step 2: Split the Document by Tokens<a class="headerlink" href="#step-2-split-the-document-by-tokens" title="Permanent link">&para;</a></h2>
+<p>As we have said, the <code>TokenSplitter</code> lets you pick the tokenization backend: <strong>SpaCy</strong>, <strong>NLTK</strong>, or <strong>tiktoken</strong>. Use one or another depending on your needs. For every tokenizer, it should be passed:</p>
+<ul>
+<li>A <code>chunk_size</code>, the maximum chunk size in characters for the tokenization process. It tries to never cut a sentence in two chunks.</li>
+<li>A <code>model_name</code>, the tokenizer model to use. It should always follows this structure: <code>{tokenizer}/{model_name}</code>, e.g., <code>tiktoken/cl100k_base</code>. </li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For <strong>spaCy</strong> and <strong>tiktoken</strong>, the corresponding models must be installed in your environment.</p>
+</div>
+<p>To see a complete list of available tokenizers, refer to <a href="#available-models">Available models</a>.</p>
+<h3 id="21-split-by-tokens-using-spacy">2.1. Split by Tokens Using <strong>SpaCy</strong><a class="headerlink" href="#21-split-by-tokens-using-spacy" title="Permanent link">&para;</a></h3>
+<p>To split using a spaCy tokenizer model, you firstly need to instantiate the <code>TokenSplitter</code> class and select the parameters. Then, call to the <code>split</code> method with the path, URL or variable to split on:</p>
+<p><div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.splitter</span><span class="w"> </span><span class="kn">import</span> <span class="n">TokenSplitter</span>
+
+<span class="n">spacy_splitter</span> <span class="o">=</span> <span class="n">TokenSplitter</span><span class="p">(</span>
+    <span class="n">chunk_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
+    <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;spacy/en_core_web_sm&quot;</span> <span class="c1"># Use the SpaCy model with &quot;spacy/{model_name}&quot; format</span>
+<span class="p">)</span>
+<span class="n">spacy_output</span> <span class="o">=</span> <span class="n">spacy_splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">spacy_output</span><span class="p">)</span>  <span class="c1"># See the SplitterOutput object</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">SplitterOutput</span><span class="p">(</span>
+    <span class="n">chunks</span><span class="o">=</span><span class="p">[</span>
+        <span class="s1">&#39;My Wonderful Family</span><span class="se">\n</span><span class="s1">I live in a house near the mountains.&#39;</span><span class="p">,</span> <span class="s1">&#39;I have two brothers and one sister, and I was born last.&#39;</span><span class="p">,</span> <span class="s1">&#39;My father teaches mathematics, and my mother is a nurse at a big hospital.&#39;</span><span class="p">,</span> <span class="s1">&#39;My brothers are very smart and work hard in school.&#39;</span><span class="p">,</span> <span class="s1">&#39;My sister is a nervous girl, but she is very kind.</span><span class="se">\n\n</span><span class="s1">My grandmother also lives with us.&#39;</span><span class="p">,</span> <span class="s1">&#39;She came from Italy when I was two years old.</span><span class="se">\n\n</span><span class="s1">She has grown old, but she is still very strong.&#39;</span><span class="p">,</span> <span class="s1">&#39;She cooks the best food!</span><span class="se">\n\n\n\n</span><span class="s1">My family is very important to me.</span><span class="se">\n\n</span><span class="s1">We do lots of things together.&#39;</span><span class="p">,</span> <span class="s1">&#39;My brothers and I like to go on long walks in the mountains.&#39;</span><span class="p">,</span> <span class="s1">&#39;My sister likes to cook with my grandmother.</span><span class="se">\n\n</span><span class="s1">On the weekends we all play board games together.&#39;</span><span class="p">,</span> <span class="s1">&#39;We laugh and always have a good time.</span><span class="se">\n\n</span><span class="s1">I love my family very much.&#39;</span>
+        <span class="p">],</span> 
+    <span class="n">chunk_id</span><span class="o">=</span><span class="p">[</span>
+        <span class="s1">&#39;8225f436-b039-4b54-9472-093dee2068d8&#39;</span><span class="p">,</span> <span class="s1">&#39;1c347f11-421f-4549-9074-0dbe18072eb8&#39;</span><span class="p">,</span> <span class="s1">&#39;1582e42a-aac2-46ba-bfe0-c87a25b452f4&#39;</span><span class="p">,</span> <span class="s1">&#39;82d76292-103e-4a94-9ea4-8bbe4e321a6c&#39;</span><span class="p">,</span> <span class="s1">&#39;36d5d71d-3a2c-42c7-a722-7b65dcf3ffc0&#39;</span><span class="p">,</span> <span class="s1">&#39;cb4c57d9-1174-49f4-a7d3-6e52a96bb8ed&#39;</span><span class="p">,</span> <span class="s1">&#39;9f67d776-f2df-4cc7-864e-1f5b43b36658&#39;</span><span class="p">,</span> <span class="s1">&#39;ef130c6f-7b69-430a-9af5-4c1c1b72ac99&#39;</span><span class="p">,</span> <span class="s1">&#39;744aef78-806b-4439-880e-7921111659d2&#39;</span><span class="p">,</span> <span class="s1">&#39;d3355854-099d-4a05-ae63-94ee0954fd92&#39;</span>
+    <span class="p">],</span> 
+    <span class="n">document_name</span><span class="o">=</span><span class="s1">&#39;my_wonderful_family.txt&#39;</span><span class="p">,</span> 
+    <span class="n">document_path</span><span class="o">=</span><span class="s1">&#39;https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/my_wonderful_family.txt&#39;</span><span class="p">,</span> 
+    <span class="n">document_id</span><span class="o">=</span><span class="s1">&#39;90cf6e00-b4ca-439e-9b3d-3bd8713934b4&#39;</span><span class="p">,</span>
+    <span class="n">conversion_method</span><span class="o">=</span><span class="s1">&#39;markdown&#39;</span><span class="p">,</span> 
+    <span class="n">reader_method</span><span class="o">=</span><span class="s1">&#39;markitdown&#39;</span><span class="p">,</span> 
+    <span class="n">ocr_method</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+    <span class="n">split_method</span><span class="o">=</span><span class="s1">&#39;token_splitter&#39;</span><span class="p">,</span> 
+    <span class="n">split_params</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">&#39;chunk_size&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;model_name&#39;</span><span class="p">:</span> <span class="s1">&#39;spacy/en_core_web_sm&#39;</span><span class="p">,</span> <span class="s1">&#39;language&#39;</span><span class="p">:</span> <span class="s1">&#39;english&#39;</span>
+        <span class="p">},</span> 
+    <span class="n">metadata</span><span class="o">=</span><span class="p">{}</span>
+    <span class="p">)</span>
+</code></pre></div></p>
+<p>To see the resulting chunks, you can use the following code:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Visualize each chunk</span>
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">spacy_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; Chunk </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">chunk</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="o">========================================</span> <span class="n">Chunk</span> <span class="mi">1</span> <span class="o">========================================</span>
+<span class="n">My</span> <span class="n">Wonderful</span> <span class="n">Family</span>
+<span class="n">I</span> <span class="n">live</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">house</span> <span class="n">near</span> <span class="n">the</span> <span class="n">mountains</span><span class="o">.</span>
+
+<span class="o">========================================</span> <span class="n">Chunk</span> <span class="mi">2</span> <span class="o">========================================</span>
+<span class="n">I</span> <span class="n">have</span> <span class="n">two</span> <span class="n">brothers</span> <span class="ow">and</span> <span class="n">one</span> <span class="n">sister</span><span class="p">,</span> <span class="ow">and</span> <span class="n">I</span> <span class="n">was</span> <span class="n">born</span> <span class="n">last</span><span class="o">.</span>
+<span class="o">...</span>
+</code></pre></div>
+<h3 id="22-split-by-tokens-using-nltk">2.2. Split by Tokens Using <strong>NLTK</strong><a class="headerlink" href="#22-split-by-tokens-using-nltk" title="Permanent link">&para;</a></h3>
+<p>Similarly, you can use a NLTK tokenizer. This library will always use <code>punkt</code> as the tokenizer, but you can customize the language through this parameter.</p>
+<div class="highlight"><pre><span></span><code><span class="n">nltk_splitter</span> <span class="o">=</span> <span class="n">TokenSplitter</span><span class="p">(</span>
+    <span class="n">chunk_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;nltk/punkt&quot;</span><span class="p">,</span>   <span class="c1"># Use the NLTK model as &quot;nltk/{model_name}&quot;</span>
+    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;english&quot;</span>         <span class="c1"># Defaults to English</span>
+<span class="p">)</span>
+<span class="n">nltk_output</span> <span class="o">=</span> <span class="n">nltk_splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nltk_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; Chunk </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">chunk</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="o">========================================</span> <span class="n">Chunk</span> <span class="mi">1</span> <span class="o">========================================</span>
+<span class="n">My</span> <span class="n">Wonderful</span> <span class="n">Family</span>
+<span class="n">I</span> <span class="n">live</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">house</span> <span class="n">near</span> <span class="n">the</span> <span class="n">mountains</span><span class="o">.</span>
+
+<span class="o">========================================</span> <span class="n">Chunk</span> <span class="mi">2</span> <span class="o">========================================</span>
+<span class="n">I</span> <span class="n">have</span> <span class="n">two</span> <span class="n">brothers</span> <span class="ow">and</span> <span class="n">one</span> <span class="n">sister</span><span class="p">,</span> <span class="ow">and</span> <span class="n">I</span> <span class="n">was</span> <span class="n">born</span> <span class="n">last</span><span class="o">.</span>
+<span class="o">...</span>
+</code></pre></div>
+<p>As you can see, the results are basically the same.</p>
+<h3 id="23-split-by-tokens-using-tiktoken-openai">2.3. Split by Tokens Using <strong>tiktoken</strong> (OpenAI)<a class="headerlink" href="#23-split-by-tokens-using-tiktoken-openai" title="Permanent link">&para;</a></h3>
+<p>TikToken is one of the most extended tokenizer models. In this case, this tokenizer split by the number of tokens and chunks if <code>\\n\\n</code> is detected. Hence, the results are the following:</p>
+<div class="highlight"><pre><span></span><code><span class="n">tiktoken_splitter</span> <span class="o">=</span> <span class="n">TokenSplitter</span><span class="p">(</span>
+    <span class="n">chunk_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;tiktoken/cl100k_base&quot;</span><span class="p">,</span> <span class="c1"># Use the tiktoken model as &quot;tiktoken/{model_name}&quot;</span>
+    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;english&quot;</span>
+<span class="p">)</span>
+<span class="n">tiktoken_output</span> <span class="o">=</span> <span class="n">tiktoken_splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tiktoken_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; Chunk </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">chunk</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="o">========================================</span> <span class="n">Chunk</span> <span class="mi">1</span> <span class="o">========================================</span>
+<span class="n">My</span> <span class="n">Wonderful</span> <span class="n">Family</span>
+
+<span class="o">========================================</span> <span class="n">Chunk</span> <span class="mi">2</span> <span class="o">========================================</span>
+<span class="n">I</span> <span class="n">live</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">house</span> <span class="n">near</span> <span class="n">the</span> <span class="n">mountains</span><span class="o">.</span> <span class="n">I</span> <span class="n">have</span> <span class="n">two</span> <span class="n">brothers</span> <span class="ow">and</span> <span class="n">one</span> <span class="n">sister</span><span class="p">,</span> <span class="ow">and</span> <span class="n">I</span> <span class="n">was</span> <span class="n">born</span> <span class="n">last</span><span class="o">.</span> <span class="n">My</span> <span class="n">father</span> <span class="n">teaches</span> <span class="n">mathematics</span><span class="p">,</span> <span class="ow">and</span> <span class="n">my</span> <span class="n">mother</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">nurse</span> <span class="n">at</span> <span class="n">a</span> <span class="n">big</span> <span class="n">hospital</span><span class="o">.</span> <span class="n">My</span> <span class="n">brothers</span> <span class="n">are</span> <span class="n">very</span> <span class="n">smart</span> <span class="ow">and</span> <span class="n">work</span> <span class="n">hard</span> <span class="ow">in</span> <span class="n">school</span><span class="o">.</span> <span class="n">My</span> <span class="n">sister</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">nervous</span> <span class="n">girl</span><span class="p">,</span> <span class="n">but</span> <span class="n">she</span> <span class="ow">is</span> <span class="n">very</span> <span class="n">kind</span><span class="o">.</span> <span class="n">My</span> <span class="n">grandmother</span> <span class="n">also</span> <span class="n">lives</span> <span class="k">with</span> <span class="n">us</span><span class="o">.</span> <span class="n">She</span> <span class="n">came</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Italy</span> <span class="n">when</span> <span class="n">I</span> <span class="n">was</span> <span class="n">two</span> <span class="n">years</span> <span class="n">old</span><span class="o">.</span> <span class="n">She</span> <span class="n">has</span> <span class="n">grown</span> <span class="n">old</span><span class="p">,</span> <span class="n">but</span> <span class="n">she</span> <span class="ow">is</span> <span class="n">still</span> <span class="n">very</span> <span class="n">strong</span><span class="o">.</span> <span class="n">She</span> <span class="n">cooks</span> <span class="n">the</span> <span class="n">best</span> <span class="n">food</span><span class="err">!</span>
+<span class="o">...</span>
+</code></pre></div>
+<h2 id="extra-split-by-tokens-in-other-languages-eg-spanish"><strong>Extra:</strong> Split by Tokens in Other Languages (e.g., Spanish)<a class="headerlink" href="#extra-split-by-tokens-in-other-languages-eg-spanish" title="Permanent link">&para;</a></h2>
+<p>In previous examples, we show you how to split the text by tokens, but these models were adapted to English. But in case that you have texts in other languages, you can use other Tokenizers. Here, there are two examples with SpaCy and NLTK (tiktoken is multilingual by default):</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">DoclingReader</span>
+
+<span class="n">sp_file</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/mi_nueva_casa.txt&quot;</span>
+<span class="n">sp_reader</span> <span class="o">=</span> <span class="n">DoclingReader</span><span class="p">()</span>
+<span class="n">sp_reader_output</span> <span class="o">=</span> <span class="n">sp_reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">sp_file</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sp_reader_output</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>Mi nueva casa
+Yo vivo en Granada, una ciudad pequeña que tiene monumentos muy importantes como la Alhambra. Aquí la comida es deliciosa y son famosos el gazpacho, el rebujito y el salmorejo.
+
+Mi nueva casa está en una calle ancha que tiene muchos árboles. El piso de arriba de mi casa tiene tres dormitorios y un despacho para trabajar. El piso de abajo tiene una cocina muy grande, un comedor con una mesa y seis sillas, un salón con dos sofás verdes, una televisión y cortinas. Además, tiene una pequeña terraza con piscina donde puedo tomar el sol en verano.
+
+Me gusta mucho mi casa porque puedo invitar a mis amigos a cenar o a ver el fútbol en mi televisión. Además, cerca de mi casa hay muchas tiendas para hacer la compra, como panadería, carnicería y pescadería.
+</code></pre></div>
+<h3 id="split-spanish-by-tokens-using-spacy">Split Spanish by Tokens Using <strong>SpaCy</strong><a class="headerlink" href="#split-spanish-by-tokens-using-spacy" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">spacy_sp_splitter</span> <span class="o">=</span> <span class="n">TokenSplitter</span><span class="p">(</span>
+    <span class="n">chunk_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;spacy/es_core_news_sm&quot;</span>  <span class="c1"># Use a Spanish SpaCy model</span>
+<span class="p">)</span>
+<span class="n">spacy_sp_output</span> <span class="o">=</span> <span class="n">spacy_sp_splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sp_reader_output</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">spacy_sp_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; Chunk </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">chunk</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">Created</span> <span class="n">a</span> <span class="n">chunk</span> <span class="n">of</span> <span class="n">size</span> <span class="mi">107</span><span class="p">,</span> <span class="n">which</span> <span class="ow">is</span> <span class="n">longer</span> <span class="n">than</span> <span class="n">the</span> <span class="n">specified</span> <span class="mi">100</span>
+<span class="n">Created</span> <span class="n">a</span> <span class="n">chunk</span> <span class="n">of</span> <span class="n">size</span> <span class="mi">142</span><span class="p">,</span> <span class="n">which</span> <span class="ow">is</span> <span class="n">longer</span> <span class="n">than</span> <span class="n">the</span> <span class="n">specified</span> <span class="mi">100</span>
+<span class="o">========================================</span> <span class="n">Chunk</span> <span class="mi">1</span> <span class="o">========================================</span>
+<span class="n">Mi</span> <span class="n">nueva</span> <span class="n">casa</span>
+<span class="n">Yo</span> <span class="n">vivo</span> <span class="n">en</span> <span class="n">Granada</span><span class="p">,</span> <span class="n">una</span> <span class="n">ciudad</span> <span class="n">pequeña</span> <span class="n">que</span> <span class="n">tiene</span> <span class="n">monumentos</span> <span class="n">muy</span> <span class="n">importantes</span> <span class="n">como</span> <span class="n">la</span> <span class="n">Alhambra</span><span class="o">.</span>
+
+<span class="o">========================================</span> <span class="n">Chunk</span> <span class="mi">2</span> <span class="o">========================================</span>
+<span class="n">Aquí</span> <span class="n">la</span> <span class="n">comida</span> <span class="n">es</span> <span class="n">deliciosa</span> <span class="n">y</span> <span class="n">son</span> <span class="n">famosos</span> <span class="n">el</span> <span class="n">gazpacho</span><span class="p">,</span> <span class="n">el</span> <span class="n">rebujito</span> <span class="n">y</span> <span class="n">el</span> <span class="n">salmorejo</span><span class="o">.</span>
+<span class="o">...</span>
+</code></pre></div>
+<h3 id="split-spanish-by-tokens-using-nltk">Split Spanish by Tokens Using <strong>NLTK</strong><a class="headerlink" href="#split-spanish-by-tokens-using-nltk" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">nltk_sp_splitter</span> <span class="o">=</span> <span class="n">TokenSplitter</span><span class="p">(</span>
+    <span class="n">chunk_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;nltk/punkt&quot;</span><span class="p">,</span>
+    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;spanish&quot;</span>
+<span class="p">)</span>
+<span class="n">nltk_sp_output</span> <span class="o">=</span> <span class="n">nltk_sp_splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sp_reader_output</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nltk_sp_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; Chunk </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">chunk</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">Created</span> <span class="n">a</span> <span class="n">chunk</span> <span class="n">of</span> <span class="n">size</span> <span class="mi">107</span><span class="p">,</span> <span class="n">which</span> <span class="ow">is</span> <span class="n">longer</span> <span class="n">than</span> <span class="n">the</span> <span class="n">specified</span> <span class="mi">100</span>
+<span class="n">Created</span> <span class="n">a</span> <span class="n">chunk</span> <span class="n">of</span> <span class="n">size</span> <span class="mi">142</span><span class="p">,</span> <span class="n">which</span> <span class="ow">is</span> <span class="n">longer</span> <span class="n">than</span> <span class="n">the</span> <span class="n">specified</span> <span class="mi">100</span>
+<span class="o">========================================</span> <span class="n">Chunk</span> <span class="mi">1</span> <span class="o">========================================</span>
+<span class="n">Mi</span> <span class="n">nueva</span> <span class="n">casa</span>
+<span class="n">Yo</span> <span class="n">vivo</span> <span class="n">en</span> <span class="n">Granada</span><span class="p">,</span> <span class="n">una</span> <span class="n">ciudad</span> <span class="n">pequeña</span> <span class="n">que</span> <span class="n">tiene</span> <span class="n">monumentos</span> <span class="n">muy</span> <span class="n">importantes</span> <span class="n">como</span> <span class="n">la</span> <span class="n">Alhambra</span><span class="o">.</span>
+
+<span class="o">========================================</span> <span class="n">Chunk</span> <span class="mi">2</span> <span class="o">========================================</span>
+<span class="n">Aquí</span> <span class="n">la</span> <span class="n">comida</span> <span class="n">es</span> <span class="n">deliciosa</span> <span class="n">y</span> <span class="n">son</span> <span class="n">famosos</span> <span class="n">el</span> <span class="n">gazpacho</span><span class="p">,</span> <span class="n">el</span> <span class="n">rebujito</span> <span class="n">y</span> <span class="n">el</span> <span class="n">salmorejo</span><span class="o">.</span>
+</code></pre></div>
+<hr />
+<p><strong>And that’s it!</strong>
+You can now tokenize and chunk text with precision, using the NLP backend and language that best fits your project.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For best results, make sure to install any SpaCy/NLTK/tiktoken models needed for your language and task.</p>
+</div>
+<h2 id="complete-script"><strong>Complete Script</strong><a class="headerlink" href="#complete-script" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">DoclingReader</span><span class="p">,</span> <span class="n">MarkItDownReader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.splitter</span><span class="w"> </span><span class="kn">import</span> <span class="n">TokenSplitter</span>
+
+<span class="c1"># 1. Read the file using any Reader (e.g., MarkItDownReader)</span>
+
+<span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/my_wonderful_family.txt&quot;</span>
+
+<span class="n">reader</span> <span class="o">=</span> <span class="n">MarkItDownReader</span><span class="p">()</span>
+<span class="n">reader_output</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">reader_output</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+
+<span class="c1"># 2. Split by Tokens</span>
+
+<span class="c1">## 2.1. Using SpaCy</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot; spaCy &quot;</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span><span class="o">*</span><span class="mi">40</span><span class="p">)</span>
+
+<span class="n">spacy_splitter</span> <span class="o">=</span> <span class="n">TokenSplitter</span><span class="p">(</span>
+    <span class="n">chunk_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
+    <span class="n">model_name</span> <span class="o">=</span> <span class="s2">&quot;spacy/en_core_web_sm&quot;</span> <span class="c1"># Select a valid model with nomenclature spacy/{model_name}.</span>
+    <span class="p">)</span> 
+<span class="c1"># Note that it is required to have the model installed in your execution machine.</span>
+
+<span class="n">spacy_output</span> <span class="o">=</span> <span class="n">spacy_splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span> <span class="c1"># Split the text</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">spacy_output</span><span class="p">)</span>  <span class="c1"># Print the SplitterOutput object</span>
+
+<span class="c1"># Visualize each chunk</span>
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">spacy_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; Chunk </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">chunk</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1">## 2.2. Using NLTK</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot; NLTK &quot;</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span><span class="o">*</span><span class="mi">40</span><span class="p">)</span>
+
+<span class="n">nltk_splitter</span> <span class="o">=</span> <span class="n">TokenSplitter</span><span class="p">(</span>
+    <span class="n">chunk_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;nltk/punkt&quot;</span><span class="p">,</span> <span class="c1"># introduce the model as nltk/{model_name}</span>
+    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;english&quot;</span> <span class="c1"># defaults to this language</span>
+<span class="p">)</span>
+
+<span class="n">nltk_output</span> <span class="o">=</span> <span class="n">nltk_splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span>
+
+<span class="c1"># Visualize each chunk</span>
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nltk_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; Chunk </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">chunk</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1">## 2.3. Using tiktoken</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot; Tiktoken &quot;</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span><span class="o">*</span><span class="mi">40</span><span class="p">)</span>
+
+<span class="n">tiktoken_splitter</span> <span class="o">=</span> <span class="n">TokenSplitter</span><span class="p">(</span>
+    <span class="n">chunk_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;tiktoken/cl100k_base&quot;</span><span class="p">,</span> <span class="c1"># introduce the model as tiktoken/{model_name}</span>
+    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;english&quot;</span>
+<span class="p">)</span>
+
+<span class="n">tiktoken_output</span> <span class="o">=</span> <span class="n">tiktoken_splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span>
+
+<span class="c1"># Visualize each chunk</span>
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tiktoken_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; Chunk </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">chunk</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1">## 2.4. Split by tokens in other languages (e.g., Spanish)</span>
+
+<span class="n">sp_file</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/mi_nueva_casa.txt&quot;</span>
+
+<span class="n">sp_reader</span> <span class="o">=</span> <span class="n">DoclingReader</span><span class="p">()</span>
+<span class="n">sp_reader_output</span> <span class="o">=</span> <span class="n">sp_reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">sp_file</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sp_reader_output</span><span class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="c1"># Visualize the text content</span>
+
+<span class="c1">### 2.4.1. Using SpaCy</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot; Spacy in Spanish &quot;</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span><span class="o">*</span><span class="mi">40</span><span class="p">)</span>
+
+<span class="n">spacy_sp_splitter</span> <span class="o">=</span> <span class="n">TokenSplitter</span><span class="p">(</span>
+    <span class="n">chunk_size</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="n">model_name</span> <span class="o">=</span> <span class="s2">&quot;spacy/es_core_news_sm&quot;</span><span class="p">,</span> <span class="c1"># Pick another model in Spanish</span>
+<span class="p">)</span>
+<span class="n">nltk_sp_output</span> <span class="o">=</span> <span class="n">spacy_sp_splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sp_reader_output</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nltk_sp_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; Chunk </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">chunk</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1">### 2.4.2 Using NLTK</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot; NLTK in Spanish &quot;</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span><span class="o">*</span><span class="mi">40</span><span class="p">)</span>
+
+<span class="n">nltk_sp_splitter</span> <span class="o">=</span> <span class="n">TokenSplitter</span><span class="p">(</span>
+    <span class="n">chunk_size</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="n">model_name</span> <span class="o">=</span> <span class="s2">&quot;nltk/punkt&quot;</span><span class="p">,</span>
+    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;spanish&quot;</span> <span class="c1"># select `spanish` as language for the tokenizer</span>
+<span class="p">)</span>
+<span class="n">nltk_sp_output</span> <span class="o">=</span> <span class="n">nltk_sp_splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sp_reader_output</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nltk_sp_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; Chunk </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">chunk</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="available-models">Available models<a class="headerlink" href="#available-models" title="Permanent link">&para;</a></h2>
+<p>There are several tokenizer models that you can use to split your text. In the following table is provided a summary of the models that you can currently use, among with some implementation examples:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"><strong>Library</strong></th>
+<th style="text-align: left;"><strong>Model identifier/template</strong></th>
+<th style="text-align: left;"><strong>How to implement</strong></th>
+<th style="text-align: left;"><strong>Reference Guide</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>NLTK (Punkt)</strong></td>
+<td style="text-align: left;"><code>&lt;language&gt;</code></td>
+<td style="text-align: left;">See <a href="#nltk-example">NLTK Example</a></td>
+<td style="text-align: left;"><a href="https://www.nltk.org/api/nltk.tokenize.html">NLTK Tokenizers</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Tiktoken</strong></td>
+<td style="text-align: left;"><code>&lt;encoder&gt;</code></td>
+<td style="text-align: left;">See <a href="#tiktoken-example">Tiktoken Example</a></td>
+<td style="text-align: left;"><a href="https://github.com/openai/tiktoken">tiktoken</a></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>spaCy</strong></td>
+<td style="text-align: left;"><code>{CC}_core_web_sm</code>,<br><code>{CC}_core_web_md</code>,<br><code>{CC}_core_web_lg</code>,<br><code>{CCe}_core_web_trf</code>,<br><code>xx_ent_wiki_sm</code>,<br><code>xx_sent_ud_sm</code></td>
+<td style="text-align: left;">See <a href="#spacy-example">spaCy Example</a></td>
+<td style="text-align: left;"><a href="https://spacy.io/usage/models">spaCy Models</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>spaCy Model Suffixes:</strong>
+- <code>sm</code> (<strong>small</strong>): Fastest, small in size, less accurate; good for prototyping and lightweight use-cases.
+- <code>md</code> (<strong>medium</strong>): Medium size and accuracy; balances speed and performance.
+- <code>lg</code> (<strong>large</strong>): Largest and most accurate pipeline with the most vectors; slower and uses more memory.
+- <code>trf</code> (<strong>transformer</strong>): Uses transformer-based architectures (e.g., BERT, RoBERTa); highest accuracy, slowest, and requires more resources.</p>
+<h3 id="nltk-example">NLTK Example<a class="headerlink" href="#nltk-example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">language</span> <span class="o">=</span> <span class="s2">&quot;english&quot;</span>
+<span class="n">TokenSplitter</span><span class="p">(</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;nltk/punkt&quot;</span><span class="p">,</span>
+    <span class="n">language</span><span class="o">=</span><span class="n">language</span>
+<span class="p">)</span>
+</code></pre></div>
+<h3 id="tiktoken-example">Tiktoken Example<a class="headerlink" href="#tiktoken-example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">encoder</span> <span class="o">=</span> <span class="s2">&quot;cl100k_base&quot;</span>
+<span class="n">TokenSplitter</span><span class="p">(</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;tiktoken/</span><span class="si">{</span><span class="n">encoder</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</code></pre></div>
+<h3 id="spacy-example">spaCy Example<a class="headerlink" href="#spacy-example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">CC</span> <span class="o">=</span> <span class="s2">&quot;en&quot;</span>
+<span class="n">ext</span> <span class="o">=</span> <span class="s2">&quot;sm&quot;</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">CC</span><span class="si">}</span><span class="s2">_core_web_</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="n">TokenSplitter</span><span class="p">(</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;spacy/</span><span class="si">{</span><span class="n">encoder</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy"], "search": "../../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>
