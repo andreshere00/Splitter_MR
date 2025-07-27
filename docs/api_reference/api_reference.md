@@ -1,4 +1,4 @@
-# Developer guide
+# **Developer guide**
 
 Welcome to the **SplitterMR Python API** reference.
 
@@ -6,7 +6,7 @@ Welcome to the **SplitterMR Python API** reference.
 
 ![SplitterMR architecture diagram](../assets/splitter_mr_architecture_diagram_white.svg#gh-dark-mode-only)
 
-## Documentation
+## **Documentation**
 
 ### [Model component documentation](./model.md)
 
