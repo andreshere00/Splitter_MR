@@ -1,5 +1,21 @@
 # **v0.3.x**
 
+## v0.3.3
+
+### Features
+
+- Add a method to convert variables to a `ReaderOutput` object.
+- Add a `page_placeholder` attribute to the `ReaderOutput` object to distinguish when a file has been read by pages and which placeholder is.
+- Add an splitter method which split by pages for supported documents: `PagedSplitter`. 
+
+### Developer features
+
+- Refactor the `VanillaReader` class to be more decoupled.
+
+### Documentation
+
+- Update examples in documentation server.
+
 ## v0.3.2
 
 ### Features

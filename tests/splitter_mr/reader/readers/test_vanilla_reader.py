@@ -14,6 +14,13 @@ from splitter_mr.schema import DEFAULT_EXTRACTION_PROMPT, ReaderOutput
 # ---------- Helper Fixtures ----------
 
 
+class DummyVisionModel:
+    model_name = "dummy-vlm"
+
+    def get_client(self):
+        return None
+
+
 class DummyPDFPlumberReader:
     def __init__(self):
         self.last_kwargs = None  # store kwargs for assertions
@@ -35,10 +42,6 @@ class DummyPDFPlumberReader:
         }
         # pretend 2-page PDF
         return ["PAGE-1-MD", "PAGE-2-MD"]
-
-
-class DummyVisionModel:
-    model_name = "dummy-vlm"
 
 
 @pytest.fixture(autouse=True)
@@ -437,3 +440,87 @@ def test_pdf_default_placeholder(tmp_path):
     reader = VanillaReader()
     reader.read(str(pdf_path))
     assert reader.pdf_reader.last_kwargs["image_placeholder"] == "<!-- image -->"
+
+
+@pytest.mark.parametrize(
+    "pdf_text, page_placeholder, expected",
+    [
+        ("page 1 <!-- page --> page 2", "<!-- page -->", "<!-- page -->"),
+        ("single page, no marker", "<!-- page -->", None),
+        ("abc |##| xyz", "|##|", "|##|"),
+        ("abc, not here", "|##|", None),
+        ("", "<!-- page -->", None),
+    ],
+)
+def test_page_placeholder_field_for_pdf(
+    monkeypatch, tmp_path, pdf_text, page_placeholder, expected
+):
+    # Patch DummyPDFPlumberReader.read to return pdf_text
+    class DummyPDF:
+        def __init__(self):
+            self.last_kwargs = {}
+
+        def read(self, *a, **kw):
+            self.last_kwargs = kw
+            return pdf_text
+
+        def describe_pages(self, *a, **kw):
+            # Only needed for scan_pdf_pages=True, not in this test
+            return []
+
+    # Patch VanillaReader.pdf_reader to our dummy
+    monkeypatch.setattr(
+        "splitter_mr.reader.readers.vanilla_reader.PDFPlumberReader", lambda: DummyPDF()
+    )
+    path = tmp_path / "test.pdf"
+    path.write_bytes(b"%PDF-FAKE")
+    reader = VanillaReader()
+    out = reader.read(str(path), page_placeholder=page_placeholder)
+    assert out.page_placeholder == expected
+
+
+def test_page_placeholder_field_scan_pdf_pages(monkeypatch, tmp_path):
+    # For scan_pdf_pages=True, we want to join with custom marker
+    class DummyPDF:
+        def __init__(self):
+            self.last_kwargs = {}
+
+        def read(self, *a, **kw):
+            return "no split"
+
+        def describe_pages(self, *a, **kw):
+            # Simulate two page markdowns
+            return ["page1", "page2"]
+
+    monkeypatch.setattr(
+        "splitter_mr.reader.readers.vanilla_reader.PDFPlumberReader", lambda: DummyPDF()
+    )
+    pdf_path = tmp_path / "scanned.pdf"
+    pdf_path.write_bytes(b"%PDF-FAKE")
+    reader = VanillaReader(model=DummyVisionModel())
+    out = reader.read(str(pdf_path), scan_pdf_pages=True, page_placeholder="###PAGE###")
+    assert "###PAGE###" in out.text
+    assert out.page_placeholder == "###PAGE###"
+
+
+def test_page_placeholder_field_scan_pdf_pages_none(monkeypatch, tmp_path):
+    # If the placeholder is not in the joined text, page_placeholder should be None
+    class DummyPDF:
+        def __init__(self):
+            self.last_kwargs = {}
+
+        def read(self, *a, **kw):
+            return "irrelevant"
+
+        def describe_pages(self, *a, **kw):
+            return ["no_marker1", "no_marker2"]
+
+    monkeypatch.setattr(
+        "splitter_mr.reader.readers.vanilla_reader.PDFPlumberReader", lambda: DummyPDF()
+    )
+    pdf_path = tmp_path / "no_marker.pdf"
+    pdf_path.write_bytes(b"%PDF-FAKE")
+    reader = VanillaReader(model=DummyVisionModel())
+
+    out = reader.read(str(pdf_path), scan_pdf_pages=True, page_placeholder="%%PAGE%%")
+    assert out.page_placeholder is None

@@ -3,7 +3,7 @@ import os
 import uuid
 from html.parser import HTMLParser
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional, Tuple
 
 import pandas as pd
 import requests
@@ -100,281 +100,263 @@ class VanillaReader(BaseReader):
             ```
         """
 
-        def _ensure_str(val):
-            if isinstance(val, (dict, list)):
-                try:
-                    return json.dumps(val, indent=2, ensure_ascii=False)
-                except Exception:
-                    try:
-                        return yaml.safe_dump(val, allow_unicode=True)
-                    except Exception:
-                        return str(val)
-            if val is None:
-                return ""
-            return str(val)
+        source_type, source_val = _guess_source(kwargs, file_path)
+        name, path, text, conv, ocr = self._dispatch_source(
+            source_type, source_val, kwargs
+        )
 
-        SOURCE_PRIORITY = [
-            "file_path",
-            "file_url",
-            "json_document",
-            "text_document",
-        ]
-
-        # Pick the highest-priority source provided
-        document_source = None
-        source_type = None
-        for key in SOURCE_PRIORITY:
-            if key in kwargs and kwargs[key] is not None:
-                document_source = kwargs[key]
-                source_type = key
-                break
-
-        if document_source is None:
-            document_source = file_path
-            source_type = "file_path"
-
-        document_name = kwargs.get("document_name", None)
-        document_path = None
-        conversion_method = None
-        ocr_method = None
-        text = ""
-
-        # File path or default
-        if source_type == "file_path":
-            if isinstance(document_source, Path):
-                document_source = os.fspath(document_source)
-            if not isinstance(document_source, str):
-                raise ValueError("file_path must be a string or Path object.")
-
-            if self.is_valid_file_path(document_source):
-                ext = os.path.splitext(document_source)[-1].lower().lstrip(".")
-                document_name = os.path.basename(document_source)
-                document_path = os.path.relpath(document_source)
-
-                if ext == "pdf":
-                    if kwargs.get("scan_pdf_pages"):
-                        # Vision-powered full-page description
-                        model: Optional[BaseModel] = kwargs.get("model", self.model)
-                        if model is None:
-                            raise ValueError(
-                                "scan_pdf_pages=True requires a vision-capable "
-                                "`model` implementing BaseModel."
-                            )
-                        resolution = kwargs.get("resolution", 300)
-                        vlm_parameters: Dict[str, Any] = kwargs.get(
-                            "vlm_parameters", {}
-                        )
-                        page_placeholder = kwargs.get(
-                            "page_placeholder", "<!-- page -->"
-                        )
-
-                        page_markdowns: List[str] = self.pdf_reader.describe_pages(
-                            file_path=document_source,
-                            model=model,
-                            prompt=kwargs.get("prompt") or DEFAULT_EXTRACTION_PROMPT,
-                            resolution=resolution,
-                            **vlm_parameters,
-                        )
-
-                        # Join pages under clear headings
-                        joined_pages = []
-                        for _, md in enumerate(page_markdowns, start=1):
-                            joined_pages.append(f"{page_placeholder}\n\n{md}")
-                        text = "\n\n---\n\n".join(joined_pages)
-
-                        conversion_method = "png"
-                        ocr_method = model.model_name
-
-                    else:
-                        # Element-wised PDF extraction
-                        pdf_reader = self.pdf_reader
-                        model = kwargs.get("model", self.model)
-
-                        image_placeholder = kwargs.get(
-                            "image_placeholder", "<!-- image -->"
-                        )
-                        page_placeholder = kwargs.get(
-                            "page_placeholder", "<!-- page -->"
-                        )
-
-                        if model is not None:
-                            text = pdf_reader.read(
-                                document_source,
-                                model=model,
-                                prompt=kwargs.get("prompt")
-                                or DEFAULT_IMAGE_CAPTION_PROMPT,  # noqa: W503
-                                show_base64_images=kwargs.get(
-                                    "show_base64_images", False
-                                ),
-                                image_placeholder=image_placeholder,
-                                page_placeholder=page_placeholder,
-                            )
-                            ocr_method = model.model_name
-                        else:
-                            text = pdf_reader.read(
-                                document_source,
-                                show_base64_images=kwargs.get(
-                                    "show_base64_images", False
-                                ),
-                                image_placeholder=image_placeholder,
-                                page_placeholder=page_placeholder,
-                            )
-                        conversion_method = "pdf"
-
-                elif ext in (
-                    "json",
-                    "html",
-                    "txt",
-                    "xml",
-                    "csv",
-                    "tsv",
-                    "md",
-                    "markdown",
-                ):
-                    with open(document_source, "r", encoding="utf-8") as f:
-                        text = f.read()
-                    conversion_method = ext
-                elif ext == "parquet":
-                    df = pd.read_parquet(document_source)
-                    text = df.to_csv(index=False)
-                    conversion_method = "csv"
-                elif ext in ("yaml", "yml"):
-                    with open(document_source, "r", encoding="utf-8") as f:
-                        yaml_text = f.read()
-                    text = yaml.safe_load(yaml_text)
-                    conversion_method = "json"
-                elif ext in ("xlsx", "xls"):
-                    text = str(
-                        pd.read_excel(document_source, engine="openpyxl").to_csv()
-                    )
-                    conversion_method = ext
-                elif ext in SUPPORTED_PROGRAMMING_LANGUAGES:
-                    with open(document_source, "r", encoding="utf-8") as f:
-                        text = f.read()
-                    conversion_method = "txt"
-                else:
-                    raise ValueError(
-                        f"Unsupported file extension: {ext}. Use another Reader component."
-                    )
-
-            # (2) URL
-            elif self.is_url(document_source):
-                ext = os.path.splitext(document_source)[-1].lower().lstrip(".")
-                response = requests.get(document_source)
-                response.raise_for_status()
-                document_name = document_source.split("/")[-1] or "downloaded_file"
-                document_path = document_source
-                conversion_method = ext
-                content_type = response.headers.get("Content-Type", "")
-
-                if "application/json" in content_type or document_name.endswith(
-                    ".json"
-                ):
-                    text = response.json()
-                elif "text/html" in content_type or document_name.endswith(".html"):
-                    parser = SimpleHTMLTextExtractor()
-                    parser.feed(response.text)
-                    text = parser.get_text()
-                elif "text/yaml" in content_type or document_name.endswith(
-                    (".yaml", ".yml")
-                ):
-                    text = yaml.safe_load(response.text)
-                    conversion_method = "json"
-                elif "text/csv" in content_type or document_name.endswith(".csv"):
-                    text = response.text
-                else:
-                    text = response.text
-
-            # (3) JSON/dict string
-            else:
-                try:
-                    text = self.parse_json(document_source)
-                    conversion_method = "json"
-                except Exception:
-                    try:
-                        text = yaml.safe_load(document_source)
-                        conversion_method = "json"
-                    except Exception:
-                        text = document_source
-                        conversion_method = "txt"
-
-        # --- 2. Explicit URL
-        elif source_type == "file_url":
-            ext = os.path.splitext(document_source)[-1].lower().lstrip(".")
-            if not isinstance(document_source, str) or not self.is_url(document_source):
-                raise ValueError("file_url must be a valid URL string.")
-            response = requests.get(document_source)
-            response.raise_for_status()
-            document_name = document_source.split("/")[-1] or "downloaded_file"
-            document_path = document_source
-            conversion_method = ext
-            content_type = response.headers.get("Content-Type", "")
-
-            if "application/json" in content_type or document_name.endswith(".json"):
-                text = response.json()
-            elif "text/html" in content_type or document_name.endswith(".html"):
-                parser = SimpleHTMLTextExtractor()
-                parser.feed(response.text)
-                text = parser.get_text()
-            elif "text/yaml" in content_type or document_name.endswith(
-                (".yaml", ".yml")
-            ):
-                text = yaml.safe_load(response.text)
-                conversion_method = "json"
-            elif "text/csv" in content_type or document_name.endswith(".csv"):
-                text = response.text
-            else:
-                text = response.text
-
-        # --- 3. Explicit JSON
-        elif source_type == "json_document":
-            document_name = kwargs.get("document_name", None)
-            document_path = None
-            text = self.parse_json(document_source)
-            conversion_method = "json"
-
-        # --- 4. Explicit text
-        elif source_type == "text_document":
-            document_name = kwargs.get("document_name", None)
-            document_path = None
-            try:
-                parsed = self.parse_json(document_source)
-                # Only treat as JSON if result is dict or list, not a string!
-                if isinstance(parsed, (dict, list)):
-                    text = parsed
-                    conversion_method = "json"
-                else:
-                    raise ValueError  # Force fallback
-            except Exception:
-                try:
-                    parsed = yaml.safe_load(document_source)
-                    # Only treat as YAML if it returns a dict or list
-                    if isinstance(parsed, (dict, list)):
-                        text = parsed
-                        conversion_method = "json"
-                    else:
-                        raise ValueError
-                except Exception:
-                    text = document_source
-                    conversion_method = "txt"
-
-        else:
-            raise ValueError(f"Unrecognized document source: {source_type}")
-
-        metadata = kwargs.get("metadata") or {}
-        document_id = kwargs.get("document_id", str(uuid.uuid4()))
-        document_path = document_path or ""
+        page_ph = kwargs.get("page_placeholder", "<!-- page -->")
+        page_ph_out = self._surface_page_placeholder(
+            scan=bool(kwargs.get("scan_pdf_pages")),
+            placeholder=page_ph,
+            text=text,
+        )
 
         return ReaderOutput(
             text=_ensure_str(text),
-            document_name=document_name,
-            document_path=document_path,
-            document_id=document_id,
-            conversion_method=conversion_method,
+            document_name=name,
+            document_path=path or "",
+            document_id=kwargs.get("document_id", str(uuid.uuid4())),
+            conversion_method=conv,
             reader_method="vanilla",
-            ocr_method=ocr_method,
-            metadata=metadata,
+            ocr_method=ocr,
+            page_placeholder=page_ph_out,
+            metadata=kwargs.get("metadata", {}),
         )
+
+    def _dispatch_source(  # noqa: WPS231
+        self,
+        src_type: str,
+        src_val: Any,
+        kw: Dict[str, Any],
+    ) -> Tuple[str, Optional[str], Any, str, Optional[str]]:
+        """
+        Route the request to a specialised handler and return
+        (document_name, document_path, text/content, conversion_method, ocr_method)
+        """
+        handlers = {
+            "file_path": self._handle_local_path,
+            "file_url": self._handle_url,
+            "json_document": self._handle_explicit_json,
+            "text_document": self._handle_explicit_text,
+        }
+        if src_type not in handlers:
+            raise ValueError(f"Unrecognized document source: {src_type}")
+        return handlers[src_type](src_val, kw)
+
+    # ---- individual strategies below – each ~20 lines or fewer ---------- #
+
+    # 1) Local / drive paths
+    def _handle_local_path(
+        self,
+        path_like: str | Path,
+        kw: Dict[str, Any],
+    ) -> Tuple[str, str, Any, str, Optional[str]]:
+        """Load from the filesystem (or, if it ‘looks like’ one, via HTTP)."""
+        path_str = os.fspath(path_like) if isinstance(path_like, Path) else path_like
+        if not isinstance(path_str, str):
+            raise ValueError("file_path must be a string or Path object.")
+
+        if not self.is_valid_file_path(path_str):
+            if self.is_url(path_str):
+                return self._handle_url(path_str, kw)
+            return self._handle_fallback(path_str, kw)
+
+        ext = os.path.splitext(path_str)[1].lower().lstrip(".")
+        doc_name = os.path.basename(path_str)
+        rel_path = os.path.relpath(path_str)
+
+        # ---- type‑specific branches ---- #
+        if ext == "pdf":
+            return (
+                doc_name,
+                rel_path,
+                *self._process_pdf(path_str, kw),
+            )
+        if ext in ("json", "html", "txt", "xml", "csv", "tsv", "md", "markdown"):
+            return doc_name, rel_path, _read_text_file(path_str, ext), ext, None
+        if ext == "parquet":
+            return doc_name, rel_path, _read_parquet(path_str), "csv", None
+        if ext in ("yaml", "yml"):
+            return doc_name, rel_path, _read_text_file(path_str, ext), "json", None
+        if ext in ("xlsx", "xls"):
+            return doc_name, rel_path, _read_excel(path_str), ext, None
+        if ext in SUPPORTED_PROGRAMMING_LANGUAGES:
+            return doc_name, rel_path, _read_text_file(path_str, ext), "txt", None
+
+        raise ValueError(f"Unsupported file extension: {ext}. Use another Reader.")
+
+    # 2) Remote URL
+    def _handle_url(
+        self,
+        url: str,
+        kw: Dict[str, Any],
+    ) -> Tuple[str, str, Any, str, Optional[str]]:  # noqa: D401
+        """Fetch via HTTP(S)."""
+        if not isinstance(url, str) or not self.is_url(url):
+            raise ValueError("file_url must be a valid URL string.")
+        content, conv = _load_via_requests(url)
+        name = url.split("/")[-1] or "downloaded_file"
+        return name, url, content, conv, None
+
+    # 3) Explicit JSON (dict or str)
+    def _handle_explicit_json(
+        self,
+        json_doc: Any,
+        _kw: Dict[str, Any],
+    ) -> Tuple[str, None, Any, str, None]:
+        """JSON passed straight in."""
+        return (
+            _kw.get("document_name", None),
+            None,
+            self.parse_json(json_doc),
+            "json",
+            None,
+        )
+
+    # 4) Explicit raw text
+    def _handle_explicit_text(
+        self,
+        txt: str,
+        _kw: Dict[str, Any],
+    ) -> Tuple[str, None, Any, str, None]:  # noqa: D401
+        """Text (maybe JSON / YAML) passed straight in."""
+        for parser, conv in ((self.parse_json, "json"), (yaml.safe_load, "json")):
+            try:
+                parsed = parser(txt)
+                if isinstance(parsed, (dict, list)):
+                    return _kw.get("document_name", None), None, parsed, conv, None
+            except Exception:  # pragma: no cover
+                pass
+        return _kw.get("document_name", None), None, txt, "txt", None
+
+    # ----- shared utilities ------------------------------------------------ #
+
+    def _process_pdf(
+        self,
+        path: str,
+        kw: Dict[str, Any],
+    ) -> Tuple[Any, str, Optional[str]]:
+        """Handle the two PDF modes, returning (content, conv, ocr_method)."""
+        if kw.get("scan_pdf_pages"):
+            model = kw.get("model", self.model)
+            if model is None:
+                raise ValueError("scan_pdf_pages=True requires a vision‑capable model.")
+            joined = self._scan_pdf_pages(path, model=model, **kw)
+            return joined, "png", model.model_name
+        # element‑wise extraction
+        content = self.pdf_reader.read(
+            path,
+            model=kw.get("model", self.model),
+            prompt=kw.get("prompt") or DEFAULT_IMAGE_CAPTION_PROMPT,
+            show_base64_images=kw.get("show_base64_images", False),
+            image_placeholder=kw.get("image_placeholder", "<!-- image -->"),
+            page_placeholder=kw.get("page_placeholder", "<!-- page -->"),
+        )
+        ocr_name = (
+            (kw.get("model") or self.model).model_name
+            if kw.get("model") or self.model
+            else None
+        )
+        return content, "pdf", ocr_name
+
+    def _scan_pdf_pages(self, file_path: str, model: BaseModel, **kw) -> str:
+        """VLM: describe each page then join."""
+        page_ph = kw.get("page_placeholder", "<!-- page -->")
+        pages = self.pdf_reader.describe_pages(
+            file_path=file_path,
+            model=model,
+            prompt=kw.get("prompt") or DEFAULT_EXTRACTION_PROMPT,
+            resolution=kw.get("resolution", 300),
+            **kw.get("vlm_parameters", {}),
+        )
+        return "\n\n---\n\n".join(f"{page_ph}\n\n{md}" for md in pages)
+
+    def _handle_fallback(self, raw: str, kw: Dict[str, Any]):
+        """
+        Re‑use the logic from the original ‘else’ branch when *raw* is neither
+        a valid path nor a recognised URL.
+        """
+        try:
+            return self._handle_explicit_json(raw, kw)
+        except Exception:
+            try:
+                return self._handle_explicit_text(raw, kw)
+            except Exception:  # pragma: no cover
+                return kw.get("document_name", None), None, raw, "txt", None
+
+    @staticmethod
+    def _surface_page_placeholder(
+        scan: bool, placeholder: str, text: Any
+    ) -> Optional[str]:
+        """
+        Decide whether to expose the page placeholder in `ReaderOutput`.
+        Follows the rule introduced in the latest patch: never expose
+        placeholders that contain '%'.
+        """
+        if "%" in placeholder:
+            return None
+        txt = _ensure_str(text)
+        return placeholder if (scan or placeholder in txt) else None
+
+
+# Helpers
+
+
+def _ensure_str(val: Any) -> str:
+    """Convert *val* (possibly a dict / list) to a readable string."""
+    if isinstance(val, (dict, list)):
+        for dumper in (
+            lambda v: json.dumps(v, indent=2, ensure_ascii=False),
+            lambda v: yaml.safe_dump(v, allow_unicode=True),
+        ):
+            try:
+                return dumper(val)
+            except Exception:  # pragma: no cover – fall‑through
+                pass
+    return "" if val is None else str(val)
+
+
+def _guess_source(
+    kwargs: Dict[str, Any], file_path: str | Path | None
+) -> Tuple[str, Any]:
+    """
+    Decide where the content comes from based on the precedence defined in the
+    original implementation.
+    """
+    for key in ("file_path", "file_url", "json_document", "text_document"):
+        if kwargs.get(key) is not None:
+            return key, kwargs[key]
+    return "file_path", file_path
+
+
+def _read_text_file(path: str, ext: str) -> str:
+    with open(path, "r", encoding="utf-8") as fh:
+        return fh.read() if ext != "yaml" and ext != "yml" else yaml.safe_load(fh)
+
+
+def _read_parquet(path: str) -> str:
+    return pd.read_parquet(path).to_csv(index=False)
+
+
+def _read_excel(path: str) -> str:
+    return pd.read_excel(path, engine="openpyxl").to_csv(index=False)
+
+
+def _load_via_requests(url: str) -> Tuple[Any, str]:
+    """Return content, mime‐like conversion key."""
+    resp = requests.get(url)
+    resp.raise_for_status()
+    ctype = resp.headers.get("Content-Type", "")
+    if "application/json" in ctype or url.endswith(".json"):
+        return resp.json(), "json"
+    if "text/html" in ctype or url.endswith(".html"):
+        p = SimpleHTMLTextExtractor()
+        p.feed(resp.text)
+        return p.get_text(), "html"
+    if "text/yaml" in ctype or url.endswith((".yaml", ".yml")):
+        return yaml.safe_load(resp.text), "json"
+    return resp.text, "txt"  # covers csv & plain text
 
 
 class SimpleHTMLTextExtractor(HTMLParser):

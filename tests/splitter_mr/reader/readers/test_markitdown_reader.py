@@ -13,11 +13,10 @@ def patch_vision_models():
     """
 
     class DummyVisionModel:
-        def __init__(self):
-            self.model_name = "gpt-4o-vision"
+        model_name = "gpt-4o-vision"
 
         def get_client(self):
-            return MagicMock()
+            return None
 
     base = "splitter_mr.reader.readers.markitdown_reader"
     return (
@@ -169,3 +168,81 @@ def test_scan_pdf_pages_custom_prompt(tmp_path):
         # Should pass prompt to convert
         args, kwargs = MockMID.return_value.convert.call_args
         assert kwargs["llm_prompt"] == custom_prompt
+
+
+@pytest.mark.parametrize(
+    "md_text, page_placeholder, expected",
+    [
+        ("text <!-- page --> more", "<!-- page -->", "<!-- page -->"),
+        # etc...
+    ],
+)
+def test_page_placeholder_field(
+    monkeypatch, tmp_path, md_text, page_placeholder, expected
+):
+    class DummyVisionModel:
+        model_name = "gpt-4o-vision"
+
+        def get_client(self):
+            return None
+
+    file_path = tmp_path / "doc.pdf"
+    file_path.write_text("fake pdf")
+
+    monkeypatch.setattr(
+        MarkItDownReader,
+        "_pdf_pages_to_markdown",
+        lambda self, file_path, md, prompt, page_placeholder: md_text,
+    )
+    monkeypatch.setattr(
+        MarkItDownReader, "_get_markitdown", lambda self: (None, "gpt-4o-vision")
+    )
+
+    reader = MarkItDownReader(model=DummyVisionModel())
+    out = reader.read(
+        str(file_path), page_placeholder=page_placeholder, scan_pdf_pages=True
+    )
+    assert out.page_placeholder == expected
+
+
+def test_page_placeholder_field_no_scan(monkeypatch, tmp_path):
+    file_path = tmp_path / "plain.txt"
+    file_path.write_text("irrelevant")
+
+    # Patch MarkItDown.convert to control output when scan_pdf_pages is False (default)
+    class DummyMD:
+        def convert(self, file_path, llm_prompt=None):
+            class Result:
+                text_content = "foo <!-- page --> bar"
+
+            return Result()
+
+    monkeypatch.setattr(
+        "splitter_mr.reader.readers.markitdown_reader.MarkItDown",
+        lambda *a, **kw: DummyMD(),
+    )
+    reader = MarkItDownReader()
+    out = reader.read(str(file_path))
+    # The placeholder appears, so should be picked up
+    assert out.page_placeholder == "<!-- page -->"
+
+
+def test_page_placeholder_absent_no_scan(monkeypatch, tmp_path):
+    file_path = tmp_path / "plain.txt"
+    file_path.write_text("irrelevant")
+
+    # Patch MarkItDown.convert to output something without placeholder
+    class DummyMD:
+        def convert(self, file_path, llm_prompt=None):
+            class Result:
+                text_content = "something else"
+
+            return Result()
+
+    monkeypatch.setattr(
+        "splitter_mr.reader.readers.markitdown_reader.MarkItDown",
+        lambda *a, **kw: DummyMD(),
+    )
+    reader = MarkItDownReader()
+    out = reader.read(str(file_path))
+    assert out.page_placeholder is None
