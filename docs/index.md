@@ -15,6 +15,14 @@
     ➡️ See [**documentation**](https://andreshere00.github.io/Splitter_MR/api_reference/model/).
 
 
+!!! important
+    **New version v0.3.3**
+     
+    Add support for reading files and splitting them by pages using `PageSplitter`
+      
+    ➡️ See [**documentation**](https://andreshere00.github.io/Splitter_MR/examples/text/splitter/).
+
+
 ## Features
 
 ### Different input formats
@@ -122,6 +130,7 @@ ReaderOutput(
     conversion_method='txt', 
     reader_method='vanilla', 
     ocr_method=None, 
+    page_placeholder=None,
     metadata={}
     )
 ```
@@ -183,11 +192,10 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 
 ## Next features
 
-- [ ] Modularize library into several sub-libraries.
-- [ ] Implement a method to split a document by pages (`PagedSplitter`).
 - [ ] Add support to read `xlsx`, `docx` and `pptx` files using `VanillaReader`. 
-- [ ] Add support to read formulas in DoclingReader.
-- [ ] Implement a method to split by embedding similarity > `SemanticSplitter`.
+- [ ] Modularize library into several sub-libraries.
+- [ ] Add support to read formulas.
+- [ ] Implement a method to split by embedding similarity: `SemanticSplitter`.
     - [ ] Add HuggingFace embeddings model support.
     - [ ] Add OpenAI embeddings model support.
     - [ ] Add Gemini embeddings model support.
@@ -197,6 +205,7 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 - [ ] Add Gemini VLMs model support.
 - [ ] Add Claude Anthropic VLMs model support.
 - [ ] Add support to generate output in JSON format.
+- [X] Implement a method to split a document by pages (`PagedSplitter`).
 - [X] Add support to read PDF as scanned pages.
 - [X] Add support to change image placeholders.
 - [X] Add support to change page placeholders.

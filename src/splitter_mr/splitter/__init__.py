@@ -4,7 +4,7 @@ from .splitters import (
     CodeSplitter,
     HeaderSplitter,
     HTMLTagSplitter,
-    PageSplitter,
+    PagedSplitter,
     ParagraphSplitter,
     RecursiveCharacterSplitter,
     RecursiveJSONSplitter,
@@ -27,5 +27,5 @@ __all__ = [
     "HeaderSplitter",
     "RowColumnSplitter",
     "TokenSplitter",
-    "PageSplitter",
+    "PagedSplitter",
 ]

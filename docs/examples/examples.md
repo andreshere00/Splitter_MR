@@ -1,8 +1,8 @@
-# Examples
+# **Examples**
 
 This section illustrates some use cases with **SplitterMR** to read documents and split them into smaller chunks.
 
-## Text-based splitting
+## **Text-based splitting**
 
 ### [How to split recusively](./text/recursive_character_splitter.md)
 
@@ -12,11 +12,15 @@ Divide your text recursively by group of words and sentences, based on the chara
 
 Divide your text by gramatical groups, with an specific chunk size and with optional chunk overlap.
 
+### [How to split by pages](./text/paged_splitter.md)
+
+Divide your files (PDF, Word, Excel, PowerPoint) by gramatical groups, with the desired number of pages and optional chunk overlap.
+
 ### [How to split your text by tokens](./text/token_splitter.md)
 
 Divide your text to accomplsih your LLM window context using tokenizers such as `Spacy`, `NLTK` and `Tiktoken`.
 
-## Schema-based splitting
+## **Schema-based splitting**
 
 ### [How to split HTML documents by tags](./schema/html_tag_splitter.md)
 
@@ -38,7 +42,7 @@ Divide your scripts written in Java, Javascript, Python, Go and many more progra
 
 Divide your tables by a fixed number of rows and columns preserving the headers and overall structure.
 
-## Reading files
+## **Reading files**
 
 ### [How to read a PDF file without image processing](./pdf/pdf_without_vlm.md)
 
@@ -57,11 +61,15 @@ Read your PDF files and analyze the content using Docling and Visual Language Mo
 Read your PDF files and analyze the content using MarkItDown and Visual Language Models.
 
 !!! note
-    
+
     👨‍💻 **Work-in-progress...** More examples to come!
 
 ## Other examples
 
-### [Deprecated] - [How to read PDFs and analyze its content using several Visual Language Models](./pdf/pdf_with_vlm.md)
+!!! warning
+
+    These examples have been deprecated!
+
+### [How to read PDFs and analyze its content using several Visual Language Models](./pdf/pdf_with_vlm.md)
 
 Examples about how to read PDF files using PDFPlumber, MarkItDown and Docling frameworks, and read its multimedia content using a visual language model.

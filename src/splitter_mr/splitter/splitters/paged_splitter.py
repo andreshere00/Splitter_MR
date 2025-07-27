@@ -4,7 +4,7 @@ from ...schema import ReaderOutput, SplitterOutput
 from ..base_splitter import BaseSplitter
 
 
-class PageSplitter(BaseSplitter):
+class PagedSplitter(BaseSplitter):
     """
     Splits a multi-page document into page-based or multi-page chunks using a placeholder marker.
 
