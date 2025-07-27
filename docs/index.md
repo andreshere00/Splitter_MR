@@ -20,7 +20,7 @@
      
     Add support for reading files and splitting them by pages using `PageSplitter`
       
-    ➡️ See [**documentation**](https://andreshere00.github.io/Splitter_MR/examples/text/splitter/).
+    ➡️ See [**documentation**](https://andreshere00.github.io/Splitter_MR/examples/text/paged_splitter/).
 
 
 ## Features
