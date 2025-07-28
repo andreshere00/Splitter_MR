@@ -1,5 +1,17 @@
 # **v0.3.x**
 
+## v0.3.4
+
+### Features
+
+- Add support to read a PDF by pages using `MarkItDownReader` without LLM.
+- [IN PROGRESS] Add method to read `xlsx`, `pptx`, `docx` files using `VanillaReader`.
+
+### Documentation
+
+- Update documentation.
+- Fix some hyperlinks in README.
+
 ## v0.3.3
 
 ### Features

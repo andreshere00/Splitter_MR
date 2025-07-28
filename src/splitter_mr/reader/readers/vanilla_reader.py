@@ -105,7 +105,7 @@ class VanillaReader(BaseReader):
             source_type, source_val, kwargs
         )
 
-        page_ph = kwargs.get("page_placeholder", "<!-- page -->")
+        page_ph: str = kwargs.get("page_placeholder", "<!-- page -->")
         page_ph_out = self._surface_page_placeholder(
             scan=bool(kwargs.get("scan_pdf_pages")),
             placeholder=page_ph,

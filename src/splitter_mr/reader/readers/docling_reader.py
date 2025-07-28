@@ -73,7 +73,7 @@ class DoclingReader(BaseReader):
                 show_base64_images provided).
         """
 
-        ext = os.path.splitext(file_path)[1].lower().lstrip(".")
+        ext: str = os.path.splitext(file_path)[1].lower().lstrip(".")
         if ext not in self.SUPPORTED_EXTENSIONS:
             warnings.warn(f"Unsupported extension '{ext}'. Using VanillaReader.")
             return VanillaReader().read(file_path=file_path, **kwargs)
@@ -82,7 +82,7 @@ class DoclingReader(BaseReader):
         pipeline_name, pipeline_args = self._select_pipeline(file_path, ext, **kwargs)
         md = DoclingPipelineFactory.run(pipeline_name, file_path, **pipeline_args)
 
-        page_placeholder = pipeline_args.get("page_placeholder", "")
+        page_placeholder: str = pipeline_args.get("page_placeholder", "<!-- page -->")
         page_placeholder_value = (
             page_placeholder if page_placeholder and page_placeholder in md else None
         )
@@ -127,11 +127,11 @@ class DoclingReader(BaseReader):
             - For other extensions: always uses Markdown pipeline.
         """
         # Defaults
-        show_base64_images = kwargs.get("show_base64_images", False)
-        page_placeholder = kwargs.get("page_placeholder", "<!-- page -->")
-        image_placeholder = kwargs.get("image_placeholder", "<!-- image -->")
-        image_resolution = kwargs.get("image_resolution", 1.0)
-        scan_pdf_pages = kwargs.get("scan_pdf_pages", False)
+        show_base64_images: bool = kwargs.get("show_base64_images", False)
+        page_placeholder: str = kwargs.get("page_placeholder", "<!-- page -->")
+        image_placeholder: str = kwargs.get("image_placeholder", "<!-- image -->")
+        image_resolution: float = kwargs.get("image_resolution", 1.0)
+        scan_pdf_pages: bool = kwargs.get("scan_pdf_pages", False)
 
         # --- PDF logic ---
         if ext == "pdf":
