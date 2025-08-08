@@ -12,7 +12,7 @@ from markitdown import MarkItDown
 from pypdf import PdfReader, PdfWriter
 
 from ...model import AzureOpenAIVisionModel, OpenAIVisionModel
-from ...schema import DEFAULT_EXTRACTION_PROMPT, ReaderOutput
+from ...schema import DEFAULT_IMAGE_EXTRACTION_PROMPT, ReaderOutput
 from ..base_reader import BaseReader
 
 
@@ -244,7 +244,7 @@ class MarkItDownReader(BaseReader):
         # Initialize MarkItDown reader
         file_path: str | Path = os.fspath(file_path)
         ext: str = os.path.splitext(file_path)[1].lower().lstrip(".")
-        prompt: str = kwargs.get("prompt", DEFAULT_EXTRACTION_PROMPT)
+        prompt: str = kwargs.get("prompt", DEFAULT_IMAGE_EXTRACTION_PROMPT)
         page_placeholder: str = kwargs.get("page_placeholder", "<!-- page -->")
         split_by_pages: bool = kwargs.get("split_by_pages", False)
         conversion_method: str = None

@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from splitter_mr.reader.utils import PDFPlumberReader
-from splitter_mr.schema import DEFAULT_EXTRACTION_PROMPT
+from splitter_mr.schema import DEFAULT_IMAGE_EXTRACTION_PROMPT
 
 # Helpers
 
@@ -279,7 +279,9 @@ def test_describe_pages_calls_vlm(monkeypatch):
     assert len(model.calls) == 3
     for idx, call in enumerate(model.calls):
         assert call["file"] == dummy_imgs[idx]
-        assert call["prompt"] is None or call["prompt"] == DEFAULT_EXTRACTION_PROMPT
+        assert (
+            call["prompt"] is None or call["prompt"] == DEFAULT_IMAGE_EXTRACTION_PROMPT
+        )
 
 
 def test_extract_images_encodes_and_annotates():

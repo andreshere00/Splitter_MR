@@ -3,8 +3,9 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from splitter_mr.model.models.openai_model import OpenAIVisionModel
+from splitter_mr.schema import DEFAULT_IMAGE_CAPTION_PROMPT
 
-# Helpers
+# -------- Helpers & Fixtures -------- #
 
 
 @pytest.fixture
@@ -21,24 +22,23 @@ def clear_env(monkeypatch):
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
 
 
-# Test cases
+# -------- Test cases --------- #
+
+
+def _mock_create_returning(text="Extracted text!"):
+    mock_response = MagicMock()
+    mock_response.choices = [MagicMock(message=MagicMock(content=text))]
+    return mock_response
 
 
 def test_extract_text_calls_api(openai_vision_model):
-    # Patch the correct method: chat.completions.create
     with patch.object(
         openai_vision_model.client.chat.completions, "create"
     ) as mock_create:
-        # Setup mock return value
-        mock_response = MagicMock()
-        mock_response.choices = [
-            MagicMock(message=MagicMock(content="Extracted text!"))
-        ]
-        mock_create.return_value = mock_response
-
+        mock_create.return_value = _mock_create_returning("Extracted text!")
         text = openai_vision_model.extract_text("SOME_BASE64", prompt="What's here?")
         mock_create.assert_called_once()
-        args = mock_create.call_args[1]
+        args = mock_create.call_args.kwargs
         assert args["model"] == "gpt-4.1"
         assert args["messages"][0]["content"][0]["text"] == "What's here?"
         assert text == "Extracted text!"
@@ -54,7 +54,7 @@ def test_init_with_argument():
 def test_init_with_env(monkeypatch):
     monkeypatch.setenv("OPENAI_API_KEY", "env-key")
     with patch("splitter_mr.model.models.openai_model.OpenAI") as mock_openai:
-        model = OpenAIVisionModel()
+        _ = OpenAIVisionModel()
         mock_openai.assert_called_once_with(api_key="env-key")
 
 
@@ -64,20 +64,41 @@ def test_init_missing_key_raises():
 
 
 def test_extract_text_custom_params():
-    # Setup mock client
     mock_client = MagicMock()
-    mock_response = MagicMock()
-    mock_response.choices = [MagicMock(message=MagicMock(content="foo"))]
-    mock_client.chat.completions.create.return_value = mock_response
-
+    mock_client.chat.completions.create.return_value = _mock_create_returning("foo")
     with patch(
         "splitter_mr.model.models.openai_model.OpenAI", return_value=mock_client
     ):
         model = OpenAIVisionModel(api_key="x", model_name="vision")
         out = model.extract_text("dGVzdA==", prompt="Extract!", temperature=0.2)
-        mock_client.chat.completions.create.assert_called_once()
-        args = mock_client.chat.completions.create.call_args[1]
-        assert args["model"] == "vision"
-        assert args["messages"][0]["content"][0]["text"] == "Extract!"
-        assert args["temperature"] == 0.2
+        called = mock_client.chat.completions.create.call_args.kwargs
+        assert called["model"] == "vision"
+        assert called["messages"][0]["content"][0]["text"] == "Extract!"
+        assert called["temperature"] == 0.2
         assert out == "foo"
+
+
+def test_extract_text_uses_default_prompt_when_omitted(openai_vision_model):
+    with patch.object(
+        openai_vision_model.client.chat.completions, "create"
+    ) as mock_create:
+        mock_create.return_value = _mock_create_returning("ok")
+        _ = openai_vision_model.extract_text("AAAA")
+        called = mock_create.call_args.kwargs
+        text_part = called["messages"][0]["content"][0]
+        assert text_part["type"] == "text"
+        assert text_part["text"] == DEFAULT_IMAGE_CAPTION_PROMPT
+
+
+def test_extract_text_includes_image_url_block_png(openai_vision_model):
+    with patch.object(
+        openai_vision_model.client.chat.completions, "create"
+    ) as mock_create:
+        mock_create.return_value = _mock_create_returning("ok")
+        _ = openai_vision_model.extract_text("Zm9vYmFy", prompt="go")
+        called = mock_create.call_args.kwargs
+        content = called["messages"][0]["content"]
+        kinds = [c["type"] for c in content]
+        assert "text" in kinds and "image_url" in kinds
+        img = next(c for c in content if c["type"] == "image_url")
+        assert img["image_url"]["url"].startswith("data:image/png;base64,")

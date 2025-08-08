@@ -14,7 +14,7 @@ from openai import AzureOpenAI, OpenAI
 from PIL.Image import Image
 
 from ...model import BaseModel
-from ...schema import DEFAULT_EXTRACTION_PROMPT, DEFAULT_IMAGE_CAPTION_PROMPT
+from ...schema import DEFAULT_IMAGE_CAPTION_PROMPT, DEFAULT_IMAGE_EXTRACTION_PROMPT
 
 # Helpers
 
@@ -64,7 +64,7 @@ def get_vlm_url_and_headers(client: Any) -> Tuple[str, dict]:
 def page_image_pipeline(
     file_path: str | Path,
     model: BaseModel = None,
-    prompt: str = DEFAULT_EXTRACTION_PROMPT,
+    prompt: str = DEFAULT_IMAGE_EXTRACTION_PROMPT,
     image_resolution: float = 1.0,
     show_base64_images: bool = False,
     page_placeholder: str = "<!-- page -->",

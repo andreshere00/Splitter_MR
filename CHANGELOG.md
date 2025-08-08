@@ -1,16 +1,30 @@
-# **v0.3.x**
+# **v0.4.x**
 
-## v0.3.4
+## v0.4.0
+
+PagedSplitter full implementation
+
+> [!IMPORTANT]
+> **New version v0.4.0**
+>  
+> Add support for reading files and splitting them by pages using `PageSplitter`. Add support to read more files with `VanillaReader`.
+>   
+> ➡️ See [**documentation**](https://andreshere00.github.io/Splitter_MR/examples/text/paged_splitter/).
 
 ### Features
 
 - Add support to read a PDF by pages using `MarkItDownReader` without LLM.
-- [IN PROGRESS] Add method to read `xlsx`, `pptx`, `docx` files using `VanillaReader`.
+- Add method to read `xlsx`, `pptx`, `docx` files using `VanillaReader`.
+- Add method to read several image formats using `VanillaReader`.
+- Add support to read excel and parquet files using different engines in `VanillaReader`.
+- Add support to read several file types using AzureOpenAI and OpenAI models.
 
 ### Documentation
 
 - Update documentation.
 - Fix some hyperlinks in README.
+
+# **v0.3.x**
 
 ## v0.3.3
 
@@ -60,6 +74,13 @@
 - Change MkDocs server to support both light and dark modes.
 
 ## v0.3.0
+
+> [!IMPORTANT]
+> **Vision Language Model (VLM) support!**
+>  
+> You can now use vision-capable models (OpenAI Vision, Azure OpenAI Vision) to extract image descriptions and OCR text during file reading. Pass a VLM model to any Reader class via the `model` parameter. 
+>   
+> ➡️ See [**documentation**](https://andreshere00.github.io/Splitter_MR/api_reference/model/).
 
 ### Features
 

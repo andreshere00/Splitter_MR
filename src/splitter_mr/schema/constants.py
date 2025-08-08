@@ -55,7 +55,7 @@ SUPPORTED_PROGRAMMING_LANGUAGES: set[str] = {
     "pm",
 }
 
-DOCLING_SUPPORTED_EXTENSIONS: set[str] = {
+SUPPORTED_DOCLING_FILE_EXTENSIONS: set[str] = {
     "md",
     "markdown",
     "pdf",
@@ -73,3 +73,5 @@ DOCLING_SUPPORTED_EXTENSIONS: set[str] = {
     "gif",
     "tiff",
 }
+
+SUPPORTED_VANILLA_IMAGE_EXTENSIONS: set[str] = {"png", "pneg", "jpg", "jpeg"}

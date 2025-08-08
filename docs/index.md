@@ -8,17 +8,9 @@
 **SplitterMR** is a library for chunking data into convenient text blocks compatible with your LLM applications.
 
 !!! important
-    **Vision Language Model (VLM) support!**
+    **New version v0.4.0**
      
-    You can now use vision-capable models (OpenAI Vision, Azure OpenAI Vision) to extract image descriptions and OCR text during file reading. Pass a VLM model to any Reader class via the `model` parameter. 
-      
-    ➡️ See [**documentation**](https://andreshere00.github.io/Splitter_MR/api_reference/model/).
-
-
-!!! important
-    **New version v0.3.3**
-     
-    Add support for reading files and splitting them by pages using `PageSplitter`
+    Add support for reading files and splitting them by pages using `PageSplitter`. Add support to read more files with `VanillaReader`.
       
     ➡️ See [**documentation**](https://andreshere00.github.io/Splitter_MR/examples/text/paged_splitter/).
 
@@ -31,11 +23,11 @@ SplitterMR can read data from multiples sources and files. To read the files, it
 
 Currently, there are supported three readers: `VanillaReader`, and `MarkItDownReader` and `DoclingReader`. These are the differences between each Reader component:
 
-| **Reader**         | **Unstructured files & PDFs**    | **MS Office suite files**         | **Tabular data**        | **Files with hierarchical schema**      | **Image files**                  | **Markdown conversion** |
-|--------------------|----------------------------------|-----------------------------------|-------------------------|----------------------------------------|----------------------------------|----------------------------------|
-| **`VanillaReader`**      | `txt`, `md`, `pdf`                  | `xlsx`                                 | `csv`, `tsv`, `parquet`| `json`, `yaml`, `html`, `xml`          | - | Partial |----------------------------------| –                                |
-| **`MarkItDownReader`**   | `txt`, `md`, `pdf`               | `docx`, `xlsx`, `pptx`            | `csv`, `tsv`                  | `json`, `html`, `xml`                  | `jpg`, `png`, `pneg`             | Yes |
-| **`DoclingReader`**      | `txt`, `md`, `pdf`                     | `docx`, `xlsx`, `pptx`            | –                 | `html`, `xhtml`                        | `png`, `jpeg`, `tiff`, `bmp`, `webp` | Yes |
+| **Reader**             | **Unstructured files & PDFs** | **MS Office suite files** | **Tabular data** | **Files with hierarchical schema** | **Image files** | **Markdown conversion** |
+|------------------------|-------------------------------|---------------------------|------------------|------------------------------------|-----------------|-------------------------|
+| **`VanillaReader`**    | `txt`, `md`, `pdf` | `xlsx`, `docx`, `pptx` | `csv`, `tsv`, `parquet` | `json`, `yaml`, `html`, `xml` | -                           | Partial                 |
+| **`MarkItDownReader`** | `txt`, `md`, `pdf` | `docx`, `xlsx`, `pptx` | `csv`, `tsv` | `json`, `html`, `xml` | `jpg`, `png`, `pneg`                           | Yes                     |
+| **`DoclingReader`**    | `txt`, `md`, `pdf` | `docx`, `xlsx`, `pptx` | –           | `html`, `xhtml`  | `png`, `jpeg`, `tiff`, `bmp`, `webp`                 | Yes                     |
 
 ### Several splitting methods
 
@@ -190,7 +182,7 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 
 ## Next features
 
-- [ ] Add support to read `xlsx`, `docx` and `pptx` files using `VanillaReader`. 
+- [ ] Add support to read images using `VanillaReader`. 
 - [ ] Modularize library into several sub-libraries.
 - [ ] Add support to read formulas.
 - [ ] Implement a method to split by embedding similarity: `SemanticSplitter`.
@@ -203,6 +195,8 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 - [ ] Add Gemini VLMs model support.
 - [ ] Add Claude Anthropic VLMs model support.
 - [ ] Add support to generate output in JSON format.
+- [X] Add support to read `xlsx`, `docx` and `pptx` files using `VanillaReader`. 
+- [X] Add support to read images using `VanillaReader`.
 - [X] Implement a method to split a document by pages (`PagedSplitter`).
 - [X] Add support to read PDF as scanned pages.
 - [X] Add support to change image placeholders.

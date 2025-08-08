@@ -1,8 +1,10 @@
+import mimetypes
 import os
 from typing import Any, Optional
 
 from openai import AzureOpenAI
 
+from ...schema import DEFAULT_IMAGE_CAPTION_PROMPT
 from ..base_model import BaseModel
 
 
@@ -70,45 +72,57 @@ class AzureOpenAIVisionModel(BaseModel):
     def extract_text(
         self,
         file: Optional[bytes],
-        prompt: str = "Extract the text from this resource in the original language. Return the result in markdown code format.",
+        prompt: str = DEFAULT_IMAGE_CAPTION_PROMPT,
+        file_ext: Optional[str] = "png",
         **parameters: Any,
     ) -> str:
         """
-        Extracts text from a base64 image using Azure's Responses API.
+        Extract text from an image using the Azure OpenAI Vision model.
+
+        Encodes the given image as a data URI with an appropriate MIME type based on
+        ``file_ext`` and sends it along with a prompt to the Azure OpenAI Vision API.
+        The API processes the image and returns extracted text in the response.
 
         Args:
-            file (bytes): Base64‑encoded image string.
-            prompt (str): Instruction prompt for text extraction.
-            **parameters: Extra params passed to client.responses.create().
+            file (bytes, optional): Base64-encoded image content **without** the
+                ``data:image/...;base64,`` prefix. Must not be None.
+            prompt (str, optional): Instruction text guiding the extraction.
+                Defaults to ``DEFAULT_IMAGE_CAPTION_PROMPT``.
+            file_ext (str, optional): File extension (e.g., ``"png"``, ``"jpg"``)
+                used to determine the MIME type for the image. Defaults to ``"png"``.
+            **parameters (Any): Additional keyword arguments passed directly to
+                the Azure OpenAI client ``chat.completions.create()`` method.
 
         Returns:
-            str: Extracted text from the image.
+            str: The extracted text returned by the vision model.
+
+        Raises:
+            ValueError: If ``file`` is None.
+            openai.OpenAIError: If the API request fails.
 
         Example:
             ```python
-            from splitter_mr.model import AzureOpenAIVisionModel
-
-            # Ensure required Azure environment variables are set, or pass parameters directly
-            model = AzureOpenAIVisionModel(
-                api_key="...",
-                azure_endpoint="https://...azure.com/",
-                azure_deployment="deployment-name"
-            )
-
-            with open("example.png", "rb") as f:
-                image_bytes = f.read()
-
-            markdown = model.extract_text(image_bytes)
-            print(markdown)
+            model = AzureOpenAIVisionModel(...)
+            with open("image.jpg", "rb") as f:
+                img_b64 = base64.b64encode(f.read()).decode("utf-8")
+            text = model.extract_text(img_b64, prompt="Describe this image", file_ext="jpg")
+            print(text)
             ```
         """
+        if file is None:
+            raise ValueError("No file content provided for text extraction.")
+
+        mime_type = mimetypes.types_map.get(
+            f".{file_ext.lower()}", "application/octet-stream"
+        )
+
         payload = {
             "role": "user",
             "content": [
                 {"type": "text", "text": prompt},
                 {
                     "type": "image_url",
-                    "image_url": {"url": f"data:image/png;base64,{file}"},
+                    "image_url": {"url": f"data:{mime_type};base64,{file}"},
                 },
             ],
         }

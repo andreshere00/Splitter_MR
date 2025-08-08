@@ -7,9 +7,9 @@ from typing import Any, Optional
 
 from ...model import BaseModel
 from ...schema import (
-    DEFAULT_EXTRACTION_PROMPT,
     DEFAULT_IMAGE_CAPTION_PROMPT,
-    DOCLING_SUPPORTED_EXTENSIONS,
+    DEFAULT_IMAGE_EXTRACTION_PROMPT,
+    SUPPORTED_DOCLING_FILE_EXTENSIONS,
     ReaderOutput,
 )
 from ..base_reader import BaseReader
@@ -25,7 +25,7 @@ class DoclingReader(BaseReader):
     and non-PDF files.
     """
 
-    SUPPORTED_EXTENSIONS = DOCLING_SUPPORTED_EXTENSIONS
+    SUPPORTED_EXTENSIONS = SUPPORTED_DOCLING_FILE_EXTENSIONS
 
     _IMAGE_PATTERN = re.compile(
         r"!\[(?P<alt>[^\]]*?)\]"
@@ -139,7 +139,7 @@ class DoclingReader(BaseReader):
                 # Scan pages as images and extract their content
                 pipeline_args = {
                     "model": self.model,
-                    "prompt": kwargs.get("prompt", DEFAULT_EXTRACTION_PROMPT),
+                    "prompt": kwargs.get("prompt", DEFAULT_IMAGE_EXTRACTION_PROMPT),
                     "image_resolution": image_resolution,
                     "page_placeholder": page_placeholder,
                     "show_base64_images": show_base64_images,
