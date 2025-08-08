@@ -178,19 +178,22 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 
 ## Next features
 
-- [ ] Add support to read images using `VanillaReader`. 
-- [ ] Modularize library into several sub-libraries.
-- [ ] Add support to read formulas.
 - [ ] Implement a method to split by embedding similarity: `SemanticSplitter`.
     - [ ] Add HuggingFace embeddings model support.
     - [ ] Add OpenAI embeddings model support.
     - [ ] Add Gemini embeddings model support.
     - [ ] Add Claude Anthropic embeddings model support.
+- [ ] Modularize library into several sub-libraries.
+- [ ] Add support to read formulas.
 - [ ] Add classic **OCR** models: `easyocr` and `pytesseract`.
-- [ ] Add HuggingFace VLMs model support.
-- [ ] Add Gemini VLMs model support.
-- [ ] Add Claude Anthropic VLMs model support.
-- [ ] Add support to generate output in JSON format.
+- [ ] Add new models:
+    - [ ] Add HuggingFace VLMs model support.
+    - [ ] Add Gemini VLMs model support.
+    - [ ] Add Claude Anthropic VLMs model support.
+    - [ ] Add Grok VLMs model support.
+    - [ ] Add support to generate output in Markdown format.
+- [X] Add new supported formats to be analyzed with OpenAI and AzureOpenAI models.
+- [X] Add support to read images using `VanillaReader`. 
 - [X] Add support to read `xlsx`, `docx` and `pptx` files using `VanillaReader`. 
 - [X] Add support to read images using `VanillaReader`.
 - [X] Implement a method to split a document by pages (`PagedSplitter`).

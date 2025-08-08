@@ -74,4 +74,4 @@ SUPPORTED_DOCLING_FILE_EXTENSIONS: set[str] = {
     "tiff",
 }
 
-SUPPORTED_VANILLA_IMAGE_EXTENSIONS: set[str] = {"png", "pneg", "jpg", "jpeg"}
+SUPPORTED_VANILLA_IMAGE_EXTENSIONS: set[str] = {"png", "jpg", "jpeg", "webp", "gif"}

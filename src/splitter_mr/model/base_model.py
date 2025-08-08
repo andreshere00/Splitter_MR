@@ -13,7 +13,11 @@ class BaseModel(ABC):
 
     @abstractmethod
     def extract_text(
-        self, prompt: str, file: Optional[bytes], **parameters: Dict[str, Any]
+        self,
+        prompt: str,
+        file: Optional[bytes],
+        file_ext: Optional[str],
+        **parameters: Dict[str, Any],
     ) -> str:
         """
         Extracts text from the provided image (base64-encoded string) using the prompt.

@@ -743,7 +743,7 @@ def test_image_file_base64_encoding(create_image):
 
 
 def test_image_file_unsupported_ext(create_image):
-    img_path = create_image("gif")  # Only PNG/JPG/JPEG supported
+    img_path = create_image("svg")  # Only PNG/JPG/JPEG supported
     reader = VanillaReader(model=DummyVisionModel())
     with pytest.raises(ValueError):
         reader.read(file_path=img_path)

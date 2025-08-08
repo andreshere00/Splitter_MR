@@ -17,7 +17,7 @@ PagedSplitter full implementation
 - Add method to read `xlsx`, `pptx`, `docx` files using `VanillaReader`.
 - Add method to read several image formats using `VanillaReader`.
 - Add support to read excel and parquet files using different engines in `VanillaReader`.
-- Add support to read several file types using AzureOpenAI and OpenAI models.
+- Add support to analyze content in several file types using AzureOpenAI and OpenAI models.
 
 ### Documentation
 
