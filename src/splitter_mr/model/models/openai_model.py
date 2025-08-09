@@ -4,7 +4,14 @@ from typing import Any, Optional
 
 from openai import OpenAI
 
-from ...schema import DEFAULT_IMAGE_CAPTION_PROMPT
+from ...schema import (
+    DEFAULT_IMAGE_CAPTION_PROMPT,
+    SUPPORTED_OPENAI_MIME_TYPES,
+    ClientImageContent,
+    ClientImageUrl,
+    ClientPayload,
+    ClientTextContent,
+)
 from ..base_model import BaseModel
 
 
@@ -16,7 +23,9 @@ class OpenAIVisionModel(BaseModel):
     images along with text prompts in a single multimodal request.
     """
 
-    def __init__(self, api_key: Optional[str] = None, model_name: str = "gpt-4.1"):
+    def __init__(
+        self, api_key: Optional[str] = None, model_name: str = "gpt-4.1"
+    ) -> None:
         """
         Initialize the OpenAIVisionModel.
 
@@ -26,13 +35,13 @@ class OpenAIVisionModel(BaseModel):
             model_name (str): Vision-capable model name (e.g., ``"gpt-4.1"``).
 
         Raises:
-            ValueError: If no API key is provided and ``OPENAI_API_KEY`` is not set.
+            ValueError: If no API key is provided or ``OPENAI_API_KEY`` is not set.
         """
         if api_key is None:
             api_key = os.getenv("OPENAI_API_KEY")
             if not api_key:
                 raise ValueError(
-                    "OpenAI API key not provided and 'OPENAI_API_KEY' env var is not set."
+                    "OpenAI API key not provided or 'OPENAI_API_KEY' env var is not set."
                 )
         self.client = OpenAI(api_key=api_key)
         self.model_name = model_name
@@ -69,14 +78,15 @@ class OpenAIVisionModel(BaseModel):
             file_ext (str, optional): File extension (e.g., ``"png"``, ``"jpg"``,
                 ``"jpeg"``, ``"webp"``, ``"gif"``) used to determine the MIME type.
                 Defaults to ``"png"``.
-            **parameters: Extra keyword args forwarded to
-                ``client.chat.completions.create()`` (e.g., ``temperature``).
+            **parameters (Any): Additional keyword arguments passed directly to
+                the OpenAI client ``chat.completions.create()`` method. Consult documentation
+                [here](https://platform.openai.com/docs/api-reference/chat/create).
 
         Returns:
             str: Extracted text returned by the model.
 
         Raises:
-            ValueError: If ``file`` is None.
+            ValueError: If ``file`` is None or the file extension is not compatible.
             openai.OpenAIError: If the API request fails.
 
         Example:
@@ -95,22 +105,27 @@ class OpenAIVisionModel(BaseModel):
         if file is None:
             raise ValueError("No file content provided for text extraction.")
 
-        # Resolve MIME type from extension (fallback is octet-stream).
         mime_type = mimetypes.types_map.get(
-            f".{(file_ext or 'png').lower()}", "application/octet-stream"
+            f".{(file_ext or 'png').lower()}", "image/png"
         )
+        if mime_type not in SUPPORTED_OPENAI_MIME_TYPES:
+            raise ValueError(f"Unsupported image MIME type: {mime_type}")
 
-        payload = {
-            "role": "user",
-            "content": [
-                {"type": "text", "text": prompt},
-                {
-                    "type": "image_url",
-                    "image_url": {"url": f"data:{mime_type};base64,{file}"},
-                },
+        payload_obj = ClientPayload(
+            role="user",
+            content=[
+                ClientTextContent(type="text", text=prompt),
+                ClientImageContent(
+                    type="image_url",
+                    image_url=ClientImageUrl(url=f"data:{mime_type};base64,{file}"),
+                ),
             ],
-        }
+        )
+        payload = payload_obj.model_dump()
+
         response = self.client.chat.completions.create(
-            model=self.model_name, messages=[payload], **parameters
+            model=self.model_name,
+            messages=[payload],
+            **parameters,
         )
         return response.choices[0].message.content

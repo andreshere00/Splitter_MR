@@ -102,3 +102,34 @@ def test_extract_text_includes_image_url_block_png(openai_vision_model):
         assert "text" in kinds and "image_url" in kinds
         img = next(c for c in content if c["type"] == "image_url")
         assert img["image_url"]["url"].startswith("data:image/png;base64,")
+
+
+@pytest.mark.parametrize("ext", ["tiff", "bmp", "svg", "heic"])
+def test_extract_text_raises_on_unsupported_mime(openai_vision_model, ext):
+    # If the extension maps to an unsupported MIME type, we should error out
+    with patch.object(
+        openai_vision_model.client.chat.completions, "create"
+    ) as mock_create:
+        with pytest.raises(ValueError):
+            openai_vision_model.extract_text("BASE64DATA", file_ext=ext)
+
+        # Make sure we never hit the network call
+        mock_create.assert_not_called()
+
+
+def test_extract_text_accepts_jpg_and_normalizes_to_jpeg(openai_vision_model):
+    # jpg should resolve to image/jpeg and proceed without error
+    with patch.object(
+        openai_vision_model.client.chat.completions, "create"
+    ) as mock_create:
+        mock_response = MagicMock()
+        mock_response.choices = [MagicMock(message=MagicMock(content="ok"))]
+        mock_create.return_value = mock_response
+
+        _ = openai_vision_model.extract_text("AAAA", file_ext="jpg")
+
+        mock_create.assert_called_once()
+        called = mock_create.call_args.kwargs
+        content = called["messages"][0]["content"]
+        img = next(part for part in content if part["type"] == "image_url")
+        assert img["image_url"]["url"].startswith("data:image/jpeg;base64,")

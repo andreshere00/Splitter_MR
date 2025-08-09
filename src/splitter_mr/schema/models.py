@@ -1,6 +1,6 @@
 import json
 import uuid
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Literal, Optional, Union
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
@@ -167,3 +167,52 @@ class SplitterOutput(BaseModel):
         if self.metadata is None:
             self.metadata = {}
         self.metadata.update(metadata)
+
+
+# ----- Client Connection payload model
+
+
+class ClientTextContent(BaseModel):
+    """Text content block for chat payloads.
+
+    Attributes:
+        type: Constant literal `"text"`.
+        text: The textual prompt or instruction.
+    """
+
+    type: Literal["text"]
+    text: str
+
+
+class ClientImageUrl(BaseModel):
+    """Image URL container for data-URI images.
+
+    Attributes:
+        url: A data URI string (e.g., "data:image/png;base64,<...>").
+    """
+
+    url: str
+
+
+class ClientImageContent(BaseModel):
+    """Image content block for chat payloads.
+
+    Attributes:
+        type: Constant literal `"image_url"`.
+        image_url: The image URL wrapper containing a data URI.
+    """
+
+    type: Literal["image_url"]
+    image_url: ClientImageUrl
+
+
+class ClientPayload(BaseModel):
+    """Top-level chat message payload sent to the model.
+
+    Attributes:
+        role: The role of the message author, one of "user", "system", or "assistant".
+        content: Ordered list of content blocks (text and/or image).
+    """
+
+    role: Literal["user", "system", "assistant"]
+    content: List[ClientTextContent | ClientImageContent]

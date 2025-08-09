@@ -75,3 +75,10 @@ SUPPORTED_DOCLING_FILE_EXTENSIONS: set[str] = {
 }
 
 SUPPORTED_VANILLA_IMAGE_EXTENSIONS: set[str] = {"png", "jpg", "jpeg", "webp", "gif"}
+
+SUPPORTED_OPENAI_MIME_TYPES: set[str] = {
+    "image/png",
+    "image/jpeg",
+    "image/webp",
+    "image/gif",
+}

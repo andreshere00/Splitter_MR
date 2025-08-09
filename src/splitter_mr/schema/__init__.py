@@ -1,17 +1,30 @@
 from .constants import (
     SUPPORTED_DOCLING_FILE_EXTENSIONS,
+    SUPPORTED_OPENAI_MIME_TYPES,
     SUPPORTED_PROGRAMMING_LANGUAGES,
     SUPPORTED_VANILLA_IMAGE_EXTENSIONS,
 )
-from .models import ReaderOutput, SplitterOutput
+from .models import (
+    ClientImageContent,
+    ClientImageUrl,
+    ClientPayload,
+    ClientTextContent,
+    ReaderOutput,
+    SplitterOutput,
+)
 from .prompts import DEFAULT_IMAGE_CAPTION_PROMPT, DEFAULT_IMAGE_EXTRACTION_PROMPT
 
 __all__ = [
     "ReaderOutput",
     "SplitterOutput",
+    "ClientImageContent",
+    "ClientImageUrl",
+    "ClientPayload",
+    "ClientTextContent",
     "SUPPORTED_PROGRAMMING_LANGUAGES",
     "DEFAULT_IMAGE_EXTRACTION_PROMPT",
     "DEFAULT_IMAGE_CAPTION_PROMPT",
     "SUPPORTED_DOCLING_FILE_EXTENSIONS",
     "SUPPORTED_VANILLA_IMAGE_EXTENSIONS",
+    "SUPPORTED_OPENAI_MIME_TYPES",
 ]

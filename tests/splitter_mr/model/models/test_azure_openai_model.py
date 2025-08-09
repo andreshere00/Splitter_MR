@@ -158,31 +158,6 @@ def test_extract_text_sets_expected_mime_for_common_exts(ext, mime_prefix):
         assert image_part["image_url"]["url"].startswith(mime_prefix)
 
 
-def test_extract_text_unknown_ext_falls_back_to_octet_stream():
-    client = _mocked_client()
-    with patch(
-        "splitter_mr.model.models.azure_openai_model.AzureOpenAI", return_value=client
-    ):
-        m = AzureOpenAIVisionModel(
-            api_key="k",
-            azure_endpoint="e",
-            azure_deployment="deployment",
-            api_version="v",
-        )
-        _ = m.extract_text(
-            "Zm9v", prompt="p", file_ext="tiff"
-        )  # mimetypes often knows tiff, so use really bogus
-        _ = m.extract_text("Zm9v", prompt="p", file_ext="totally-unknown-ext")
-        # Check the last call payload
-        called = client.chat.completions.create.call_args.kwargs
-        image_part = next(
-            x for x in called["messages"][0]["content"] if x["type"] == "image_url"
-        )
-        assert image_part["image_url"]["url"].startswith(
-            "data:application/octet-stream;base64,"
-        )
-
-
 def test_extract_text_forwards_extra_parameters():
     client = _mocked_client()
     with patch(
@@ -259,3 +234,72 @@ def test_extract_text_includes_image_url_block():
         kinds = [c["type"] for c in content]
         assert "text" in kinds
         assert "image_url" in kinds
+
+
+def test_extract_text_unknown_ext_falls_back_to_png():
+    client = _mocked_client()
+    with patch(
+        "splitter_mr.model.models.azure_openai_model.AzureOpenAI", return_value=client
+    ):
+        m = AzureOpenAIVisionModel(
+            api_key="k",
+            azure_endpoint="e",
+            azure_deployment="deployment",
+            api_version="v",
+        )
+        _ = m.extract_text("Zm9v", prompt="p", file_ext="totally-unknown-ext")
+        called = client.chat.completions.create.call_args.kwargs
+        image_part = next(
+            x for x in called["messages"][0]["content"] if x["type"] == "image_url"
+        )
+        assert image_part["image_url"]["url"].startswith("data:image/png;base64,")
+
+
+@pytest.mark.parametrize("ext", ["tiff", "bmp", "svg", "heic"])
+def test_extract_text_raises_on_unsupported_mime(ext):
+    client = _mocked_client()
+    with patch(
+        "splitter_mr.model.models.azure_openai_model.AzureOpenAI", return_value=client
+    ):
+        m = AzureOpenAIVisionModel(
+            api_key="k",
+            azure_endpoint="e",
+            azure_deployment="deployment",
+            api_version="v",
+        )
+        with pytest.raises(ValueError, match="Unsupported image MIME type"):
+            m.extract_text("Zm9v", prompt="p", file_ext=ext)
+
+
+@pytest.mark.parametrize(
+    "ext,mime_prefix",
+    [
+        ("jpg", "data:image/jpeg;base64,"),
+        ("jpeg", "data:image/jpeg;base64,"),
+        ("png", "data:image/png;base64,"),
+        ("gif", "data:image/gif;base64,"),
+        ("webp", "data:image/webp;base64,"),
+    ],
+)
+def test_extract_text_accepts_common_mime_types(ext, mime_prefix):
+    client = MagicMock()
+    client._azure_deployment = "deployment"
+    mock_resp = MagicMock()
+    mock_resp.choices = [MagicMock(message=MagicMock(content="ok"))]
+    client.chat.completions.create.return_value = mock_resp
+
+    with patch(
+        "splitter_mr.model.models.azure_openai_model.AzureOpenAI", return_value=client
+    ):
+        m = AzureOpenAIVisionModel(
+            api_key="k",
+            azure_endpoint="e",
+            azure_deployment="deployment",
+            api_version="v",
+        )
+        _ = m.extract_text("AAAA", prompt="p", file_ext=ext)
+
+        called = client.chat.completions.create.call_args.kwargs
+        content = called["messages"][0]["content"]
+        image_part = next(x for x in content if x["type"] == "image_url")
+        assert image_part["image_url"]["url"].startswith(mime_prefix)
