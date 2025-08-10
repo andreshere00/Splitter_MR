@@ -1,4 +1,5 @@
 import json
+import os
 import uuid
 
 import pandas as pd
@@ -9,7 +10,7 @@ from splitter_mr.reader.readers.vanilla_reader import (
     SimpleHTMLTextExtractor,
     VanillaReader,
 )
-from splitter_mr.schema import DEFAULT_EXTRACTION_PROMPT, ReaderOutput
+from splitter_mr.schema import DEFAULT_IMAGE_EXTRACTION_PROMPT, ReaderOutput
 
 # ---------- Helper Fixtures ----------
 
@@ -19,6 +20,10 @@ class DummyVisionModel:
 
     def get_client(self):
         return None
+
+    def extract_text(self, file, prompt=None, **kwargs):
+        # Return a string that encodes what was sent, for assertion
+        return f"EXTRACTED_TEXT:{file[:10]}:{prompt or 'NO_PROMPT'}"
 
 
 class DummyPDFPlumberReader:
@@ -44,6 +49,28 @@ class DummyPDFPlumberReader:
         return ["PAGE-1-MD", "PAGE-2-MD"]
 
 
+@pytest.fixture
+def dummy_docx_file(tmp_path):
+    file = tmp_path / "test.docx"
+    file.write_text("dummy docx")
+    return file
+
+
+@pytest.fixture
+def dummy_pptx_file(tmp_path):
+    file = tmp_path / "test.pptx"
+    file.write_text("dummy pptx")
+    return file
+
+
+@pytest.fixture
+def dummy_xlsx_file(tmp_path):
+    file = tmp_path / "test.xlsx"
+    # You don't need a real xlsx for the logic, just a path
+    file.write_text("dummy xlsx")
+    return file
+
+
 @pytest.fixture(autouse=True)
 def patch_pdf_reader(monkeypatch):
     monkeypatch.setattr(
@@ -51,6 +78,25 @@ def patch_pdf_reader(monkeypatch):
         lambda: DummyPDFPlumberReader(),
     )
     yield
+
+
+@pytest.fixture
+def create_image(tmp_path):
+    from PIL import Image
+
+    def _make(ext):
+        img_path = tmp_path / f"test_image.{ext}"
+        # Just create a small RGB image for non-svg, SVG is handled separately
+        if ext == "svg":
+            img_path.write_text(
+                '<svg height="100" width="100"><circle cx="50" cy="50" r="40" /></svg>'
+            )
+        else:
+            img = Image.new("RGB", (10, 10), (255, 0, 0))
+            img.save(img_path)
+        return str(img_path)
+
+    return _make
 
 
 # ---------- Tests for SimpleHTMLTextExtractor ----------
@@ -126,15 +172,17 @@ def test_read_parquet_file(monkeypatch, tmp_path):
     assert out.conversion_method == "csv"
 
 
-def test_read_excel_file(monkeypatch, tmp_path):
-    df = pd.DataFrame({"x": [1], "y": [2]})
+def test_excel_read_as_table(monkeypatch, dummy_xlsx_file):
+    # Patch pd.read_excel to simulate table read
+    df = pd.DataFrame({"A": [1, 2], "B": [3, 4]})
     monkeypatch.setattr(pd, "read_excel", lambda *a, **k: df)
-    path = tmp_path / "data.xlsx"
-    path.write_text("dummy")
+    # Should not call _convert_office_to_pdf or pdf_reader
     reader = VanillaReader()
-    out = reader.read(str(path))
-    assert "x,y" in out.text
+    out = reader.read(str(dummy_xlsx_file), as_table=True)
+    assert "A,B" in out.text or "A,B\n" in out.text
     assert out.conversion_method == "xlsx"
+    assert out.document_name == "test.xlsx"
+    assert out.document_path.endswith("test.xlsx")
 
 
 def test_read_pdf_file(tmp_path):
@@ -412,7 +460,7 @@ def test_scan_pdf_pages_success(tmp_path):
     recorded = pdf_reader.last_kwargs
     assert recorded["resolution"] == 300
     assert recorded["model"] is reader.model
-    assert DEFAULT_EXTRACTION_PROMPT in recorded["prompt"]
+    assert DEFAULT_IMAGE_EXTRACTION_PROMPT in recorded["prompt"]
 
 
 def test_pdf_custom_placeholder(tmp_path):
@@ -524,3 +572,189 @@ def test_page_placeholder_field_scan_pdf_pages_none(monkeypatch, tmp_path):
 
     out = reader.read(str(pdf_path), scan_pdf_pages=True, page_placeholder="%%PAGE%%")
     assert out.page_placeholder is None
+
+
+# ---------- Office processing tests ----------
+
+
+def test_office_docx_to_pdf(monkeypatch, dummy_docx_file, tmp_path):
+    # Patch _convert_office_to_pdf and pdf_reader.read
+    def fake_convert(file_path):
+        fake_pdf = tmp_path / "converted.pdf"
+        fake_pdf.write_text("FAKE_PDF")
+        return str(fake_pdf)
+
+    class DummyPDFReader:
+        def read(self, pdf_path, **kw):
+            assert pdf_path.endswith("converted.pdf")
+            return "FAKE_PDF_TEXT"
+
+    monkeypatch.setattr(
+        VanillaReader, "_convert_office_to_pdf", staticmethod(fake_convert)
+    )
+    monkeypatch.setattr(
+        "splitter_mr.reader.readers.vanilla_reader.PDFPlumberReader",
+        lambda: DummyPDFReader(),
+    )
+
+    reader = VanillaReader()
+    out = reader.read(str(dummy_docx_file))
+    assert isinstance(out, ReaderOutput)
+    assert out.text == "FAKE_PDF_TEXT"
+    assert out.document_name == "converted.pdf"
+    assert out.document_path.endswith("converted.pdf")
+    assert out.conversion_method == "pdf"
+
+
+def test_office_pptx_to_pdf(monkeypatch, dummy_pptx_file, tmp_path):
+    def fake_convert(file_path):
+        fake_pdf = tmp_path / "slide.pdf"
+        fake_pdf.write_text("PPT2PDF")
+        return str(fake_pdf)
+
+    class DummyPDFReader:
+        def read(self, pdf_path, **kw):
+            assert pdf_path.endswith("slide.pdf")
+            return "SLIDES_AS_PDF"
+
+    monkeypatch.setattr(
+        VanillaReader, "_convert_office_to_pdf", staticmethod(fake_convert)
+    )
+    monkeypatch.setattr(
+        "splitter_mr.reader.readers.vanilla_reader.PDFPlumberReader",
+        lambda: DummyPDFReader(),
+    )
+    reader = VanillaReader()
+    out = reader.read(str(dummy_pptx_file))
+    assert out.text == "SLIDES_AS_PDF"
+    assert out.document_name == "slide.pdf"
+    assert out.document_path.endswith("slide.pdf")
+    assert out.conversion_method == "pdf"
+
+
+def test_excel_to_pdf_default(monkeypatch, dummy_xlsx_file, tmp_path):
+    # as_table=False, so convert to PDF and run through pdf_reader.read
+    def fake_convert(file_path):
+        fake_pdf = tmp_path / "excel_as_pdf.pdf"
+        fake_pdf.write_text("EXCELPDF")
+        return str(fake_pdf)
+
+    class DummyPDFReader:
+        def read(self, pdf_path, **kw):
+            assert pdf_path.endswith("excel_as_pdf.pdf")
+            return "EXCEL_AS_PDF_TEXT"
+
+    monkeypatch.setattr(
+        VanillaReader, "_convert_office_to_pdf", staticmethod(fake_convert)
+    )
+    monkeypatch.setattr(
+        "splitter_mr.reader.readers.vanilla_reader.PDFPlumberReader",
+        lambda: DummyPDFReader(),
+    )
+    reader = VanillaReader()
+    out = reader.read(str(dummy_xlsx_file))
+    assert out.text == "EXCEL_AS_PDF_TEXT"
+    assert out.document_name == "excel_as_pdf.pdf"
+    assert out.document_path.endswith("excel_as_pdf.pdf")
+    assert out.conversion_method == "pdf"
+
+
+def test_excel_as_table_and_pdf(monkeypatch, dummy_xlsx_file, tmp_path):
+    # Sanity: as_table=False triggers PDF, as_table=True triggers pandas/CSV
+    def fake_convert(file_path):
+        fake_pdf = tmp_path / "xls2pdf.pdf"
+        fake_pdf.write_text("FOO")
+        return str(fake_pdf)
+
+    class DummyPDFReader:
+        def read(self, pdf_path, **kw):
+            assert pdf_path.endswith("xls2pdf.pdf")
+            return "EXCEL2PDF"
+
+    # Case: as_table=False
+    monkeypatch.setattr(
+        VanillaReader, "_convert_office_to_pdf", staticmethod(fake_convert)
+    )
+    monkeypatch.setattr(
+        "splitter_mr.reader.readers.vanilla_reader.PDFPlumberReader",
+        lambda: DummyPDFReader(),
+    )
+    reader = VanillaReader()
+    out = reader.read(str(dummy_xlsx_file), as_table=False)
+    assert out.text == "EXCEL2PDF"
+    assert out.document_name == "xls2pdf.pdf"
+    assert out.conversion_method == "pdf"
+    # Case: as_table=True
+    df = pd.DataFrame({"C": [5]})
+    monkeypatch.setattr(pd, "read_excel", lambda *a, **k: df)
+    out2 = reader.read(str(dummy_xlsx_file), as_table=True)
+    assert "C" in out2.text
+    assert out2.conversion_method == "xlsx"
+
+
+# ---------- Image handling tests ----------
+
+
+@pytest.mark.parametrize("ext", ["png", "jpg", "jpeg"])
+def test_image_file_handling(create_image, ext):
+    img_path = create_image(ext)
+    reader = VanillaReader(model=DummyVisionModel())
+    out = reader.read(file_path=img_path)
+    # The output text should be from DummyVisionModel, starting with EXTRACTED_TEXT:
+    assert out.text.startswith("EXTRACTED_TEXT:")
+    assert out.document_name.endswith(f".{ext}")
+    assert out.document_path.endswith(f".{ext}")
+    assert out.conversion_method == "image"
+    assert out.ocr_method == "dummy-vlm"
+
+
+def test_image_file_with_custom_prompt(create_image):
+    img_path = create_image("png")
+    prompt = "Describe this image"
+    reader = VanillaReader(model=DummyVisionModel())
+    out = reader.read(file_path=img_path, prompt=prompt)
+    assert prompt in out.text  # Dummy returns prompt in result
+
+
+def test_image_file_no_model(create_image):
+    img_path = create_image("jpg")
+    reader = VanillaReader(model=None)
+    with pytest.raises(ValueError):
+        reader.read(file_path=img_path)
+
+
+def test_image_file_base64_encoding(create_image):
+    img_path = create_image("jpeg")
+
+    class CheckBase64Model(DummyVisionModel):
+        def extract_text(self, file, prompt=None, **kwargs):
+            import base64
+
+            # Should be a base64 string
+            try:
+                base64.b64decode(file)
+                return "BASE64_OK"
+            except Exception:
+                return "BASE64_FAIL"
+
+    reader = VanillaReader(model=CheckBase64Model())
+    out = reader.read(file_path=img_path)
+    assert out.text == "BASE64_OK"
+
+
+def test_image_file_unsupported_ext(create_image):
+    img_path = create_image("svg")  # Only PNG/JPG/JPEG supported
+    reader = VanillaReader(model=DummyVisionModel())
+    with pytest.raises(ValueError):
+        reader.read(file_path=img_path)
+
+
+def test_image_ext_custom_supported(monkeypatch, create_image):
+    img_path = create_image("bmp")
+    monkeypatch.setattr(
+        "splitter_mr.reader.readers.vanilla_reader.SUPPORTED_VANILLA_IMAGE_EXTENSIONS",
+        {"bmp"},
+    )
+    reader = VanillaReader(model=DummyVisionModel())
+    out = reader.read(file_path=img_path)
+    assert out.conversion_method == "image"

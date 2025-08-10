@@ -7,6 +7,21 @@ from splitter_mr.reader import MarkItDownReader
 # Helpers
 
 
+@pytest.fixture
+def mock_split_pdfs(tmp_path):
+    """Fixture to patch _split_pdf_to_temp_pdfs and create dummy temp PDF files."""
+
+    def _make(n_pages=3):
+        temp_files = []
+        for i in range(n_pages):
+            temp_file = tmp_path / f"temp_page_{i}.pdf"
+            temp_file.write_text(f"Fake content page {i}")
+            temp_files.append(str(temp_file))
+        return temp_files
+
+    return _make
+
+
 def patch_vision_models():
     """
     Returns (patch_OpenAIVisionModel, patch_AzureOpenAIVisionModel, DummyVisionModel).
@@ -246,3 +261,206 @@ def test_page_placeholder_absent_no_scan(monkeypatch, tmp_path):
     reader = MarkItDownReader()
     out = reader.read(str(file_path))
     assert out.page_placeholder is None
+
+
+def test_split_by_pages_no_model_single_page(tmp_path, mock_split_pdfs):
+    pdf = tmp_path / "single.pdf"
+    pdf.write_text("pdf one page")
+    temp_files = mock_split_pdfs(1)
+    with (
+        patch(
+            "splitter_mr.reader.readers.markitdown_reader.MarkItDown"
+        ) as MockMarkItDown,
+        patch(
+            "splitter_mr.reader.readers.markitdown_reader.MarkItDownReader._split_pdf_to_temp_pdfs",
+            return_value=temp_files,
+        ),
+        patch("os.remove") as mock_remove,
+    ):
+        MockMarkItDown.return_value.convert.return_value = MagicMock(
+            text_content="Just one page"
+        )
+        reader = MarkItDownReader()
+        result = reader.read(
+            str(pdf), split_by_pages=True, page_placeholder="<<{page}>>"
+        )
+        assert MockMarkItDown.return_value.convert.call_count == 1
+        assert "<<1>>" in result.text
+        assert "Just one page" in result.text
+        mock_remove.assert_called_once_with(temp_files[0])
+
+
+def test_split_by_pages_placeholder_detected(tmp_path, mock_split_pdfs):
+    pdf = tmp_path / "ph.pdf"
+    pdf.write_text("pdf content")
+    temp_files = mock_split_pdfs(1)
+    with (
+        patch(
+            "splitter_mr.reader.readers.markitdown_reader.MarkItDown"
+        ) as MockMarkItDown,
+        patch(
+            "splitter_mr.reader.readers.markitdown_reader.MarkItDownReader._split_pdf_to_temp_pdfs",
+            return_value=temp_files,
+        ),
+        patch("os.remove"),
+    ):
+        MockMarkItDown.return_value.convert.return_value = MagicMock(
+            text_content="AA <!--pagebreak--> BB"
+        )
+        reader = MarkItDownReader()
+        result = reader.read(
+            str(pdf), split_by_pages=True, page_placeholder="<!--pagebreak-->"
+        )
+        assert result.page_placeholder == "<!--pagebreak-->"
+        assert "AA <!--pagebreak--> BB" in result.text
+
+
+def test_split_by_pages_no_model_multiple_pages(tmp_path, mock_split_pdfs):
+    file = tmp_path / "docx_file.docx"
+    file.write_text("fake docx content")
+    temp_files = mock_split_pdfs(3)
+    with (
+        patch(
+            "splitter_mr.reader.readers.markitdown_reader.MarkItDown"
+        ) as MockMarkItDown,
+        patch(
+            "splitter_mr.reader.readers.markitdown_reader.MarkItDownReader._convert_to_pdf",
+            return_value="dummy.pdf",
+        ) as mock_convert,
+        patch(
+            "splitter_mr.reader.readers.markitdown_reader.MarkItDownReader._split_pdf_to_temp_pdfs",
+            return_value=temp_files,
+        ),
+        patch("os.remove") as mock_remove,
+    ):
+        mock_md = MockMarkItDown.return_value
+        mock_md.convert.side_effect = [
+            MagicMock(text_content="Page ONE"),
+            MagicMock(text_content="Page TWO"),
+            MagicMock(text_content="Page THREE"),
+        ]
+        reader = MarkItDownReader()
+        result = reader.read(
+            str(file), split_by_pages=True, page_placeholder="<p {page}>"
+        )
+        assert mock_convert.called
+        assert mock_md.convert.call_count == 3
+        for f in temp_files:
+            mock_md.convert.assert_any_call(f, llm_prompt=ANY)
+            mock_remove.assert_any_call(f)
+        assert "<p 1>" in result.text
+        assert "<p 2>" in result.text
+        assert "<p 3>" in result.text
+        assert all(
+            page in result.text for page in ["Page ONE", "Page TWO", "Page THREE"]
+        )
+        assert result.ocr_method is None
+        assert (
+            result.conversion_method == "markdown"
+        )  # could be "pdf" if you wish to reflect the conversion
+
+
+def test_split_by_pages_ignored_for_txt(tmp_path):
+    txt_file = tmp_path / "x.txt"
+    txt_file.write_text("fake text")
+    dummy_pdf = tmp_path / "dummy.pdf"
+    dummy_pdf.write_text("fake pdf")
+    temp_files = [str(dummy_pdf)]
+
+    with (
+        patch(
+            "splitter_mr.reader.readers.markitdown_reader.MarkItDown"
+        ) as MockMarkItDown,
+        patch(
+            "splitter_mr.reader.readers.markitdown_reader.MarkItDownReader._convert_to_pdf",
+            return_value=str(dummy_pdf),
+        ) as mock_convert,
+        patch(
+            "splitter_mr.reader.readers.markitdown_reader.MarkItDownReader._split_pdf_to_temp_pdfs",
+            return_value=temp_files,
+        ),
+        patch("os.remove"),
+    ):
+        MockMarkItDown.return_value.convert.return_value = MagicMock(
+            text_content="reg text"
+        )
+        reader = MarkItDownReader()
+        result = reader.read(str(txt_file), split_by_pages=True)
+
+        # _convert_to_pdf should **not** be invoked for .txt
+        mock_convert.assert_not_called()
+
+        # convert() should receive the dummy PDF path returned by _split_pdf_to_temp_pdfs
+        MockMarkItDown.return_value.convert.assert_called_once_with(
+            str(dummy_pdf), llm_prompt=ANY
+        )
+
+        assert result.text.startswith("<!-- page -->")
+        assert result.text.endswith("reg text")
+
+
+@pytest.mark.parametrize("ext", ["docx", "pptx", "xlsx"])
+def test_split_by_pages_convertible_extensions(tmp_path, ext):
+    doc_file = tmp_path / f"doc_file.{ext}"
+    doc_file.write_text("fake content")
+    dummy_pdf = tmp_path / "dummy.pdf"
+    dummy_pdf.write_text("fake pdf")
+    temp_files = [str(dummy_pdf)]
+
+    with (
+        patch(
+            "splitter_mr.reader.readers.markitdown_reader.MarkItDown"
+        ) as MockMarkItDown,
+        patch(
+            "splitter_mr.reader.readers.markitdown_reader.MarkItDownReader._convert_to_pdf",
+            return_value=str(dummy_pdf),
+        ) as mock_convert,
+        patch(
+            "splitter_mr.reader.readers.markitdown_reader.MarkItDownReader._split_pdf_to_temp_pdfs",
+            return_value=temp_files,
+        ),
+        patch("os.remove"),
+    ):
+        MockMarkItDown.return_value.convert.return_value = MagicMock(
+            text_content="converted page"
+        )
+        reader = MarkItDownReader()
+        result = reader.read(str(doc_file), split_by_pages=True)
+
+        mock_convert.assert_called_once_with(str(doc_file))
+
+        MockMarkItDown.return_value.convert.assert_called_once_with(
+            str(dummy_pdf), llm_prompt=ANY
+        )
+        assert "<!-- page -->" in result.text
+        assert "converted page" in result.text
+
+
+def test_split_by_pages_placeholder_not_detected(tmp_path, mock_split_pdfs):
+    file = tmp_path / "ph2.pptx"
+    file.write_text("content")
+    temp_files = mock_split_pdfs(1)
+
+    with (
+        patch(
+            "splitter_mr.reader.readers.markitdown_reader.MarkItDown"
+        ) as MockMarkItDown,
+        patch(
+            "splitter_mr.reader.readers.markitdown_reader.MarkItDownReader._convert_to_pdf",
+            return_value="dummy.pdf",
+        ),
+        patch(
+            "splitter_mr.reader.readers.markitdown_reader.MarkItDownReader._split_pdf_to_temp_pdfs",
+            return_value=temp_files,
+        ),
+        patch("os.remove"),
+    ):
+        MockMarkItDown.return_value.convert.return_value = MagicMock(
+            text_content="AA BB CC"
+        )
+        reader = MarkItDownReader()
+        result = reader.read(
+            str(file), split_by_pages=True, page_placeholder="<!--pagebreak-->"
+        )
+
+        assert result.page_placeholder == "<!--pagebreak-->"

@@ -1,4 +1,4 @@
-DEFAULT_EXTRACTION_PROMPT: str = (
+DEFAULT_IMAGE_EXTRACTION_PROMPT: str = (
     "Extract all the elements (text, formulas, tables, images, etc.) detected in the page in markdown format, orderly. Return ONLY the extracted content, with no previous comments or placeholders."
 )
 

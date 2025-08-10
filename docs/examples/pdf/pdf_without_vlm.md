@@ -427,17 +427,17 @@ As we've seen, each method has its advantages and disadvantages. Therefore, choo
 
 Finally, here we present a comparative table of each method, with the strengths and weaknesses of each one:
 
-| **Feature**                              | `VanillaReader`        | `MarkItDownReader`        | `DoclingReader`            |
-| ---------------------------------------- | ---------------------- | ------------------------- | -------------------------- |
-| **Header preservation**                  | low                    | mid                       | **high**                   |
-| **Text formatting (bold, italic, etc.)** | no                     | no                        | **partial**                |
-| **Text color & highlighting**            | no                     | no                        | no                         |
-| **Markdown tables**                      | **yes**                | no (txt format)           | **yes**                    |
-| **Markdown lists**                       | partial                | no                        | **yes**                    |
-| **Image placeholders**                               | **yes**   | no      | **yes**       |
-| **Formulas placeholders**                             | **no**                | **no**                   | **yes** |
-| **Pagination**                           | **yes**                | no                        | **yes**                         |
-| **Execution time**                       | low                    | **the lowest**            | the highest                |
+| **Feature**                              | `VanillaReader`        | `MarkItDownReader`                | `DoclingReader`            |
+| ---------------------------------------- | ---------------------- | --------------------------------- | -------------------------- |
+| **Header preservation**                  | low                    | mid                               | **high**                   |
+| **Text formatting (bold, italic, etc.)** | no                     | no                                | **partial**                |
+| **Text color & highlighting**            | no                     | no                                | no                         |
+| **Markdown tables**                      | **yes**                | no (txt format)                   | **yes**                    |
+| **Markdown lists**                       | partial                | no                                | **yes**                    |
+| **Image placeholders**                   | **yes**                | no                                | **yes**                    |
+| **Formulas placeholders**                | no                     | no                                | **yes**                    |
+| **Pagination**                           | **yes**                | **yes** (`split_by_pages = True`) | **yes**                    |
+| **Execution time**                       | low                    | **the lowest**                    | the highest                |
 
 With this information, we know which method to use. However, there is an element that we have not yet analyzed: the description and annotation of images. Currently, all three methods can describe and annotate images using VLMs. To see how to do this, [jump to the next tutorial](./pdf_with_vlm.md).
 
