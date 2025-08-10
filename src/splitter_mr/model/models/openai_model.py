@@ -6,6 +6,7 @@ from openai import OpenAI
 
 from ...schema import (
     DEFAULT_IMAGE_CAPTION_PROMPT,
+    OPENAI_MIME_BY_EXTENSION,
     SUPPORTED_OPENAI_MIME_TYPES,
     ClientImageContent,
     ClientImageUrl,
@@ -105,9 +106,13 @@ class OpenAIVisionModel(BaseModel):
         if file is None:
             raise ValueError("No file content provided for text extraction.")
 
-        mime_type = mimetypes.types_map.get(
-            f".{(file_ext or 'png').lower()}", "image/png"
+        ext = (file_ext or "png").lower()
+        mime_type = (
+            OPENAI_MIME_BY_EXTENSION.get(ext)  # noqa: W503
+            or mimetypes.types_map.get(f".{ext}")  # noqa: W503
+            or "image/png"  # noqa: W503
         )
+
         if mime_type not in SUPPORTED_OPENAI_MIME_TYPES:
             raise ValueError(f"Unsupported image MIME type: {mime_type}")
 

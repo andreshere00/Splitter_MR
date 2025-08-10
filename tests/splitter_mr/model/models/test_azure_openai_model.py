@@ -20,6 +20,15 @@ def clear_env(monkeypatch):
         monkeypatch.delenv(var, raising=False)
 
 
+_IMAGE_MIME_BY_EXT = {
+    "jpg": "image/jpeg",
+    "jpeg": "image/jpeg",
+    "png": "image/png",
+    "gif": "image/gif",
+    "webp": "image/webp",
+}
+
+
 def _mocked_client(return_text="OK"):
     client = MagicMock()
     client._azure_deployment = "deployment"
@@ -133,6 +142,7 @@ def test_extract_text_uses_jpeg_mime_for_jpg_ext():
 @pytest.mark.parametrize(
     "ext,mime_prefix",
     [
+        ("jpg", "data:image/jpeg;base64,"),
         ("jpeg", "data:image/jpeg;base64,"),
         ("png", "data:image/png;base64,"),
         ("gif", "data:image/gif;base64,"),
