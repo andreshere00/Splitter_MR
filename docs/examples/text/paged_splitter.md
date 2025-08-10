@@ -8,17 +8,35 @@ For this example, we will read the file using `VanillaReader. The file can be fo
 
 ## Step 1. Read the file
 
-You can read the file using `VanillaReader` or `DoclingReader`. In case that you use `MarkItDownReader`, you can only use this splitting method when reading with an LLM, since standalone MarkItDown does not convert the file into a markdown with page placeholders.
+You can read the file using `VanillaReader` or `DoclingReader`. In case that you use `MarkItDownReader`, you should pass the parameter `split_by_pages = True`, since MarkItDown by default does not provide any placeholder to split by pages.
 
-```python
-from splitter_mr.reader import VanillaReader
-from splitter_mr.splitter import PagedSplitter
+??? example "Show Python examples for all Readers"
+    ```python
+    from splitter_mr.reader import VanillaReader
 
-FILE_PATH = "data/attention.pdf"
+    FILE_PATH = "data/attention.pdf"
 
-reader = VanillaReader()
-reader_output = reader.read(file_path=FILE_PATH)
-```
+    reader = VanillaReader()
+    reader_output = reader.read(file_path=FILE_PATH)
+    ```
+
+    ```python
+    from splitter_mr.reader import DoclingReader
+
+    FILE_PATH = "data/attention.pdf"
+
+    reader = DoclingReader()
+    reader_output = reader.read(file_path=FILE_PATH)
+    ```
+
+    ```python
+    from splitter_mr.reader import MarkItDownReader
+
+    FILE_PATH = "data/attention.pdf"
+
+    reader = MarkItDownReader()
+    reader_output = reader.read(file_path=FILE_PATH, split_by_pages=True)
+    ```
 
 The output will be the following:
 
