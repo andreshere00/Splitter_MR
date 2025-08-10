@@ -82,3 +82,11 @@ SUPPORTED_OPENAI_MIME_TYPES: set[str] = {
     "image/webp",
     "image/gif",
 }
+
+OPENAI_MIME_BY_EXTENSION: dict[str, str] = {
+    "jpg": "image/jpeg",
+    "jpeg": "image/jpeg",
+    "png": "image/png",
+    "gif": "image/gif",
+    "webp": "image/webp",
+}
