@@ -27,6 +27,7 @@ nav:
     - Readers: api_reference/reader.md
     - Splitters: api_reference/splitter.md
     - Models: api_reference/model.md
+    - Embedders: api_reference/embedding.md
   - Examples:
     - Overview: examples/examples.md
     - Reading:
