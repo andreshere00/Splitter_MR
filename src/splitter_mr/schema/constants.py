@@ -90,3 +90,5 @@ OPENAI_MIME_BY_EXTENSION: dict[str, str] = {
     "gif": "image/gif",
     "webp": "image/webp",
 }
+
+OPENAI_EMBEDDING_MAX_TOKENS: int = 8192
