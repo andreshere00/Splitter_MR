@@ -11,6 +11,7 @@ For this example, we will read the file using `VanillaReader. The file can be fo
 You can read the file using `VanillaReader` or `DoclingReader`. In case that you use `MarkItDownReader`, you should pass the parameter `split_by_pages = True`, since MarkItDown by default does not provide any placeholder to split by pages.
 
 ??? example "Show Python examples for all Readers"
+
     ```python
     from splitter_mr.reader import VanillaReader
 
@@ -49,6 +50,15 @@ As you can see, the [`ReaderOutput` object](../../api_reference/reader.md#output
 ## Split by pages
 
 So, we can simply instantiate the `PageSplitter` object and use the `split` method to get the chunks page-by-page:
+
+```python
+splitter = PagedSplitter()
+splitter_output = splitter.split(reader_output=reader_output)
+
+for idx, chunk in enumerate(splitter_output.chunks):
+    print("\n" + "*"*80 + f" Chunk {idx} " + "*"*80 + "\n")
+    print(chunk)
+```
 
 ```md
 ******************************************************************************* Chunk 0 ********************************************************************************
@@ -108,6 +118,15 @@ Indeed, we have obtained a list of chunks with the extracted content, one per pa
 ### Experimenting with custom parameteres
 
 In case that we want to split by group of many pages (e.g., 3), we can specify that value on the `PageSplitter` object. In addition, we can define an overlap between characters:
+
+```python
+splitter = PagedSplitter(chunk_size=3, chunk_overlap = 100)
+splitter_output = splitter.split(reader_output=reader_output)
+
+for idx, chunk in enumerate(splitter_output.chunks):
+    print("\n" + "*"*80 + f" Chunk {idx} " + "*"*80 + "\n")
+    print(chunk)
+```
 
 ```md
 ******************************************************************************** Chunk 0 ********************************************************************************

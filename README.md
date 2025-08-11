@@ -24,7 +24,7 @@ Currently, there are supported three readers: `VanillaReader`, and `MarkItDownRe
 
 | **Reader**             | **Unstructured files & PDFs** | **MS Office suite files** | **Tabular data** | **Files with hierarchical schema** | **Image files** | **Markdown conversion** |
 |------------------------|-------------------------------|---------------------------|------------------|------------------------------------|-----------------|-------------------------|
-| **`VanillaReader`**    | `txt`, `md`, `pdf` | `xlsx`, `docx`, `pptx` | `csv`, `tsv`, `parquet` | `json`, `yaml`, `html`, `xml` | `jpg`, `png`, `webp`, `gif` | Partial                 |
+| **`VanillaReader`**    | `txt`, `md`, `pdf` | `xlsx`, `docx`, `pptx` | `csv`, `tsv`, `parquet` | `json`, `yaml`, `html`, `xml` | `jpg`, `png`, `webp`, `gif` | Yes                     |
 | **`MarkItDownReader`** | `txt`, `md`, `pdf` | `docx`, `xlsx`, `pptx` | `csv`, `tsv` | `json`, `html`, `xml`                    | `jpg`, `png`, `pneg`        | Yes                     |
 | **`DoclingReader`**    | `txt`, `md`, `pdf` | `docx`, `xlsx`, `pptx` | –            | `html`, `xhtml`                 | `png`, `jpeg`, `tiff`, `bmp`, `webp` | Yes                     |
 
@@ -40,7 +40,7 @@ SplitterMR allows you to split files in many different ways depending on your ne
 | **Paragraph Splitter**    | Splits text into chunks based on a specified number of paragraphs. Allows overlapping by word count or percentage, and customizable line breaks. <br> **Parameters:** `chunk_size` (max paragraphs per chunk), `chunk_overlap` (overlapping words: int or %), `line_break` (delimiter(s) for paragraphs). <br> **Compatible with:** Text. |
 | **Recursive Splitter**    | Recursively splits text based on a hierarchy of separators (e.g., paragraph, sentence, word, character) until chunks reach a target size. Tries to preserve semantic units as long as possible. <br> **Parameters:** `chunk_size` (max chars per chunk), `chunk_overlap` (overlapping chars), `separators` (list of characters to split on, e.g., `["\n\n", "\n", " ", ""]`). <br> **Compatible with:** Text.                                                                                   |
 | **Token Splitter**        | Splits text into chunks based on the number of tokens, using various tokenization models (e.g., tiktoken, spaCy, NLTK). Useful for ensuring chunks are compatible with LLM context limits. <br> **Parameters:** `chunk_size` (max tokens per chunk), `model_name` (tokenizer/model, e.g., `"tiktoken/cl100k_base"`, `"spacy/en_core_web_sm"`, `"nltk/punkt"`), `language` (for NLTK). <br> **Compatible with:** Text. |
-| **Paged Splitter**        | **WORK IN PROGRESS**. Splits text by pages for documents that have page structure. Each chunk contains a specified number of pages, with optional word overlap. <br> **Parameters:** `num_pages` (pages per chunk), `chunk_overlap` (overlapping words). <br> **Compatible with:** Word, PDF, Excel, PowerPoint. |
+| **Paged Splitter**        | Splits text by pages for documents that have page structure. Each chunk contains a specified number of pages, with optional word overlap. <br> **Parameters:** `num_pages` (pages per chunk), `chunk_overlap` (overlapping words). <br> **Compatible with:** Word, PDF, Excel, PowerPoint. |
 | **Row/Column Splitter**   | For tabular formats, splits data by a set number of rows or columns per chunk, with possible overlap. Row-based and column-based splitting are mutually exclusive. <br> **Parameters:** `num_rows`, `num_cols` (rows/columns per chunk), `overlap` (overlapping rows or columns). <br> **Compatible with:** Tabular formats (csv, tsv, parquet, flat json). |
 | **JSON Splitter**         | Recursively splits JSON documents into smaller sub-structures that preserve the original JSON schema. <br> **Parameters:** `max_chunk_size` (max chars per chunk), `min_chunk_size` (min chars per chunk). <br> **Compatible with:** JSON. |
 | **Semantic Splitter**     | **WORK IN PROGRESS**. Splits text into chunks based on semantic similarity, using an embedding model and a max tokens parameter. Useful for meaningful semantic groupings. <br> **Parameters:** `embedding_model` (model for embeddings), `max_tokens` (max tokens per chunk). <br> **Compatible with:** Text. |
@@ -110,17 +110,15 @@ reader_output = reader.read('https://raw.githubusercontent.com/andreshere00/Spli
 print(reader_output)
 ```
 ```python
-ReaderOutput(
-    text='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sit amet ultricies orci. Nullam et tellus dui.', 
-    document_name='lorem_ipsum.txt',
-    document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/lorem_ipsum.txt', 
-    document_id='732b9530-3e41-4a1a-a4ea-1d9d6fe815d3', 
-    conversion_method='txt', 
-    reader_method='vanilla', 
-    ocr_method=None, 
-    page_placeholder=None,
-    metadata={}
-    )
+text='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sit amet ultricies orci. Nullam et tellus dui.', 
+document_name='lorem_ipsum.txt',
+document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/lorem_ipsum.txt', 
+document_id='732b9530-3e41-4a1a-a4ea-1d9d6fe815d3', 
+conversion_method='txt', 
+reader_method='vanilla', 
+ocr_method=None, 
+page_placeholder=None,
+metadata={}
 ```
 
 > [!NOTE]
@@ -140,19 +138,17 @@ splitter_output = char_splitter.split(reader_output)
 print(splitter_output)
 ```
 ```python
-SplitterOutput(
-    chunks=['Lorem ipsum dolor sit amet, consectetur adipiscing', 'adipiscing elit. Vestibulum sit amet ultricies orc', 'ricies orci. Nullam et tellus dui.'], 
-    chunk_id=['db454a9b-32aa-4fdc-9aab-8770cae99882', 'e67b427c-4bb0-4f28-96c2-7785f070d1c1', '6206a89d-efd1-4586-8889-95590a14645b'], 
-    document_name='lorem_ipsum.txt', 
-    document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/lorem_ipsum.txt', 
-    document_id='732b9530-3e41-4a1a-a4ea-1d9d6fe815d3', 
-    conversion_method='txt', 
-    reader_method='vanilla', 
-    ocr_method=None, 
-    split_method='character_splitter', 
-    split_params={'chunk_size': 50, 'chunk_overlap': 10}, 
-    metadata={}
-    )
+chunks=['Lorem ipsum dolor sit amet, consectetur adipiscing', 'adipiscing elit. Vestibulum sit amet ultricies orc', 'ricies orci. Nullam et tellus dui.'], 
+chunk_id=['db454a9b-32aa-4fdc-9aab-8770cae99882', 'e67b427c-4bb0-4f28-96c2-7785f070d1c1', '6206a89d-efd1-4586-8889-95590a14645b'], 
+document_name='lorem_ipsum.txt', 
+document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/lorem_ipsum.txt', 
+document_id='732b9530-3e41-4a1a-a4ea-1d9d6fe815d3', 
+conversion_method='txt', 
+reader_method='vanilla', 
+ocr_method=None, 
+split_method='character_splitter', 
+split_params={'chunk_size': 50, 'chunk_overlap': 10}, 
+metadata={}
 ```
 
 The returned object is a `SplitterOutput` dataclass, which provides all the information you need to further process your data. You can easily add custom metadata, and you have access to details such as the document name, path, and type. Each chunk is uniquely identified by an UUID, allowing for easy traceability throughout your LLM workflow.
@@ -183,15 +179,15 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
     - [ ] Add OpenAI embeddings model support.
     - [ ] Add Gemini embeddings model support.
     - [ ] Add Claude Anthropic embeddings model support.
-- [ ] Modularize library into several sub-libraries.
 - [ ] Add support to read formulas.
+- [ ] Modularize library into several sub-libraries.
 - [ ] Add classic **OCR** models: `easyocr` and `pytesseract`.
 - [ ] Add new models:
     - [ ] Add HuggingFace VLMs model support.
     - [ ] Add Gemini VLMs model support.
     - [ ] Add Claude Anthropic VLMs model support.
     - [ ] Add Grok VLMs model support.
-    - [ ] Add support to generate output in Markdown format.
+- [ ] Add support to generate output in `markdown`, `json`, `yaml` formats.
 - [X] Add new supported formats to be analyzed with OpenAI and AzureOpenAI models.
 - [X] Add support to read images using `VanillaReader`. 
 - [X] Add support to read `xlsx`, `docx` and `pptx` files using `VanillaReader`. 
@@ -200,7 +196,7 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 - [X] Add support to read PDF as scanned pages.
 - [X] Add support to change image placeholders.
 - [X] Add support to change page placeholders.
-- [X] Add Pydantic models.
+- [X] Add Pydantic models to define Reader and Splitter outputs.
 
 ## Contact
 

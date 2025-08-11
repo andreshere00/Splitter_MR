@@ -21,11 +21,11 @@ Each Reader component extracts document text in different ways. Therefore, choos
 
 Additionally, the file compatibility depending on the Reader class is given by the following table:
 
-| **Reader**         | **Unstructured files & PDFs**    | **MS Office suite files**         | **Tabular data**        | **Files with hierarchical schema**      | **Image files**                  | **Markdown conversion** |
-|--------------------|----------------------------------|-----------------------------------|-------------------------|----------------------------------------|----------------------------------|----------------------------------|
-| **`VanillaReader`**      | `txt`, `md`                    | `xlsx`                                 | `csv`, `tsv`, `parquet`| `json`, `yaml`, `html`, `xml`          | - | No |----------------------------------| –                                |
-| **`MarkItDownReader`**   | `txt`, `md`, `pdf`               | `docx`, `xlsx`, `pptx`            | `csv`, `tsv`                  | `json`, `html`, `xml`                  | `jpg`, `png`, `pneg`             | Yes |
-| **`DoclingReader`**      | `txt`, `md`, `pdf`                     | `docx`, `xlsx`, `pptx`            | –                 | `html`, `xhtml`                        | `png`, `jpeg`, `tiff`, `bmp`, `webp` | Yes |
+| **Reader**             | **Unstructured files & PDFs** | **MS Office suite files** | **Tabular data** | **Files with hierarchical schema** | **Image files** | **Markdown conversion** |
+|------------------------|-------------------------------|---------------------------|------------------|------------------------------------|-----------------|-------------------------|
+| **`VanillaReader`**    | `txt`, `md`, `pdf` | `xlsx`, `docx`, `pptx` | `csv`, `tsv`, `parquet` | `json`, `yaml`, `html`, `xml` | `jpg`, `png`, `webp`, `gif` | Yes                     |
+| **`MarkItDownReader`** | `txt`, `md`, `pdf` | `docx`, `xlsx`, `pptx` | `csv`, `tsv` | `json`, `html`, `xml`                    | `jpg`, `png`, `pneg`        | Yes                     |
+| **`DoclingReader`**    | `txt`, `md`, `pdf` | `docx`, `xlsx`, `pptx` | –            | `html`, `xhtml`                 | `png`, `jpeg`, `tiff`, `bmp`, `webp` | Yes                     |
 
 ### Output format
 
