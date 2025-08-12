@@ -266,27 +266,32 @@ class SemanticSplitter(BaseSplitter):
             distances, sentence_dicts = self._calculate_sentence_distances(sentences)
 
             if self.number_of_chunks is not None and distances:
-                threshold = self._threshold_from_clusters(distances)
-                ref_array = distances
+                # Pick top (k-1) distances as breakpoints
+                k = int(self.number_of_chunks)
+                m = max(0, min(k - 1, len(distances)))  # number of cuts to make
+                if m == 0:
+                    indices_above = []  # single chunk
+                else:
+                    # indices of the m largest distances (breaks), sorted in ascending order
+                    idxs = np.argsort(np.asarray(distances))[-m:]
+                    indices_above = sorted(int(i) for i in idxs.tolist())
             else:
                 threshold, ref_array = self._calculate_breakpoint_threshold(distances)
-
-            indices_above = [i for i, val in enumerate(ref_array) if val > threshold]
+                indices_above = [
+                    i for i, val in enumerate(ref_array) if val > threshold
+                ]
 
             chunks: List[str] = []
             start_idx = 0
 
             for idx in indices_above:
-                end = idx + 1  # slice is inclusive of idx
+                end = idx + 1  # inclusive slice end
                 candidate = " ".join(
                     d["sentence"] for d in sentence_dicts[start_idx:end]
                 ).strip()
-
                 if len(candidate) < self.chunk_size:
-                    # Too small: do not cut here.
+                    # too small: keep accumulating (do NOT move start_idx)
                     continue
-
-                # Big enough: emit and advance the start
                 chunks.append(candidate)
                 start_idx = end
 
@@ -299,8 +304,7 @@ class SemanticSplitter(BaseSplitter):
                     chunks.append(tail)
 
             if not chunks:
-                # Fallback if everything was below min size
-                chunks = [" ".join(sentences).strip() or text]
+                chunks = [" ".join(sentences).strip() or (reader_output.text or "")]
 
         # IDs & metadata
         chunk_ids = self._generate_chunk_ids(len(chunks))
