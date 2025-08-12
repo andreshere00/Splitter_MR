@@ -25,12 +25,18 @@ And if you want to bring your own, simply implement `BaseEmbedding` and plug it 
 
 ### OpenAIEmbedding
 
+![OpenAIEmbedding logo](../assets/openai_vision_model_button.svg#gh-light-mode-only)
+![OpenAIEmbedding logo](../assets/openai_vision_model_button_white.svg#gh-dark-mode-only)
+
 ::: src.splitter_mr.embedding.embeddings.openai_embedding
     handler: python
     options:
       members_order: source
 
 ### AzureOpenAIEmbedding
+
+![AzureOpenAIEmbedding logo](../assets/openai_vision_model_button.svg#gh-light-mode-only)
+![AzureOpenAIEmbedding logo](../assets/openai_vision_model_button_white.svg#gh-dark-mode-only)
 
 ::: src.splitter_mr.embedding.embeddings.azure_openai_embedding
     handler: python

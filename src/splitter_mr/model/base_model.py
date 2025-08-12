@@ -31,8 +31,8 @@ class BaseModel(ABC):
 
         Returns:
             Any: A client/handle that the implementation uses to perform
-            inference (e.g., an SDK client instance, session object, or
-            lightweight wrapper). May be ``None`` for pure-local implementations.
+                inference (e.g., an SDK client instance, session object, or
+                lightweight wrapper). May be ``None`` for pure-local implementations.
         """
 
     @abstractmethod

@@ -46,8 +46,7 @@ class OpenAIEmbedding(BaseEmbedding):
                 this overrides automatic model-to-tokenizer mapping.
 
         Raises:
-            ValueError: If the API key is not provided and not found in
-            `OPENAI_API_KEY`.
+            ValueError: If the API key is not provided or the `OPENAI_API_KEY` environment variable is not set.
         """
         if api_key is None:
             api_key = os.getenv("OPENAI_API_KEY")
@@ -160,7 +159,7 @@ class OpenAIEmbedding(BaseEmbedding):
                 `client.embeddings.create(...)`.
 
         Returns:
-            List[List[float]]: A list of embedding vectors, one per input string.
+            A list of embedding vectors, one per input string.
 
         Raises:
             ValueError:

@@ -30,8 +30,8 @@ class BaseEmbedding(ABC):
 
         Returns:
             Any: A client/handle used to perform embedding calls (e.g., an SDK
-            client instance, session object, or local runner). May be ``None``
-            for pure-local implementations that do not require a client.
+                client instance, session object, or local runner). May be ``None``
+                for pure-local implementations that do not require a client.
         """
 
     @abstractmethod
@@ -40,7 +40,8 @@ class BaseEmbedding(ABC):
         text: str,
         **parameters: Dict[str, Any],
     ) -> List[float]:
-        """Compute an embedding vector for the given text.
+        """
+        Compute an embedding vector for the given text.
 
         Args:
             text (str): Input text to embed. Implementations may apply
@@ -49,7 +50,7 @@ class BaseEmbedding(ABC):
                 forwarded to the implementation (e.g., user tags, request IDs).
 
         Returns:
-            List[float]: A single embedding vector representing ``text``.
+            A single embedding vector representing ``text``.
 
         Raises:
             ValueError: If ``text`` is empty or exceeds backend constraints.

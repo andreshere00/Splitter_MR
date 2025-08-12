@@ -69,8 +69,7 @@ class AzureOpenAIEmbedding(BaseEmbedding):
                 `"cl100k_base"`). If provided, it overrides the automatic mapping.
 
         Raises:
-            ValueError: If any required parameter is missing and not found in
-            environment variables.
+            ValueError: If any required parameter is missing or it is not found in environment variables.
         """
         if api_key is None:
             api_key = os.getenv("AZURE_OPENAI_API_KEY")
@@ -209,7 +208,7 @@ class AzureOpenAIEmbedding(BaseEmbedding):
                 Additional parameters to forward to the Azure OpenAI embeddings API.
 
         Returns:
-            List[List[float]]: A list of embedding vectors, one per input text.
+            A list of embedding vectors, one per input text.
 
         Raises:
             ValueError:

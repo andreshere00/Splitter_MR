@@ -20,6 +20,10 @@ Divide your files (PDF, Word, Excel, PowerPoint) by gramatical groups, with the 
 
 Divide your text to accomplsih your LLM window context using tokenizers such as `Spacy`, `NLTK` and `Tiktoken`.
 
+### [How to split your text based on semantic similarity](./text/semantic_splitter.md)
+
+Divide your text into semantically coherent units using clustering embedding-based methods.
+
 ## **Schema-based splitting**
 
 ### [How to split HTML documents by tags](./schema/html_tag_splitter.md)
