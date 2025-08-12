@@ -25,8 +25,8 @@ And if you want to bring your own, simply implement `BaseEmbedding` and plug it 
 
 ### OpenAIEmbedding
 
-![OpenAIEmbedding logo](../assets/openai_vision_model_button.svg#gh-light-mode-only)
-![OpenAIEmbedding logo](../assets/openai_vision_model_button_white.svg#gh-dark-mode-only)
+![OpenAIEmbedding logo](../assets/openai_embedding_model_button.svg#gh-light-mode-only)
+![OpenAIEmbedding logo](../assets/openai_embedding_model_button_white.svg#gh-dark-mode-only)
 
 ::: src.splitter_mr.embedding.embeddings.openai_embedding
     handler: python
@@ -35,8 +35,8 @@ And if you want to bring your own, simply implement `BaseEmbedding` and plug it 
 
 ### AzureOpenAIEmbedding
 
-![AzureOpenAIEmbedding logo](../assets/openai_vision_model_button.svg#gh-light-mode-only)
-![AzureOpenAIEmbedding logo](../assets/openai_vision_model_button_white.svg#gh-dark-mode-only)
+![AzureOpenAIEmbedding logo](../assets/azure_openai_embedding_button.svg#gh-light-mode-only)
+![AzureOpenAIEmbedding logo](../assets/azure_openai_embedding_button_white.svg#gh-dark-mode-only)
 
 ::: src.splitter_mr.embedding.embeddings.azure_openai_embedding
     handler: python
