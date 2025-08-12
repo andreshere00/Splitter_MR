@@ -1,7 +1,11 @@
 import re
 from typing import List, Union
 
-from ...schema import ReaderOutput, SplitterOutput
+from ...schema import (  # regex: terminator + trailing quotes/brackets + optional space
+    DEFAULT_SENTENCE_SEPARATOR,
+    ReaderOutput,
+    SplitterOutput,
+)
 from ..base_splitter import BaseSplitter
 
 
@@ -21,13 +25,22 @@ class SentenceSplitter(BaseSplitter):
         self,
         chunk_size: int = 5,
         chunk_overlap: Union[int, float] = 0,
-        separators: Union[str, List[str]] = [".", "!", "?"],
+        separators: Union[str, List[str]] = DEFAULT_SENTENCE_SEPARATOR,
     ):
         super().__init__(chunk_size)
         self.chunk_overlap = chunk_overlap
-        self.sentence_separators = (
-            separators if isinstance(separators, list) else [separators]
-        )
+
+        if isinstance(separators, list):
+            # Legacy path (NOT recommended): join list with alternation, ensure "..." before "."
+            parts = sorted({*separators}, key=lambda s: (s != "...", s))
+            sep_pattern = "|".join(re.escape(s) for s in parts)
+            # Attach trailing quotes/brackets if user insisted on a list
+            self.separators = rf'(?:{sep_pattern})(?:["”’\'\)\]\}}»]*)\s*'
+        else:
+            # Recommended path: already a full regex pattern
+            self.separators = separators
+
+        self._sep_re = re.compile(f"({self.separators})")
 
     def split(self, reader_output: ReaderOutput) -> SplitterOutput:
         """
@@ -35,7 +48,7 @@ class SentenceSplitter(BaseSplitter):
         allowing for overlap at the word level.
 
         Each chunk contains at most `chunk_size` sentences, where sentence boundaries are
-        detected using the specified `sentence_separators` (e.g., '.', '!', '?').
+        detected using the specified `separators` (e.g., '.', '!', '?').
         Overlap between consecutive chunks is specified by `chunk_overlap`, which can be an
         integer (number of words) or a float (fraction of the maximum words in a sentence).
         This is useful for downstream NLP tasks that require context preservation.
@@ -49,7 +62,7 @@ class SentenceSplitter(BaseSplitter):
             SplitterOutput: Dataclass defining the output structure for all splitters.
 
         Raises:
-            ValueError: If `chunk_overlap` is negative or greater than or equal to `chunk_size`.
+            ValueError: If `chunk_overlap` is negative.
             ValueError: If 'text' is missing in `reader_output`.
 
         Example:
@@ -72,26 +85,40 @@ class SentenceSplitter(BaseSplitter):
             ```
             ```python
             ['Hello world! How are you? I am fine.',
-            'Testing sentence splitting. Short. End!',
-            'And another?', ...]
+             'Testing sentence splitting. Short. End!',
+             'And another?', ...]
             ```
         """
         # Initialize variables
-        text = reader_output.text
+        text = reader_output.text or ""
         chunk_size = self.chunk_size
 
-        # Split text into sentences
-        separators_pattern = "|".join([re.escape(d) for d in self.sentence_separators])
-        sentences = re.split(f"({separators_pattern})", text)
-        merged_sentences = []
-        for i in range(0, len(sentences) - 1, 2):
-            sent = sentences[i].strip()
-            punct = sentences[i + 1].strip() if i + 1 < len(sentences) else ""
-            merged = (sent + punct).strip()
-            if merged:
-                merged_sentences.append(merged)
-        if len(sentences) % 2 == 1 and sentences[-1].strip():
-            merged_sentences.append(sentences[-1].strip())
+        # Build sentence list
+        if not text.strip():
+            merged_sentences: List[str] = [""]
+        else:
+            parts = self._sep_re.split(text)  # [text, sep, text, sep, ...]
+            merged_sentences = []
+            i = 0
+            while i < len(parts):
+                segment = (parts[i] or "").strip()
+                if i + 1 < len(
+                    parts
+                ):  # we have a separator that belongs to this sentence
+                    sep = parts[i + 1] or ""
+                    sentence = (segment + sep).strip()
+                    if sentence:
+                        merged_sentences.append(sentence)
+                    i += 2
+                else:
+                    # tail without terminator
+                    if segment:
+                        merged_sentences.append(segment)
+                    i += 1
+
+            if not merged_sentences:
+                merged_sentences = [""]
+
         num_sentences = len(merged_sentences)
 
         # Determine overlap in words
@@ -100,29 +127,32 @@ class SentenceSplitter(BaseSplitter):
             overlap = int(max_sent_words * self.chunk_overlap)
         else:
             overlap = int(self.chunk_overlap)
+        if overlap < 0:
+            raise ValueError("chunk_overlap must be >= 0")
 
-        # Split into sentences
-        chunks = []
+        # Build chunks of up to `chunk_size` sentences (single implementation, no duplication)
+        chunks: List[str] = []
         start = 0
         while start < num_sentences:
             end = min(start + chunk_size, num_sentences)
             chunk_sents = merged_sentences[start:end]
             chunk_text = " ".join(chunk_sents)
+
             if overlap > 0 and chunks:
                 prev_words = chunks[-1].split()
                 overlap_words = (
                     prev_words[-overlap:] if overlap <= len(prev_words) else prev_words
                 )
                 chunk_text = " ".join([" ".join(overlap_words), chunk_text]).strip()
+
             chunks.append(chunk_text)
             start += chunk_size
 
-        # Generate chunk_id and append metadata
+        # Generate chunk_id and append metadata, then return once
         chunk_ids = self._generate_chunk_ids(len(chunks))
         metadata = self._default_metadata()
 
-        # Return output
-        output = SplitterOutput(
+        return SplitterOutput(
             chunks=chunks,
             chunk_id=chunk_ids,
             document_name=reader_output.document_name,
@@ -135,8 +165,7 @@ class SentenceSplitter(BaseSplitter):
             split_params={
                 "chunk_size": chunk_size,
                 "chunk_overlap": self.chunk_overlap,
-                "sentence_separators": self.sentence_separators,
+                "separators": self.separators,
             },
             metadata=metadata,
         )
-        return output

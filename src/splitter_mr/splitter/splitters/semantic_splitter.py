@@ -248,6 +248,13 @@ class SemanticSplitter(BaseSplitter):
         if text == "" or text is None:
             raise ValueError("No text has been provided")
 
+        amt = self.breakpoint_threshold_amount
+        if (
+            self.breakpoint_threshold_type in ("percentile", "gradient")
+            and 0.0 < amt <= 1.0  # noqa: W503
+        ):
+            self.breakpoint_threshold_amount = amt * 100.0
+
         sentences = self._split_into_sentences(reader_output)
 
         # Edge cases where thresholds aren't meaningful
@@ -268,16 +275,22 @@ class SemanticSplitter(BaseSplitter):
 
             chunks: List[str] = []
             start_idx = 0
-            for idx in indices_above:
-                group = sentence_dicts[start_idx : idx + 1]
-                combined_text = " ".join(d["sentence"] for d in group).strip()
-                if len(combined_text) < self.chunk_size:
-                    start_idx = idx + 1  # skip/merge forward
-                    continue
-                chunks.append(combined_text)
-                start_idx = idx + 1
 
-            # tail
+            for idx in indices_above:
+                end = idx + 1  # slice is inclusive of idx
+                candidate = " ".join(
+                    d["sentence"] for d in sentence_dicts[start_idx:end]
+                ).strip()
+
+                if len(candidate) < self.chunk_size:
+                    # Too small: do not cut here.
+                    continue
+
+                # Big enough: emit and advance the start
+                chunks.append(candidate)
+                start_idx = end
+
+            # Tail (always emit whatever remains)
             if start_idx < len(sentence_dicts):
                 tail = " ".join(
                     d["sentence"] for d in sentence_dicts[start_idx:]
@@ -286,7 +299,7 @@ class SemanticSplitter(BaseSplitter):
                     chunks.append(tail)
 
             if not chunks:
-                # Fallback if everything was skipped by min size
+                # Fallback if everything was below min size
                 chunks = [" ".join(sentences).strip() or text]
 
         # IDs & metadata
