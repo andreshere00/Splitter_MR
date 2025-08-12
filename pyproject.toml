@@ -16,6 +16,7 @@ dependencies = [
     "langchain-text-splitters>=0.3.8",
     "markitdown[all]>=0.1.2",
     "nltk>=3.9.1",
+    "numpy>=2.3.0",
     "openai>=1.88.0",
     "openpyxl>=3.1.5",
     "pdfplumber>=0.11.7",
@@ -57,10 +58,14 @@ docs = { shell = "uv run mkdocs serve", help = "Deploy Mkdocs server." }
 
 pre-commit = { shell = "uv run pre-commit", help = "Install pre-commit hooks." }
 
-format = { shell = "uv run --dev pyupgrade --exit-zero && uv run --dev isort . && uv run --dev black . && uv run --dev flake8 --max-line-length=101 --ignore=E203,W291,E501,W293 src/", help = "Format the code using pyupgrade, isort, black and flake8"}
+format = { shell = "uv run --dev pyupgrade --exit-zero && uv run --dev isort . && uv run --dev black . && uv run ruff check --fix . && uv run --dev flake8 --max-line-length=101 --ignore=E203,W291,E501,W293 src/", help = "Format the code using pyupgrade, isort, black and flake8"}
 
 publish-docs = { shell = "uv run mkdocs gh-deploy", help = "Publish Mkdocs server" }
 
+[tool.autoflake]
+in-place = true
+recursive = true
+remove-all-unused-imports = true
 
 [build-system]
 requires = ["setuptools>=61.0", "setuptools_scm[toml]>=7.0", "wheel"]
@@ -79,10 +84,12 @@ dev = [
     "mkdocs-material>=9.6.14",
     "mkdocstrings[python]>=0.29.1",
     "pre-commit>=4.2.0",
+    "pyproject-autoflake>=1.0.2",
     "pytest>=8.4.0",
     "pytest-cov>=6.1.1",
     "pyupgrade>=3.20.0",
     "requests-mock>=1.12.1",
+    "ruff>=0.12.8",
     "setuptools-scm>=8.3.1",
     "splitter-mr",
     "twine>=6.1.0",
@@ -92,4 +99,3 @@ dev = [
 [project.urls]
 homepage = "https://github.com/andreshere00/splitter_mr"
 repository = "https://github.com/andreshere00/splitter_mr"
-

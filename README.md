@@ -174,11 +174,14 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 
 ## Next features
 
-- [ ] Implement a method to split by embedding similarity: `SemanticSplitter`.
+- [X] Implement a method to split by embedding similarity: `SemanticSplitter`.
     - [ ] Add HuggingFace embeddings model support.
-    - [ ] Add OpenAI embeddings model support.
+    - [X] Add OpenAI embeddings model support.
     - [ ] Add Gemini embeddings model support.
     - [ ] Add Claude Anthropic embeddings model support.
+    - [ ] Add Grok VLMs model support.
+- [ ] Add asynchronous methods for Splitters and Readers.
+- [ ] Add batch methods to process several documents at once.
 - [ ] Add support to read formulas.
 - [ ] Modularize library into several sub-libraries.
 - [ ] Add classic **OCR** models: `easyocr` and `pytesseract`.

@@ -155,4 +155,3 @@ class BaseReader(ABC):
                     )
             ```
         """
-        pass

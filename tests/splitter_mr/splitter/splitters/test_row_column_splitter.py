@@ -137,7 +137,7 @@ def test_tsv_split():
 
 
 def test_chunk_size_too_small():
-    md_table = "| id | name |\n" "|----|------|\n" "| 1  | A    |\n"
+    md_table = "| id | name |\n|----|------|\n| 1  | A    |\n"
     splitter = RowColumnSplitter(chunk_size=10, num_rows=0, num_cols=0)
     reader_output = make_reader_output(md_table, "markdown")
     with pytest.raises(
@@ -174,11 +174,7 @@ def test_chunk_size_only():
 
 def test_chunk_size_with_overlap():
     md_table = (
-        "| id | name |\n"
-        "|----|------|\n"
-        "| 1  | A    |\n"
-        "| 2  | B    |\n"
-        "| 3  | C    |\n"
+        "| id | name |\n|----|------|\n| 1  | A    |\n| 2  | B    |\n| 3  | C    |\n"
     )
     splitter = RowColumnSplitter(
         chunk_size=80, chunk_overlap=10, num_rows=0, num_cols=0
@@ -211,7 +207,7 @@ def test_empty_input():
 
 def test_missing_headers():
     # No header line at all
-    md_table = "| 1 | A |\n" "| 2 | B |\n"
+    md_table = "| 1 | A |\n| 2 | B |\n"
     splitter = RowColumnSplitter(num_rows=1)
     reader_output = make_reader_output(md_table, "markdown")
     output = splitter.split(reader_output)
@@ -235,7 +231,7 @@ def test_malformed_table():
 
 
 def test_single_row():
-    md_table = "| id | name |\n" "|----|------|\n" "| 1  | A    |\n"
+    md_table = "| id | name |\n|----|------|\n| 1  | A    |\n"
     splitter = RowColumnSplitter(num_rows=1)
     reader_output = make_reader_output(md_table, "markdown")
     output = splitter.split(reader_output)
@@ -245,7 +241,7 @@ def test_single_row():
 
 
 def test_one_column():
-    md_table = "| id |\n" "|----|\n" "| 1  |\n" "| 2  |\n"
+    md_table = "| id |\n|----|\n| 1  |\n| 2  |\n"
     splitter = RowColumnSplitter(num_rows=1)
     reader_output = make_reader_output(md_table, "markdown")
     output = splitter.split(reader_output)

@@ -1,12 +1,18 @@
-# Embedding models
+# Embedding Models
 
-Encoder models produces embeddings. Embeddings are vectorized representations of the inputs (see the Image). These embeddings can model mathematical relationships between semantic units (e.g., words). This is useful for some use cases, such as measuring the relevance from one word into a certain text, or comparing the similarity between two texts.
+Encoder models are the engines that produce *embeddings* — vectorized representations of your input (see the image below). These embeddings capture mathematical relationships between semantic units (like words, sentences, or even images).  
+
+Why does this matter? Because once you have embeddings, you can:  
+- Measure how relevant a word is within a text.  
+- Compare the similarity between two pieces of text.  
+- Power search, clustering, and recommendation systems.  
 
 ![Example of an embedding representation](../assets/vectorization.png)
 
-**SplitterMR** incorporates these models to automatically compute the chunks from a text based on their semantic similarity between each sentence. So, chunks will be grouped by their contextual similarity, and not for a specified chunk size or other criteria. This splitting method is known as `SemanticSplitter`. 
+**SplitterMR** takes advantage of these models to break text into chunks based on *meaning*, not just size. Sentences with similar context end up together, regardless of length or position. This approach is called `SemanticSplitter` — perfect when you want your chunks to *make sense* rather than just follow arbitrary size limits.
 
-Next, we present the embedding models available to encode text. Note that that you can always use any model that we define with `BaseEmbedding` to use your own Embedding models.
+Below is the list of embedding models you can use out-of-the-box.  
+And if you want to bring your own, simply implement `BaseEmbedding` and plug it in.
 
 ## Embedders
 

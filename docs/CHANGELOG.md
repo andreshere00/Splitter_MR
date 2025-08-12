@@ -1,3 +1,23 @@
+## v0.5.0
+
+Add SemanticSplitter first implementation
+
+### Features
+
+- Add `embedding` module.
+  - Add `AzureOpenAI embeddings`.
+  - Add `OpenAI embeddings`.
+  - Add `BaseEmbeddings`, to create your own class.
+- Add `SemanticSplitter` class.
+
+### Developer features
+
+- Update tests.
+
+### Documentation
+
+- Update documentation with new embedding module.
+
 # **v0.4.x**
 
 ## v0.4.0

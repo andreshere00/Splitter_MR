@@ -124,9 +124,47 @@ class AzureOpenAIEmbedding(BaseEmbedding):
 
         self._validate_token_length(text)
 
-        resp = self.client.embeddings.create(
+        response = self.client.embeddings.create(
             model=self.model_name,
             input=text,
             **parameters,
         )
-        return resp.data[0].embedding
+        return response.data[0].embedding
+
+    def embed_documents(self, texts: List[str], **parameters: Any) -> List[List[float]]:
+        """
+        Batch embeddings using a single Azure OpenAI API call.
+
+        Args:
+            texts: List of input strings to embed.
+            **parameters: AzureOpenAI embeddings API-specific parameters.
+
+        Returns:
+            List of embedding vectors, one per input string.
+
+        Raises:
+            ValueError:
+            - If `texts` is empty or any element is empty
+            - If an input exceeds `OPENAI_EMBEDDING_MAX_TOKENS` tokens.
+        """
+        if not texts:
+            raise ValueError("`texts` must be a non-empty list of strings.")
+        if any(not isinstance(t, str) or not t for t in texts):
+            raise ValueError("All items in `texts` must be non-empty strings.")
+
+        # Per-item token validation
+        enc = tiktoken.encoding_for_model(self.model_name)
+        for t in texts:
+            if len(enc.encode(t)) > OPENAI_EMBEDDING_MAX_TOKENS:
+                raise ValueError(
+                    "An input exceeds the maximum allowed length of "
+                    f"{OPENAI_EMBEDDING_MAX_TOKENS} tokens."
+                )
+
+        response = self.client.embeddings.create(
+            model=self.model_name,
+            input=texts,
+            **parameters,
+        )
+        # Ensure order is preserved
+        return [d.embedding for d in response.data]
