@@ -24,7 +24,6 @@ class BaseModel(ABC):
         Raises:
             ValueError: If required configuration or credentials are missing.
         """
-        pass
 
     @abstractmethod
     def get_client(self) -> Any:
@@ -32,10 +31,9 @@ class BaseModel(ABC):
 
         Returns:
             Any: A client/handle that the implementation uses to perform
-            inference (e.g., an SDK client instance, session object, or
-            lightweight wrapper). May be ``None`` for pure-local implementations.
+                inference (e.g., an SDK client instance, session object, or
+                lightweight wrapper). May be ``None`` for pure-local implementations.
         """
-        pass
 
     @abstractmethod
     def extract_text(
@@ -72,4 +70,3 @@ class BaseModel(ABC):
             RuntimeError: If the inference call fails or returns an unexpected
                 response shape.
         """
-        pass

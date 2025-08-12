@@ -248,7 +248,7 @@ def test_extract_text_excludes_table_rows():
     page.extract_words.return_value = words
 
     lines = reader.extract_text(page, 1, table_bbox)
-    assert [l["content"] for l in lines] == ["Outside"]
+    assert [line["content"] for line in lines] == ["Outside"]
 
 
 @patch("pdfplumber.open")

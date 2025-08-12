@@ -4,7 +4,7 @@ from typing import Any, List, Optional
 import tiktoken
 from openai import AzureOpenAI
 
-from ...schema import OPENAI_EMBEDDING_MAX_TOKENS
+from ...schema import OPENAI_EMBEDDING_MAX_TOKENS, OPENAI_EMBEDDING_MODEL_FALLBACK
 from ..base_embedding import BaseEmbedding
 
 
@@ -12,8 +12,26 @@ class AzureOpenAIEmbedding(BaseEmbedding):
     """
     Encoder provider using Azure OpenAI Embeddings.
 
-    You must provision a deployment for an embeddings model (e.g., "text-embedding-3-large")
-    and pass its deployment name via `azure_deployment` or env var.
+    This class wraps Azure OpenAI's embeddings API, handling both authentication
+    and tokenization. It supports both direct embedding calls for a single text
+    (`embed_text`) and batch embedding calls (`embed_documents`).
+
+    Azure deployments use *deployment names* (e.g., `my-embedding-deployment`)
+    instead of OpenAI's standard model names. Since `tiktoken` may not be able to
+    map a deployment name to a tokenizer automatically, this class implements
+    a fallback mechanism to use a known encoding (e.g., `cl100k_base`) when necessary.
+
+    Example:
+        ```python
+        from splitter_mr.embedding import AzureOpenAIEmbedding
+
+        embedder = AzureOpenAIEmbedding(
+            azure_deployment="text-embedding-3-large",
+            api_key="...",
+            azure_endpoint="https://my-azure-endpoint.openai.azure.com/"
+        )
+        vector = embedder.embed_text("Hello world")
+        ```
     """
 
     def __init__(
@@ -23,18 +41,35 @@ class AzureOpenAIEmbedding(BaseEmbedding):
         azure_endpoint: Optional[str] = None,
         azure_deployment: Optional[str] = None,
         api_version: Optional[str] = None,
+        tokenizer_name: Optional[str] = None,
     ) -> None:
         """
+        Initialize the Azure OpenAI Embedding provider.
+
         Args:
-            model_name: Unused for Azure (deployment name is what matters). Kept to
-                respect BaseEmbedding signature. If provided and `azure_deployment`
-                is None, we'll use this value as the deployment name.
-            api_key: If None, reads from AZURE_OPENAI_API_KEY.
-            azure_endpoint: If None, reads from AZURE_OPENAI_ENDPOINT.
-            azure_deployment: The *deployment name* for your embeddings model. If None,
-                reads from AZURE_OPENAI_DEPLOYMENT, or falls back to `model_name`.
-            api_version: If None, reads from AZURE_OPENAI_API_VERSION
-                (defaults to "2025-04-14-preview").
+            model_name (Optional[str]):
+                OpenAI model name (unused for Azure, but kept for API parity).
+                If `azure_deployment` is not provided, this will be used as the
+                deployment name.
+            api_key (Optional[str]):
+                API key for Azure OpenAI. If not provided, it will be read from
+                the environment variable `AZURE_OPENAI_API_KEY`.
+            azure_endpoint (Optional[str]):
+                The base endpoint for the Azure OpenAI service. If not provided,
+                it will be read from `AZURE_OPENAI_ENDPOINT`.
+            azure_deployment (Optional[str]):
+                Deployment name for the embeddings model in Azure OpenAI. If not
+                provided, it will be read from `AZURE_OPENAI_DEPLOYMENT` or
+                fallback to `model_name`.
+            api_version (Optional[str]):
+                Azure API version string. Defaults to `"2025-04-14-preview"`.
+                If not provided, it will be read from `AZURE_OPENAI_API_VERSION`.
+            tokenizer_name (Optional[str]):
+                Optional explicit tokenizer name for `tiktoken` (e.g.,
+                `"cl100k_base"`). If provided, it overrides the automatic mapping.
+
+        Raises:
+            ValueError: If any required parameter is missing or it is not found in environment variables.
         """
         if api_key is None:
             api_key = os.getenv("AZURE_OPENAI_API_KEY")
@@ -51,7 +86,6 @@ class AzureOpenAIEmbedding(BaseEmbedding):
                 )
 
         if azure_deployment is None:
-            # prefer explicit deployment env var; otherwise allow model_name to stand in
             azure_deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT") or model_name
             if not azure_deployment:
                 raise ValueError(
@@ -69,64 +103,134 @@ class AzureOpenAIEmbedding(BaseEmbedding):
             api_version=api_version,
         )
         self.model_name = azure_deployment
+        self._tokenizer_name = tokenizer_name
 
     def get_client(self) -> AzureOpenAI:
         """
-        Return the initialized Azure OpenAI client instance.
+        Get the underlying Azure OpenAI client.
 
         Returns:
-            AzureOpenAI: The API client configured with provided credentials and
-            endpoint details.
+            AzureOpenAI: The configured Azure OpenAI API client.
         """
         return self.client
 
-    def _validate_token_length(self, text: str) -> None:
-        """Validate that the text does not exceed the model's token limit.
+    def _get_encoder(self):
+        """
+        Retrieve the `tiktoken` encoder for this deployment.
 
-        Args:
-            text: The input text to check.
+        This method ensures compatibility with Azure's deployment names, which
+        may not be directly recognized by `tiktoken`. If the user has explicitly
+        provided a tokenizer name, that is used. Otherwise, the method first
+        tries to look up the encoding via `tiktoken.encoding_for_model` using the
+        deployment name. If that fails, it falls back to the default encoding
+        defined by `OPENAI_EMBEDDING_MODEL_FALLBACK`.
+
+        Returns:
+            tiktoken.Encoding: A tokenizer encoding object.
 
         Raises:
-            ValueError: If the text exceeds `OPENAI_EMBEDDING_MAX_TOKENS` tokens.
+            ValueError: If `tiktoken` fails to load the fallback encoding.
         """
-        enc = tiktoken.encoding_for_model(self.model_name)
-        tokens = enc.encode(text)
-        if len(tokens) > OPENAI_EMBEDDING_MAX_TOKENS:
+        if self._tokenizer_name:
+            return tiktoken.get_encoding(self._tokenizer_name)
+        try:
+            return tiktoken.encoding_for_model(self.model_name)
+        except Exception:
+            return tiktoken.get_encoding(OPENAI_EMBEDDING_MODEL_FALLBACK)
+
+    def _count_tokens(self, text: str) -> int:
+        """
+        Count the number of tokens in the given text.
+
+        Uses the encoder retrieved from `_get_encoder()` to tokenize the input
+        and returns the length of the resulting token list.
+
+        Args:
+            text (str): The text to tokenize.
+
+        Returns:
+            int: Number of tokens in the input text.
+        """
+        encoder = self._get_encoder()
+        return len(encoder.encode(text))
+
+    def _validate_token_length(self, text: str) -> None:
+        """
+        Ensure the input text does not exceed the model's maximum token limit.
+
+        Args:
+            text (str): The text to check.
+
+        Raises:
+            ValueError: If the token count exceeds `OPENAI_EMBEDDING_MAX_TOKENS`.
+        """
+        if self._count_tokens(text) > OPENAI_EMBEDDING_MAX_TOKENS:
             raise ValueError(
                 f"Input text exceeds maximum allowed length of {OPENAI_EMBEDDING_MAX_TOKENS} tokens."
             )
 
     def embed_text(self, text: str, **parameters: Any) -> List[float]:
         """
-        Compute an embedding for a single text using Azure OpenAI.
+        Compute an embedding vector for a single text string.
 
         Args:
-            text: The text to embed.
-            **parameters: Additional args forwarded to `client.embeddings.create(...)`.
+            text (str):
+                The text to embed. Must be non-empty and within the model's
+                token limit.
+            **parameters:
+                Additional parameters to forward to the Azure OpenAI embeddings API.
 
         Returns:
-            List[float]: Embedding vector.
+            List[float]: The computed embedding vector.
 
         Raises:
-            ValueError: If `text` is empty or exceeds max token length.
-
-        Example:
-            ```python
-            from splitter_mr.embedding import AzureOpenAIEmbedding
-
-            embedder = AzureOpenAIEmbedding(model_name="text-embedding-3-large")
-            embedding = embedder.embed_text("hello world")
-            print(embedding)
-            ```
+            ValueError: If `text` is empty or exceeds the token limit.
         """
         if not text:
             raise ValueError("`text` must be a non-empty string.")
-
         self._validate_token_length(text)
-
-        resp = self.client.embeddings.create(
+        response = self.client.embeddings.create(
             model=self.model_name,
             input=text,
             **parameters,
         )
-        return resp.data[0].embedding
+        return response.data[0].embedding
+
+    def embed_documents(self, texts: List[str], **parameters: Any) -> List[List[float]]:
+        """
+        Compute embeddings for multiple texts in a single API call.
+
+        Args:
+            texts (List[str]):
+                List of text strings to embed. All items must be non-empty strings
+                within the token limit.
+            **parameters:
+                Additional parameters to forward to the Azure OpenAI embeddings API.
+
+        Returns:
+            A list of embedding vectors, one per input text.
+
+        Raises:
+            ValueError:
+                - If `texts` is empty.
+                - If any text is empty or not a string.
+                - If any text exceeds the token limit.
+        """
+        if not texts:
+            raise ValueError("`texts` must be a non-empty list of strings.")
+        if any(not isinstance(t, str) or not t for t in texts):
+            raise ValueError("All items in `texts` must be non-empty strings.")
+
+        encoder = self._get_encoder()
+        for t in texts:
+            if len(encoder.encode(t)) > OPENAI_EMBEDDING_MAX_TOKENS:
+                raise ValueError(
+                    f"An input exceeds the maximum allowed length of {OPENAI_EMBEDDING_MAX_TOKENS} tokens."
+                )
+
+        response = self.client.embeddings.create(
+            model=self.model_name,
+            input=texts,
+            **parameters,
+        )
+        return [data.embedding for data in response.data]

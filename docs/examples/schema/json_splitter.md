@@ -1,4 +1,4 @@
-## **Example**: Splitting JSON Files with `RecursiveJSONSplitter`
+# **Example**: Splitting JSON Files with `RecursiveJSONSplitter`
 
 When working with structured data such as invoices, user records, or any other JSON document, it's often necessary to split the data into manageable chunks for downstream processing, storage, or LLM ingestion. **SplitterMR** provides the `RecursiveJSONSplitter`, an splitter which divides a JSON structure into key-based chunks, preserving the hierarchy and content integrity. Let's see how it works!
 
@@ -6,7 +6,7 @@ When working with structured data such as invoices, user records, or any other J
 
 ---
 
-### Step 1: Read the JSON Document
+## Step 1: Read the JSON Document
 
 First, use the `VanillaReader` to load the JSON file. You can use other Reader methods as your choice. Note that you can read from an URL, Path or variable.
 
@@ -79,7 +79,7 @@ This is a JSON dataset with some sample invoices.
 
 ---
 
-### Step 2: Split the JSON Document
+## Step 2: Split the JSON Document
 
 To split the text, instantiate the `RecursiveJSONSplitter` and split the loaded JSON content:
 
@@ -158,7 +158,7 @@ In markdown format table:
 
 ---
 
-### Complete Example Script
+## Complete Example Script
 
 ```python
 from splitter_mr.reader import VanillaReader

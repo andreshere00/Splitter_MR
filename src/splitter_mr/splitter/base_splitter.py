@@ -28,6 +28,9 @@ class BaseSplitter(ABC):
     """
 
     def __init__(self, chunk_size: int = 1000):
+        """
+        Initializer method for BaseSplitter classes
+        """
         self.chunk_size = chunk_size
 
     @abstractmethod
@@ -42,7 +45,6 @@ class BaseSplitter(ABC):
         Returns:
             SplitterOutput: A dictionary containing split chunks and associated metadata.
         """
-        pass
 
     def _generate_chunk_ids(self, num_chunks: int) -> List[str]:
         """

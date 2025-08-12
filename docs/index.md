@@ -8,11 +8,10 @@
 **SplitterMR** is a library for chunking data into convenient text blocks compatible with your LLM applications.
 
 !!! important
-    **New version v0.4.0**
+    **New version v0.5.0**
      
-    Add support for reading files and splitting them by pages using `PageSplitter`. Add support to read more files with `VanillaReader`.
-      
-    ➡️ See [**documentation**](https://andreshere00.github.io/Splitter_MR/examples/text/paged_splitter/).
+    - Add **embedding models** to encode the text into distributed vectorized representations. See documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/embedding/). 
+    - Add support for chunking files based on **semantic similarity** between sentences. See documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#semanticsplitter).
 
 
 ## Features
@@ -35,24 +34,19 @@ SplitterMR allows you to split files in many different ways depending on your ne
 
 | Splitting Technique | Description |
 | ------------------------- | -----------------------------|
-| **Character Splitter**    | Splits text into chunks based on a specified number of characters. Supports overlapping by character count or percentage. <br> **Parameters:** `chunk_size` (max chars per chunk), `chunk_overlap` (overlapping chars: int or %). <br> **Compatible with:** Text. |
-| **Word Splitter**         | Splits text into chunks based on a specified number of words. Supports overlapping by word count or percentage. <br> **Parameters:** `chunk_size` (max words per chunk), `chunk_overlap` (overlapping words: int or %). <br> **Compatible with:** Text. |
-| **Sentence Splitter**     | Splits text into chunks by a specified number of sentences. Allows overlap defined by a number or percentage of words from the end of the previous chunk. Customizable sentence separators (e.g., `.`, `!`, `?`). <br> **Parameters:** `chunk_size` (max sentences per chunk), `chunk_overlap` (overlapping words: int or %), `sentence_separators` (list of characters). <br> **Compatible with:** Text. |
-| **Paragraph Splitter**    | Splits text into chunks based on a specified number of paragraphs. Allows overlapping by word count or percentage, and customizable line breaks. <br> **Parameters:** `chunk_size` (max paragraphs per chunk), `chunk_overlap` (overlapping words: int or %), `line_break` (delimiter(s) for paragraphs). <br> **Compatible with:** Text. |
-| **Recursive Splitter**    | Recursively splits text based on a hierarchy of separators (e.g., paragraph, sentence, word, character) until chunks reach a target size. Tries to preserve semantic units as long as possible. <br> **Parameters:** `chunk_size` (max chars per chunk), `chunk_overlap` (overlapping chars), `separators` (list of characters to split on, e.g., `["\n\n", "\n", " ", ""]`). <br> **Compatible with:** Text.                                                                                   |
-| **Token Splitter**        | Splits text into chunks based on the number of tokens, using various tokenization models (e.g., tiktoken, spaCy, NLTK). Useful for ensuring chunks are compatible with LLM context limits. <br> **Parameters:** `chunk_size` (max tokens per chunk), `model_name` (tokenizer/model, e.g., `"tiktoken/cl100k_base"`, `"spacy/en_core_web_sm"`, `"nltk/punkt"`), `language` (for NLTK). <br> **Compatible with:** Text. |
-| **Paged Splitter**        | Splits text by pages for documents that have page structure. Each chunk contains a specified number of pages, with optional word overlap. <br> **Parameters:** `num_pages` (pages per chunk), `chunk_overlap` (overlapping words). <br> **Compatible with:** Word, PDF, Excel, PowerPoint. |
-| **Row/Column Splitter**   | For tabular formats, splits data by a set number of rows or columns per chunk, with possible overlap. Row-based and column-based splitting are mutually exclusive. <br> **Parameters:** `num_rows`, `num_cols` (rows/columns per chunk), `overlap` (overlapping rows or columns). <br> **Compatible with:** Tabular formats (csv, tsv, parquet, flat json). |
-| **JSON Splitter**         | Recursively splits JSON documents into smaller sub-structures that preserve the original JSON schema. <br> **Parameters:** `max_chunk_size` (max chars per chunk), `min_chunk_size` (min chars per chunk). <br> **Compatible with:** JSON. |
-| **Semantic Splitter**     | **WORK IN PROGRESS**. Splits text into chunks based on semantic similarity, using an embedding model and a max tokens parameter. Useful for meaningful semantic groupings. <br> **Parameters:** `embedding_model` (model for embeddings), `max_tokens` (max tokens per chunk). <br> **Compatible with:** Text. |
-| **HTML Tag Splitter**       | Splits HTML content based on a specified tag, or automatically detects the most frequent and shallowest tag if not specified. Each chunk is a complete HTML fragment for that tag. <br> **Parameters:** `chunk_size` (max chars per chunk), `tag` (HTML tag to split on, optional). <br> **Compatible with:** HTML. |
-| **Header Splitter**        | Splits Markdown or HTML documents into chunks using header levels (e.g., `#`, `##`, or `<h1>`, `<h2>`). Uses configurable headers for chunking. <br> **Parameters:** `headers_to_split_on` (list of headers and semantic names), `chunk_size` (unused, for compatibility). <br> **Compatible with:** Markdown, HTML. |
-| **Code Splitter**         | Splits source code files into programmatically meaningful chunks (functions, classes, methods, etc.), aware of the syntax of the specified programming language (e.g., Python, Java, Kotlin). Uses language-aware logic to avoid splitting inside code blocks. <br> **Parameters:** `chunk_size` (max chars per chunk), `language` (programming language as string, e.g., `"python"`, `"java"`). <br> **Compatible with:** Source code files (Python, Java, Kotlin, C++, JavaScript, Go, etc.). |
-
-!!! warning
-    **Semantic Splitter** is **not fully implemented yet**. 
-    Stay aware to updates!
-
+| [**Character Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#charactersplitter)    | Splits text into chunks based on a specified number of characters. Supports overlapping by character count or percentage. <br> **Parameters:** `chunk_size` (max chars per chunk), `chunk_overlap` (overlapping chars: int or %). <br> **Compatible with:** Text. |
+| [**Word Splitter** ](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#wordsplitter)        | Splits text into chunks based on a specified number of words. Supports overlapping by word count or percentage. <br> **Parameters:** `chunk_size` (max words per chunk), `chunk_overlap` (overlapping words: int or %). <br> **Compatible with:** Text. |
+| [**Sentence Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#sentencesplitter)     | Splits text into chunks by a specified number of sentences. Allows overlap defined by a number or percentage of words from the end of the previous chunk. Customizable sentence separators (e.g., `.`, `!`, `?`). <br> **Parameters:** `chunk_size` (max sentences per chunk), `chunk_overlap` (overlapping words: int or %), `sentence_separators` (list of characters). <br> **Compatible with:** Text. |
+| [**Paragraph Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#paragraphsplitter)    | Splits text into chunks based on a specified number of paragraphs. Allows overlapping by word count or percentage, and customizable line breaks. <br> **Parameters:** `chunk_size` (max paragraphs per chunk), `chunk_overlap` (overlapping words: int or %), `line_break` (delimiter(s) for paragraphs). <br> **Compatible with:** Text. |
+| [**Recursive Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#recursivesplitter)    | Recursively splits text based on a hierarchy of separators (e.g., paragraph, sentence, word, character) until chunks reach a target size. Tries to preserve semantic units as long as possible. <br> **Parameters:** `chunk_size` (max chars per chunk), `chunk_overlap` (overlapping chars), `separators` (list of characters to split on, e.g., `["\n\n", "\n", " ", ""]`). <br> **Compatible with:** Text.                                                                                   |
+| [**Token Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#tokensplitter)        | Splits text into chunks based on the number of tokens, using various tokenization models (e.g., tiktoken, spaCy, NLTK). Useful for ensuring chunks are compatible with LLM context limits. <br> **Parameters:** `chunk_size` (max tokens per chunk), `model_name` (tokenizer/model, e.g., `"tiktoken/cl100k_base"`, `"spacy/en_core_web_sm"`, `"nltk/punkt"`), `language` (for NLTK). <br> **Compatible with:** Text. |
+| [**Paged Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#pagedsplitter)        | Splits text by pages for documents that have page structure. Each chunk contains a specified number of pages, with optional word overlap. <br> **Parameters:** `num_pages` (pages per chunk), `chunk_overlap` (overlapping words). <br> **Compatible with:** Word, PDF, Excel, PowerPoint. |
+| [**Row/Column Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#rowcolumnsplitter)   | For tabular formats, splits data by a set number of rows or columns per chunk, with possible overlap. Row-based and column-based splitting are mutually exclusive. <br> **Parameters:** `num_rows`, `num_cols` (rows/columns per chunk), `overlap` (overlapping rows or columns). <br> **Compatible with:** Tabular formats (csv, tsv, parquet, flat json). |
+| [**JSON Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#jsonrecursivesplitter)         | Recursively splits JSON documents into smaller sub-structures that preserve the original JSON schema. <br> **Parameters:** `max_chunk_size` (max chars per chunk), `min_chunk_size` (min chars per chunk). <br> **Compatible with:** JSON. |
+| [**Semantic Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#semanticsplitter)     | Splits text into chunks based on semantic similarity, using an embedding model and a max tokens parameter. Useful for meaningful semantic groupings. <br> **Parameters:** `embedding_model` (model for embeddings), `max_tokens` (max tokens per chunk). <br> **Compatible with:** Text. |
+| [**HTML Tag Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#htmltagsplitter)       | Splits HTML content based on a specified tag, or automatically detects the most frequent and shallowest tag if not specified. Each chunk is a complete HTML fragment for that tag. <br> **Parameters:** `chunk_size` (max chars per chunk), `tag` (HTML tag to split on, optional). <br> **Compatible with:** HTML. |
+| [**Header Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#headersplitter)       | Splits Markdown or HTML documents into chunks using header levels (e.g., `#`, `##`, or `<h1>`, `<h2>`). Uses configurable headers for chunking. <br> **Parameters:** `headers_to_split_on` (list of headers and semantic names), `chunk_size` (unused, for compatibility). <br> **Compatible with:** Markdown, HTML. |
+| [**Code Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#codesplitter)         | Splits source code files into programmatically meaningful chunks (functions, classes, methods, etc.), aware of the syntax of the specified programming language (e.g., Python, Java, Kotlin). Uses language-aware logic to avoid splitting inside code blocks. <br> **Parameters:** `chunk_size` (max chars per chunk), `language` (programming language as string, e.g., `"python"`, `"java"`). <br> **Compatible with:** Source code files (Python, Java, Kotlin, C++, JavaScript, Go, etc.). |
 
 ## Architecture
 
@@ -176,13 +170,18 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
     To see more details, consult documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/model/).
 
 
-## Next features
+## Updates
 
-- [ ] Implement a method to split by embedding similarity: `SemanticSplitter`.
+### Next features
+
+- [X] Add embedding model support.
     - [ ] Add HuggingFace embeddings model support.
-    - [ ] Add OpenAI embeddings model support.
+    - [X] Add OpenAI embeddings model support.
     - [ ] Add Gemini embeddings model support.
     - [ ] Add Claude Anthropic embeddings model support.
+    - [ ] Add Grok VLMs model support.
+- [ ] Add asynchronous methods for Splitters and Readers.
+- [ ] Add batch methods to process several documents at once.
 - [ ] Add support to read formulas.
 - [ ] Modularize library into several sub-libraries.
 - [ ] Add classic **OCR** models: `easyocr` and `pytesseract`.
@@ -192,6 +191,10 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
     - [ ] Add Claude Anthropic VLMs model support.
     - [ ] Add Grok VLMs model support.
 - [ ] Add support to generate output in `markdown`, `json`, `yaml` formats.
+
+### Previously implemented
+
+- [X] Implement a method to split by embedding similarity: `SemanticSplitter`.
 - [X] Add new supported formats to be analyzed with OpenAI and AzureOpenAI models.
 - [X] Add support to read images using `VanillaReader`. 
 - [X] Add support to read `xlsx`, `docx` and `pptx` files using `VanillaReader`. 

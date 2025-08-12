@@ -204,3 +204,5 @@ notebooks/
 
 # Visual Studio Code settings
 .vscode
+
+*.DS_Store*

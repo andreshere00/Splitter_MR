@@ -9,7 +9,7 @@ As we have seen in previous examples, reading a PDF is not a simple task. In thi
 
 ## Connecting to a VLM to extract text and analyze images
 
-For this example, we will use the same document as the (previous tutorial)[https://github.com/andreshere00/Splitter_MR/blob/main/data/sample_pdf.pdf].
+For this example, we will use the same document as the [previous tutorial](https://github.com/andreshere00/Splitter_MR/blob/main/data/sample_pdf.pdf).
 
 To use a VLM to read images and get annotations, you can simply instantiate a model which inherits from a `BaseModel` class and pass that model into the Reader class. 
 
