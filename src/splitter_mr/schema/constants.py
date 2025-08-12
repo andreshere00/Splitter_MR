@@ -1,4 +1,6 @@
-SUPPORTED_PROGRAMMING_LANGUAGES: set[str] = {
+from typing import Dict, Set
+
+SUPPORTED_PROGRAMMING_LANGUAGES: Set[str] = {
     "lua",
     "java",
     "ts",
@@ -55,7 +57,7 @@ SUPPORTED_PROGRAMMING_LANGUAGES: set[str] = {
     "pm",
 }
 
-SUPPORTED_DOCLING_FILE_EXTENSIONS: set[str] = {
+SUPPORTED_DOCLING_FILE_EXTENSIONS: Set[str] = {
     "md",
     "markdown",
     "pdf",
@@ -74,19 +76,25 @@ SUPPORTED_DOCLING_FILE_EXTENSIONS: set[str] = {
     "tiff",
 }
 
-SUPPORTED_VANILLA_IMAGE_EXTENSIONS: set[str] = {"png", "jpg", "jpeg", "webp", "gif"}
+SUPPORTED_VANILLA_IMAGE_EXTENSIONS: Set[str] = {"png", "jpg", "jpeg", "webp", "gif"}
 
-SUPPORTED_OPENAI_MIME_TYPES: set[str] = {
+SUPPORTED_OPENAI_MIME_TYPES: Set[str] = {
     "image/png",
     "image/jpeg",
     "image/webp",
     "image/gif",
 }
 
-OPENAI_MIME_BY_EXTENSION: dict[str, str] = {
+OPENAI_MIME_BY_EXTENSION: Dict[str, str] = {
     "jpg": "image/jpeg",
     "jpeg": "image/jpeg",
     "png": "image/png",
     "gif": "image/gif",
     "webp": "image/webp",
 }
+
+OPENAI_EMBEDDING_MAX_TOKENS: int = 8192
+
+OPENAI_EMBEDDING_MODEL_FALLBACK: str = "cl100k_base"
+
+DEFAULT_SENTENCE_SEPARATOR: str = r'(?:\.\.\.|…|[.!?])(?:["”’\'\)\]\}»]*)\s*'

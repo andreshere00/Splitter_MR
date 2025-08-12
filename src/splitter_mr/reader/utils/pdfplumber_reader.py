@@ -337,10 +337,10 @@ class PDFPlumberReader:
                     if item["type"] == "image":
                         if show_base64_images:
                             md_lines.append(
-                                f'![Image page {item["page"]}]({item["content"]})\n'
+                                f"![Image page {item['page']}]({item['content']})\n"
                             )
                         elif item.get("annotation"):
-                            md_lines.append(f'{item["annotation"]}\n')
+                            md_lines.append(f"{item['annotation']}\n")
                         else:
                             md_lines.append(f"\n{image_placeholder}\n")
                     elif item["type"] == "table":

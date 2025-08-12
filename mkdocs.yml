@@ -26,7 +26,8 @@ nav:
     - Overview: api_reference/api_reference.md
     - Readers: api_reference/reader.md
     - Splitters: api_reference/splitter.md
-    - Models: api_reference/model.md
+    - Vision models: api_reference/model.md
+    - Embedding models: api_reference/embedding.md
   - Examples:
     - Overview: examples/examples.md
     - Reading:
@@ -40,6 +41,7 @@ nav:
       - Split by characters recursively: examples/text/recursive_character_splitter.md
       - Split by tokens: examples/text/token_splitter.md
       - Split by pages: examples/text/paged_splitter.md
+      - Split by semantic similarity: examples/text/semantic_splitter.md
     - Schema-based splitting:
       - Split by HTML Tags: examples/schema/html_tag_splitter.md
       - Split by Code: examples/schema/code_splitter.md

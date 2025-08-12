@@ -7,6 +7,7 @@ from .paged_splitter import PagedSplitter
 from .paragraph_splitter import ParagraphSplitter
 from .recursive_splitter import RecursiveCharacterSplitter
 from .row_column_splitter import RowColumnSplitter
+from .semantic_splitter import SemanticSplitter
 from .sentence_splitter import SentenceSplitter
 from .token_splitter import TokenSplitter
 from .word_splitter import WordSplitter
@@ -22,6 +23,7 @@ __all__ = [
     "RowColumnSplitter",
     "ParagraphSplitter",
     "SentenceSplitter",
+    "SemanticSplitter",
     "WordSplitter",
     "TokenSplitter",
     "PagedSplitter",
