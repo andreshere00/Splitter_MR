@@ -18,7 +18,7 @@ COPY pyproject.toml uv.lock mkdocs.yml ./
 
 # 4) install python deps (cache wheels via mount)
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install --system --group dev --frozen
+    uv sync --group dev
 
 # 5) now copy the rest of the project (changes here won't bust deps layer)
 COPY . .

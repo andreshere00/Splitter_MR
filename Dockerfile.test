@@ -15,7 +15,7 @@ WORKDIR /app
 # 3) deps first
 COPY pyproject.toml uv.lock ./
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install --system --group dev --frozen
+    uv sync --group dev
 
 # 4) then source (and tests, data as needed)
 COPY . .
