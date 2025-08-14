@@ -1,21 +1,27 @@
 FROM python:3.12-slim
 
-# Install uv (for fast installs) and git if needed for plugins from git
+# 1) system deps (cached via mounts)
+RUN --mount=type=cache,target=/var/cache/apt \
+    --mount=type=cache,target=/var/lib/apt/lists \
+    apt-get update && apt-get install -y --no-install-recommends \
+      gcc build-essential git \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc \
-    build-essential \
-    git  && \
-    pip install --no-cache-dir uv
+# 2) install uv once (rarely changes)
+RUN pip install --no-cache-dir uv
 
-# Define working directory
 WORKDIR /app
 
-# Copy the project
+# 3) copy ONLY files that affect Python dependency resolution
+#    (keep this list tight so the layer stays cached when code changes)
+COPY pyproject.toml uv.lock mkdocs.yml ./
+
+# 4) install python deps (cache wheels via mount)
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install --system --group dev --frozen
+
+# 5) now copy the rest of the project (changes here won't bust deps layer)
 COPY . .
 
-# Install dependencies
-RUN uv pip install --system --group dev
-
-# Default command to build docs (change to gh-deploy if you wish)
+# 6) default command to deploy docs
 CMD ["uv", "run", "mkdocs", "gh-deploy", "--force"]

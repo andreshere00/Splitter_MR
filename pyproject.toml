@@ -44,6 +44,7 @@ splitter-mr = { workspace = true }
 [tool.poe.tasks]
 
 help = { shell = "poe --help" }
+
 build = { shell = "uv build", help = "Build the project using uv." }
 
 install = { shell = "uv pip install -U uv || pip install uv || true && uv add --dev pre-commit && uv run pre-commit install", help = "Install all the dependencies and requirements" }
@@ -60,7 +61,7 @@ pre-commit = { shell = "uv run pre-commit", help = "Install pre-commit hooks." }
 
 format = { shell = "uv run --dev pyupgrade --exit-zero && uv run --dev isort . && uv run --dev black . && uv run ruff check --fix . && uv run ruff format . && uv run --dev flake8 --max-line-length=101 --ignore=E203,W291,E501,W293 src/", help = "Format the code using pyupgrade, isort, black and flake8"}
 
-publish-docs = { shell = "uv run mkdocs gh-deploy", help = "Publish Mkdocs server" }
+deploy-docs = { shell = "uv run mkdocs gh-deploy", help = "Publish Mkdocs server" }
 
 [tool.autoflake]
 in-place = true

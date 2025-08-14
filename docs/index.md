@@ -175,8 +175,9 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 ### Next features
 
 - [X] Add embedding model support.
-    - [ ] Add HuggingFace embeddings model support.
     - [X] Add OpenAI embeddings model support.
+    - [X] Add Azure OpenAI embeddings model support.
+    - [ ] Add HuggingFace embeddings model support.
     - [ ] Add Gemini embeddings model support.
     - [ ] Add Claude Anthropic embeddings model support.
     - [ ] Add Grok VLMs model support.
