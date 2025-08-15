@@ -12,8 +12,9 @@ RUN pip install --upgrade pip && pip install uv==0.6.4
 
 WORKDIR /app
 
-# Let setuptools_scm succeed without .git
-ENV SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0+test
+# docker-specific environment variables
+ENV SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0+docs
+ENV UV_LINK_MODE=copy
 
 # 3) deps first (no project yet)
 COPY pyproject.toml uv.lock ./
