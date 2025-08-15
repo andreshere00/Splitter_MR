@@ -1,42 +1,27 @@
-# syntax=docker/dockerfile:1.7
-FROM python:3.12-slim AS base
+FROM python:3.12-slim
 
-# 1) system deps
-RUN --mount=type=cache,target=/var/cache/apt \
-    --mount=type=cache,target=/var/lib/apt/lists \
-    apt-get update && apt-get install -y --no-install-recommends \
+# Environment variables
+ENV SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0+ci
+ENV UV_LINK_MODE=copy
+ENV VIRTUAL_ENV=/app/.venv
+ENV PATH="${VIRTUAL_ENV}/bin:${PATH}"
+
+# Install OS dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
       gcc build-essential git \
     && rm -rf /var/lib/apt/lists/*
 
-# 2) uv
+# Install uv
 RUN pip install --upgrade pip && pip install uv==0.6.4
 
-WORKDIR /app
-ENV SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0+ci
-ENV UV_LINK_MODE=copy
-
-# ---------- deps stage (for "prepare") ----------
-FROM base AS deps
-WORKDIR /app
-COPY pyproject.toml uv.lock ./
-
-# Install dev tools (no project, no default-group) + core runtime deps (default-group)
-RUN --mount=type=cache,target=/root/.cache/uv bash -euxo pipefail <<'EOF'
-uv export --format requirements-txt --group dev --no-default-groups > /tmp/dev.txt
-uv export --format requirements-txt                                 > /tmp/runtime.txt
-uv pip install --system -r /tmp/dev.txt --no-cache-dir
-uv pip install --system -r /tmp/runtime.txt --no-cache-dir
-rm -f /tmp/dev.txt /tmp/runtime.txt
-EOF
-
-# ---------- final test image ----------
-FROM deps AS app
+# Copy working directory
 WORKDIR /app
 COPY . .
 
-# EXTRAS lets CI switch on optional stacks (docling/markitdown/etc.)
+# Install the project with CI extras
 ARG EXTRAS=""
-RUN --mount=type=cache,target=/root/.cache/uv uv pip install --system -e .${EXTRAS}
+RUN uv pip install -e .${EXTRAS}
 
+# Check for test coverage
 RUN chmod +x ./scripts/validate_test.sh
 CMD ["./scripts/validate_test.sh"]

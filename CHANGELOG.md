@@ -24,12 +24,10 @@ Divide library into sub packages.
 
 ### Developer features
 
-- Add cache layers to CI/CD process.
 - Add new steps to Dockerfile images.
-- Add optional dependencies to pyproject.toml.
 - Change `requirements.txt` to don't save editable builds as dependencies.
 - Change how the `splitter_mr` library is installed within Dockerfiles.
-- Lighten the weight of the library by making some dependencies optional
+- Lighten the weight of the library by making some dependencies optional.
 - Change how `poe test` is executed.
 
 ### Documentation
