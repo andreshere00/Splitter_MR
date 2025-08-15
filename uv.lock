@@ -3813,6 +3813,15 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
+audio = [
+    { name = "pydub" },
+    { name = "speechrecognition" },
+]
+azure = [
+    { name = "azure-ai-documentintelligence" },
+    { name = "azure-core" },
+    { name = "azure-identity" },
+]
 ocr = [
     { name = "easyocr" },
     { name = "imageio" },
@@ -3853,6 +3862,9 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "azure-ai-documentintelligence", marker = "extra == 'azure'", specifier = ">=1.0.2" },
+    { name = "azure-core", marker = "extra == 'azure'", specifier = ">=1.34.0" },
+    { name = "azure-identity", marker = "extra == 'azure'", specifier = ">=1.23.0" },
     { name = "docling", specifier = ">=2.15.1" },
     { name = "easyocr", marker = "extra == 'ocr'", specifier = ">=1.7.2" },
     { name = "fastparquet", specifier = ">=2024.11.0" },
@@ -3870,6 +3882,7 @@ requires-dist = [
     { name = "pdfplumber", specifier = ">=0.11.7" },
     { name = "pillow", marker = "extra == 'ocr'", specifier = ">=11.2.1" },
     { name = "poethepoet", specifier = ">=0.35.0" },
+    { name = "pydub", marker = "extra == 'audio'", specifier = ">=0.25.1" },
     { name = "pymupdf", specifier = ">=1.26.1" },
     { name = "pypdf", specifier = ">=5.9.0" },
     { name = "pyyaml", specifier = ">=6.0.2" },
@@ -3877,6 +3890,7 @@ requires-dist = [
     { name = "scikit-image", marker = "extra == 'ocr'", specifier = ">=0.25.2" },
     { name = "shapely", marker = "extra == 'ocr'", specifier = ">=2.1.1" },
     { name = "spacy", specifier = ">=3.8.7" },
+    { name = "speechrecognition", marker = "extra == 'audio'", specifier = ">=3.14.3" },
     { name = "svglib", specifier = ">=1.5.1" },
     { name = "tiktoken", specifier = ">=0.9.0" },
     { name = "tokenizers", marker = "extra == 'ocr'", specifier = ">=0.21.1" },
@@ -3885,7 +3899,7 @@ requires-dist = [
     { name = "transformers", marker = "extra == 'ocr'", specifier = ">=4.52.4" },
     { name = "xlrd", specifier = ">=2.0.1" },
 ]
-provides-extras = ["ocr"]
+provides-extras = ["ocr", "audio", "azure"]
 
 [package.metadata.requires-dev]
 dev = [

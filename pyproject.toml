@@ -45,6 +45,17 @@ ocr = [
     "transformers>=4.52.4",
     "tokenizers>=0.21.1",
 ]
+# Audio transcription / speech recognition
+audio = [
+    "speechrecognition>=3.14.3",
+    "pydub>=0.25.1",
+]
+# Optional Azure AI dependencies (large + extra)
+azure = [
+    "azure-ai-documentintelligence>=1.0.2",
+    "azure-core>=1.34.0",
+    "azure-identity>=1.23.0",
+]
 
 [tool.setuptools]
 package-dir = {"" = "src"}
