@@ -24,8 +24,8 @@ jobs:
           tags: splitter_mr_tests:latest
           load: true
           provenance: false          # needed when load: true
-          cache-from: type=gha,scope=splitter_mr_tests
-          cache-to: type=gha,mode=max,scope=splitter_mr_tests
+          cache-from: type=gha,scope=splitter_mr
+          cache-to: type=gha,mode=max,scope=splitter_mr
           build-args: |
             BUILDKIT_PROGRESS=plain  # clearer logs to confirm cache hits
 
@@ -48,8 +48,8 @@ jobs:
           tags: splitter_mr_docs:latest
           load: true
           provenance: false
-          cache-from: type=gha,scope=splitter_mr_docs
-          cache-to: type=gha,mode=max,scope=splitter_mr_docs
+          cache-from: type=gha,scope=splitter_mr
+          cache-to: type=gha,mode=max,scope=splitter_mr
           build-args: |
             BUILDKIT_PROGRESS=plain
 

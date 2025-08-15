@@ -1,27 +1,31 @@
 FROM python:3.12-slim
 
-# 1) system deps (cached via mounts)
+# 1) system deps
 RUN --mount=type=cache,target=/var/cache/apt \
     --mount=type=cache,target=/var/lib/apt/lists \
     apt-get update && apt-get install -y --no-install-recommends \
       gcc build-essential git \
     && rm -rf /var/lib/apt/lists/*
 
-# 2) install uv once (rarely changes)
-RUN pip install --no-cache-dir uv
+# 2) uv
+RUN pip install --no-cache-dir "uv>=0.4"
 
 WORKDIR /app
 
-# 3) copy ONLY files that affect Python dependency resolution
-#    (keep this list tight so the layer stays cached when code changes)
+# setuptools_scm friendly
+ENV SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0+docs
+
+# 3) only files affecting deps
 COPY pyproject.toml uv.lock mkdocs.yml ./
 
-# 4) install python deps (cache wheels via mount)
+# 4) install python deps (dev for mkdocs)
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --group dev
 
-# 5) now copy the rest of the project (changes here won't bust deps layer)
+# 5) now bring in the rest and install the project once
 COPY . .
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install --system -e .
 
 # 6) default command to deploy docs
 CMD ["uv", "run", "mkdocs", "gh-deploy", "--force"]

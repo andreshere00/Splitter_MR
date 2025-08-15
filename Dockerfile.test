@@ -8,17 +8,22 @@ RUN --mount=type=cache,target=/var/cache/apt \
     && rm -rf /var/lib/apt/lists/*
 
 # 2) uv
-RUN pip install --upgrade pip && pip install uv
+RUN pip install --upgrade pip && pip install "uv>=0.4"
 
 WORKDIR /app
 
-# 3) deps first
+# Let setuptools_scm succeed without .git
+ENV SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0+test
+
+# 3) deps first (no project yet)
 COPY pyproject.toml uv.lock ./
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --group dev
 
-# 4) then source (and tests, data as needed)
+# 4) now copy source and install the project once
 COPY . .
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install --system -e .
 
 # 5) permissions & default command
 RUN chmod +x ./scripts/validate_test.sh

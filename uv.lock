@@ -3832,7 +3832,6 @@ dev = [
     { name = "requests-mock" },
     { name = "ruff" },
     { name = "setuptools-scm" },
-    { name = "splitter-mr" },
     { name = "twine" },
     { name = "wheel" },
 ]
@@ -3881,7 +3880,6 @@ dev = [
     { name = "requests-mock", specifier = ">=1.12.1" },
     { name = "ruff", specifier = ">=0.12.8" },
     { name = "setuptools-scm", specifier = ">=8.3.1" },
-    { name = "splitter-mr", editable = "." },
     { name = "twine", specifier = ">=6.1.0" },
     { name = "wheel", specifier = ">=0.45.1" },
 ]

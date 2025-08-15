@@ -37,6 +37,10 @@ package-dir = {"" = "src"}
 [tool.setuptools_scm]
 version_scheme = "guess-next-dev"
 local_scheme = "no-local-version"
+fallback_version = "0.0.0"
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.uv.sources]
 splitter-mr = { workspace = true }
@@ -51,9 +55,9 @@ install = { shell = "uv pip install -U uv || pip install uv || true && uv add --
 
 shell = { shell = "uv run shell", help = "Run a uv shell." }
 
-clean = { shell = "echo 'Clean all the cache and temporary files.' && find . -type d -name '__pycache__' -exec rm -rf {} + && find . -type d -name '.pytest_cache' -exec rm -rf {} + && find . -type f -name '*.pyc' -delete && find . -type f -name '*.pyo' -delete && find . -type f -name '*.pyd' -delete && find . -type d -name '*.egg-info' -exec rm -rf {} + && find . -type f -name '*.egg' -delete", help = "Clean cache and temporary files." }
+test = { shell = "uv run --dev pytest --cov" }
 
-test = { shell = "uv run --dev pytest --cov", help = "Run tests and check test coverage." }
+clean = { shell = "echo 'Clean all the cache and temporary files.' && find . -type d -name '__pycache__' -exec rm -rf {} + && find . -type d -name '.pytest_cache' -exec rm -rf {} + && find . -type f -name '*.pyc' -delete && find . -type f -name '*.pyo' -delete && find . -type f -name '*.pyd' -delete && find . -type d -name '*.egg-info' -exec rm -rf {} + && find . -type f -name '*.egg' -delete", help = "Clean cache and temporary files." }
 
 docs = { shell = "uv run mkdocs serve", help = "Deploy Mkdocs server." }
 
@@ -92,7 +96,6 @@ dev = [
     "requests-mock>=1.12.1",
     "ruff>=0.12.8",
     "setuptools-scm>=8.3.1",
-    "splitter-mr",
     "twine>=6.1.0",
     "wheel>=0.45.1",
 ]
