@@ -195,7 +195,6 @@ spacy==3.8.7
 spacy-legacy==3.0.12
 spacy-loggers==1.0.5
 speechrecognition==3.14.3
--e file:///Users/aherencia/Documents/Projects/Splitter_MR
 srsly==2.5.1
 svglib==1.5.1
 sympy==1.14.0

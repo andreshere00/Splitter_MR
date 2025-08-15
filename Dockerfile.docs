@@ -12,20 +12,24 @@ RUN pip install --no-cache-dir "uv==0.6.4"
 
 WORKDIR /app
 
-# setuptools_scm friendly
+# docker-specific environment variables
 ENV SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0+docs
+ENV UV_LINK_MODE=copy
 
 # 3) only files affecting deps
 COPY pyproject.toml uv.lock mkdocs.yml ./
 
 # 4) install python deps (dev for mkdocs)
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --group dev --frozen --no-install-project
+COPY pyproject.toml uv.lock ./
+RUN --mount=type=cache,target=/root/.cache/uv sh -euxc '\
+  uv export --group dev --format requirements-txt --no-project > /tmp/req.txt && \
+  uv pip install --system -r /tmp/req.txt --no-cache-dir && \
+  rm -f /tmp/req.txt \
+'
 
-# 5) now bring in the rest and install the project once
+# 5) copy source and install project
 COPY . .
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install --system -e .
+RUN --mount=type=cache,target=/root/.cache/uv uv pip install --system -e .
 
 # 6) default command to deploy docs
 CMD ["uv", "run", "mkdocs", "gh-deploy", "--force"]

@@ -1,5 +1,16 @@
 # v0.5.x
 
+## v0.5.1
+
+Optimize package installation and CI/CD pipeline
+
+### Developer features
+
+- Add cache layers to CI/CD process.
+- Add optional dependencies to pyproject.toml.
+- Change `requirements.txt` to don't save editable builds as dependencies.
+- Change how the `splitter_mr` library is installed within Dockerfiles.
+
 ## v0.5.0
 
 Add **SemanticSplitter** first implementation
