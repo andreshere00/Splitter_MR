@@ -1,4 +1,5 @@
-FROM python:3.12-slim
+# syntax=docker/dockerfile:1.7
+FROM python:3.12-slim AS base
 
 # 1) system deps
 RUN --mount=type=cache,target=/var/cache/apt \
@@ -11,21 +12,31 @@ RUN --mount=type=cache,target=/var/cache/apt \
 RUN pip install --upgrade pip && pip install uv==0.6.4
 
 WORKDIR /app
-
-# docker-specific environment variables
-ENV SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0+docs
+ENV SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0+ci
 ENV UV_LINK_MODE=copy
 
-# 3) deps first (no project yet)
+# ---------- deps stage (for "prepare") ----------
+FROM base AS deps
+WORKDIR /app
 COPY pyproject.toml uv.lock ./
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --group dev --frozen --no-install-project
 
-# 4) now copy source and install the project once
+# Install dev tools (no project, no default-group) + core runtime deps (default-group)
+RUN --mount=type=cache,target=/root/.cache/uv bash -euxo pipefail <<'EOF'
+uv export --group dev --format requirements-txt --no-project --no-default-group > /tmp/dev.txt
+uv export --format requirements-txt --no-project > /tmp/runtime.txt
+uv pip install --system -r /tmp/dev.txt --no-cache-dir
+uv pip install --system -r /tmp/runtime.txt --no-cache-dir
+rm -f /tmp/dev.txt /tmp/runtime.txt
+EOF
+
+# ---------- final test image ----------
+FROM deps AS app
+WORKDIR /app
 COPY . .
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install --system -e .
 
-# 5) permissions & default command
+# EXTRAS lets CI switch on optional stacks (docling/markitdown/etc.)
+ARG EXTRAS=""
+RUN --mount=type=cache,target=/root/.cache/uv uv pip install --system -e .${EXTRAS}
+
 RUN chmod +x ./scripts/validate_test.sh
 CMD ["./scripts/validate_test.sh"]

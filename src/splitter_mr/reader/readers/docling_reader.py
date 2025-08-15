@@ -17,6 +17,23 @@ from ..utils import DoclingPipelineFactory
 from .vanilla_reader import VanillaReader
 
 
+def _require_extra(extra: str, import_name: Optional[str] = None) -> None:
+    """Raise a helpful error if an optional extra is missing."""
+    mod = import_name or extra
+    try:
+        __import__(mod)
+    except ImportError as e:
+        raise ImportError(
+            f"This feature requires the '{extra}' extra.\n"
+            f"Install it with:\n\n"
+            f"    pip install splitter-mr[{extra}]\n"
+        ) from e
+
+
+def _require_docling() -> None:
+    _require_extra("docling")
+
+
 class DoclingReader(BaseReader):
     """
     High-level document reader leveraging IBM Docling for flexible document-to-Markdown conversion,
@@ -33,6 +50,7 @@ class DoclingReader(BaseReader):
     )
 
     def __init__(self, model: Optional[BaseModel] = None) -> None:
+        _require_docling()
         self.model = model
         self.client = None
         self.model_name: Optional[str] = None

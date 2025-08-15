@@ -1,15 +1,48 @@
-# v0.5.x
+# v0.6.x
 
-## v0.5.1
+> [!IMPORTANT]
+> **Breaking Change! Version v0.6.0**
+>
+> - Dependencies are now split into **core** (installed by default) and **optional extras** for heavy or specialized features.
+>   - Example: to use MarkItDown and Docling readers, install with:
+>     ```bash
+>     pip install "splitter-mr[markitdown,docling]"
+>     ```
+>   - To install *all* optional features:
+>     ```bash
+>     pip install "splitter-mr[all]"
+>     ```
+>   - This change reduces install time and keeps core installs lightweight.
 
-Optimize package installation and CI/CD pipeline
+## v0.6.0
+
+Divide library into sub packages.
+
+### Features
+
+- Divide the library into sub-modules.
 
 ### Developer features
 
 - Add cache layers to CI/CD process.
+- Add new steps to Dockerfile images.
 - Add optional dependencies to pyproject.toml.
 - Change `requirements.txt` to don't save editable builds as dependencies.
 - Change how the `splitter_mr` library is installed within Dockerfiles.
+- Lighten the weight of the library by making some dependencies optional
+- Change how `poe test` is executed.
+
+### Documentation
+
+- Fix Embedding models not showing on Developer Guide overview page.
+
+# v0.5.x
+
+> [!IMPORTANT]
+> **New version v0.5.0**
+>  
+> - Add **embedding models** to encode the text into distributed vectorized representations. See documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/embedding/). 
+> - Add support for chunking files based on **semantic similarity** between sentences. See documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#semanticsplitter).
 
 ## v0.5.0
 

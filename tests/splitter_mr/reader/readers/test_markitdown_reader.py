@@ -24,7 +24,7 @@ def mock_split_pdfs(tmp_path):
 
 def patch_vision_models():
     """
-    Returns (patch_OpenAIVisionModel, patch_AzureOpenAIVisionModel, DummyVisionModel).
+    Returns (patch_BaseModel, DummyVisionModel).
     """
 
     class DummyVisionModel:
@@ -35,8 +35,7 @@ def patch_vision_models():
 
     base = "splitter_mr.reader.readers.markitdown_reader"
     return (
-        patch(f"{base}.OpenAIVisionModel", DummyVisionModel),
-        patch(f"{base}.AzureOpenAIVisionModel", DummyVisionModel),
+        patch(f"{base}.BaseModel", DummyVisionModel),
         DummyVisionModel,
     )
 
@@ -101,12 +100,11 @@ def test_markitdown_reader_defaults(tmp_path):
 def test_scan_pdf_pages_calls_convert_per_page(tmp_path):
     pdf = tmp_path / "multi.pdf"
     pdf.write_text("dummy pdf")
-    patch_oa, patch_az, DummyVisionModel = patch_vision_models()
+    patch_oa, DummyVisionModel = patch_vision_models()
     with (
         patch_pdf_pages(pages=3),
         patch("splitter_mr.reader.readers.markitdown_reader.MarkItDown") as MockMID,
         patch_oa,
-        patch_az,
     ):
         reader = MarkItDownReader(model=DummyVisionModel())
         MockMID.return_value.convert.return_value = MagicMock(text_content="## page-md")
@@ -121,12 +119,11 @@ def test_scan_pdf_pages_calls_convert_per_page(tmp_path):
 def test_scan_pdf_pages_uses_custom_prompt(tmp_path):
     pdf = tmp_path / "single.pdf"
     pdf.write_text("dummy pdf")
-    patch_oa, patch_az, DummyVisionModel = patch_vision_models()
+    patch_oa, DummyVisionModel = patch_vision_models()
     with (
         patch_pdf_pages(pages=1),
         patch("splitter_mr.reader.readers.markitdown_reader.MarkItDown") as MockMID,
         patch_oa,
-        patch_az,
     ):
         reader = MarkItDownReader(model=DummyVisionModel())
         MockMID.return_value.convert.return_value = MagicMock(text_content="foo")
@@ -140,12 +137,11 @@ def test_scan_pdf_pages_splits_each_page(tmp_path):
     """Test PDF is split and scanned page by page with VisionModel."""
     pdf = tmp_path / "multi.pdf"
     pdf.write_text("dummy pdf")
-    patch_oa, patch_az, DummyVisionModel = patch_vision_models()
+    patch_oa, DummyVisionModel = patch_vision_models()
     with (
         patch_pdf_pages(pages=3),
         patch("splitter_mr.reader.readers.markitdown_reader.MarkItDown") as MockMID,
         patch_oa,
-        patch_az,
     ):
         reader = MarkItDownReader(model=DummyVisionModel())
         # Simulate each page conversion returning "PAGE-MD"
@@ -169,12 +165,11 @@ def test_scan_pdf_pages_custom_prompt(tmp_path):
     """Test that a custom prompt is passed for page scanning."""
     pdf = tmp_path / "onepage.pdf"
     pdf.write_text("pdf")
-    patch_oa, patch_az, DummyVisionModel = patch_vision_models()
+    patch_oa, DummyVisionModel = patch_vision_models()
     with (
         patch_pdf_pages(pages=1),
         patch("splitter_mr.reader.readers.markitdown_reader.MarkItDown") as MockMID,
         patch_oa,
-        patch_az,
     ):
         MockMID.return_value.convert.return_value = MagicMock(text_content="CUSTOM")
         reader = MarkItDownReader(model=DummyVisionModel())

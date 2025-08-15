@@ -3,10 +3,10 @@ revision = 1
 requires-python = ">=3.11"
 resolution-markers = [
     "python_full_version >= '3.13' and sys_platform == 'darwin'",
-    "python_full_version >= '3.13' and platform_machine == 'aarch64' and sys_platform == 'linux'",
-    "(python_full_version >= '3.13' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version >= '3.13' and sys_platform != 'darwin' and sys_platform != 'linux')",
     "python_full_version == '3.12.*' and sys_platform == 'darwin'",
+    "python_full_version >= '3.13' and platform_machine == 'aarch64' and sys_platform == 'linux'",
     "python_full_version == '3.12.*' and platform_machine == 'aarch64' and sys_platform == 'linux'",
+    "(python_full_version >= '3.13' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version >= '3.13' and sys_platform != 'darwin' and sys_platform != 'linux')",
     "(python_full_version == '3.12.*' and platform_machine != 'aarch64' and sys_platform == 'linux') or (python_full_version == '3.12.*' and sys_platform != 'darwin' and sys_platform != 'linux')",
     "python_full_version < '3.12' and sys_platform == 'darwin'",
     "python_full_version < '3.12' and platform_machine == 'aarch64' and sys_platform == 'linux'",
@@ -453,6 +453,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/a9/15/ae3256348834b92b9594d73eb7230538bae2bf726c2d721b920a668017c5/cloudpathlib-0.21.1.tar.gz", hash = "sha256:f26a855abf34d98f267aafd15efdb2db3c9665913dbabe5fad079df92837a431", size = 45295 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/40/e7/6fea57b887f8e367c1e4a496ba03bfaf57824b766f777723ce1faf28834b/cloudpathlib-0.21.1-py3-none-any.whl", hash = "sha256:bfe580ad72ec030472ec233cd7380701b2d3227da7b2898387bd170aa70c803c", size = 52776 },
+]
+
+[[package]]
+name = "cobble"
+version = "0.1.4"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/54/7a/a507c709be2c96e1bb6102eb7b7f4026c5e5e223ef7d745a17d239e9d844/cobble-0.1.4.tar.gz", hash = "sha256:de38be1539992c8a06e569630717c485a5f91be2192c461ea2b220607dfa78aa", size = 3805 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d5/e1/3714a2f371985215c219c2a70953d38e3eed81ef165aed061d21de0e998b/cobble-0.1.4-py3-none-any.whl", hash = "sha256:36c91b1655e599fd428e2b95fdd5f0da1ca2e9f1abb0bc871dec21a0e78a2b44", size = 3984 },
 ]
 
 [[package]]
@@ -1619,6 +1628,18 @@ wheels = [
 ]
 
 [[package]]
+name = "mammoth"
+version = "1.10.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "cobble" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/89/0d/2ab86f37021b4c50fe72354acd226b1e31a10497e51f6cbd7e3d1eca1181/mammoth-1.10.0.tar.gz", hash = "sha256:cb6fbba41ccf8b5502859c457177d87a833fef0e0b1d4e6fd23ec372fe892c30", size = 52285 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a6/67/36eeb3a8726df3b282ba99ec126323871cffdbcf3b7a1db64ca9bbe4abc1/mammoth-1.10.0-py2.py3-none-any.whl", hash = "sha256:a1c87d5b98ca30230394267f98614b58b14b50f8031dc33ac9a535c6ab04eb99", size = 53823 },
+]
+
+[[package]]
 name = "marisa-trie"
 version = "1.2.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1711,6 +1732,23 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/da/bd/b7ae7863ee556411fbb6ca19a4a7593ef2b3531d6cd10b979ba386a2dd4d/markitdown-0.1.2.tar.gz", hash = "sha256:85fe108a92bd18f317e75a36cf567a6fa812072612a898abf8c156d5d74c13c4", size = 39361 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ed/33/d52d06b44c28e0db5c458690a4356e6abbb866f4abc00c0cf4eebb90ca78/markitdown-0.1.2-py3-none-any.whl", hash = "sha256:4881f0768794ffccb52d09dd86498813a6896ba9639b4fc15512817f56ed9d74", size = 57751 },
+]
+
+[package.optional-dependencies]
+all = [
+    { name = "azure-ai-documentintelligence" },
+    { name = "azure-identity" },
+    { name = "lxml" },
+    { name = "mammoth" },
+    { name = "olefile" },
+    { name = "openpyxl" },
+    { name = "pandas" },
+    { name = "pdfminer-six" },
+    { name = "pydub" },
+    { name = "python-pptx" },
+    { name = "speechrecognition" },
+    { name = "xlrd" },
+    { name = "youtube-transcript-api" },
 ]
 
 [[package]]
@@ -2374,6 +2412,15 @@ source = { registry = "https://pypi.org/simple" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/56/9a/fff8376f8e3d084cd1530e1ef7b879bb7d6d265620c95c1b322725c694f4/nvidia_nvtx_cu12-12.6.77-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:b90bed3df379fa79afbd21be8e04a0314336b8ae16768b58f2d34cb1d04cd7d2", size = 89276 },
     { url = "https://files.pythonhosted.org/packages/9e/4e/0d0c945463719429b7bd21dece907ad0bde437a2ff12b9b12fee94722ab0/nvidia_nvtx_cu12-12.6.77-py3-none-manylinux2014_x86_64.whl", hash = "sha256:6574241a3ec5fdc9334353ab8c479fe75841dbe8f4532a8fc97ce63503330ba1", size = 89265 },
+]
+
+[[package]]
+name = "olefile"
+version = "0.47"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/69/1b/077b508e3e500e1629d366249c3ccb32f95e50258b231705c09e3c7a4366/olefile-0.47.zip", hash = "sha256:599383381a0bf3dfbd932ca0ca6515acd174ed48870cbf7fee123d698c192c1c", size = 112240 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/17/d3/b64c356a907242d719fc668b71befd73324e47ab46c8ebbbede252c154b2/olefile-0.47-py2.py3-none-any.whl", hash = "sha256:543c7da2a7adadf21214938bb79c83ea12b473a4b6ee4ad4bf854e7715e13d1f", size = 114565 },
 ]
 
 [[package]]
@@ -3980,18 +4027,16 @@ wheels = [
 name = "splitter-mr"
 source = { editable = "." }
 dependencies = [
-    { name = "docling" },
+    { name = "beautifulsoup4" },
     { name = "fastparquet" },
     { name = "ffmpeg" },
     { name = "ffmpeg-downloader" },
     { name = "langchain-text-splitters" },
-    { name = "markitdown" },
     { name = "nltk" },
     { name = "numpy" },
     { name = "openai" },
     { name = "openpyxl" },
     { name = "pdfplumber" },
-    { name = "poethepoet" },
     { name = "pymupdf" },
     { name = "pypdf" },
     { name = "pyyaml" },
@@ -4003,23 +4048,47 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
-audio = [
+all = [
+    { name = "azure-ai-documentintelligence" },
+    { name = "azure-core" },
+    { name = "azure-identity" },
+    { name = "docling" },
+    { name = "easyocr" },
+    { name = "imageio" },
+    { name = "markitdown", extra = ["all"] },
+    { name = "onnxruntime" },
+    { name = "opencv-python-headless" },
+    { name = "pillow" },
     { name = "pydub" },
+    { name = "scikit-image" },
+    { name = "shapely" },
     { name = "speechrecognition" },
+    { name = "tokenizers" },
+    { name = "torch" },
+    { name = "torchvision" },
+    { name = "transformers" },
 ]
 azure = [
     { name = "azure-ai-documentintelligence" },
     { name = "azure-core" },
     { name = "azure-identity" },
 ]
-ocr = [
+docling = [
+    { name = "docling" },
+]
+markitdown = [
+    { name = "markitdown", extra = ["all"] },
+]
+multimodal = [
     { name = "easyocr" },
     { name = "imageio" },
     { name = "onnxruntime" },
     { name = "opencv-python-headless" },
     { name = "pillow" },
+    { name = "pydub" },
     { name = "scikit-image" },
     { name = "shapely" },
+    { name = "speechrecognition" },
     { name = "tokenizers" },
     { name = "torch" },
     { name = "torchvision" },
@@ -4038,6 +4107,7 @@ dev = [
     { name = "mkdocs-glightbox" },
     { name = "mkdocs-material" },
     { name = "mkdocstrings", extra = ["python"] },
+    { name = "poethepoet" },
     { name = "pre-commit" },
     { name = "pyproject-autoflake" },
     { name = "pytest" },
@@ -4052,44 +4122,62 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "azure-ai-documentintelligence", marker = "extra == 'all'", specifier = ">=1.0.2" },
     { name = "azure-ai-documentintelligence", marker = "extra == 'azure'", specifier = ">=1.0.2" },
+    { name = "azure-core", marker = "extra == 'all'", specifier = ">=1.34.0" },
     { name = "azure-core", marker = "extra == 'azure'", specifier = ">=1.34.0" },
+    { name = "azure-identity", marker = "extra == 'all'", specifier = ">=1.23.0" },
     { name = "azure-identity", marker = "extra == 'azure'", specifier = ">=1.23.0" },
-    { name = "docling", specifier = ">=2.15.1" },
-    { name = "easyocr", marker = "extra == 'ocr'", specifier = ">=1.7.2" },
+    { name = "beautifulsoup4", specifier = ">=4.13.4" },
+    { name = "docling", marker = "extra == 'all'", specifier = ">=2.36.0" },
+    { name = "docling", marker = "extra == 'docling'", specifier = ">=2.36.0" },
+    { name = "easyocr", marker = "extra == 'all'", specifier = ">=1.7.2" },
+    { name = "easyocr", marker = "extra == 'multimodal'", specifier = ">=1.7.2" },
     { name = "fastparquet", specifier = ">=2024.11.0" },
     { name = "ffmpeg", specifier = ">=1.4" },
     { name = "ffmpeg-downloader", specifier = ">=0.4.0" },
-    { name = "imageio", marker = "extra == 'ocr'", specifier = ">=2.37.0" },
+    { name = "imageio", marker = "extra == 'all'", specifier = ">=2.37.0" },
+    { name = "imageio", marker = "extra == 'multimodal'", specifier = ">=2.37.0" },
     { name = "langchain-text-splitters", specifier = ">=0.3.8" },
-    { name = "markitdown", specifier = "==0.1.2" },
+    { name = "markitdown", extras = ["all"], marker = "extra == 'all'", specifier = "==0.1.2" },
+    { name = "markitdown", extras = ["all"], marker = "extra == 'markitdown'", specifier = "==0.1.2" },
     { name = "nltk", specifier = ">=3.9.1" },
     { name = "numpy", specifier = ">=2.3.0" },
-    { name = "onnxruntime", marker = "extra == 'ocr'", specifier = ">=1.22.0" },
+    { name = "onnxruntime", marker = "extra == 'all'", specifier = ">=1.22.0" },
+    { name = "onnxruntime", marker = "extra == 'multimodal'", specifier = ">=1.22.0" },
     { name = "openai", specifier = ">=1.88.0" },
-    { name = "opencv-python-headless", marker = "extra == 'ocr'", specifier = ">=4.11.0.86" },
+    { name = "opencv-python-headless", marker = "extra == 'all'", specifier = ">=4.11.0.86" },
+    { name = "opencv-python-headless", marker = "extra == 'multimodal'", specifier = ">=4.11.0.86" },
     { name = "openpyxl", specifier = ">=3.1.5" },
     { name = "pdfplumber", specifier = ">=0.11.7" },
-    { name = "pillow", marker = "extra == 'ocr'", specifier = ">=11.2.1" },
-    { name = "poethepoet", specifier = ">=0.35.0" },
-    { name = "pydub", marker = "extra == 'audio'", specifier = ">=0.25.1" },
+    { name = "pillow", marker = "extra == 'all'", specifier = ">=11.2.1" },
+    { name = "pillow", marker = "extra == 'multimodal'", specifier = ">=11.2.1" },
+    { name = "pydub", marker = "extra == 'all'", specifier = ">=0.25.1" },
+    { name = "pydub", marker = "extra == 'multimodal'", specifier = ">=0.25.1" },
     { name = "pymupdf", specifier = ">=1.26.1" },
     { name = "pypdf", specifier = ">=5.9.0" },
     { name = "pyyaml", specifier = ">=6.0.2" },
     { name = "reportlab", specifier = ">=4.4.3" },
-    { name = "scikit-image", marker = "extra == 'ocr'", specifier = ">=0.25.2" },
-    { name = "shapely", marker = "extra == 'ocr'", specifier = ">=2.1.1" },
+    { name = "scikit-image", marker = "extra == 'all'", specifier = ">=0.25.2" },
+    { name = "scikit-image", marker = "extra == 'multimodal'", specifier = ">=0.25.2" },
+    { name = "shapely", marker = "extra == 'all'", specifier = ">=2.1.1" },
+    { name = "shapely", marker = "extra == 'multimodal'", specifier = ">=2.1.1" },
     { name = "spacy", specifier = ">=3.8.7" },
-    { name = "speechrecognition", marker = "extra == 'audio'", specifier = ">=3.14.3" },
+    { name = "speechrecognition", marker = "extra == 'all'", specifier = ">=3.14.3" },
+    { name = "speechrecognition", marker = "extra == 'multimodal'", specifier = ">=3.14.3" },
     { name = "svglib", specifier = ">=1.5.1" },
     { name = "tiktoken", specifier = ">=0.9.0" },
-    { name = "tokenizers", marker = "extra == 'ocr'", specifier = ">=0.21.1" },
-    { name = "torch", marker = "extra == 'ocr'", specifier = ">=2.7.1,<3.0" },
-    { name = "torchvision", marker = "extra == 'ocr'", specifier = ">=0.22.1,<0.23" },
-    { name = "transformers", marker = "extra == 'ocr'", specifier = ">=4.52.4" },
+    { name = "tokenizers", marker = "extra == 'all'", specifier = ">=0.21.1" },
+    { name = "tokenizers", marker = "extra == 'multimodal'", specifier = ">=0.21.1" },
+    { name = "torch", marker = "extra == 'all'", specifier = ">=2.7.1,<3.0" },
+    { name = "torch", marker = "extra == 'multimodal'", specifier = ">=2.7.1,<3.0" },
+    { name = "torchvision", marker = "extra == 'all'", specifier = ">=0.22.1,<0.23" },
+    { name = "torchvision", marker = "extra == 'multimodal'", specifier = ">=0.22.1,<0.23" },
+    { name = "transformers", marker = "extra == 'all'", specifier = ">=4.52.4" },
+    { name = "transformers", marker = "extra == 'multimodal'", specifier = ">=4.52.4" },
     { name = "xlrd", specifier = ">=2.0.1" },
 ]
-provides-extras = ["ocr", "audio", "azure"]
+provides-extras = ["markitdown", "docling", "multimodal", "azure", "all"]
 
 [package.metadata.requires-dev]
 dev = [
@@ -4103,6 +4191,7 @@ dev = [
     { name = "mkdocs-glightbox", specifier = ">=0.4.0" },
     { name = "mkdocs-material", specifier = ">=9.6.14" },
     { name = "mkdocstrings", extras = ["python"], specifier = ">=0.29.1" },
+    { name = "poethepoet", specifier = ">=0.35.0" },
     { name = "pre-commit", specifier = ">=4.2.0" },
     { name = "pyproject-autoflake", specifier = ">=1.0.2" },
     { name = "pytest", specifier = ">=8.4.0" },
@@ -4764,6 +4853,19 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/a7/47/7704bac42ac6fe1710ae099b70e6a1e68ed173ef14792b647808c357da43/xlsxwriter-3.2.5.tar.gz", hash = "sha256:7e88469d607cdc920151c0ab3ce9cf1a83992d4b7bc730c5ffdd1a12115a7dbe", size = 213306 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/fa/34/a22e6664211f0c8879521328000bdcae9bf6dbafa94a923e531f6d5b3f73/xlsxwriter-3.2.5-py3-none-any.whl", hash = "sha256:4f4824234e1eaf9d95df9a8fe974585ff91d0f5e3d3f12ace5b71e443c1c6abd", size = 172347 },
+]
+
+[[package]]
+name = "youtube-transcript-api"
+version = "1.0.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "defusedxml" },
+    { name = "requests" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/b0/32/f60d87a99c05a53604c58f20f670c7ea6262b55e0bbeb836ffe4550b248b/youtube_transcript_api-1.0.3.tar.gz", hash = "sha256:902baf90e7840a42e1e148335e09fe5575dbff64c81414957aea7038e8a4db46", size = 2153252 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f0/44/40c03bb0f8bddfb9d2beff2ed31641f52d96c287ba881d20e0c074784ac2/youtube_transcript_api-1.0.3-py3-none-any.whl", hash = "sha256:d1874e57de65cf14c9d7d09b2b37c814d6287fa0e770d4922c4cd32a5b3f6c47", size = 2169911 },
 ]
 
 [[package]]
