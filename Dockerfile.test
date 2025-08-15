@@ -1,20 +1,24 @@
 FROM python:3.12-slim
 
+# Environment variables and build args
 ENV SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0+ci
 ENV UV_LINK_MODE=copy
 
+# Install OS dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
       gcc build-essential git \
     && rm -rf /var/lib/apt/lists/*
 
+# Install uv and pip
 RUN pip install --upgrade pip && pip install uv==0.6.4
 
+# Define working directory and copy application
 WORKDIR /app
 COPY . .
 
-# Install the project with CI extras into system site-packages
-ARG EXTRAS=""
-RUN uv pip install --system -e .${EXTRAS}
+# Install Python dependencies
+RUN uv sync --dev --extra markitdown --extra docling
 
+# Run test coverage
 RUN chmod +x ./scripts/validate_test.sh
 CMD ["./scripts/validate_test.sh"]

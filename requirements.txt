@@ -209,8 +209,8 @@ tinycss2==1.4.0
 tokenize-rt==6.2.0
 tokenizers==0.21.4
 toml==0.10.2
-torch==2.8.0
-torchvision==0.23.0
+torch==2.7.1
+torchvision==0.22.1
 tqdm==4.67.1
 transformers==4.55.2
 twine==6.1.0

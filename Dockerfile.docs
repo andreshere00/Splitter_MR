@@ -1,22 +1,23 @@
 FROM python:3.12-slim
 
+# Environment variables and build args
 ENV SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0+docs
 ENV UV_LINK_MODE=copy
 
+# Install OS dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
       gcc build-essential git \
     && rm -rf /var/lib/apt/lists/*
 
+# Install uv and pip
 RUN pip install --upgrade pip && pip install uv==0.6.4
 
+# Define working directory and copy application
 WORKDIR /app
 COPY . .
 
-# Install the project (no heavy extras for docs) into system site-packages
-ARG EXTRAS=""
-RUN uv pip install --system -e .${EXTRAS}
+# Install Python dependencies
+RUN uv sync --dev
 
-RUN git config --global user.name "github-actions[bot]" && \
-    git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
+# Deploy docs
 CMD ["uv", "run", "mkdocs", "gh-deploy", "--force"]
