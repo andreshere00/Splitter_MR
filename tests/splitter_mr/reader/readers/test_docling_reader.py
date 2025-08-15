@@ -1,10 +1,11 @@
+import builtins
+import types
 import uuid
 import warnings
-from types import SimpleNamespace
 
 import pytest
 
-from splitter_mr.reader.readers.docling_reader import DoclingReader
+from splitter_mr.reader.readers.docling_reader import DoclingReader, _require_docling
 from splitter_mr.reader.readers.vanilla_reader import VanillaReader
 from splitter_mr.reader.utils import DoclingPipelineFactory
 from splitter_mr.schema import ReaderOutput
@@ -16,7 +17,7 @@ from splitter_mr.schema import ReaderOutput
 class DummyModel:
     def __init__(self, model_name="dummy"):
         self.model_name = model_name
-        self._client = SimpleNamespace(
+        self._client = types.SimpleNamespace(
             _azure_endpoint="https://example.com",
             _azure_deployment="dep",
             _api_version="v1",
@@ -221,3 +222,50 @@ def test_page_placeholder_none_when_absent(monkeypatch):
     reader = DoclingReader()
     out = reader.read("a.pdf", page_placeholder="<!-- page -->")
     assert out.page_placeholder is None
+
+
+def test__require_docling_raises_when_missing(monkeypatch):
+    """If docling isn't installed, surface a clear extras message."""
+    real_import = builtins.__import__
+
+    def fake_import(name, *args, **kwargs):
+        if name == "docling":
+            raise ImportError("No module named 'docling'")
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", fake_import)
+
+    with pytest.raises(ImportError) as ei:
+        _require_docling()
+
+    msg = str(ei.value)
+    assert "requires the 'docling' extra" in msg
+    assert "pip install splitter-mr[docling]" in msg
+
+
+def test_docling_reader_ctor_raises_when_missing(monkeypatch):
+    """Constructor should fail early with the same clear error when extra is missing."""
+    real_import = builtins.__import__
+
+    def fake_import(name, *args, **kwargs):
+        if name == "docling":
+            raise ImportError("No module named 'docling'")
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", fake_import)
+
+    with pytest.raises(ImportError) as ei:
+        DoclingReader()
+
+    msg = str(ei.value)
+    assert "requires the 'docling' extra" in msg
+    assert "pip install splitter-mr[docling]" in msg
+
+
+def test__require_docling_noop_when_present(monkeypatch):
+    """If a (stub) docling module is present, no error should be raised."""
+    stub = types.ModuleType("docling")
+    monkeypatch.setitem(__import__("sys").modules, "docling", stub)
+
+    # Should not raise
+    _require_docling()

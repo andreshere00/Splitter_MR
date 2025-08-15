@@ -1,8 +1,13 @@
+import builtins
+import types
 from unittest.mock import ANY, MagicMock, patch
 
 import pytest
 
-from splitter_mr.reader import MarkItDownReader
+from splitter_mr.reader.readers.markitdown_reader import (
+    MarkItDownReader,
+    _require_markitdown,
+)
 
 # Helpers
 
@@ -459,3 +464,52 @@ def test_split_by_pages_placeholder_not_detected(tmp_path, mock_split_pdfs):
         )
 
         assert result.page_placeholder == "<!--pagebreak-->"
+
+
+def test__require_markitdown_raises_when_missing(monkeypatch):
+    """If markitdown isn't installed, we surface a clear extras message."""
+
+    real_import = builtins.__import__
+
+    def fake_import(name, *args, **kwargs):
+        if name == "markitdown":
+            raise ImportError("No module named 'markitdown'")
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", fake_import)
+
+    with pytest.raises(ImportError) as ei:
+        _require_markitdown()
+
+    msg = str(ei.value)
+    assert "requires the 'markitdown' extra" in msg
+    assert "pip install splitter-mr[markitdown]" in msg
+
+
+def test_markitdown_reader_ctor_raises_when_missing(monkeypatch):
+    """Constructor should fail early with the same clear error when extra is missing."""
+
+    real_import = builtins.__import__
+
+    def fake_import(name, *args, **kwargs):
+        if name == "markitdown":
+            raise ImportError("No module named 'markitdown'")
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", fake_import)
+
+    with pytest.raises(ImportError) as ei:
+        MarkItDownReader()
+
+    msg = str(ei.value)
+    assert "requires the 'markitdown' extra" in msg
+    assert "pip install splitter-mr[markitdown]" in msg
+
+
+def test__require_markitdown_noop_when_present(monkeypatch):
+    """If a (stub) markitdown module is present, no error should be raised."""
+    stub = types.ModuleType("markitdown")
+    monkeypatch.setitem(__import__("sys").modules, "markitdown", stub)
+
+    # Should not raise
+    _require_markitdown()

@@ -22,8 +22,8 @@ COPY pyproject.toml uv.lock ./
 
 # Install dev tools (no project, no default-group) + core runtime deps (default-group)
 RUN --mount=type=cache,target=/root/.cache/uv bash -euxo pipefail <<'EOF'
-uv export --group dev --format requirements-txt --no-project --no-default-group > /tmp/dev.txt
-uv export --format requirements-txt --no-project > /tmp/runtime.txt
+uv export --format requirements-txt --group dev --no-default-groups > /tmp/dev.txt
+uv export --format requirements-txt                                 > /tmp/runtime.txt
 uv pip install --system -r /tmp/dev.txt --no-cache-dir
 uv pip install --system -r /tmp/runtime.txt --no-cache-dir
 rm -f /tmp/dev.txt /tmp/runtime.txt
