@@ -1,21 +1,23 @@
 FROM python:3.12-slim
 
-# Install uv (for fast installs) and git if needed for plugins from git
+# Environment variables and build args
+ENV SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0+docs
+ENV UV_LINK_MODE=copy
 
+# Install OS dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc \
-    build-essential \
-    git  && \
-    pip install --no-cache-dir uv
+      gcc build-essential git \
+    && rm -rf /var/lib/apt/lists/*
 
-# Define working directory
+# Install uv and pip
+RUN pip install --upgrade pip && pip install uv==0.6.4
+
+# Define working directory and copy application
 WORKDIR /app
-
-# Copy the project
 COPY . .
 
-# Install dependencies
-RUN uv pip install --system --group dev
+# Install Python dependencies
+RUN uv sync --dev
 
-# Default command to build docs (change to gh-deploy if you wish)
+# Deploy docs
 CMD ["uv", "run", "mkdocs", "gh-deploy", "--force"]
