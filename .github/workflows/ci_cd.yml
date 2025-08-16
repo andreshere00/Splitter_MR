@@ -17,11 +17,15 @@ jobs:
         with:
           python-version: '3.12'
       - name: Build docker image for testing
-        run: docker build -f Dockerfile.test -t splitter_mr_tests .
+        run: |
+          docker build \
+            -f Dockerfile.test \
+            -t splitter_mr_tests \
+            .
       - name: Run tests and check coverage
         run: docker run splitter_mr_tests
 
-  deploy:
+  deploy_docs:
     runs-on: ubuntu-latest
     needs: test
     steps:
@@ -30,7 +34,11 @@ jobs:
         with:
           python-version: '3.12'
       - name: Build docker for Docs
-        run: docker build -f Dockerfile.docs -t splitter_mr_docs .
+        run: |
+          docker build \
+            -f Dockerfile.docs \
+            -t splitter_mr_docs \
+            .
       - name: Deploy docs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

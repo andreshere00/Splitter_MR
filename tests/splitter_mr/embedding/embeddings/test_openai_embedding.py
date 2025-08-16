@@ -4,8 +4,8 @@ from typing import Any, Dict, List
 
 import pytest
 
-from src.splitter_mr.embedding.embeddings.openai_embedding import OpenAIEmbedding
-from src.splitter_mr.schema import OPENAI_EMBEDDING_MAX_TOKENS
+from splitter_mr.embedding.embeddings.openai_embedding import OpenAIEmbedding
+from splitter_mr.schema import OPENAI_EMBEDDING_MAX_TOKENS
 
 # --------- Helpers & Fixtures --------------------------------
 
@@ -44,7 +44,7 @@ def mod(monkeypatch):
     """
     import importlib
 
-    m = importlib.import_module("src.splitter_mr.embedding.embeddings.openai_embedding")
+    m = importlib.import_module("splitter_mr.embedding.embeddings.openai_embedding")
 
     fake_client = _FakeEmbeddingsClient()
     # Patch OpenAI(...) to return our fake client instead of the real SDK client

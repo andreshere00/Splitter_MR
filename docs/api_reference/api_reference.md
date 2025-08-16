@@ -19,3 +19,7 @@ Use several reading methods to process your files.
 ### [Splitter component documentation](./splitter.md)
 
 Implement several splitting strategies based on your needs.
+
+### [Embedding component documentation](./embedding.md)
+
+Implement encoder models to perform Semantic Splitting.

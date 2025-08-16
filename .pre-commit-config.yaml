@@ -32,6 +32,6 @@ repos:
       - id: generate-requirements
         name: Generate requirements.txt
         entry: bash
-        args: ["-c", "uv pip freeze > requirements.txt"]
+        args: ["-c", "uv pip freeze --exclude-editable > requirements.txt"]
         language: system
         stages: [pre-commit]

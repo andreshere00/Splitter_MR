@@ -4,10 +4,8 @@ from typing import Any, Dict, List
 
 import pytest
 
-from src.splitter_mr.embedding.embeddings.azure_openai_embedding import (
-    AzureOpenAIEmbedding,
-)
-from src.splitter_mr.schema import OPENAI_EMBEDDING_MAX_TOKENS
+from splitter_mr.embedding.embeddings.azure_openai_embedding import AzureOpenAIEmbedding
+from splitter_mr.schema import OPENAI_EMBEDDING_MAX_TOKENS
 
 # --------- Helpers & Fixtures --------------------------------
 
@@ -41,7 +39,7 @@ def mod(monkeypatch):
     import importlib
 
     m = importlib.import_module(
-        "src.splitter_mr.embedding.embeddings.azure_openai_embedding"
+        "splitter_mr.embedding.embeddings.azure_openai_embedding"
     )
 
     # patch AzureOpenAI constructor to return our fake client

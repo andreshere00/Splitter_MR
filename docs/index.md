@@ -8,10 +8,23 @@
 **SplitterMR** is a library for chunking data into convenient text blocks compatible with your LLM applications.
 
 !!! important
-    **New version v0.5.0**
-     
-    - Add **embedding models** to encode the text into distributed vectorized representations. See documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/embedding/). 
-    - Add support for chunking files based on **semantic similarity** between sentences. See documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#semanticsplitter).
+    **Breaking Change! Version v0.6.0**
+    
+    - Dependencies are now split into **core** (installed by default) and **optional extras** for heavy or specialized features.
+      - Example: to use MarkItDown and Docling readers, install with:
+        ```bash
+        pip install "splitter-mr[markitdown,docling]"
+        ```
+      - To install *all* optional features:
+        ```bash
+        pip install "splitter-mr[all]"
+        ```
+      - This change reduces install time and keeps core installs lightweight.
+    
+    **Version 0.5.0**
+    
+    - Added **embedding models** to encode text into distributed vectorized representations. See documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/embedding/). 
+    - Added support for chunking files based on **semantic similarity** between sentences. See documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#semanticsplitter).
 
 
 ## Features
@@ -71,19 +84,45 @@ SplitterMR allows you to split files in many different ways depending on your ne
 
 ## How to install
 
-Package is published on [PyPi](https://pypi.org/project/splitter-mr/). To install it, you can use the official Python package manager:
+Package is published on [PyPi](https://pypi.org/project/splitter-mr/).  
+By default, only the **core dependencies** are installed.  
+If you need additional features (e.g., MarkItDown, Docling, multimodal processing), you can install the corresponding **extras**.
 
-```python
+### Core install
+Installs the basic text splitting and file parsing features (lightweight, fast install):
+
+```bash
 pip install splitter-mr
 ```
 
-Alternatively, you can install it using other Python package management tools such as [`uv`](https://docs.astral.sh/uv/), [Conda](https://anaconda.org/anaconda/conda) or [Poetry](https://python-poetry.org/):
+### Optional extras
 
-```python
+| Extra            | Description                                                                                                           | Example install command                 |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| **`markitdown`** | Adds [MarkItDown](https://github.com/microsoft/markitdown) support for rich-text document parsing (HTML, DOCX, etc.). | `pip install "splitter-mr[markitdown]"` |
+| **`docling`**    | Adds [Docling](https://github.com/ibm/docling) support for high-quality PDF/document to Markdown conversion.          | `pip install "splitter-mr[docling]"`    |
+| **`multimodal`** | Enables computer vision, OCR, and audio features — includes **PyTorch**, EasyOCR, OpenCV, Transformers, etc.          | `pip install "splitter-mr[multimodal]"` |
+| **`azure`**      | Installs Azure AI SDKs for integrating with Azure Document Intelligence and other Azure AI services.                  | `pip install "splitter-mr[azure]"`      |
+| **`all`**        | Installs **everything** above (MarkItDown + Docling + Multimodal + Azure). **Heavy install** (\~GBs).                 | `pip install "splitter-mr[all]"`        |
+
+### Multiple extras
+
+You can combine extras by separating them with commas:
+
+```bash
+pip install "splitter-mr[markitdown,docling]"
+```
+
+### Using other package managers
+
+You can also install it with [`uv`](https://docs.astral.sh/uv/), [`conda`](https://anaconda.org/anaconda/conda) or [`poetry`](https://python-poetry.org/):
+
+```bash
 uv add splitter-mr
 ```
 
 !!! note
+    
     **Python 3.11 or greater** is required to use this library.
 
 
@@ -175,15 +214,15 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 ### Next features
 
 - [X] Add embedding model support.
-    - [ ] Add HuggingFace embeddings model support.
     - [X] Add OpenAI embeddings model support.
+    - [X] Add Azure OpenAI embeddings model support.
+    - [ ] Add HuggingFace embeddings model support.
     - [ ] Add Gemini embeddings model support.
     - [ ] Add Claude Anthropic embeddings model support.
     - [ ] Add Grok VLMs model support.
 - [ ] Add asynchronous methods for Splitters and Readers.
 - [ ] Add batch methods to process several documents at once.
 - [ ] Add support to read formulas.
-- [ ] Modularize library into several sub-libraries.
 - [ ] Add classic **OCR** models: `easyocr` and `pytesseract`.
 - [ ] Add new models:
     - [ ] Add HuggingFace VLMs model support.
@@ -194,6 +233,7 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 
 ### Previously implemented
 
+- [X] Modularize library into several sub-libraries.
 - [X] Implement a method to split by embedding similarity: `SemanticSplitter`.
 - [X] Add new supported formats to be analyzed with OpenAI and AzureOpenAI models.
 - [X] Add support to read images using `VanillaReader`. 

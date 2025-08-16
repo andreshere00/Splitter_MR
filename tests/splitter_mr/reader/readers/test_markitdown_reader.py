@@ -1,8 +1,13 @@
+import builtins
+import types
 from unittest.mock import ANY, MagicMock, patch
 
 import pytest
 
-from splitter_mr.reader import MarkItDownReader
+from splitter_mr.reader.readers.markitdown_reader import (
+    MarkItDownReader,
+    _require_markitdown,
+)
 
 # Helpers
 
@@ -24,7 +29,7 @@ def mock_split_pdfs(tmp_path):
 
 def patch_vision_models():
     """
-    Returns (patch_OpenAIVisionModel, patch_AzureOpenAIVisionModel, DummyVisionModel).
+    Returns (patch_BaseModel, DummyVisionModel).
     """
 
     class DummyVisionModel:
@@ -35,8 +40,7 @@ def patch_vision_models():
 
     base = "splitter_mr.reader.readers.markitdown_reader"
     return (
-        patch(f"{base}.OpenAIVisionModel", DummyVisionModel),
-        patch(f"{base}.AzureOpenAIVisionModel", DummyVisionModel),
+        patch(f"{base}.BaseModel", DummyVisionModel),
         DummyVisionModel,
     )
 
@@ -101,12 +105,11 @@ def test_markitdown_reader_defaults(tmp_path):
 def test_scan_pdf_pages_calls_convert_per_page(tmp_path):
     pdf = tmp_path / "multi.pdf"
     pdf.write_text("dummy pdf")
-    patch_oa, patch_az, DummyVisionModel = patch_vision_models()
+    patch_oa, DummyVisionModel = patch_vision_models()
     with (
         patch_pdf_pages(pages=3),
         patch("splitter_mr.reader.readers.markitdown_reader.MarkItDown") as MockMID,
         patch_oa,
-        patch_az,
     ):
         reader = MarkItDownReader(model=DummyVisionModel())
         MockMID.return_value.convert.return_value = MagicMock(text_content="## page-md")
@@ -121,12 +124,11 @@ def test_scan_pdf_pages_calls_convert_per_page(tmp_path):
 def test_scan_pdf_pages_uses_custom_prompt(tmp_path):
     pdf = tmp_path / "single.pdf"
     pdf.write_text("dummy pdf")
-    patch_oa, patch_az, DummyVisionModel = patch_vision_models()
+    patch_oa, DummyVisionModel = patch_vision_models()
     with (
         patch_pdf_pages(pages=1),
         patch("splitter_mr.reader.readers.markitdown_reader.MarkItDown") as MockMID,
         patch_oa,
-        patch_az,
     ):
         reader = MarkItDownReader(model=DummyVisionModel())
         MockMID.return_value.convert.return_value = MagicMock(text_content="foo")
@@ -140,12 +142,11 @@ def test_scan_pdf_pages_splits_each_page(tmp_path):
     """Test PDF is split and scanned page by page with VisionModel."""
     pdf = tmp_path / "multi.pdf"
     pdf.write_text("dummy pdf")
-    patch_oa, patch_az, DummyVisionModel = patch_vision_models()
+    patch_oa, DummyVisionModel = patch_vision_models()
     with (
         patch_pdf_pages(pages=3),
         patch("splitter_mr.reader.readers.markitdown_reader.MarkItDown") as MockMID,
         patch_oa,
-        patch_az,
     ):
         reader = MarkItDownReader(model=DummyVisionModel())
         # Simulate each page conversion returning "PAGE-MD"
@@ -169,12 +170,11 @@ def test_scan_pdf_pages_custom_prompt(tmp_path):
     """Test that a custom prompt is passed for page scanning."""
     pdf = tmp_path / "onepage.pdf"
     pdf.write_text("pdf")
-    patch_oa, patch_az, DummyVisionModel = patch_vision_models()
+    patch_oa, DummyVisionModel = patch_vision_models()
     with (
         patch_pdf_pages(pages=1),
         patch("splitter_mr.reader.readers.markitdown_reader.MarkItDown") as MockMID,
         patch_oa,
-        patch_az,
     ):
         MockMID.return_value.convert.return_value = MagicMock(text_content="CUSTOM")
         reader = MarkItDownReader(model=DummyVisionModel())
@@ -464,3 +464,52 @@ def test_split_by_pages_placeholder_not_detected(tmp_path, mock_split_pdfs):
         )
 
         assert result.page_placeholder == "<!--pagebreak-->"
+
+
+def test__require_markitdown_raises_when_missing(monkeypatch):
+    """If markitdown isn't installed, we surface a clear extras message."""
+
+    real_import = builtins.__import__
+
+    def fake_import(name, *args, **kwargs):
+        if name == "markitdown":
+            raise ImportError("No module named 'markitdown'")
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", fake_import)
+
+    with pytest.raises(ImportError) as ei:
+        _require_markitdown()
+
+    msg = str(ei.value)
+    assert "requires the 'markitdown' extra" in msg
+    assert "pip install splitter-mr[markitdown]" in msg
+
+
+def test_markitdown_reader_ctor_raises_when_missing(monkeypatch):
+    """Constructor should fail early with the same clear error when extra is missing."""
+
+    real_import = builtins.__import__
+
+    def fake_import(name, *args, **kwargs):
+        if name == "markitdown":
+            raise ImportError("No module named 'markitdown'")
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", fake_import)
+
+    with pytest.raises(ImportError) as ei:
+        MarkItDownReader()
+
+    msg = str(ei.value)
+    assert "requires the 'markitdown' extra" in msg
+    assert "pip install splitter-mr[markitdown]" in msg
+
+
+def test__require_markitdown_noop_when_present(monkeypatch):
+    """If a (stub) markitdown module is present, no error should be raised."""
+    stub = types.ModuleType("markitdown")
+    monkeypatch.setitem(__import__("sys").modules, "markitdown", stub)
+
+    # Should not raise
+    _require_markitdown()

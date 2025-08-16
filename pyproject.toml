@@ -9,18 +9,16 @@ license = { file = "LICENSE" }
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "docling>=2.15.1",
+    "beautifulsoup4>=4.13.4",
     "fastparquet>=2024.11.0",
     "ffmpeg>=1.4",
     "ffmpeg-downloader>=0.4.0",
     "langchain-text-splitters>=0.3.8",
-    "markitdown[all]>=0.1.2",
     "nltk>=3.9.1",
     "numpy>=2.3.0",
     "openai>=1.88.0",
     "openpyxl>=3.1.5",
     "pdfplumber>=0.11.7",
-    "poethepoet>=0.35.0",
     "pymupdf>=1.26.1",
     "pypdf>=5.9.0",
     "pyyaml>=6.0.2",
@@ -31,12 +29,69 @@ dependencies = [
     "xlrd>=2.0.1",
 ]
 
+[project.optional-dependencies]
+# Markitdown dependencies
+markitdown = [
+    "markitdown[all]==0.1.2"
+]
+# Docling dependencies
+docling = [
+    "docling>=2.36.0"
+]
+# Computer vision + OCR + audio stack
+multimodal = [
+    "easyocr>=1.7.2",
+    "torch>=2.7.1,<3.0",
+    "torchvision>=0.22.1,<0.23",
+    "opencv-python-headless>=4.11.0.86",
+    "onnxruntime>=1.22.0",
+    "pillow>=11.2.1",
+    "scikit-image>=0.25.2",
+    "imageio>=2.37.0",
+    "shapely>=2.1.1",
+    "transformers>=4.52.4",
+    "tokenizers>=0.21.1",
+    "speechrecognition>=3.14.3",
+    "pydub>=0.25.1",
+]
+# Optional Azure AI dependencies (large + extra)
+azure = [
+    "azure-ai-documentintelligence>=1.0.2",
+    "azure-core>=1.34.0",
+    "azure-identity>=1.23.0",
+]
+# All the dependencies
+all = [
+    "markitdown[all]==0.1.2",
+    "docling>=2.36.0",
+    "easyocr>=1.7.2",
+    "torch>=2.7.1,<3.0",
+    "torchvision>=0.22.1,<0.23",
+    "opencv-python-headless>=4.11.0.86",
+    "onnxruntime>=1.22.0",
+    "pillow>=11.2.1",
+    "scikit-image>=0.25.2",
+    "imageio>=2.37.0",
+    "shapely>=2.1.1",
+    "transformers>=4.52.4",
+    "tokenizers>=0.21.1",
+    "speechrecognition>=3.14.3",
+    "pydub>=0.25.1",
+    "azure-ai-documentintelligence>=1.0.2",
+    "azure-core>=1.34.0",
+    "azure-identity>=1.23.0",
+]
+
 [tool.setuptools]
 package-dir = {"" = "src"}
 
 [tool.setuptools_scm]
 version_scheme = "guess-next-dev"
 local_scheme = "no-local-version"
+fallback_version = "0.0.0"
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.uv.sources]
 splitter-mr = { workspace = true }
@@ -44,15 +99,16 @@ splitter-mr = { workspace = true }
 [tool.poe.tasks]
 
 help = { shell = "poe --help" }
+
 build = { shell = "uv build", help = "Build the project using uv." }
 
 install = { shell = "uv pip install -U uv || pip install uv || true && uv add --dev pre-commit && uv run pre-commit install", help = "Install all the dependencies and requirements" }
 
 shell = { shell = "uv run shell", help = "Run a uv shell." }
 
-clean = { shell = "echo 'Clean all the cache and temporary files.' && find . -type d -name '__pycache__' -exec rm -rf {} + && find . -type d -name '.pytest_cache' -exec rm -rf {} + && find . -type f -name '*.pyc' -delete && find . -type f -name '*.pyo' -delete && find . -type f -name '*.pyd' -delete && find . -type d -name '*.egg-info' -exec rm -rf {} + && find . -type f -name '*.egg' -delete", help = "Clean cache and temporary files." }
+test = { shell = "uv sync --dev --extra markitdown --extra docling && uv run coverage run --source=src -m pytest && uv run coverage report && uv run coverage report --fail-under=70", help = "Run tests with coverage ≥70% (installs markitdown+docling extras first)" }
 
-test = { shell = "uv run --dev pytest --cov", help = "Run tests and check test coverage." }
+clean = { shell = "echo 'Clean all the cache and temporary files.' && find . -type d -name '__pycache__' -exec rm -rf {} + && find . -type d -name '.pytest_cache' -exec rm -rf {} + && find . -type f -name '*.pyc' -delete && find . -type f -name '*.pyo' -delete && find . -type f -name '*.pyd' -delete && find . -type d -name '*.egg-info' -exec rm -rf {} + && find . -type f -name '*.egg' -delete", help = "Clean cache and temporary files." }
 
 docs = { shell = "uv run mkdocs serve", help = "Deploy Mkdocs server." }
 
@@ -60,7 +116,7 @@ pre-commit = { shell = "uv run pre-commit", help = "Install pre-commit hooks." }
 
 format = { shell = "uv run --dev pyupgrade --exit-zero && uv run --dev isort . && uv run --dev black . && uv run ruff check --fix . && uv run ruff format . && uv run --dev flake8 --max-line-length=101 --ignore=E203,W291,E501,W293 src/", help = "Format the code using pyupgrade, isort, black and flake8"}
 
-publish-docs = { shell = "uv run mkdocs gh-deploy", help = "Publish Mkdocs server" }
+deploy-docs = { shell = "uv run mkdocs gh-deploy", help = "Publish Mkdocs server" }
 
 [tool.autoflake]
 in-place = true
@@ -79,6 +135,7 @@ dev = [
     "flake8>=7.2.0",
     "isort>=6.0.1",
     "mkdocs>=1.6.1",
+    "poethepoet>=0.35.0",
     "mkdocs-awesome-pages-plugin>=2.10.1",
     "mkdocs-glightbox>=0.4.0",
     "mkdocs-material>=9.6.14",
@@ -91,7 +148,6 @@ dev = [
     "requests-mock>=1.12.1",
     "ruff>=0.12.8",
     "setuptools-scm>=8.3.1",
-    "splitter-mr",
     "twine>=6.1.0",
     "wheel>=0.45.1",
 ]
