@@ -1,3 +1,4 @@
+
 # Reader
 
 ## Introduction
@@ -21,27 +22,56 @@ Each Reader component extracts document text in different ways. Therefore, choos
 
 Additionally, the file compatibility depending on the Reader class is given by the following table:
 
-| **Reader**             | **Unstructured files & PDFs** | **MS Office suite files** | **Tabular data** | **Files with hierarchical schema** | **Image files** | **Markdown conversion** |
-|------------------------|-------------------------------|---------------------------|------------------|------------------------------------|-----------------|-------------------------|
-| **`VanillaReader`**    | `txt`, `md`, `pdf` | `xlsx`, `docx`, `pptx` | `csv`, `tsv`, `parquet` | `json`, `yaml`, `html`, `xml` | `jpg`, `png`, `webp`, `gif` | Yes                     |
-| **`MarkItDownReader`** | `txt`, `md`, `pdf` | `docx`, `xlsx`, `pptx` | `csv`, `tsv` | `json`, `html`, `xml`                    | `jpg`, `png`, `pneg`        | Yes                     |
-| **`DoclingReader`**    | `txt`, `md`, `pdf` | `docx`, `xlsx`, `pptx` | –            | `html`, `xhtml`                 | `png`, `jpeg`, `tiff`, `bmp`, `webp` | Yes                     |
+| **Reader**                           | **Unstructured files & PDFs** | **MS Office suite files** | **Tabular data** | **Files with hierarchical schema** | **Image files**                      | **Markdown conversion** |
+|-------------------------------------|-------------------------------|---------------------------|------------------|------------------------------------|--------------------------------------|-------------------------|
+| [**Vanilla Reader**](#vanillareader)    | `txt`, `md`, `pdf`            | `xlsx`, `docx`, `pptx`    | `csv`, `tsv`, `parquet` | `json`, `yaml`, `html`, `xml`    | `jpg`, `png`, `webp`, `gif`          | Yes                     |
+| [**MarkItDown Reader**](#markitdownreader) | `txt`, `md`, `pdf`            | `docx`, `xlsx`, `pptx`    | `csv`, `tsv`     | `json`, `html`, `xml`             | `jpg`, `png`, `pneg`                 | Yes                     |
+| [**Docling Reader**](#doclingreader)   | `txt`, `md`, `pdf`            | `docx`, `xlsx`, `pptx`    | –                | `html`, `xhtml`                   | `png`, `jpeg`, `tiff`, `bmp`, `webp` | Yes                     |
+
+## Installing Docling & MarkItDown
+
+By default, `pip install splitter-mr` installs **core** features only.  
+To use `DoclingReader` and/or `MarkItDownReader`, install the corresponding **extras**:
+
+> **Python ≥ 3.11** is required.
+
+**MarkItDown:**
+
+```bash
+pip install "splitter-mr[markitdown]"
+```
+
+**Docling:**
+
+```bash
+pip install "splitter-mr[docling]"
+```
+
+**Both:**
+
+```bash
+pip install "splitter-mr[markitdown,docling]"
+```
+
+!!! Note
+    For the full matrix of extras and alternative package managers, see the global **How to install** section in the project README:
+    [Splitter_MR — How to install](https://github.com/andreshere00/Splitter_MR/#how-to-install)
 
 ### Output format
 
 ::: splitter_mr.schema.models.ReaderOutput
-    handler: python
-    options:
-      members_order: source
+handler: python
+options:
+members_order: source
 
 ## Readers
 
 ### BaseReader
 
 ::: splitter_mr.reader.base_reader
-    handler: python
-    options:
-      members_order: source
+handler: python
+options:
+members_order: source
 
 > 📚 **Note:** file examples are extracted from  the`data` folder in the **GitHub** repository: [**link**](https://github.com/andreshere00/Splitter_MR/tree/main/data).
 
@@ -51,9 +81,9 @@ Additionally, the file compatibility depending on the Reader class is given by t
 ![VanillaReader logo](../assets/vanilla_reader_button_white.svg#gh-dark-mode-only)
 
 ::: splitter_mr.reader.readers.vanilla_reader
-    handler: python
-    options:
-      members_order: source
+handler: python
+options:
+members_order: source
 
 `VanillaReader` uses a helper class to read PDF and use Visual Language Models. This class is `PDFPlumberReader`.
 
@@ -63,9 +93,9 @@ Additionally, the file compatibility depending on the Reader class is given by t
 ![DoclingReader logo](../assets/docling_reader_button_white.svg#gh-dark-mode-only)
 
 ::: splitter_mr.reader.readers.docling_reader
-    handler: python
-    options:
-      members_order: source
+handler: python
+options:
+members_order: source
 
 To execute pipelines, DoclingReader has a utils class, `DoclingUtils`.
 
@@ -75,6 +105,6 @@ To execute pipelines, DoclingReader has a utils class, `DoclingUtils`.
 ![MarkItDownReader logo](../assets/markitdown_reader_button_white.svg#gh-dark-mode-only)
 
 ::: splitter_mr.reader.readers.markitdown_reader
-    handler: python
-    options:
-      members_order: source
+handler: python
+options:
+members_order: source
