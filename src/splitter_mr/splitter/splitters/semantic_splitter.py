@@ -60,15 +60,17 @@ def _combine_sentences(
 
 
 class SemanticSplitter(BaseSplitter):
-    """Split text into semantically coherent chunks using embedding similarity.
+    """
+    Split text into semantically coherent chunks using embedding similarity.
 
-    Pipeline:
-        1) Split text into sentences via `SentenceSplitter` (1-sentence chunks).
-        2) Build a sliding window around each sentence (`buffer_size`).
-        3) Embed each window with `BaseEmbedding` (batched).
-        4) Compute cosine *distances* between consecutive windows (1 - cosine_sim).
-        5) Pick breakpoints using a thresholding strategy, or aim for `number_of_chunks`.
-        6) Join sentences between breakpoints; enforce minimum size via `chunk_size`.
+    **Pipeline:**
+
+    - Split text into sentences via `SentenceSplitter` (one sentence chunks).
+    - Build a sliding window around each sentence (`buffer_size`).
+    - Embed each window with `BaseEmbedding` (batched).
+    - Compute cosine *distances* between consecutive windows (1 - cosine_sim).
+    - Pick breakpoints using a thresholding strategy, or aim for `number_of_chunks`.
+    - Join sentences between breakpoints; enforce minimum size via `chunk_size`.
     """
 
     def __init__(

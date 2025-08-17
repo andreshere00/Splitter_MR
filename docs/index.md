@@ -21,10 +21,9 @@
         ```
       - This change reduces install time and keeps core installs lightweight.
     
-    **Version 0.5.0**
+    **Version 0.6.1**
     
-    - Added **embedding models** to encode text into distributed vectorized representations. See documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/embedding/). 
-    - Added support for chunking files based on **semantic similarity** between sentences. See documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#semanticsplitter).
+    New Vision Model added: `GrokVisionModel`. See documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/model#grokvisionmodel).
 
 
 ## Features

@@ -24,6 +24,13 @@ Add Grok Vision Model.
 - Redefine constants.
 - Add new tests.
 
+### Documentation
+
+- Add `GrokVisionModel` documentation.
+- Fix format bugs.
+- Add new documentation in Readers about how to install necessary dependencies.
+- Add plugin to read formulas appropiately.
+
 ## v0.6.0
 
 Divide library into sub packages.
@@ -164,7 +171,7 @@ PagedSplitter full implementation
 
 ### Features
 
-- Implement `AzureOpenAI` and `OpenAI` Visual Models to analyze graphical resources in PDF files.
+- Implement `AzureOpenAI` and `OpenAI` Vision Models to analyze graphical resources in PDF files.
 - Add support to read PDF files to VanillaReader using `PDFPlumber`.
 
 ### Documentation

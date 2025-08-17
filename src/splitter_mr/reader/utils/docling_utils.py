@@ -16,7 +16,7 @@ from PIL.Image import Image
 from ...model import BaseModel
 from ...schema import DEFAULT_IMAGE_CAPTION_PROMPT, DEFAULT_IMAGE_EXTRACTION_PROMPT
 
-# Helpers
+# ---- Helpers ---- #
 
 
 def get_vlm_url_and_headers(client: Any) -> Tuple[str, dict]:
@@ -55,10 +55,14 @@ def get_vlm_url_and_headers(client: Any) -> Tuple[str, dict]:
         full_url = str(urljoin(base, path))
         return full_url, headers
 
+    # TODO: Add support to Grok and other models
+
     raise ValueError(f"Unsupported client type: {type(client)}")
 
 
-# Pipelines
+# ---- Pipelines ---- #
+
+# 1. Read the document by pages using a VLM
 
 
 def page_image_pipeline(
@@ -132,6 +136,9 @@ def page_image_pipeline(
             md_img = f"![Page {page_no}](data:image/png;base64,{img_base64})"
             output_md += f"{page_placeholder}\n\n{md_img}\n\n"
     return output_md
+
+
+# 2. Read the entire document using the VLM
 
 
 def vlm_pipeline(
@@ -223,6 +230,9 @@ def vlm_pipeline(
     return md
 
 
+# 3. Read the document using the Docling default markdown extraction without using a VLM
+
+
 def markdown_pipeline(
     file_path: str | Path,
     show_base64_images: bool = True,
@@ -274,7 +284,7 @@ def markdown_pipeline(
     return md
 
 
-# Factory
+# ---- Factory ---- #
 
 
 class DoclingPipelineFactory:
