@@ -158,23 +158,24 @@ Below, the full process will be detailed.
 
 ### Notation
 
-- Let the document be split into sentences $ S = [s_0, s_1, \ldots, s_{n-1}] $.
-- For each index $ i $, define a **window** $ w_i $ as the concatenation of sentences
+- Let the document be split into sentences \( S = [s_0, s_1, \ldots, s_{n-1}] \).
+
+- For each index \( i \), define a **window** \( w_i \) as the concatenation of sentences
+
   $$
   w_i = \text{concat}\big(s_{\max(0,\, i-b)}, \ldots, s_i, \ldots, s_{\min(n-1,\, i+b)}\big),
   $$
-  where $ b = \texttt{buffer\_size} $.
-- Let $ \mathbf{e}_i = \text{embed}(w_i) \in \mathbb{R}^d $ be the embedding vector.
-- Define **cosine similarity** and **distance**:
-  $$
-  \text{cos\_sim}(\mathbf{e}_i, \mathbf{e}_{i+1}) = 
-  \frac{\mathbf{e}_i \cdot \mathbf{e}_{i+1}}{\|\mathbf{e}_i\|\,\|\mathbf{e}_{i+1}\| + \varepsilon}, 
-  \qquad
-  d_i = 1 - \text{cos\_sim}(\mathbf{e}_i, \mathbf{e}_{i+1}),
-  $$
-  with a small $ \varepsilon $ for numerical stability.
+  where \( b = \texttt{buffer\_size} \).
 
-We obtain a distance vector $ D = [d_0, d_1, \ldots, d_{n-2}] $ (length $ n-1 $).
+- Let \( \mathbf{e}_i = \text{embed}(w_i) \in \mathbb{R}^d \) be the embedding vector.
+
+- Define **cosine similarity** and **distance**:
+
+$$\text{cos\_sim}(\mathbf{e}_i, \mathbf{e}_{i+1})= \frac{\mathbf{e}_i \cdot \mathbf{e}_{i+1}}{\lVert \mathbf{e}_i \rVert \, \lVert \mathbf{e}_{i+1} \rVert + \varepsilon}, \qquad d_i = 1 - \operatorname{cos\_sim}(\mathbf{e}_i, \mathbf{e}_{i+1}),$$
+
+  with a small \( \varepsilon \) for numerical stability.
+
+We obtain a distance vector \( D = [d_0, d_1, \ldots, d_{n-2}] \) (length \( n-1 \)).
 
 
 ### Breakpoint Selection
@@ -187,35 +188,42 @@ We then choose a **threshold** $ T $ and mark **breakpoints** at all indices $ i
 
 #### Threshold Strategies
 
-1. **Percentile** (default):
-   - $ T = \text{percentile}(D, p) $, where $ p \in [0, 100] $.
-   - Intuition: cut at the largest $ (100 - p)\% $ jumps.
+**Percentile** (default):
 
-2. **Standard Deviation**:
+  - $ T = \text{percentile}(D, p) $, where $ p \in [0, 100] $.
+  - Intuition: cut at the largest $ (100 - p)\% $ jumps.
+
+**Standard Deviation**:
+
    - $ \mu = \text{mean}(D),\ \sigma = \text{std}(D) $
    - $ T = \mu + \alpha \sigma $ (e.g., $ \alpha=3 $).
    - Intuition: cut on statistical outliers.
 
-3. **Interquartile (IQR)**:
+**Interquartile (IQR)**:
+
    - $ Q_1, Q_3 = \text{percentile}(D, 25), \text{percentile}(D, 75) $
    - $ \text{IQR} = Q_3 - Q_1,\ \mu = \text{mean}(D) $
    - $ T = \mu + \beta \cdot \text{IQR} $ (e.g., $ \beta=1.5 $).
    - Intuition: robust outlier detection vs. heavy tails.
 
-4. **Gradient**:
+**Gradient**:
+
    - Compute $ G = \nabla D $ and threshold by percentile on $ G $:
      $ T = \text{percentile}(G, p) $.
-   - Intuition: cut at steep **changes** in the distance signal (useful when distances drift).
+   - **Intuition**: cut at steep **changes** in the distance signal (useful when distances drift).
 
-> **Note on units**: For `"percentile"` and `"gradient"`, the class accepts `breakpoint_threshold_amount` in either $[0, 1]$ (interpreted as a fraction, converted internally to $[0,100]$) or $[0,100]$ (as a percentile). For `"standard_deviation"` and `"interquartile"`, the amount is a **multiplier** ($\alpha$ or $\beta$).
+!!! note
+    For `"percentile"` and `"gradient"`, the class accepts `breakpoint_threshold_amount` in either $[0, 1]$ (interpreted as a fraction, converted internally to $[0,100]$) or $[0,100]$ (as a percentile). For `"standard_deviation"` and `"interquartile"`, the amount is a **multiplier** ($\alpha$ or $\beta$).
 
 ### Targeting a Desired Number of Chunks
 
 If `number_of_chunks` is set, the splitter **maps** the requested count to an **inverse percentile** over $ D $:
 
 - Let $ m = |D| $. Requested chunks $ k $ are mapped to a percentile $ y \in [0,100] $ such that:
+
   - $ k=1 \Rightarrow y \approx 100 $ (almost no cuts),
   - $ k=m \Rightarrow y \approx 0 $ (many cuts).
+
 - The threshold is then $ T = \text{percentile}(D, y) $.
 
 This provides an approximate, monotonic control over chunk count without explicit clustering.

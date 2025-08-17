@@ -25,7 +25,9 @@ class OpenAIVisionModel(BaseModel):
     """
 
     def __init__(
-        self, api_key: Optional[str] = None, model_name: str = "gpt-4.1"
+        self,
+        api_key: Optional[str] = None,
+        model_name: str = os.getenv("OPENAI_MODEL", "gpt-4.1"),
     ) -> None:
         """
         Initialize the OpenAIVisionModel.
@@ -126,7 +128,7 @@ class OpenAIVisionModel(BaseModel):
                 ),
             ],
         )
-        payload = payload_obj.model_dump()
+        payload = payload_obj.model_dump(exclude_none=True)
 
         response = self.client.chat.completions.create(
             model=self.model_name,

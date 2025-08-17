@@ -64,6 +64,10 @@ Read your PDF files and analyze the content using Docling and Visual Language Mo
 
 Read your PDF files and analyze the content using MarkItDown and Visual Language Models.
 
+### VLM Options comparison
+
+> Coming soon!
+
 !!! note
 
     👨‍💻 **Work-in-progress...** More examples to come!

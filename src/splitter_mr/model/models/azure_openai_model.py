@@ -145,7 +145,7 @@ class AzureOpenAIVisionModel(BaseModel):
                 ),
             ],
         )
-        payload = payload_obj.model_dump()
+        payload = payload_obj.model_dump(exclude_none=True)
 
         response = self.client.chat.completions.create(
             model=self.get_client()._azure_deployment,
