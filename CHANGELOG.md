@@ -14,6 +14,16 @@
 >     ```
 >   - This change reduces install time and keeps core installs lightweight.
 
+## v0.6.1
+
+Add Grok Vision Model.
+
+### Features
+
+- Add `GrokVisionModel`. 
+- Redefine constants.
+- Add new tests.
+
 ## v0.6.0
 
 Divide library into sub packages.

@@ -219,16 +219,17 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
     - [ ] Add HuggingFace embeddings model support.
     - [ ] Add Gemini embeddings model support.
     - [ ] Add Claude Anthropic embeddings model support.
-    - [ ] Add Grok VLMs model support.
+- [ ] Add Vision models:
+    - [X] Add OpenAI vision model support.
+    - [X] Add Azure OpenAI embeddings model support.
+    - [X] Add Grok VLMs model support.
+    - [ ] Add HuggingFace VLMs model support.
+    - [ ] Add Gemini VLMs model support.
+    - [ ] Add Claude Anthropic VLMs model support.
 - [ ] Add asynchronous methods for Splitters and Readers.
 - [ ] Add batch methods to process several documents at once.
 - [ ] Add support to read formulas.
 - [ ] Add classic **OCR** models: `easyocr` and `pytesseract`.
-- [ ] Add new models:
-    - [ ] Add HuggingFace VLMs model support.
-    - [ ] Add Gemini VLMs model support.
-    - [ ] Add Claude Anthropic VLMs model support.
-    - [ ] Add Grok VLMs model support.
 - [ ] Add support to generate output in `markdown`, `json`, `yaml` formats.
 
 ### Previously implemented

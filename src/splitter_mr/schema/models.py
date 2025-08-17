@@ -189,9 +189,15 @@ class ClientImageUrl(BaseModel):
 
     Attributes:
         url: A data URI string (e.g., "data:image/png;base64,<...>").
+        detail: Optional level of detail for vision models that support it
+            (e.g., Grok). Valid values: "low", "high", "auto".
+            If not provided, the field is omitted from the payload.
     """
 
     url: str
+    detail: Optional[Literal["low", "high", "auto"]] = Field(
+        default=None, description="Optional detail level for compatible VLMs."
+    )
 
 
 class ClientImageContent(BaseModel):

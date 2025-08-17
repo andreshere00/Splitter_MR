@@ -53,6 +53,7 @@ multimodal = [
     "tokenizers>=0.21.1",
     "speechrecognition>=3.14.3",
     "pydub>=0.25.1",
+    "openai>=1.99.9",
 ]
 # Optional Azure AI dependencies (large + extra)
 azure = [
@@ -80,6 +81,8 @@ all = [
     "azure-ai-documentintelligence>=1.0.2",
     "azure-core>=1.34.0",
     "azure-identity>=1.23.0",
+    "xai-sdk>=1.0.1",
+    "openai>=1.99.9",
 ]
 
 [tool.setuptools]
