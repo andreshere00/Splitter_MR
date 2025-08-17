@@ -1,0 +1,1519 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../pdf/pdf_markitdown/">
+      
+      
+        <link rel="next" href="../recursive_character_splitter/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Split by grammatical groups - SplitterMR Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
+    
+      <link rel="stylesheet" href="../../../assets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#example-splitting-text-files-with-charactersplitter-wordsplitter-sentencesplitter-paragraphsplitter" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="SplitterMR Docs" class="md-header__button md-logo" aria-label="SplitterMR Docs" data-md-component="logo">
+      
+  <img src="../../../assets/splitter_mr_logo_reduced_white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SplitterMR Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Split by grammatical groups
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/andreshere00/Splitter_MR" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    andreshere00/Splitter_MR
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="SplitterMR Docs" class="md-nav__button md-logo" aria-label="SplitterMR Docs" data-md-component="logo">
+      
+  <img src="../../../assets/splitter_mr_logo_reduced_white.svg" alt="logo">
+
+    </a>
+    SplitterMR Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/andreshere00/Splitter_MR" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    andreshere00/Splitter_MR
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Developer Guide
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Developer Guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api_reference/api_reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api_reference/reader/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Readers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api_reference/splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Splitters
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api_reference/model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vision models
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api_reference/embedding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Embedding models
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Examples
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Examples
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Reading
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Reading
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pdf/pdf_without_vlm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Read PDFs without VLMs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pdf/pdf_with_vlm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Read PDFs using VLMs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pdf/pdf_vanilla/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Read files with VanillaReader using VLMs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pdf/pdf_docling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Read files with Docling using VLMs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pdf/pdf_markitdown/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Read files with MarkItDown using VLMs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Text-based splitting
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            Text-based splitting
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Split by grammatical groups
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by grammatical groups
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-read-the-text-document" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1: Read the Text Document
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-split-the-document" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Split the Document
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Split the Document">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-split-by-characters" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1. Split by Characters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-split-by-words" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2. Split by Words
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-split-by-sentences" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3. Split by Sentences
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-split-by-paragraphs" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.4. Split by Paragraphs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-add-overlapping-chunks" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.5. Add Overlapping Chunks
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-example-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complete Example Script
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recursive_character_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by characters recursively
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../token_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by tokens
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../paged_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by pages
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../semantic_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by semantic similarity
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Schema-based splitting
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            Schema-based splitting
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../schema/html_tag_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by HTML Tags
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../schema/code_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../schema/json_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split JSON recursively
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../schema/row_column_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split tables by rows or columns
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../schema/header_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split Markdown and HTML files by headers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CHANGELOG
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-read-the-text-document" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1: Read the Text Document
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-split-the-document" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Split the Document
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Split the Document">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-split-by-characters" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1. Split by Characters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-split-by-words" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2. Split by Words
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-split-by-sentences" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3. Split by Sentences
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-split-by-paragraphs" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.4. Split by Paragraphs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-add-overlapping-chunks" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.5. Add Overlapping Chunks
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-example-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complete Example Script
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="example-splitting-text-files-with-charactersplitter-wordsplitter-sentencesplitter-paragraphsplitter"><strong>Example</strong>: Splitting Text Files with <code>CharacterSplitter</code>, <code>WordSplitter</code>, <code>SentenceSplitter</code>, <code>ParagraphSplitter</code><a class="headerlink" href="#example-splitting-text-files-with-charactersplitter-wordsplitter-sentencesplitter-paragraphsplitter" title="Permanent link">&para;</a></h1>
+<p>When processing a plain text file, such as an e-book or an instruction guidebook, for downstream tasks like LLM ingestion, annotation, or search, it is often necessary to divide it into smaller, manageable chunks.</p>
+<p><strong>SplitterMR provides the functionality to segment such files into groups of characters, words, sentences, or paragraphs</strong>. Furthermore, it allows for overlapping chunks to maintain contextual continuity. This example will illustrate the application of each splitter, utilizing the first chapter of "<em>El Famoso Hidalgo Don Quijote de la Mancha</em>" (original language) as the sample text.</p>
+<p><img alt="El Quijote" src="https://www.cartv.es/thumbs/990x750r/2021-05/quijote-1-1-.jpg" /></p>
+<hr />
+<h2 id="step-1-read-the-text-document">Step 1: Read the Text Document<a class="headerlink" href="#step-1-read-the-text-document" title="Permanent link">&para;</a></h2>
+<p>We will use the <code>VanillaReader</code> to load our text file.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">VanillaReader</span>
+
+<span class="n">reader</span> <span class="o">=</span> <span class="n">VanillaReader</span><span class="p">()</span>
+<span class="n">data</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/quijote_example.txt&quot;</span>  <span class="c1"># Path to your file</span>
+<span class="n">reader_output</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</code></pre></div>
+<p>The <code>reader_output</code> is an object containing the raw text and its metadata. You can view its content by simply printing the object:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">ReaderOutput</span><span class="p">(</span>
+    <span class="n">text</span><span class="o">=</span><span class="s1">&#39;Capítulo Primero</span><span class="se">\n\n</span><span class="s1">Que trata de la condición y ejercicio del famoso hidalgo D. Quijote de la Mancha</span><span class="se">\n\n</span><span class="s1">En un lugar de la Mancha, ...&#39;</span><span class="p">,</span>
+    <span class="n">document_name</span><span class="o">=</span><span class="s1">&#39;quijote_example.txt&#39;</span><span class="p">,</span>
+    <span class="n">document_path</span><span class="o">=</span><span class="s1">&#39;https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/quijote_example.txt&#39;</span><span class="p">,</span>
+    <span class="n">document_id</span><span class="o">=</span><span class="s1">&#39;34e37be6-743f-4807-80c3-216c76c7798b&#39;</span><span class="p">,</span>
+    <span class="n">conversion_method</span><span class="o">=</span><span class="s1">&#39;txt&#39;</span><span class="p">,</span>
+    <span class="n">reader_method</span><span class="o">=</span><span class="s1">&#39;vanilla&#39;</span><span class="p">,</span>
+    <span class="n">ocr_method</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">metadata</span><span class="o">=</span><span class="p">{}</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>If you want to extract the text, you can access the content via the <code>text</code> attribute:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="n">reader_output</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="step-2-split-the-document">Step 2: Split the Document<a class="headerlink" href="#step-2-split-the-document" title="Permanent link">&para;</a></h2>
+<p>We will try four different splitting strategies: by <strong>characters</strong>, <strong>words</strong>, <strong>sentences</strong>, and <strong>paragraphs</strong>. Remember that you can adjust the chunk size as needed.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.splitter</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CharacterSplitter</span><span class="p">,</span>
+    <span class="n">WordSplitter</span><span class="p">,</span>
+    <span class="n">SentenceSplitter</span><span class="p">,</span>
+    <span class="n">ParagraphSplitter</span>
+<span class="p">)</span>
+</code></pre></div>
+<hr />
+<h3 id="21-split-by-characters">2.1. Split by <strong>Characters</strong><a class="headerlink" href="#21-split-by-characters" title="Permanent link">&para;</a></h3>
+<p>Firstly, we will test the character-based splitting strategy. To do this, you can instantiate the <code>CharacterSplitter</code> class with the splitting attributes as your choice and pass the reader's output to the split method of this class. Accessing the <code>SplitterOutput</code> object's content is then straightforward:</p>
+<div class="highlight"><pre><span></span><code><span class="n">char_splitter</span> <span class="o">=</span> <span class="n">CharacterSplitter</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">char_splitter_output</span> <span class="o">=</span> <span class="n">char_splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">char_splitter_output</span><span class="p">)</span>  <span class="c1"># Visualize Character Splitter output</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">SplitterOutput</span><span class="p">(</span>
+    <span class="n">chunks</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Capítulo Primero</span><span class="se">\n\n</span><span class="s1">Que trata de la condición y ejercicio del famoso hidalgo D. Quijote de la Mancha</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;En un lugar de la Mancha, de cuyo nombre no quiero acordarme, no ha mucho tiempo que vivía un hidalg&#39;</span><span class="p">,</span> <span class="s1">&#39;o de los de lanza en astillero, adarga antigua, rocín flaco y galgo corredor. Una olla de algo más v&#39;</span><span class="p">,</span> <span class="s1">&#39;aca que carnero, salpicón las más noches, duelos y quebrantos los sábados, lentejas los viernes, alg&#39;</span><span class="p">,</span> <span class="s1">&#39;ún palomino de añadidura los domingos, consumían las tres partes de su hacienda.</span><span class="se">\n\n</span><span class="s1">...</span><span class="se">\n\n</span><span class="s1">Limpias, pues&#39;</span><span class="p">,</span> <span class="s1">&#39;, sus armas, hecho del morrión celada, puesto nombre a su rocín, y confirmándose a sí mismo, se dió &#39;</span><span class="p">,</span> <span class="s1">&#39;a entender que no le faltaba otra cosa, sino buscar una dama de quien enamorarse, porque el caballer&#39;</span><span class="p">,</span> <span class="s1">&#39;o andante sin amores, era árbol sin hojas y sin fruto, y cuerpo sin alma. Decíase él: si yo por malo&#39;</span><span class="p">,</span> <span class="s1">&#39;s de mis pecados, por por mi buena suerte, me encuentro por ahí con algún gigante, como de ordinario&#39;</span><span class="p">,</span> <span class="s1">&#39; les acontece a los caballeros andantes, y le derribo de un encuentro, o le parto por mitad del cuer&#39;</span><span class="p">,</span> <span class="s1">&#39;po, o finalmente, le venzo y le rindo, ¿no será bien tener a quién enviarle presentado, y que entre &#39;</span><span class="p">,</span> <span class="s1">&#39;y se hinque de rodillas ante mi dulce señora, y diga con voz humilde y rendida: yo señora, soy el gi&#39;</span><span class="p">,</span> <span class="s1">&#39;gante Caraculiambro, señor de la ínsula Malindrania, a quien venció en singular batalla el jamás com&#39;</span><span class="p">,</span> <span class="s1">&#39;o se debe alabado caballero D. Quijote de la Mancha, el cual me mandó que me presentase ante la vues&#39;</span><span class="p">,</span> <span class="s1">&#39;tra merced, para que la vuestra grandeza disponga de mí a su talante? ¡Oh, cómo se holgó nuestro bue&#39;</span><span class="p">,</span> <span class="s1">&#39;n caballero, cuando hubo hecho este discurso, y más cuando halló a quién dar nombre de su dama! Y fu&#39;</span><span class="p">,</span> <span class="s1">&#39;e, a lo que se cree, que en un lugar cerca del suyo había una moza labradora de muy buen parecer, de&#39;</span><span class="p">,</span> <span class="s1">&#39; quien él un tiempo anduvo enamorado, aunque según se entiende, ella jamás lo supo ni se dió cata de&#39;</span><span class="p">,</span> <span class="s1">&#39; ello. Llamábase Aldonza Lorenzo, y a esta le pareció ser bien darle título de señora de sus pensami&#39;</span><span class="p">,</span> <span class="s1">&#39;entos; y buscándole nombre que no desdijese mucho del suyo, y que tirase y se encaminase al de princ&#39;</span><span class="p">,</span> <span class="s1">&#39;esa y gran señora, vino a llamarla DULCINEA DEL TOBOSO, porque era natural del Toboso, nombre a su p&#39;</span><span class="p">,</span> <span class="s1">&#39;arecer músico y peregrino y significativo, como todos los demás que a él y a sus cosas había puesto.&#39;</span><span class="p">],</span> 
+    <span class="n">chunk_id</span><span class="o">=</span><span class="p">[</span>
+        <span class="s1">&#39;72533be1-07f5-47ff-b9bc-275fa14d38c7&#39;</span><span class="p">,</span> <span class="s1">&#39;d8b13e9c-29bf-4f0e-8d73-89e024d93218&#39;</span><span class="p">,</span> <span class="s1">&#39;08d4af1b-acae-43ff-8798-70f70a71dbff&#39;</span><span class="p">,</span>
+        <span class="o">...</span><span class="p">,</span> 
+        <span class="s1">&#39;c0382a84-693e-4c2f-bb82-2eef1166c0e7&#39;</span><span class="p">,</span> <span class="s1">&#39;96a42f50-33bd-4a78-bd99-73542bbd763d&#39;</span><span class="p">,</span> <span class="s1">&#39;e3a0a647-baf9-442c-8737-b0abf0ddf87e&#39;</span><span class="p">,</span> <span class="s1">&#39;ee2b7209-1e1b-4d33-b420-3949385013ad&#39;</span>
+        <span class="p">],</span> 
+    <span class="n">document_name</span><span class="o">=</span><span class="s1">&#39;quijote_example.txt&#39;</span><span class="p">,</span> 
+    <span class="n">document_path</span><span class="o">=</span><span class="s1">&#39;https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/quijote_example.txt&#39;</span><span class="p">,</span> <span class="n">document_id</span><span class="o">=</span><span class="s1">&#39;34e37be6-743f-4807-80c3-216c76c7798b&#39;</span><span class="p">,</span> <span class="n">conversion_method</span><span class="o">=</span><span class="s1">&#39;txt&#39;</span><span class="p">,</span> 
+    <span class="n">reader_method</span><span class="o">=</span><span class="s1">&#39;vanilla&#39;</span><span class="p">,</span> 
+    <span class="n">ocr_method</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+    <span class="n">split_method</span><span class="o">=</span><span class="s1">&#39;character_splitter&#39;</span><span class="p">,</span> 
+    <span class="n">split_params</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;chunk_size&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;chunk_overlap&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span> 
+    <span class="n">metadata</span><span class="o">=</span><span class="p">{}</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>To visualize each chunk, you can use the following instruction:</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">char_splitter_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; Chunk </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">chunk</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Sample output:</strong></p>
+<div class="highlight"><pre><span></span><code>======================================== Chunk 1 ========================================
+Capítulo Primero
+
+Que trata de la condición y ejercicio del famoso hidalgo D. Quijote de la Mancha
+
+======================================== Chunk 2 ========================================
+En un lugar de la Mancha, de cuyo nombre no quiero acordarme, no ha mucho tiempo que vivía un hidalg
+
+...
+</code></pre></div>
+<p>As you can see, the final characters of "hidalgo" are cut by this method. So how can we avoid cutting words? Introducing <code>WordSplitter</code>.</p>
+<hr />
+<h3 id="22-split-by-words">2.2. Split by <strong>Words</strong><a class="headerlink" href="#22-split-by-words" title="Permanent link">&para;</a></h3>
+<p>To use the <code>WordSplitter</code>, instantiate the class with your desired parameters (you can consult the <a href="../../../api_reference/splitter/">Developer guide</a> for information on available parameters). Then, split the content using the previous output from the Reader. To visualize the chunks, you need to access the <code>chunks</code> attribute of the <code>SplitterOutput</code> object:</p>
+<div class="highlight"><pre><span></span><code><span class="n">word_splitter</span> <span class="o">=</span> <span class="n">WordSplitter</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">word_splitter_output</span> <span class="o">=</span> <span class="n">word_splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">word_splitter_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; Chunk </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">chunk</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="o">========================================</span> <span class="n">Chunk</span> <span class="mi">1</span> <span class="o">========================================</span>
+<span class="n">Capítulo</span> <span class="n">Primero</span> <span class="n">Que</span> <span class="n">trata</span> <span class="n">de</span> <span class="n">la</span> <span class="n">condición</span> <span class="n">y</span> <span class="n">ejercicio</span> <span class="k">del</span> <span class="n">famoso</span> <span class="n">hidalgo</span> <span class="n">D</span><span class="o">.</span> <span class="n">Quijote</span> <span class="n">de</span> <span class="n">la</span> <span class="n">Mancha</span> <span class="n">En</span> <span class="n">un</span> <span class="n">lugar</span>
+
+<span class="o">========================================</span> <span class="n">Chunk</span> <span class="mi">2</span> <span class="o">========================================</span>
+<span class="n">de</span> <span class="n">la</span> <span class="n">Mancha</span><span class="p">,</span> <span class="n">de</span> <span class="n">cuyo</span> <span class="n">nombre</span> <span class="n">no</span> <span class="n">quiero</span> <span class="n">acordarme</span><span class="p">,</span> <span class="n">no</span> <span class="n">ha</span> <span class="n">mucho</span> <span class="n">tiempo</span> <span class="n">que</span> <span class="n">vivía</span> <span class="n">un</span> <span class="n">hidalgo</span> <span class="n">de</span> <span class="n">los</span> <span class="n">de</span>
+<span class="o">...</span>
+</code></pre></div>
+<p>Note that even though words aren't cut, the context isn't adequate because sentences are left incomplete. To avoid this issue, we should split by sentences. Introducing the <code>SentenceSplitter</code>:</p>
+<hr />
+<h3 id="23-split-by-sentences">2.3. Split by <strong>Sentences</strong><a class="headerlink" href="#23-split-by-sentences" title="Permanent link">&para;</a></h3>
+<p>Analogously to the previous steps, we can define the <code>SentenceSplitter</code> object with the number of sentences to split on:</p>
+<div class="highlight"><pre><span></span><code><span class="n">sentence_splitter</span> <span class="o">=</span> <span class="n">SentenceSplitter</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">sentence_splitter_output</span> <span class="o">=</span> <span class="n">sentence_splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sentence_splitter_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; Chunk </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">chunk</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="o">========================================</span> <span class="n">Chunk</span> <span class="mi">1</span> <span class="o">========================================</span>
+<span class="n">Capítulo</span> <span class="n">Primero</span>
+
+<span class="n">Que</span> <span class="n">trata</span> <span class="n">de</span> <span class="n">la</span> <span class="n">condición</span> <span class="n">y</span> <span class="n">ejercicio</span> <span class="k">del</span> <span class="n">famoso</span> <span class="n">hidalgo</span> <span class="n">D</span><span class="o">.</span> <span class="n">Quijote</span> <span class="n">de</span> <span class="n">la</span> <span class="n">Mancha</span>
+
+<span class="n">En</span> <span class="n">un</span> <span class="n">lugar</span> <span class="n">de</span> <span class="n">la</span> <span class="n">Mancha</span><span class="p">,</span> <span class="n">de</span> <span class="n">cuyo</span> <span class="n">nombre</span> <span class="n">no</span> <span class="n">quiero</span> <span class="n">acordarme</span><span class="p">,</span> <span class="n">no</span> <span class="n">ha</span> <span class="n">mucho</span> <span class="n">tiempo</span> <span class="n">que</span> <span class="n">vivía</span> <span class="n">un</span> <span class="n">hidalgo</span> <span class="n">de</span> <span class="n">los</span> <span class="n">de</span> <span class="n">lanza</span> <span class="n">en</span> <span class="n">astillero</span><span class="p">,</span> <span class="n">adarga</span> <span class="n">antigua</span><span class="p">,</span> <span class="n">rocín</span> <span class="n">flaco</span> <span class="n">y</span> <span class="n">galgo</span> <span class="n">corredor</span><span class="o">.</span> <span class="n">Una</span> <span class="n">olla</span> <span class="n">de</span> <span class="n">algo</span> <span class="n">más</span> <span class="n">vaca</span> <span class="n">que</span> <span class="n">carnero</span><span class="p">,</span> <span class="n">salpicón</span> <span class="n">las</span> <span class="n">más</span> <span class="n">noches</span><span class="p">,</span> <span class="n">duelos</span> <span class="n">y</span> <span class="n">quebrantos</span> <span class="n">los</span> <span class="n">sábados</span><span class="p">,</span> <span class="n">lentejas</span> <span class="n">los</span> <span class="n">viernes</span><span class="p">,</span> <span class="n">algún</span> <span class="n">palomino</span> <span class="n">de</span> <span class="n">añadidura</span> <span class="n">los</span> <span class="n">domingos</span><span class="p">,</span> <span class="n">consumían</span> <span class="n">las</span> <span class="n">tres</span> <span class="n">partes</span> <span class="n">de</span> <span class="n">su</span> <span class="n">hacienda</span><span class="o">.</span> <span class="n">El</span> <span class="n">resto</span> <span class="n">della</span> <span class="n">concluían</span> <span class="n">sayo</span> <span class="n">de</span> <span class="n">velarte</span><span class="p">,</span> <span class="n">calzas</span> <span class="n">de</span> <span class="n">velludo</span> <span class="n">para</span> <span class="n">las</span> <span class="n">fiestas</span> <span class="n">con</span> <span class="n">sus</span> <span class="n">pantuflos</span> <span class="n">de</span> <span class="n">lo</span> <span class="n">mismo</span><span class="p">,</span> <span class="n">los</span> <span class="n">días</span> <span class="n">de</span> <span class="n">entre</span> <span class="n">semana</span> <span class="n">se</span> <span class="n">honraba</span> <span class="n">con</span> <span class="n">su</span> <span class="n">vellori</span> <span class="n">de</span> <span class="n">lo</span> <span class="n">más</span> <span class="n">fino</span><span class="o">.</span> <span class="n">Tenía</span> <span class="n">en</span> <span class="n">su</span> <span class="n">casa</span> <span class="n">una</span> <span class="n">ama</span> <span class="n">que</span> <span class="n">pasaba</span> <span class="n">de</span> <span class="n">los</span> <span class="n">cuarenta</span><span class="p">,</span> <span class="n">y</span> <span class="n">una</span> <span class="n">sobrina</span> <span class="n">que</span> <span class="n">no</span> <span class="n">llegaba</span> <span class="n">a</span> <span class="n">los</span> <span class="n">veinte</span><span class="p">,</span> <span class="n">y</span> <span class="n">un</span> <span class="n">mozo</span> <span class="n">de</span> <span class="n">campo</span> <span class="n">y</span> <span class="n">plaza</span><span class="p">,</span> <span class="n">que</span> <span class="n">así</span> <span class="n">ensillaba</span> <span class="n">el</span> <span class="n">rocín</span> <span class="n">como</span> <span class="n">tomaba</span> <span class="n">la</span> <span class="n">podadera</span><span class="o">.</span>
+
+<span class="o">========================================</span> <span class="n">Chunk</span> <span class="mi">2</span> <span class="o">========================================</span>
+<span class="n">Frisaba</span> <span class="n">la</span> <span class="n">edad</span> <span class="n">de</span> <span class="n">nuestro</span> <span class="n">hidalgo</span> <span class="n">con</span> <span class="n">los</span> <span class="n">cincuenta</span> <span class="n">años</span><span class="p">,</span> <span class="n">era</span> <span class="n">de</span> <span class="n">complexión</span> <span class="n">recia</span><span class="p">,</span> <span class="n">seco</span> <span class="n">de</span> <span class="n">carnes</span><span class="p">,</span> <span class="n">enjuto</span> <span class="n">de</span> <span class="n">rostro</span><span class="p">;</span> <span class="n">gran</span> <span class="n">madrugador</span> <span class="n">y</span> <span class="n">amigo</span> <span class="n">de</span> <span class="n">la</span> <span class="n">caza</span><span class="o">.</span> <span class="n">Quieren</span> <span class="n">decir</span> <span class="n">que</span> <span class="n">tenía</span> <span class="n">el</span> <span class="n">sobrenombre</span> <span class="n">de</span> <span class="n">Quijada</span> <span class="n">o</span> <span class="n">Quesada</span> <span class="p">(</span><span class="n">que</span> <span class="n">en</span> <span class="n">esto</span> <span class="n">hay</span> <span class="n">alguna</span> <span class="n">diferencia</span> <span class="n">en</span> <span class="n">los</span> <span class="n">autores</span> <span class="n">que</span> <span class="n">deste</span> <span class="n">caso</span> <span class="n">escriben</span><span class="p">),</span> <span class="n">aunque</span> <span class="n">por</span> <span class="n">conjeturas</span> <span class="n">verosímiles</span> <span class="n">se</span> <span class="n">deja</span> <span class="n">entender</span> <span class="n">que</span> <span class="n">se</span> <span class="n">llama</span> <span class="n">Quijana</span><span class="p">;</span> <span class="n">pero</span> <span class="n">esto</span> <span class="n">importa</span> <span class="n">poco</span> <span class="n">a</span> <span class="n">nuestro</span> <span class="n">cuento</span><span class="p">;</span> <span class="n">basta</span> <span class="n">que</span> <span class="n">en</span> <span class="n">la</span> <span class="n">narración</span> <span class="n">dél</span> <span class="n">no</span> <span class="n">se</span> <span class="n">salga</span> <span class="n">un</span> <span class="n">punto</span> <span class="n">de</span> <span class="n">la</span> <span class="n">verdad</span><span class="o">.</span> <span class="n">Es</span><span class="p">,</span> <span class="n">pues</span><span class="p">,</span> <span class="n">de</span> <span class="n">saber</span><span class="p">,</span> <span class="n">que</span> <span class="n">este</span> <span class="n">sobredicho</span> <span class="n">hidalgo</span><span class="p">,</span> <span class="n">los</span> <span class="n">ratos</span> <span class="n">que</span> <span class="n">estaba</span> <span class="n">ocioso</span> <span class="p">(</span><span class="n">que</span> <span class="n">eran</span> <span class="n">los</span> <span class="n">más</span> <span class="k">del</span> <span class="n">año</span><span class="p">)</span> <span class="n">se</span> <span class="n">daba</span> <span class="n">a</span> <span class="n">leer</span> <span class="n">libros</span> <span class="n">de</span> <span class="n">caballerías</span> <span class="n">con</span> <span class="n">tanta</span> <span class="n">afición</span> <span class="n">y</span> <span class="n">gusto</span><span class="p">,</span> <span class="n">que</span> <span class="n">olvidó</span> <span class="n">casi</span> <span class="n">de</span> <span class="n">todo</span> <span class="n">punto</span> <span class="n">el</span> <span class="n">ejercicio</span> <span class="n">de</span> <span class="n">la</span> <span class="n">caza</span><span class="p">,</span> <span class="n">y</span> <span class="n">aun</span> <span class="n">la</span> <span class="n">administración</span> <span class="n">de</span> <span class="n">su</span> <span class="n">hacienda</span><span class="p">;</span> <span class="n">y</span> <span class="n">llegó</span> <span class="n">a</span> <span class="n">tanto</span> <span class="n">su</span> <span class="n">curiosidad</span> <span class="n">y</span> <span class="n">desatino</span> <span class="n">en</span> <span class="n">esto</span><span class="p">,</span> <span class="n">que</span> <span class="n">vendió</span> <span class="n">muchas</span> <span class="n">hanegas</span> <span class="n">de</span> <span class="n">tierra</span> <span class="n">de</span> <span class="n">sembradura</span><span class="p">,</span> <span class="n">para</span> <span class="n">comprar</span> <span class="n">libros</span> <span class="n">de</span> <span class="n">caballerías</span> <span class="n">en</span> <span class="n">que</span> <span class="n">leer</span><span class="p">;</span> <span class="n">y</span> <span class="n">así</span> <span class="n">llevó</span> <span class="n">a</span> <span class="n">su</span> <span class="n">casa</span> <span class="n">todos</span> <span class="n">cuantos</span> <span class="n">pudo</span> <span class="n">haber</span> <span class="n">dellos</span><span class="p">;</span> <span class="n">y</span> <span class="n">de</span> <span class="n">todos</span> <span class="n">ningunos</span> <span class="n">le</span> <span class="n">parecían</span> <span class="n">tan</span> <span class="n">bien</span> <span class="n">como</span> <span class="n">los</span> <span class="n">que</span> <span class="n">compuso</span> <span class="n">el</span> <span class="n">famoso</span> <span class="n">Feliciano</span> <span class="n">de</span> <span class="n">Silva</span><span class="p">:</span> <span class="n">porque</span> <span class="n">la</span> <span class="n">claridad</span> <span class="n">de</span> <span class="n">su</span> <span class="n">prosa</span><span class="p">,</span> <span class="n">y</span> <span class="n">aquellas</span> <span class="n">intrincadas</span> <span class="n">razones</span> <span class="n">suyas</span><span class="p">,</span> <span class="n">le</span> <span class="n">parecían</span> <span class="n">de</span> <span class="n">perlas</span><span class="p">;</span> <span class="n">y</span> <span class="n">más</span> <span class="n">cuando</span> <span class="n">llegaba</span> <span class="n">a</span> <span class="n">leer</span> <span class="n">aquellos</span> <span class="n">requiebros</span> <span class="n">y</span> <span class="n">cartas</span> <span class="n">de</span> <span class="n">desafío</span><span class="p">,</span> <span class="n">donde</span> <span class="n">en</span> <span class="n">muchas</span> <span class="n">partes</span> <span class="n">hallaba</span> <span class="n">escrito</span><span class="p">:</span> <span class="n">la</span> <span class="n">razón</span> <span class="n">de</span> <span class="n">la</span> <span class="n">sinrazón</span> <span class="n">que</span> <span class="n">a</span> <span class="n">mi</span> <span class="n">razón</span> <span class="n">se</span> <span class="n">hace</span><span class="p">,</span> <span class="n">de</span> <span class="n">tal</span> <span class="n">manera</span> <span class="n">mi</span> <span class="n">razón</span> <span class="n">enflaquece</span><span class="p">,</span> <span class="n">que</span> <span class="n">con</span> <span class="n">razón</span> <span class="n">me</span> <span class="n">quejo</span> <span class="n">de</span> <span class="n">la</span> <span class="n">vuestra</span> <span class="n">fermosura</span><span class="p">,</span> <span class="n">y</span> <span class="n">también</span> <span class="n">cuando</span> <span class="n">leía</span><span class="p">:</span> <span class="n">los</span> <span class="n">altos</span> <span class="n">cielos</span> <span class="n">que</span> <span class="n">de</span> <span class="n">vuestra</span> <span class="n">divinidad</span> <span class="n">divinamente</span> <span class="n">con</span> <span class="n">las</span> <span class="n">estrellas</span> <span class="n">se</span> <span class="n">fortifican</span><span class="p">,</span> <span class="n">y</span> <span class="n">os</span> <span class="n">hacen</span> <span class="n">merecedora</span> <span class="k">del</span> <span class="n">merecimiento</span> <span class="n">que</span> <span class="n">merece</span> <span class="n">la</span> <span class="n">vuestra</span> <span class="n">grandeza</span><span class="o">.</span> <span class="n">Con</span> <span class="n">estas</span> <span class="n">y</span> <span class="n">semejantes</span> <span class="n">razones</span> <span class="n">perdía</span> <span class="n">el</span> <span class="n">pobre</span> <span class="n">caballero</span> <span class="n">el</span> <span class="n">juicio</span><span class="p">,</span> <span class="n">y</span> <span class="n">desvelábase</span> <span class="n">por</span> <span class="n">entenderlas</span><span class="p">,</span> <span class="n">y</span> <span class="n">desentrañarles</span> <span class="n">el</span> <span class="n">sentido</span><span class="p">,</span> <span class="n">que</span> <span class="n">no</span> <span class="n">se</span> <span class="n">lo</span> <span class="n">sacara</span><span class="p">,</span> <span class="n">ni</span> <span class="n">las</span> <span class="n">entendiera</span> <span class="n">el</span> <span class="n">mismo</span> <span class="n">Aristóteles</span><span class="p">,</span> <span class="n">si</span> <span class="n">resucitara</span> <span class="n">para</span> <span class="n">sólo</span> <span class="n">ello</span><span class="o">.</span> <span class="n">No</span> <span class="n">estaba</span> <span class="n">muy</span> <span class="n">bien</span> <span class="n">con</span> <span class="n">las</span> <span class="n">heridas</span> <span class="n">que</span> <span class="n">don</span> <span class="n">Belianis</span> <span class="n">daba</span> <span class="n">y</span> <span class="n">recibía</span><span class="p">,</span> <span class="n">porque</span> <span class="n">se</span> <span class="n">imaginaba</span> <span class="n">que</span> <span class="n">por</span> <span class="n">grandes</span> <span class="n">maestros</span> <span class="n">que</span> <span class="n">le</span> <span class="n">hubiesen</span> <span class="n">curado</span><span class="p">,</span> <span class="n">no</span> <span class="n">dejaría</span> <span class="n">de</span> <span class="n">tener</span> <span class="n">el</span> <span class="n">rostro</span> <span class="n">y</span> <span class="n">todo</span> <span class="n">el</span> <span class="n">cuerpo</span> <span class="n">lleno</span> <span class="n">de</span> <span class="n">cicatrices</span> <span class="n">y</span> <span class="n">señales</span><span class="p">;</span> <span class="n">pero</span> <span class="n">con</span> <span class="n">todo</span> <span class="n">alababa</span> <span class="n">en</span> <span class="n">su</span> <span class="n">autor</span> <span class="n">aquel</span> <span class="n">acabar</span> <span class="n">su</span> <span class="n">libro</span> <span class="n">con</span> <span class="n">la</span> <span class="n">promesa</span> <span class="n">de</span> <span class="n">aquella</span> <span class="n">inacabable</span> <span class="n">aventura</span><span class="p">,</span> <span class="n">y</span> <span class="n">muchas</span> <span class="n">veces</span> <span class="n">le</span> <span class="n">vino</span> <span class="n">deseo</span> <span class="n">de</span> <span class="n">tomar</span> <span class="n">la</span> <span class="n">pluma</span><span class="p">,</span> <span class="n">y</span> <span class="n">darle</span> <span class="n">fin</span> <span class="n">al</span> <span class="n">pie</span> <span class="n">de</span> <span class="n">la</span> <span class="n">letra</span> <span class="n">como</span> <span class="n">allí</span> <span class="n">se</span> <span class="n">promete</span><span class="p">;</span> <span class="n">y</span> <span class="n">sin</span> <span class="n">duda</span> <span class="n">alguna</span> <span class="n">lo</span> <span class="n">hiciera</span><span class="p">,</span> <span class="n">y</span> <span class="n">aun</span> <span class="n">saliera</span> <span class="n">con</span> <span class="n">ello</span><span class="p">,</span> <span class="n">si</span> <span class="n">otros</span> <span class="n">mayores</span> <span class="n">y</span> <span class="n">continuos</span> <span class="n">pensamientos</span> <span class="n">no</span> <span class="n">se</span> <span class="n">lo</span> <span class="n">estorbaran</span><span class="o">.</span>
+</code></pre></div>
+<p>While the entire context is preserved when splitting by sentences, the varying chunk sizes suggest that chunking by paragraphs might be more beneficial. Introducing <code>ParagraphSplitter</code>.</p>
+<hr />
+<h3 id="24-split-by-paragraphs">2.4. Split by <strong>Paragraphs</strong><a class="headerlink" href="#24-split-by-paragraphs" title="Permanent link">&para;</a></h3>
+<p>We can select 3 as the desired number of paragraphs per chunk. The resulting chunks are the following:</p>
+<div class="highlight"><pre><span></span><code><span class="n">paragraph_splitter</span> <span class="o">=</span> <span class="n">ParagraphSplitter</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">paragraph_splitter_output</span> <span class="o">=</span> <span class="n">paragraph_splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">paragraph_splitter_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; Chunk </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">chunk</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="o">========================================</span> <span class="n">Chunk</span> <span class="mi">1</span> <span class="o">========================================</span>
+<span class="n">Capítulo</span> <span class="n">Primero</span>
+<span class="n">Que</span> <span class="n">trata</span> <span class="n">de</span> <span class="n">la</span> <span class="n">condición</span> <span class="n">y</span> <span class="n">ejercicio</span> <span class="k">del</span> <span class="n">famoso</span> <span class="n">hidalgo</span> <span class="n">D</span><span class="o">.</span> <span class="n">Quijote</span> <span class="n">de</span> <span class="n">la</span> <span class="n">Mancha</span>
+<span class="n">En</span> <span class="n">un</span> <span class="n">lugar</span> <span class="n">de</span> <span class="n">la</span> <span class="n">Mancha</span><span class="p">,</span> <span class="n">de</span> <span class="n">cuyo</span> <span class="n">nombre</span> <span class="n">no</span> <span class="n">quiero</span> <span class="n">acordarme</span><span class="p">,</span> <span class="n">no</span> <span class="n">ha</span> <span class="n">mucho</span> <span class="n">tiempo</span> <span class="n">que</span> <span class="n">vivía</span> <span class="n">un</span> <span class="n">hidalgo</span> <span class="n">de</span> <span class="n">los</span> <span class="n">de</span> <span class="n">lanza</span> <span class="n">en</span> <span class="n">astillero</span><span class="p">,</span> <span class="n">adarga</span> <span class="n">antigua</span><span class="p">,</span> <span class="n">rocín</span> <span class="n">flaco</span> <span class="n">y</span> <span class="n">galgo</span> <span class="n">corredor</span><span class="o">.</span> <span class="n">Una</span> <span class="n">olla</span> <span class="n">de</span> <span class="n">algo</span> <span class="n">más</span> <span class="n">vaca</span> <span class="n">que</span> <span class="n">carnero</span><span class="p">,</span> <span class="n">salpicón</span> <span class="n">las</span> <span class="n">más</span> <span class="n">noches</span><span class="p">,</span> <span class="n">duelos</span> <span class="n">y</span> <span class="n">quebrantos</span> <span class="n">los</span> <span class="n">sábados</span><span class="p">,</span> <span class="n">lentejas</span> <span class="n">los</span> <span class="n">viernes</span><span class="p">,</span> <span class="n">algún</span> <span class="n">palomino</span> <span class="n">de</span> <span class="n">añadidura</span> <span class="n">los</span> <span class="n">domingos</span><span class="p">,</span> <span class="n">consumían</span> <span class="n">las</span> <span class="n">tres</span> <span class="n">partes</span> <span class="n">de</span> <span class="n">su</span> <span class="n">hacienda</span><span class="o">.</span> <span class="n">El</span> <span class="n">resto</span> <span class="n">della</span> <span class="n">concluían</span> <span class="n">sayo</span> <span class="n">de</span> <span class="n">velarte</span><span class="p">,</span> <span class="n">calzas</span> <span class="n">de</span> <span class="n">velludo</span> <span class="n">para</span> <span class="n">las</span> <span class="n">fiestas</span> <span class="n">con</span> <span class="n">sus</span> <span class="n">pantuflos</span> <span class="n">de</span> <span class="n">lo</span> <span class="n">mismo</span><span class="p">,</span> <span class="n">los</span> <span class="n">días</span> <span class="n">de</span> <span class="n">entre</span> <span class="n">semana</span> <span class="n">se</span> <span class="n">honraba</span> <span class="n">con</span> <span class="n">su</span> <span class="n">vellori</span> <span class="n">de</span> <span class="n">lo</span> <span class="n">más</span> <span class="n">fino</span><span class="o">.</span> <span class="n">Tenía</span> <span class="n">en</span> <span class="n">su</span> <span class="n">casa</span> <span class="n">una</span> <span class="n">ama</span> <span class="n">que</span> <span class="n">pasaba</span> <span class="n">de</span> <span class="n">los</span> <span class="n">cuarenta</span><span class="p">,</span> <span class="n">y</span> <span class="n">una</span> <span class="n">sobrina</span> <span class="n">que</span> <span class="n">no</span> <span class="n">llegaba</span> <span class="n">a</span> <span class="n">los</span> <span class="n">veinte</span><span class="p">,</span> <span class="n">y</span> <span class="n">un</span> <span class="n">mozo</span> <span class="n">de</span> <span class="n">campo</span> <span class="n">y</span> <span class="n">plaza</span><span class="p">,</span> <span class="n">que</span> <span class="n">así</span> <span class="n">ensillaba</span> <span class="n">el</span> <span class="n">rocín</span> <span class="n">como</span> <span class="n">tomaba</span> <span class="n">la</span> <span class="n">podadera</span><span class="o">.</span> <span class="n">Frisaba</span> <span class="n">la</span> <span class="n">edad</span> <span class="n">de</span> <span class="n">nuestro</span> <span class="n">hidalgo</span> <span class="n">con</span> <span class="n">los</span> <span class="n">cincuenta</span> <span class="n">años</span><span class="p">,</span> <span class="n">era</span> <span class="n">de</span> <span class="n">complexión</span> <span class="n">recia</span><span class="p">,</span> <span class="n">seco</span> <span class="n">de</span> <span class="n">carnes</span><span class="p">,</span> <span class="n">enjuto</span> <span class="n">de</span> <span class="n">rostro</span><span class="p">;</span> <span class="n">gran</span> <span class="n">madrugador</span> <span class="n">y</span> <span class="n">amigo</span> <span class="n">de</span> <span class="n">la</span> <span class="n">caza</span><span class="o">.</span> <span class="n">Quieren</span> <span class="n">decir</span> <span class="n">que</span> <span class="n">tenía</span> <span class="n">el</span> <span class="n">sobrenombre</span> <span class="n">de</span> <span class="n">Quijada</span> <span class="n">o</span> <span class="n">Quesada</span> <span class="p">(</span><span class="n">que</span> <span class="n">en</span> <span class="n">esto</span> <span class="n">hay</span> <span class="n">alguna</span> <span class="n">diferencia</span> <span class="n">en</span> <span class="n">los</span> <span class="n">autores</span> <span class="n">que</span> <span class="n">deste</span> <span class="n">caso</span> <span class="n">escriben</span><span class="p">),</span> <span class="n">aunque</span> <span class="n">por</span> <span class="n">conjeturas</span> <span class="n">verosímiles</span> <span class="n">se</span> <span class="n">deja</span> <span class="n">entender</span> <span class="n">que</span> <span class="n">se</span> <span class="n">llama</span> <span class="n">Quijana</span><span class="p">;</span> <span class="n">pero</span> <span class="n">esto</span> <span class="n">importa</span> <span class="n">poco</span> <span class="n">a</span> <span class="n">nuestro</span> <span class="n">cuento</span><span class="p">;</span> <span class="n">basta</span> <span class="n">que</span> <span class="n">en</span> <span class="n">la</span> <span class="n">narración</span> <span class="n">dél</span> <span class="n">no</span> <span class="n">se</span> <span class="n">salga</span> <span class="n">un</span> <span class="n">punto</span> <span class="n">de</span> <span class="n">la</span> <span class="n">verdad</span><span class="o">.</span>
+
+<span class="o">========================================</span> <span class="n">Chunk</span> <span class="mi">2</span> <span class="o">========================================</span>
+<span class="n">Es</span><span class="p">,</span> <span class="n">pues</span><span class="p">,</span> <span class="n">de</span> <span class="n">saber</span><span class="p">,</span> <span class="n">que</span> <span class="n">este</span> <span class="n">sobredicho</span> <span class="n">hidalgo</span><span class="p">,</span> <span class="n">los</span> <span class="n">ratos</span> <span class="n">que</span> <span class="n">estaba</span> <span class="n">ocioso</span> <span class="p">(</span><span class="n">que</span> <span class="n">eran</span> <span class="n">los</span> <span class="n">más</span> <span class="k">del</span> <span class="n">año</span><span class="p">)</span> <span class="n">se</span> <span class="n">daba</span> <span class="n">a</span> <span class="n">leer</span> <span class="n">libros</span> <span class="n">de</span> <span class="n">caballerías</span> <span class="n">con</span> <span class="n">tanta</span> <span class="n">afición</span> <span class="n">y</span> <span class="n">gusto</span><span class="p">,</span> <span class="n">que</span> <span class="n">olvidó</span> <span class="n">casi</span> <span class="n">de</span> <span class="n">todo</span> <span class="n">punto</span> <span class="n">el</span> <span class="n">ejercicio</span> <span class="n">de</span> <span class="n">la</span> <span class="n">caza</span><span class="p">,</span> <span class="n">y</span> <span class="n">aun</span> <span class="n">la</span> <span class="n">administración</span> <span class="n">de</span> <span class="n">su</span> <span class="n">hacienda</span><span class="p">;</span> <span class="n">y</span> <span class="n">llegó</span> <span class="n">a</span> <span class="n">tanto</span> <span class="n">su</span> <span class="n">curiosidad</span> <span class="n">y</span> <span class="n">desatino</span> <span class="n">en</span> <span class="n">esto</span><span class="p">,</span> <span class="n">que</span> <span class="n">vendió</span> <span class="n">muchas</span> <span class="n">hanegas</span> <span class="n">de</span> <span class="n">tierra</span> <span class="n">de</span> <span class="n">sembradura</span><span class="p">,</span> <span class="n">para</span> <span class="n">comprar</span> <span class="n">libros</span> <span class="n">de</span> <span class="n">caballerías</span> <span class="n">en</span> <span class="n">que</span> <span class="n">leer</span><span class="p">;</span> <span class="n">y</span> <span class="n">así</span> <span class="n">llevó</span> <span class="n">a</span> <span class="n">su</span> <span class="n">casa</span> <span class="n">todos</span> <span class="n">cuantos</span> <span class="n">pudo</span> <span class="n">haber</span> <span class="n">dellos</span><span class="p">;</span> <span class="n">y</span> <span class="n">de</span> <span class="n">todos</span> <span class="n">ningunos</span> <span class="n">le</span> <span class="n">parecían</span> <span class="n">tan</span> <span class="n">bien</span> <span class="n">como</span> <span class="n">los</span> <span class="n">que</span> <span class="n">compuso</span> <span class="n">el</span> <span class="n">famoso</span> <span class="n">Feliciano</span> <span class="n">de</span> <span class="n">Silva</span><span class="p">:</span> <span class="n">porque</span> <span class="n">la</span> <span class="n">claridad</span> <span class="n">de</span> <span class="n">su</span> <span class="n">prosa</span><span class="p">,</span> <span class="n">y</span> <span class="n">aquellas</span> <span class="n">intrincadas</span> <span class="n">razones</span> <span class="n">suyas</span><span class="p">,</span> <span class="n">le</span> <span class="n">parecían</span> <span class="n">de</span> <span class="n">perlas</span><span class="p">;</span> <span class="n">y</span> <span class="n">más</span> <span class="n">cuando</span> <span class="n">llegaba</span> <span class="n">a</span> <span class="n">leer</span> <span class="n">aquellos</span> <span class="n">requiebros</span> <span class="n">y</span> <span class="n">cartas</span> <span class="n">de</span> <span class="n">desafío</span><span class="p">,</span> <span class="n">donde</span> <span class="n">en</span> <span class="n">muchas</span> <span class="n">partes</span> <span class="n">hallaba</span> <span class="n">escrito</span><span class="p">:</span> <span class="n">la</span> <span class="n">razón</span> <span class="n">de</span> <span class="n">la</span> <span class="n">sinrazón</span> <span class="n">que</span> <span class="n">a</span> <span class="n">mi</span> <span class="n">razón</span> <span class="n">se</span> <span class="n">hace</span><span class="p">,</span> <span class="n">de</span> <span class="n">tal</span> <span class="n">manera</span> <span class="n">mi</span> <span class="n">razón</span> <span class="n">enflaquece</span><span class="p">,</span> <span class="n">que</span> <span class="n">con</span> <span class="n">razón</span> <span class="n">me</span> <span class="n">quejo</span> <span class="n">de</span> <span class="n">la</span> <span class="n">vuestra</span> <span class="n">fermosura</span><span class="p">,</span> <span class="n">y</span> <span class="n">también</span> <span class="n">cuando</span> <span class="n">leía</span><span class="p">:</span> <span class="n">los</span> <span class="n">altos</span> <span class="n">cielos</span> <span class="n">que</span> <span class="n">de</span> <span class="n">vuestra</span> <span class="n">divinidad</span> <span class="n">divinamente</span> <span class="n">con</span> <span class="n">las</span> <span class="n">estrellas</span> <span class="n">se</span> <span class="n">fortifican</span><span class="p">,</span> <span class="n">y</span> <span class="n">os</span> <span class="n">hacen</span> <span class="n">merecedora</span> <span class="k">del</span> <span class="n">merecimiento</span> <span class="n">que</span> <span class="n">merece</span> <span class="n">la</span> <span class="n">vuestra</span> <span class="n">grandeza</span><span class="o">.</span> <span class="n">Con</span> <span class="n">estas</span> <span class="n">y</span> <span class="n">semejantes</span> <span class="n">razones</span> <span class="n">perdía</span> <span class="n">el</span> <span class="n">pobre</span> <span class="n">caballero</span> <span class="n">el</span> <span class="n">juicio</span><span class="p">,</span> <span class="n">y</span> <span class="n">desvelábase</span> <span class="n">por</span> <span class="n">entenderlas</span><span class="p">,</span> <span class="n">y</span> <span class="n">desentrañarles</span> <span class="n">el</span> <span class="n">sentido</span><span class="p">,</span> <span class="n">que</span> <span class="n">no</span> <span class="n">se</span> <span class="n">lo</span> <span class="n">sacara</span><span class="p">,</span> <span class="n">ni</span> <span class="n">las</span> <span class="n">entendiera</span> <span class="n">el</span> <span class="n">mismo</span> <span class="n">Aristóteles</span><span class="p">,</span> <span class="n">si</span> <span class="n">resucitara</span> <span class="n">para</span> <span class="n">sólo</span> <span class="n">ello</span><span class="o">.</span> <span class="n">No</span> <span class="n">estaba</span> <span class="n">muy</span> <span class="n">bien</span> <span class="n">con</span> <span class="n">las</span> <span class="n">heridas</span> <span class="n">que</span> <span class="n">don</span> <span class="n">Belianis</span> <span class="n">daba</span> <span class="n">y</span> <span class="n">recibía</span><span class="p">,</span> <span class="n">porque</span> <span class="n">se</span> <span class="n">imaginaba</span> <span class="n">que</span> <span class="n">por</span> <span class="n">grandes</span> <span class="n">maestros</span> <span class="n">que</span> <span class="n">le</span> <span class="n">hubiesen</span> <span class="n">curado</span><span class="p">,</span> <span class="n">no</span> <span class="n">dejaría</span> <span class="n">de</span> <span class="n">tener</span> <span class="n">el</span> <span class="n">rostro</span> <span class="n">y</span> <span class="n">todo</span> <span class="n">el</span> <span class="n">cuerpo</span> <span class="n">lleno</span> <span class="n">de</span> <span class="n">cicatrices</span> <span class="n">y</span> <span class="n">señales</span><span class="p">;</span> <span class="n">pero</span> <span class="n">con</span> <span class="n">todo</span> <span class="n">alababa</span> <span class="n">en</span> <span class="n">su</span> <span class="n">autor</span> <span class="n">aquel</span> <span class="n">acabar</span> <span class="n">su</span> <span class="n">libro</span> <span class="n">con</span> <span class="n">la</span> <span class="n">promesa</span> <span class="n">de</span> <span class="n">aquella</span> <span class="n">inacabable</span> <span class="n">aventura</span><span class="p">,</span> <span class="n">y</span> <span class="n">muchas</span> <span class="n">veces</span> <span class="n">le</span> <span class="n">vino</span> <span class="n">deseo</span> <span class="n">de</span> <span class="n">tomar</span> <span class="n">la</span> <span class="n">pluma</span><span class="p">,</span> <span class="n">y</span> <span class="n">darle</span> <span class="n">fin</span> <span class="n">al</span> <span class="n">pie</span> <span class="n">de</span> <span class="n">la</span> <span class="n">letra</span> <span class="n">como</span> <span class="n">allí</span> <span class="n">se</span> <span class="n">promete</span><span class="p">;</span> <span class="n">y</span> <span class="n">sin</span> <span class="n">duda</span> <span class="n">alguna</span> <span class="n">lo</span> <span class="n">hiciera</span><span class="p">,</span> <span class="n">y</span> <span class="n">aun</span> <span class="n">saliera</span> <span class="n">con</span> <span class="n">ello</span><span class="p">,</span> <span class="n">si</span> <span class="n">otros</span> <span class="n">mayores</span> <span class="n">y</span> <span class="n">continuos</span> <span class="n">pensamientos</span> <span class="n">no</span> <span class="n">se</span> <span class="n">lo</span> <span class="n">estorbaran</span><span class="o">.</span>
+<span class="n">Tuvo</span> <span class="n">muchas</span> <span class="n">veces</span> <span class="n">competencia</span> <span class="n">con</span> <span class="n">el</span> <span class="n">cura</span> <span class="n">de</span> <span class="n">su</span> <span class="n">lugar</span> <span class="p">(</span><span class="n">que</span> <span class="n">era</span> <span class="n">hombre</span> <span class="n">docto</span> <span class="n">graduado</span> <span class="n">en</span> <span class="n">Sigüenza</span><span class="p">),</span> <span class="n">sobre</span> <span class="n">cuál</span> <span class="n">había</span> <span class="n">sido</span> <span class="n">mejor</span> <span class="n">caballero</span><span class="p">,</span> <span class="n">Palmerín</span> <span class="n">de</span> <span class="n">Inglaterra</span> <span class="n">o</span> <span class="n">Amadís</span> <span class="n">de</span> <span class="n">Gaula</span><span class="p">;</span> <span class="n">mas</span> <span class="n">maese</span> <span class="n">Nicolás</span><span class="p">,</span> <span class="n">barbero</span> <span class="k">del</span> <span class="n">mismo</span> <span class="n">pueblo</span><span class="p">,</span> <span class="n">decía</span> <span class="n">que</span> <span class="n">ninguno</span> <span class="n">llegaba</span> <span class="n">al</span> <span class="n">caballero</span> <span class="k">del</span> <span class="n">Febo</span><span class="p">,</span> <span class="n">y</span> <span class="n">que</span> <span class="n">si</span> <span class="n">alguno</span> <span class="n">se</span> <span class="n">le</span> <span class="n">podía</span> <span class="n">comparar</span><span class="p">,</span> <span class="n">era</span> <span class="n">don</span> <span class="n">Galaor</span><span class="p">,</span> <span class="n">hermano</span> <span class="n">de</span> <span class="n">Amadís</span> <span class="n">de</span> <span class="n">Gaula</span><span class="p">,</span> <span class="n">porque</span> <span class="n">tenía</span> <span class="n">muy</span> <span class="n">acomodada</span> <span class="n">condición</span> <span class="n">para</span> <span class="n">todo</span><span class="p">;</span> <span class="n">que</span> <span class="n">no</span> <span class="n">era</span> <span class="n">caballero</span> <span class="n">melindroso</span><span class="p">,</span> <span class="n">ni</span> <span class="n">tan</span> <span class="n">llorón</span> <span class="n">como</span> <span class="n">su</span> <span class="n">hermano</span><span class="p">,</span> <span class="n">y</span> <span class="n">que</span> <span class="n">en</span> <span class="n">lo</span> <span class="n">de</span> <span class="n">la</span> <span class="n">valentía</span> <span class="n">no</span> <span class="n">le</span> <span class="n">iba</span> <span class="n">en</span> <span class="n">zaga</span><span class="o">.</span>
+<span class="n">En</span> <span class="n">resolución</span><span class="p">,</span> <span class="n">él</span> <span class="n">se</span> <span class="n">enfrascó</span> <span class="n">tanto</span> <span class="n">en</span> <span class="n">su</span> <span class="n">lectura</span><span class="p">,</span> <span class="n">que</span> <span class="n">se</span> <span class="n">le</span> <span class="n">pasaban</span> <span class="n">las</span> <span class="n">noches</span> <span class="n">leyendo</span> <span class="n">de</span> <span class="n">claro</span> <span class="n">en</span> <span class="n">claro</span><span class="p">,</span> <span class="n">y</span> <span class="n">los</span> <span class="n">días</span> <span class="n">de</span> <span class="n">turbio</span> <span class="n">en</span> <span class="n">turbio</span><span class="p">,</span> <span class="n">y</span> <span class="n">así</span><span class="p">,</span> <span class="k">del</span> <span class="n">poco</span> <span class="n">dormir</span> <span class="n">y</span> <span class="k">del</span> <span class="n">mucho</span> <span class="n">leer</span><span class="p">,</span> <span class="n">se</span> <span class="n">le</span> <span class="n">secó</span> <span class="n">el</span> <span class="n">cerebro</span><span class="p">,</span> <span class="n">de</span> <span class="n">manera</span> <span class="n">que</span> <span class="n">vino</span> <span class="n">a</span> <span class="n">perder</span> <span class="n">el</span> <span class="n">juicio</span><span class="o">.</span> <span class="n">Llenósele</span> <span class="n">la</span> <span class="n">fantasía</span> <span class="n">de</span> <span class="n">todo</span> <span class="n">aquello</span> <span class="n">que</span> <span class="n">leía</span> <span class="n">en</span> <span class="n">los</span> <span class="n">libros</span><span class="p">,</span> <span class="n">así</span> <span class="n">de</span> <span class="n">encantamientos</span><span class="p">,</span> <span class="n">como</span> <span class="n">de</span> <span class="n">pendencias</span><span class="p">,</span> <span class="n">batallas</span><span class="p">,</span> <span class="n">desafíos</span><span class="p">,</span> <span class="n">heridas</span><span class="p">,</span> <span class="n">requiebros</span><span class="p">,</span> <span class="n">amores</span><span class="p">,</span> <span class="n">tormentas</span> <span class="n">y</span> <span class="n">disparates</span> <span class="n">imposibles</span><span class="p">,</span> <span class="n">y</span> <span class="n">asentósele</span> <span class="n">de</span> <span class="n">tal</span> <span class="n">modo</span> <span class="n">en</span> <span class="n">la</span> <span class="n">imaginación</span> <span class="n">que</span> <span class="n">era</span> <span class="n">verdad</span> <span class="n">toda</span> <span class="n">aquella</span> <span class="n">máquina</span> <span class="n">de</span> <span class="n">aquellas</span> <span class="n">soñadas</span> <span class="n">invenciones</span> <span class="n">que</span> <span class="n">leía</span><span class="p">,</span> <span class="n">que</span> <span class="n">para</span> <span class="n">él</span> <span class="n">no</span> <span class="n">había</span> <span class="n">otra</span> <span class="n">historia</span> <span class="n">más</span> <span class="n">cierta</span> <span class="n">en</span> <span class="n">el</span> <span class="n">mundo</span><span class="o">.</span>
+</code></pre></div>
+<hr />
+<h3 id="25-add-overlapping-chunks">2.5. Add <strong>Overlapping Chunks</strong><a class="headerlink" href="#25-add-overlapping-chunks" title="Permanent link">&para;</a></h3>
+<p>Another strategy you can employ is to preserve some text between chunks. For this use case, you can optionally add <em>overlap</em> between chunks. Overlap can be defined as either a fraction (e.g., <code>chunk_overlap = 0.2</code> for 20% overlap) or an integer number (e.g., <code>chunk_overlap = 20</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="n">char_splitter_with_overlap</span> <span class="o">=</span> <span class="n">CharacterSplitter</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">chunk_overlap</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">char_splitter_output</span> <span class="o">=</span> <span class="n">char_splitter_with_overlap</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">char_splitter_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; Chunk </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">chunk</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<p><strong>And that’s it!</strong> With these splitters, you can flexibly chunk your text data however you need. Remember that you can visit the complete <a href="../../../api_reference/splitter/">Developer Reference</a> to have more information about specific examples, methods, attributes and more of these Splitter classes.</p>
+<h2 id="complete-example-script">Complete Example Script<a class="headerlink" href="#complete-example-script" title="Permanent link">&para;</a></h2>
+<p>Finally, we provide a full example script for reproducibility purposes:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">VanillaReader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.splitter</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">CharacterSplitter</span><span class="p">,</span> <span class="n">ParagraphSplitter</span><span class="p">,</span>
+                                  <span class="n">SentenceSplitter</span><span class="p">,</span> <span class="n">WordSplitter</span><span class="p">)</span>
+
+<span class="n">reader</span> <span class="o">=</span> <span class="n">VanillaReader</span><span class="p">()</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/quijote_example.txt&quot;</span>
+<span class="n">reader_output</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span> <span class="c1"># Visualize the ReaderOutput object</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">reader_output</span><span class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="c1"># Get the text from the document</span>
+
+<span class="c1"># 1. Split by Characters</span>
+
+<span class="n">char_splitter</span> <span class="o">=</span> <span class="n">CharacterSplitter</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">char_splitter_output</span> <span class="o">=</span> <span class="n">char_splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">char_splitter_output</span><span class="p">)</span> <span class="c1"># Visualize Character Splitter output</span>
+
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">char_splitter_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span> <span class="c1"># Visualize chunks</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot; Chunk &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">chunk</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># 2. Split by Words</span>
+
+<span class="n">word_splitter</span> <span class="o">=</span> <span class="n">WordSplitter</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">word_splitter_output</span> <span class="o">=</span> <span class="n">word_splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">word_splitter_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot; Chunk &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">chunk</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># 3. Split by Sentences</span>
+
+<span class="n">sentence_splitter</span> <span class="o">=</span> <span class="n">SentenceSplitter</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">sentence_splitter_output</span> <span class="o">=</span> <span class="n">sentence_splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sentence_splitter_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot; Chunk &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">chunk</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># 4. Split by Paragraphs</span>
+
+<span class="n">paragraph_splitter</span> <span class="o">=</span> <span class="n">ParagraphSplitter</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">paragraph_splitter_output</span> <span class="o">=</span> <span class="n">paragraph_splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">paragraph_splitter_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot; Chunk &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">chunk</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># 5. Add overlapping words between chunks</span>
+
+<span class="n">char_splitter_with_overlap</span> <span class="o">=</span> <span class="n">CharacterSplitter</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">chunk_overlap</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">char_splitter_output</span> <span class="o">=</span> <span class="n">char_splitter_with_overlap</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">char_splitter_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot; Chunk &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">chunk</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../javascripts/katex.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/katex.min.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/contrib/auto-render.min.js"></script>
+      
+    
+  </body>
+</html>
