@@ -5,7 +5,7 @@ import warnings
 from pathlib import Path
 from typing import Any, Optional
 
-from ...model import BaseModel
+from ...model import BaseVisionModel
 from ...schema import (
     DEFAULT_IMAGE_CAPTION_PROMPT,
     DEFAULT_IMAGE_EXTRACTION_PROMPT,
@@ -49,7 +49,7 @@ class DoclingReader(BaseReader):
         r"\((?P<uri>data:image/[a-zA-Z0-9.+-]+;base64,(?P<b64>[A-Za-z0-9+/=]+))\)"
     )
 
-    def __init__(self, model: Optional[BaseModel] = None) -> None:
+    def __init__(self, model: Optional[BaseVisionModel] = None) -> None:
         _require_docling()
         self.model = model
         self.client = None

@@ -13,7 +13,7 @@ from pypdf import PdfReader, PdfWriter
 if TYPE_CHECKING:  # pragma: no cover
     from markitdown import MarkItDown  # type: ignore
 
-from ...model import BaseModel
+from ...model import BaseVisionModel
 from ...schema import DEFAULT_IMAGE_EXTRACTION_PROMPT, ReaderOutput
 from ..base_reader import BaseReader
 
@@ -48,7 +48,7 @@ class MarkItDownReader(BaseReader):
     for LLM-based OCR when extracting text from images or scanned documents.
     """
 
-    def __init__(self, model: BaseModel = None) -> None:
+    def __init__(self, model: BaseVisionModel = None) -> None:
         _require_markitdown()
         self.model = model
         self.model_name = model.model_name if self.model else None
@@ -210,7 +210,7 @@ class MarkItDownReader(BaseReader):
             ValueError: If provided model is not supported.
         """
         if self.model:
-            if not isinstance(self.model, BaseModel):
+            if not isinstance(self.model, BaseVisionModel):
                 raise ValueError(
                     "Incompatible client. Only AzureOpenAIVisionModel or OpenAIVisionModel are supported."
                 )

@@ -13,6 +13,7 @@ dependencies = [
     "fastparquet>=2024.11.0",
     "ffmpeg>=1.4",
     "ffmpeg-downloader>=0.4.0",
+    "gitpython>=3.1.45",
     "langchain-text-splitters>=0.3.8",
     "nltk>=3.9.1",
     "numpy>=2.3.0",
@@ -153,6 +154,10 @@ dev = [
     "setuptools-scm>=8.3.1",
     "twine>=6.1.0",
     "wheel>=0.45.1",
+]
+multimodal = [
+    "gitpython>=3.1.45",
+    "transformers>=4.55.2",
 ]
 
 [project.urls]

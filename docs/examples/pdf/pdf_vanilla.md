@@ -14,7 +14,7 @@ In this tutorial we will see how to read a PDF using our custom component, which
 
 For this tutorial, we will use the same data as the first tutorial. [**Consult reference here**](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/sample_pdf.pdf).
 
-Currently, two models are supported, both from OpenAI: the regular client, **OpenAI** and the available deployments from **Azure**. Hence, you can instantiate wherever you want to your project, or create a new one using as reference the [BaseModel abstract class](../../api_reference/model.md#basemodel).
+Currently, two models are supported, both from OpenAI: the regular client, **OpenAI** and the available deployments from **Azure**. Hence, you can instantiate wherever you want to your project, or create a new one using as reference the [BaseVisionModel abstract class](../../api_reference/model.md#basemodel).
 
 Before instantiating the model, you should provide connection parameters. These connections parameters are loaded from environment variables (you can save them in a `.env` in the root of the project or script that you will execute). Consult these snippets:
 

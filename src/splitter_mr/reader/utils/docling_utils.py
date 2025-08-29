@@ -13,7 +13,7 @@ from docling_core.types.doc import ImageRefMode
 from openai import AzureOpenAI, OpenAI
 from PIL.Image import Image
 
-from ...model import BaseModel
+from ...model import BaseVisionModel
 from ...schema import DEFAULT_IMAGE_CAPTION_PROMPT, DEFAULT_IMAGE_EXTRACTION_PROMPT
 
 # ---- Helpers ---- #
@@ -67,7 +67,7 @@ def get_vlm_url_and_headers(client: Any) -> Tuple[str, dict]:
 
 def page_image_pipeline(
     file_path: str | Path,
-    model: BaseModel = None,
+    model: BaseVisionModel = None,
     prompt: str = DEFAULT_IMAGE_EXTRACTION_PROMPT,
     image_resolution: float = 1.0,
     show_base64_images: bool = False,
@@ -79,7 +79,7 @@ def page_image_pipeline(
 
     Args:
         file_path (str): Path to the PDF file.
-        model (BaseModel): Model instance used to extract text from each page image.
+        model (BaseVisionModel): Model instance used to extract text from each page image.
         prompt (str): Prompt/instruction for the model.
         image_resolution (float, optional): Scaling factor for output image resolution. Defaults to 1.0 (72 dpi).
         show_base64_images (bool): Whether to embed images in base64 format. If False, replaces images with placeholders.
@@ -143,7 +143,7 @@ def page_image_pipeline(
 
 def vlm_pipeline(
     file_path: str | Path,
-    model: BaseModel = None,
+    model: BaseVisionModel = None,
     prompt: str = DEFAULT_IMAGE_CAPTION_PROMPT,
     page_placeholder: str = "<!-- page -->",
     image_resolution: float = 1.0,
@@ -169,7 +169,7 @@ def vlm_pipeline(
         raise ValueError("A model must be provided for vlm_pipeline.")
 
     def describe_and_replace_base64_images(
-        md: str, model: BaseModel, prompt: str, image_placeholder: str
+        md: str, model: BaseVisionModel, prompt: str, image_placeholder: str
     ) -> str:
         """
         Finds embedded base64 images in the markdown string, passes them to the model for a description,
@@ -177,7 +177,7 @@ def vlm_pipeline(
 
         Args:
             md (str): The Markdown string.
-            model (BaseModel): The model for image description.
+            model (BaseVisionModel): The model for image description.
             prompt (str): The prompt for the model.
             image_placeholder (str): The placeholder to use.
 

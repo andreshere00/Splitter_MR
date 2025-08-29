@@ -13,7 +13,7 @@ import pandas as pd
 import requests
 import yaml
 
-from ...model import BaseModel
+from ...model import BaseVisionModel
 from ...schema import (
     DEFAULT_IMAGE_CAPTION_PROMPT,
     DEFAULT_IMAGE_EXTRACTION_PROMPT,
@@ -34,7 +34,7 @@ class VanillaReader(BaseReader):
     with options to show or omit images, and to annotate images using a vision model.
     """
 
-    def __init__(self, model: Optional[BaseModel] = None):
+    def __init__(self, model: Optional[BaseVisionModel] = None):
         super().__init__()
         self.model = model
         self.pdf_reader = PDFPlumberReader()
@@ -76,7 +76,7 @@ class VanillaReader(BaseReader):
             PDF extraction:
             scan_pdf_pages (bool): If True, rasterize and describe pages using a
                 vision model (VLM). If False (default), use element-wise extraction.
-            model (BaseModel): Vision-capable model used for scanned PDFs and/or
+            model (BaseVisionModel): Vision-capable model used for scanned PDFs and/or
                 image captioning (also used for image files).
             prompt (str): Prompt for image captioning / page description. Defaults to
                 ``DEFAULT_IMAGE_CAPTION_PROMPT`` for element-wise PDFs and
@@ -328,7 +328,7 @@ class VanillaReader(BaseReader):
             path (str): The path to the PDF file.
             kw (dict): Keyword arguments controlling extraction behavior. Recognized keys include:
                 scan_pdf_pages (bool): If True, process the PDF as scanned images.
-                model (BaseModel, optional): Vision-capable model for scanned PDFs or image captioning.
+                model (BaseVisionModel, optional): Vision-capable model for scanned PDFs or image captioning.
                 prompt (str, optional): Prompt for image captioning.
                 show_base64_images (bool): Whether to include base64 images in the output.
                 image_placeholder (str): Placeholder for omitted images.
@@ -365,13 +365,13 @@ class VanillaReader(BaseReader):
         )
         return content, "pdf", ocr_name
 
-    def _scan_pdf_pages(self, file_path: str, model: BaseModel, **kw) -> str:
+    def _scan_pdf_pages(self, file_path: str, model: BaseVisionModel, **kw) -> str:
         """
         Describe each page of a PDF using a vision model.
 
         Args:
             file_path (str): The path to the PDF file.
-            model (BaseModel): Vision-capable model used for page description.
+            model (BaseVisionModel): Vision-capable model used for page description.
             **kw: Additional keyword arguments. Recognized keys include:
                 prompt (str, optional): Prompt for describing PDF pages.
                 resolution (int): DPI resolution for rasterizing pages (default: 300).
@@ -420,7 +420,7 @@ class VanillaReader(BaseReader):
 
     def _handle_image_to_llm(
         self,
-        model: BaseModel,
+        model: BaseVisionModel,
         file_path: str,
         prompt: Optional[str] = None,
         vlm_parameters: Optional[dict] = None,
@@ -432,7 +432,7 @@ class VanillaReader(BaseReader):
         with the provided prompt.
 
         Args:
-            model (BaseModel): Vision-capable model to process the image.
+            model (BaseVisionModel): Vision-capable model to process the image.
             file_path (str): Path to the image file.
             prompt (str, optional): Prompt for guiding the vision model.
             vlm_parameters (dict, optional): Additional parameters for the vision model.

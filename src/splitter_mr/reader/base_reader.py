@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Optional, Union
 from urllib.parse import urlparse
 
-from ..model import BaseModel
+from ..model import BaseVisionModel
 from ..schema import ReaderOutput
 
 
@@ -123,14 +123,14 @@ class BaseReader(ABC):
 
     @abstractmethod
     def read(
-        self, file_path: str, model: Optional[BaseModel] = None, **kwargs: Any
+        self, file_path: str, model: Optional[BaseVisionModel] = None, **kwargs: Any
     ) -> ReaderOutput:
         """
         Reads input and returns a ReaderOutput with text content and standardized metadata.
 
         Args:
             file_path (str): Path to the input file, a URL, raw string, or dictionary.
-            model (Optional[BaseModel]): Optional model instance to assist or customize the reading or extraction process. Used for cases where VLMs or specialized parsers are required for processing the file content.
+            model (Optional[BaseVisionModel]): Optional model instance to assist or customize the reading or extraction process. Used for cases where VLMs or specialized parsers are required for processing the file content.
             **kwargs: Additional keyword arguments for implementation-specific options.
 
         Returns:

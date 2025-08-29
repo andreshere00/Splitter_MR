@@ -11,9 +11,9 @@ As we have seen in previous examples, reading a PDF is not a simple task. In thi
 
 For this example, we will use the same document as the [previous tutorial](https://github.com/andreshere00/Splitter_MR/blob/main/data/sample_pdf.pdf).
 
-To use a VLM to read images and get annotations, you can simply instantiate a model which inherits from a `BaseModel` class and pass that model into the Reader class. 
+To use a VLM to read images and get annotations, you can simply instantiate a model which inherits from a `BaseVisionModel` class and pass that model into the Reader class. 
 
-Currently, two models are supported: one from **OpenAI** and one from an **Azure** **OpenAI** deployment. After choosing a model, you simply need to instantiate the `BaseModel` class, which implements one of these VLMs.
+Currently, two models are supported: one from **OpenAI** and one from an **Azure** **OpenAI** deployment. After choosing a model, you simply need to instantiate the `BaseVisionModel` class, which implements one of these VLMs.
 
 Before that, you should provide some environment variables (these variables should be saved in a `.env` file in the directory where the Python script will be executed):
 

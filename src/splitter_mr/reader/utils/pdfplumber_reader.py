@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import pdfplumber
 
-from ...model import BaseModel
+from ...model import BaseVisionModel
 from ...schema import DEFAULT_IMAGE_CAPTION_PROMPT
 
 
@@ -125,7 +125,7 @@ class PDFPlumberReader:
         page,
         page_num: int,
         prompt: Optional[str] = None,
-        model: Optional[BaseModel] = None,
+        model: Optional[BaseVisionModel] = None,
         image_placeholder: str = "<!-- image -->",
     ) -> List[Dict[str, Any]]:
         """
@@ -135,7 +135,7 @@ class PDFPlumberReader:
             page: pdfplumber page object.
             page_num (int): Page number.
             prompt (Optional[str]): Prompt for the annotation model.
-            model (Optional[BaseModel]): Optional model to generate image captions/annotations.
+            model (Optional[BaseVisionModel]): Optional model to generate image captions/annotations.
 
         Returns:
             List[Dict[str, Any]]: List of image block dicts, each containing image URI and annotation if available.
@@ -201,7 +201,7 @@ class PDFPlumberReader:
         page,
         page_num: int,
         prompt: Optional[str] = None,
-        model: Optional[BaseModel] = None,
+        model: Optional[BaseVisionModel] = None,
         image_placeholder: str = "<!-- image -->",
     ) -> List[Dict[str, Any]]:
         """
@@ -211,7 +211,7 @@ class PDFPlumberReader:
             page: pdfplumber page object.
             page_num (int): Page number.
             prompt (Optional[str]): Prompt for image annotation.
-            model (Optional[BaseModel], optional): Model for image annotation.
+            model (Optional[BaseVisionModel], optional): Model for image annotation.
 
         Returns:
             List[Dict[str, Any]]: List of all content block dicts, sorted by vertical position.
@@ -360,7 +360,7 @@ class PDFPlumberReader:
     def describe_pages(
         self,
         file_path: str,
-        model: BaseModel,
+        model: BaseVisionModel,
         prompt: Optional[str] = None,
         resolution: Optional[int] = 300,
         **parameters,
@@ -370,7 +370,7 @@ class PDFPlumberReader:
 
         Args:
             file_path (str): PDF to process.
-            model (BaseModel): Any implementation of the provided BaseModel
+            model (BaseVisionModel): Any implementation of the provided BaseVisionModel
                                interface (e.g. OpenAIVisionModel).
             prompt (Optional[str]): Instruction sent to the VLM.  Has the default
                           requested in the spec.
@@ -399,7 +399,7 @@ class PDFPlumberReader:
         self,
         file_path: str,
         prompt: Optional[str] = None,
-        model: Optional[BaseModel] = None,
+        model: Optional[BaseVisionModel] = None,
         show_base64_images: bool = False,
         image_placeholder: str = "<!-- image -->",
         page_placeholder: str = "<!-- page -->",
@@ -409,7 +409,7 @@ class PDFPlumberReader:
 
         Args:
             file_path (str): Path to the PDF file.
-            model (Optional[BaseModel], optional): Optional model for image annotation.
+            model (Optional[BaseVisionModel], optional): Optional model for image annotation.
             prompt (str, optional): Prompt for the image annotation model.
             show_base64_images (bool, optional): If True, images are included as base64 in Markdown. If False, they are omitted or replaced with a image_placeholder.
             `image_placeholder (Optional[str])`: Placeholder string to use for omitted images in PDFs. Default is `"<!-- image -->"`.
