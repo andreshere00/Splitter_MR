@@ -13,10 +13,10 @@ from ...schema import (
     ClientPayload,
     ClientTextContent,
 )
-from ..base_model import BaseModel
+from ..base_model import BaseVisionModel
 
 
-class AzureOpenAIVisionModel(BaseModel):
+class AzureOpenAIVisionModel(BaseVisionModel):
     """
     Implementation of BaseModel for Azure OpenAI Vision using the Responses API.
 

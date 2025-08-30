@@ -13,7 +13,7 @@ For this example, we will use the same document as the (previous tutorial)[https
 
 To extract image descriptions or perform OCR, instantiate a vision model and pass it to your `MarkItDownReader`. 
 
-Currently, two models are supported: one from **OpenAI** and one from an **Azure** **OpenAI** deployment. After choosing a model, you simply need to instantiate the `BaseModel` class, which implements one of these VLMs.
+Currently, two models are supported: one from **OpenAI** and one from an **Azure** **OpenAI** deployment. After choosing a model, you simply need to instantiate the `BaseVisionModel` class, which implements one of these VLMs.
 
 Before that, you should provide some environment variables (these variables should be saved in a `.env` file in the directory where the Python script will be executed):
 

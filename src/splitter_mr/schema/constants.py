@@ -68,6 +68,24 @@ GROK_MIME_BY_EXTENSION: Dict[str, str] = {
     "png": "image/png",
 }
 
+# ---- HuggingFace Vision Model constants ---- #
+
+DEFAULT_IMAGE_TOKENS: Dict[str, str] = {
+    "llava": "<image>",
+    "llava-phi": "<image>",
+    "llava-mistral": "<image>",
+    "qwen": "<|image|>",
+    "qwen2": "<|image|>",
+    "idefics": "<image>",
+    "blip": "<image>",
+    "mini-gemini": "<image>",
+    "kosmos": "<image>",
+    "cogvlm": "<image>",
+    "shi": "<image>",
+    "idefics2": "<image>",
+    "pix2struct": "<image>",
+}
+
 # ---------- #
 # Embeddings #
 # ---------- #

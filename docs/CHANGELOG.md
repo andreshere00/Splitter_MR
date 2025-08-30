@@ -14,9 +14,47 @@
 >     ```
 >   - This change reduces install time and keeps core installs lightweight.
 
+## v0.6.2
+
+> \[!IMPORTANT]
+>
+> **Version 0.6.2: HuggingFace Providers**
+> SplitterMR now supports **HuggingFace** as a backend for both embedding and vision models:
+>
+> * **HuggingFaceEmbedding**: Use any Sentence Transformers model (local or from Hugging Face Hub) for fast, local, or cloud embeddings.
+> * **HuggingFaceVisionModel**: Leverage Hugging Face’s vision-language models for image-to-text and image captioning.
+>
+> **To use HuggingFace models, you must install SplitterMR with the `multimodal` extra:**
+>
+> ```bash
+> pip install "splitter-mr[multimodal]"
+> ```
+
+Add HuggingFace Model and Embedding support.
+
+### Features
+
+- Add `HuggingFaceVisionModel` class. Note that the support is limited until now.
+- Add `HuggingFaceEmbedding` class.
+
+### Documentation
+
+- Add `HuggingFaceVisionModel` to documentation.
+- Update architecture diagram.
+- Update README.md
+
+### Developer features
+
+- Add new dependencies to multimodal group
+
 ## v0.6.1
 
 Add Grok Vision Model.
+
+> **Version 0.6.1**
+>
+> New Vision Model added: `GrokVisionModel`. See documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/model#grokvisionmodel).
+>
 
 ### Features
 

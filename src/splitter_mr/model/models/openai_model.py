@@ -13,10 +13,10 @@ from ...schema import (
     ClientPayload,
     ClientTextContent,
 )
-from ..base_model import BaseModel
+from ..base_model import BaseVisionModel
 
 
-class OpenAIVisionModel(BaseModel):
+class OpenAIVisionModel(BaseVisionModel):
     """
     Implementation of BaseModel leveraging OpenAI's Chat Completions API.
 

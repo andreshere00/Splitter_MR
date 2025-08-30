@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Dict, Optional
 
 
-class BaseModel(ABC):
+class BaseVisionModel(ABC):
     """
     Abstract base for vision models that extract text from images.
 

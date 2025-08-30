@@ -13,7 +13,7 @@ This is where **Visual Language Models (VLMs)** come in—to analyze and describ
 
 ## Step 1: Load a Model
 
-Currently, two models are supported: one from OpenAI and one from an Azure OpenAI deployment. After choosing a model, you simply need to instantiate the `BaseModel` class, which implements one of these VLMs.
+Currently, two models are supported: one from OpenAI and one from an Azure OpenAI deployment. After choosing a model, you simply need to instantiate the `BaseVisionModel` class, which implements one of these VLMs.
 
 Before that, you should provide some environment variables (these variables should be saved in a `.env` file in the directory where the Python script will be executed):
 
@@ -72,7 +72,7 @@ So, the models can be loaded as follows:
 
 ## Step 2: Read the file using a VLM
 
-All the implemented Readers support VLMs. To use these VLMs with the Readers, you only need to create the `BaseReader` classes with an object from `BaseModel` as argument. Firstly, we will use a `VanillaReader` class:
+All the implemented Readers support VLMs. To use these VLMs with the Readers, you only need to create the `BaseReader` classes with an object from `BaseVisionModel` as argument. Firstly, we will use a `VanillaReader` class:
 
 ### Read a file using VanillaReader
 
@@ -151,7 +151,7 @@ Cras in interdum augue.
 
 ### Read a file using MarkItDownReader
 
-In this case, we will read an image file to provide a complete description. So, you simply instantiate the object and pass a model which inherits from a `BaseModel` object.
+In this case, we will read an image file to provide a complete description. So, you simply instantiate the object and pass a model which inherits from a `BaseVisionModel` object.
 
 ```python
 from splitter_mr.reader import MarkItDownReader
