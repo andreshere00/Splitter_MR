@@ -7,23 +7,40 @@
 
 **SplitterMR** is a library for chunking data into convenient text blocks compatible with your LLM applications.
 
-> [!IMPORTANT]
-> **Breaking Change! Version v0.6.0**
+> \[!IMPORTANT]
 >
-> - Dependencies are now split into **core** (installed by default) and **optional extras** for heavy or specialized features.
->   - Example: to use MarkItDown and Docling readers, install with:
->     ```bash
->     pip install "splitter-mr[markitdown,docling]"
->     ```
->   - To install *all* optional features:
->     ```bash
->     pip install "splitter-mr[all]"
->     ```
->   - This change reduces install time and keeps core installs lightweight.
+> **Version 0.6.2: HuggingFace Providers**
+> SplitterMR now supports **HuggingFace** as a backend for both embedding and vision models:
+>
+> * **HuggingFaceEmbedding**: Use any Sentence Transformers model (local or from Hugging Face Hub) for fast, local, or cloud embeddings.
+> * **HuggingFaceVisionModel**: Leverage Hugging Face’s vision-language models for image-to-text and image captioning.
+>
+> **To use HuggingFace models, you must install SplitterMR with the `multimodal` extra:**
+>
+> ```bash
+> pip install "splitter-mr[multimodal]"
+> ```
 >
 > **Version 0.6.1**
 >
 > New Vision Model added: `GrokVisionModel`. See documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/model#grokvisionmodel).
+>
+
+> \[!IMPORTANT]
+> **Breaking Change! Version v0.6.0**
+>
+> * Dependencies are now split into **core** (installed by default) and **optional extras** for heavy or specialized features.
+>
+>   * **Example**: to use MarkItDown and Docling readers, install with:
+>
+>     ```bash
+>     pip install "splitter-mr[markitdown,docling]"
+>     ```
+>   * To install *all* optional features:
+>
+>     ```bash
+>     pip install "splitter-mr[all]"
+>     ```
 
 ## Features
 
@@ -35,9 +52,9 @@ Currently, there are supported three readers: `VanillaReader`, and `MarkItDownRe
 
 | **Reader**             | **Unstructured files & PDFs** | **MS Office suite files** | **Tabular data** | **Files with hierarchical schema** | **Image files** | **Markdown conversion** |
 |------------------------|-------------------------------|---------------------------|------------------|------------------------------------|-----------------|-------------------------|
-| **`VanillaReader`**    | `txt`, `md`, `pdf` | `xlsx`, `docx`, `pptx` | `csv`, `tsv`, `parquet` | `json`, `yaml`, `html`, `xml` | `jpg`, `png`, `webp`, `gif` | Yes                     |
-| **`MarkItDownReader`** | `txt`, `md`, `pdf` | `docx`, `xlsx`, `pptx` | `csv`, `tsv` | `json`, `html`, `xml`                    | `jpg`, `png`, `pneg`        | Yes                     |
-| **`DoclingReader`**    | `txt`, `md`, `pdf` | `docx`, `xlsx`, `pptx` | –            | `html`, `xhtml`                 | `png`, `jpeg`, `tiff`, `bmp`, `webp` | Yes                     |
+| [**`VanillaReader`**](https://andreshere00.github.io/Splitter_MR/api_reference/reader/#vanillareader)    | `txt`, `md`, `pdf` | `xlsx`, `docx`, `pptx` | `csv`, `tsv`, `parquet` | `json`, `yaml`, `html`, `xml` | `jpg`, `png`, `webp`, `gif` | Yes                     |
+| [**`MarkItDownReader`**](https://andreshere00.github.io/Splitter_MR/api_reference/reader/#markitdownreader) | `txt`, `md`, `pdf` | `docx`, `xlsx`, `pptx` | `csv`, `tsv` | `json`, `html`, `xml`                    | `jpg`, `png`, `pneg`        | Yes                     |
+| [**`DoclingReader`**](https://andreshere00.github.io/Splitter_MR/api_reference/reader/#doclingreader)    | `txt`, `md`, `pdf` | `docx`, `xlsx`, `pptx` | –            | `html`, `xhtml`                 | `png`, `jpeg`, `tiff`, `bmp`, `webp` | Yes                     |
 
 ### Several splitting methods
 
@@ -74,19 +91,24 @@ SplitterMR allows you to split files in many different ways depending on your ne
         - **Conversion** method.
 - **Models:**
     - The **`BaseModel`** component is used to read non-text content using a Visual Language Model (VLM).
-    - Supported models are `AzureOpenAI` and `OpenAI`, but more models will be available soon.
+    - Supported models are `AzureOpenAI`, `OpenAI` and `Grok`, but more models will be available soon.
     - All the models have a `extract_text` method which returns the LLM response based on a prompt, the client and the model parameters.
 - **Splitters**
     - The **`BaseSplitter`** components take the **`ReaderOutput`** text content and divide that text into meaningful chunks for LLM or other downstream use.
     - Splitter classes (e.g., **`CharacterSplitter`**, **`SentenceSplitter`**, **`RecursiveSplitter`**, etc.) allow flexible chunking strategies with optional overlap and rich configuration.
+- **Embedders**
+    - The **`BaseEmbedder`** components are used to encode the text into embeddings. These embeddings are used to split text by semantic similarity.
+    - Supported models are `AzureOpenAI` and `OpenAI`, but more models will be available soon.
+    - All the models have a `encode_text` method which returns the embeddings based on a text, the client and the model parameters.
 
 ## How to install
 
 Package is published on [PyPi](https://pypi.org/project/splitter-mr/).  
-By default, only the **core dependencies** are installed.  
-If you need additional features (e.g., MarkItDown, Docling, multimodal processing), you can install the corresponding **extras**.
+
+By default, only the **core dependencies** are installed. If you need additional features (e.g., MarkItDown, Docling, multimodal processing), you can install the corresponding **extras**.
 
 ### Core install
+
 Installs the basic text splitting and file parsing features (lightweight, fast install):
 
 ```bash
@@ -211,14 +233,14 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 - [X] Add embedding model support.
     - [X] Add OpenAI embeddings model support.
     - [X] Add Azure OpenAI embeddings model support.
-    - [ ] Add HuggingFace embeddings model support.
+    - [X] Add HuggingFace embeddings model support.
     - [ ] Add Gemini embeddings model support.
     - [ ] Add Claude Anthropic embeddings model support.
 - [ ] Add Vision models:
     - [X] Add OpenAI vision model support.
     - [X] Add Azure OpenAI embeddings model support.
     - [X] Add Grok VLMs model support.
-    - [ ] Add HuggingFace VLMs model support.
+    - [X] Add HuggingFace VLMs model support.
     - [ ] Add Gemini VLMs model support.
     - [ ] Add Claude Anthropic VLMs model support.
 - [ ] Add asynchronous methods for Splitters and Readers.

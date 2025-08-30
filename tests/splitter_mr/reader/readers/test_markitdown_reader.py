@@ -29,7 +29,7 @@ def mock_split_pdfs(tmp_path):
 
 def patch_vision_models():
     """
-    Returns (patch_BaseModel, DummyVisionModel).
+    Returns (patch_BaseVisionModel, DummyVisionModel).
     """
 
     class DummyVisionModel:
@@ -40,7 +40,7 @@ def patch_vision_models():
 
     base = "splitter_mr.reader.readers.markitdown_reader"
     return (
-        patch(f"{base}.BaseModel", DummyVisionModel),
+        patch(f"{base}.BaseVisionModel", DummyVisionModel),
         DummyVisionModel,
     )
 

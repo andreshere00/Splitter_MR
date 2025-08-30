@@ -1,11 +1,11 @@
 import pytest
 
-from splitter_mr.model.base_model import BaseModel
+from splitter_mr.model.base_model import BaseVisionModel
 
 # Helpers
 
 
-class DummyModel(BaseModel):
+class DummyModel(BaseVisionModel):
     def __init__(self, model_name="dummy-model"):
         self.model_name = model_name
 
@@ -18,9 +18,9 @@ class DummyModel(BaseModel):
 
 
 # Test cases
-def test_basemodel_cannot_be_instantiated():
+def test_BaseVisionModel_cannot_be_instantiated():
     with pytest.raises(TypeError):
-        BaseModel("foo")
+        BaseVisionModel("foo")
 
 
 def test_dummy_model_instantiable_and_methods_work():

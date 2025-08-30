@@ -13,10 +13,10 @@ from ...schema import (
     ClientPayload,
     ClientTextContent,
 )
-from ..base_model import BaseModel
+from ..base_model import BaseVisionModel
 
 
-class GrokVisionModel(BaseModel):
+class GrokVisionModel(BaseVisionModel):
     """
     Implementation of BaseModel for Grok Vision using the xAI API.
 

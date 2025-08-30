@@ -2,7 +2,25 @@ import json
 import uuid
 from typing import Any, Dict, List, Literal, Optional, Union
 
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    field_serializer,
+    field_validator,
+    model_validator,
+)
+
+try:
+    import torch
+
+    TorchDevice = torch.device
+except ImportError:
+    TorchDevice = object
+
+# ------- #
+# Readers #
+# ------- #
 
 
 class ReaderOutput(BaseModel):
@@ -90,6 +108,11 @@ class ReaderOutput(BaseModel):
         self.metadata.update(metadata)
 
 
+# --------- #
+# Splitters #
+# --------- #
+
+
 class SplitterOutput(BaseModel):
     """Pydantic model defining the output structure for all splitters.
 
@@ -169,7 +192,11 @@ class SplitterOutput(BaseModel):
         self.metadata.update(metadata)
 
 
-# ----- Client Connection payload model
+# ------ #
+# Models #
+# ------ #
+
+# ---- API-Based Models ---- #
 
 
 class ClientTextContent(BaseModel):
@@ -222,3 +249,63 @@ class ClientPayload(BaseModel):
 
     role: Literal["user", "system", "assistant"]
     content: List[ClientTextContent | ClientImageContent]
+
+
+# ---- HuggingFace Models ---- #
+
+
+class HFChatImageContent(BaseModel):
+    """
+    TODO: Add docstrings using Google docstyle
+    """
+
+    type: Literal["image"]
+    image: str
+
+
+class HFChatTextContent(BaseModel):
+    """
+    TODO: Add docstrings using Google docstyle
+    """
+
+    type: Literal["text"]
+    text: str
+
+
+class HFChatMessage(BaseModel):
+    """
+    TODO: Add docstrings using Google docstyle
+    """
+
+    role: Literal["user", "system", "assistant"]
+    content: List[Union[HFChatTextContent, HFChatImageContent]]
+
+
+class HFClient(BaseModel):
+    """
+    Lightweight client holder for vision models.
+    """
+
+    model: Any
+    processor: Any
+    tokenizer: Optional[Any] = None
+    device: TorchDevice
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    @field_validator("device", mode="before")
+    @classmethod
+    def _coerce_device(cls, v):
+        # Only coerce if torch is available
+        try:
+            import torch
+
+            if isinstance(v, torch.device):
+                return v
+            return torch.device(str(v))
+        except ImportError:
+            return v  # Don't coerce if torch isn't installed
+
+    @field_serializer("device")
+    def _serialize_device(self, v) -> str:
+        return str(v)
