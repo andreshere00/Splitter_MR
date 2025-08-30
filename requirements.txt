@@ -185,8 +185,10 @@ rtree==1.4.1
 ruff==0.12.9
 safetensors==0.6.2
 scikit-image==0.25.2
+scikit-learn==1.7.1
 scipy==1.16.1
 semchunk==2.2.2
+sentence-transformers==5.1.0
 setuptools==80.9.0
 setuptools-scm==8.3.1
 shapely==2.1.1
@@ -206,6 +208,7 @@ sympy==1.14.0
 tabulate==0.9.0
 tenacity==9.1.2
 thinc==8.3.6
+threadpoolctl==3.6.0
 tifffile==2025.6.11
 tiktoken==0.11.0
 tinycss2==1.4.0

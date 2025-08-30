@@ -24,6 +24,7 @@ All embedders inherit from **BaseEmbedding** and expose the same interface for g
 |------|-------------|--------------|----------|
 | [**OpenAIEmbedding**](#openaiembedding) | You have an OpenAI API key and want to use OpenAI’s hosted embeddings | **OPENAI_API_KEY** | Production-ready text embeddings; simple setup; broad ecosystem/tooling support. |
 | [**AzureOpenAIEmbedding**](#azureopenaiembedding) | Your organization uses Azure OpenAI Services | **AZURE_OPENAI_API_KEY**, **AZURE_OPENAI_ENDPOINT**, **AZURE_OPENAI_DEPLOYMENT** | Enterprise controls, Azure compliance & data residency; integrates with Azure identity and networking. |
+| [**HuggingFaceEmbedding**](#huggingfaceembedding) | You prefer local/open-source models from Sentence-Transformers or need offline capability | `pip install sentence-transformers torch` | No API key; huge model zoo; CPU/GPU/MPS; optional L2 normalization for cosine similarity. |
 | [**`BaseEmbedding`**](#baseembedding) | Abstract base, not used directly | – | Implement to plug in a custom or self-hosted embedder. |
 
 
@@ -55,3 +56,17 @@ All embedders inherit from **BaseEmbedding** and expose the same interface for g
     handler: python
     options:
       members_order: source
+
+### HuggingFaceEmbedding
+
+![HuggingFaceEmbedding logo](../assets/huggingface_embedding_button.svg#gh-light-mode-only)
+![HuggingFaceEmbedding logo](../assets/huggingface_embedding_button_white.svg#gh-dark-mode-only)
+
+::: src.splitter_mr.embedding.embeddings.huggingface_embedding
+    handler: python
+    options:
+      members_order: source
+
+!!! warning
+
+    Currently, only models compatible with `sentence-transformers` library are available. 

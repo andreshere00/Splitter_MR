@@ -17,6 +17,19 @@ from ...model import BaseVisionModel
 from ...schema import HFChatImageContent, HFChatMessage, HFChatTextContent
 
 
+def _require_extra(extra: str, import_name: Optional[str] = None) -> None:
+    """Raise a helpful error if an optional extra is missing."""
+    mod = import_name or extra
+    try:
+        __import__(mod)
+    except ImportError as e:
+        raise ImportError(
+            f"This feature requires the '{extra}' extra.\n"
+            f"Install it with:\n\n"
+            f"    pip install splitter-mr[{extra}]\n"
+        ) from e
+
+
 class HuggingFaceVisionModel(BaseVisionModel):
     """
     Implementation of BaseVisionModel using Hugging Face Transformers vision-language models.
@@ -189,3 +202,13 @@ class HuggingFaceVisionModel(BaseVisionModel):
             return output_text
         except Exception as e:
             raise RuntimeError(f"Model inference failed: {e}")
+
+    @staticmethod
+    def require_multimodal_extra() -> None:
+        """
+        Advise users that the 'multimodal' extra is required to use this class.
+
+        Raises:
+            ImportError: If 'transformers' is not installed.
+        """
+        _require_extra("multimodal", import_name="transformers")

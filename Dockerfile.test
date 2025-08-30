@@ -17,7 +17,7 @@ WORKDIR /app
 COPY . .
 
 # Install Python dependencies
-RUN uv sync --dev --extra markitdown --extra docling
+RUN uv sync --dev --extra markitdown --extra docling --extra multimodal
 
 # Run test coverage
 RUN chmod +x ./scripts/validate_test.sh
