@@ -1,4 +1,4 @@
-# Embedding Models
+# **Embedding Models**
 
 ## Overview
 
@@ -20,12 +20,14 @@ And if you want to bring your own, simply implement `BaseEmbedding` and plug it 
 
 All embedders inherit from **BaseEmbedding** and expose the same interface for generating embeddings. Choose based on your cloud provider, credentials, and compliance needs.
 
-| Model | When to use | Requirements | Features |
-|------|-------------|--------------|----------|
-| [**OpenAIEmbedding**](#openaiembedding) | You have an OpenAI API key and want to use OpenAI’s hosted embeddings | **OPENAI_API_KEY** | Production-ready text embeddings; simple setup; broad ecosystem/tooling support. |
-| [**AzureOpenAIEmbedding**](#azureopenaiembedding) | Your organization uses Azure OpenAI Services | **AZURE_OPENAI_API_KEY**, **AZURE_OPENAI_ENDPOINT**, **AZURE_OPENAI_DEPLOYMENT** | Enterprise controls, Azure compliance & data residency; integrates with Azure identity and networking. |
-| [**HuggingFaceEmbedding**](#huggingfaceembedding) | You prefer local/open-source models from Sentence-Transformers or need offline capability | `pip install sentence-transformers torch` | No API key; huge model zoo; CPU/GPU/MPS; optional L2 normalization for cosine similarity. |
-| [**`BaseEmbedding`**](#baseembedding) | Abstract base, not used directly | – | Implement to plug in a custom or self-hosted embedder. |
+| Model                                    | When to use                                                    | Requirements                                                                                       | Features                                                                                     |
+|-------------------------------------------|---------------------------------------------------------------|----------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------|
+| [**OpenAIEmbedding**](#openaiembedding)                 | You have an OpenAI API key and want to use OpenAI’s hosted embeddings      | `OPENAI_API_KEY`                                                                                   | Production-ready text embeddings; simple setup; broad ecosystem/tooling support.             |
+| [**AzureOpenAIEmbedding**](#azureopenaiembedding)       | Your organization uses Azure OpenAI Services                               | `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_DEPLOYMENT`                        | Enterprise controls, Azure compliance & data residency; integrates with Azure identity.      |
+| [**GeminiEmbedding**](#geminiembedding)                 | You want Google’s Gemini text embeddings                                  | `GEMINI_API_KEY` + **Multimodal extra**: `pip install splitter-mr[multimodal]`                    | Google Gemini API; modern, high-quality text embeddings.                                     |
+| [**HuggingFaceEmbedding**](#huggingfaceembedding)       | Prefer local/open-source models (Sentence-Transformers); offline capability| **Multimodal extra**: `pip install splitter-mr[multimodal]` (optional: `HF_ACCESS_TOKEN`, only for required models)   | No API key; huge model zoo; CPU/GPU/MPS; optional L2 normalization for cosine similarity.    |
+| [**BaseEmbedding**](#baseembedding)                     | Abstract base, not used directly                                          | –                                                                                                 | Implement to plug in a custom or self-hosted embedder.                                       |
+
 
 
 ## Embedders
@@ -49,24 +51,34 @@ All embedders inherit from **BaseEmbedding** and expose the same interface for g
 
 ### AzureOpenAIEmbedding
 
-![AzureOpenAIEmbedding logo](../assets/azure_openai_embedding_button.svg#gh-light-mode-only)
-![AzureOpenAIEmbedding logo](../assets/azure_openai_embedding_button_white.svg#gh-dark-mode-only)
+![AzureOpenAIEmbedding logo](../assets/azure_openai_embedding_model_button.svg#gh-light-mode-only)
+![AzureOpenAIEmbedding logo](../assets/azure_openai_embedding_model_button_white.svg#gh-dark-mode-only)
 
 ::: src.splitter_mr.embedding.embeddings.azure_openai_embedding
     handler: python
     options:
       members_order: source
 
+### GeminiEmbedding
+
+![GeminiEmbedding logo](../assets/gemini_embedding_model_button.svg#gh-light-mode-only)
+![GeminiEmbedding logo](../assets/gemini_embedding_model_button_white.svg#gh-dark-mode-only)
+
+::: src.splitter_mr.embedding.embeddings.gemini_embedding
+    handler: python
+    options:
+      members_order: source
+
 ### HuggingFaceEmbedding
 
-![HuggingFaceEmbedding logo](../assets/huggingface_embedding_button.svg#gh-light-mode-only)
-![HuggingFaceEmbedding logo](../assets/huggingface_embedding_button_white.svg#gh-dark-mode-only)
+!!! warning
+
+    Currently, only models compatible with `sentence-transformers` library are available. 
+
+![HuggingFaceEmbedding logo](../assets/huggingface_embedding_model_button.svg#gh-light-mode-only)
+![HuggingFaceEmbedding logo](../assets/huggingface_embedding_model_button_white.svg#gh-dark-mode-only)
 
 ::: src.splitter_mr.embedding.embeddings.huggingface_embedding
     handler: python
     options:
       members_order: source
-
-!!! warning
-
-    Currently, only models compatible with `sentence-transformers` library are available. 

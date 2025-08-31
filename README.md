@@ -9,17 +9,18 @@
 
 > [!IMPORTANT]
 >
-> **Version 0.6.1 & 0.6.2: HuggingFace Providers**
-> SplitterMR now supports **HuggingFace** as a backend for both embedding and vision models:
+> **New Vision and Embedding providers**
 >
-> * **HuggingFaceEmbedding**: Use any Sentence Transformers model (local or from Hugging Face Hub) for fast, local, or cloud embeddings.
-> * **HuggingFaceVisionModel**: Leverage Hugging Face’s vision-language models for image-to-text and image captioning.
+> **Version 0.6.3:** SplitterMR now supports **Gemini** as a backend for both [**embedding**](https://andreshere00.github.io/Splitter_MR/api_reference/embedding#geminiembedding) and [**vision**](https://andreshere00.github.io/Splitter_MR/api_reference/model/#geminivisionmodel) models.
 >
-> See documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/model#huggingfacevisionmodel)
+> **Version 0.6.2:** SplitterMR now supports **HuggingFace** as a backend for both embedding and vision models:
 >
-> NSplitterMR now supports `GrokVisionModel`. See documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/model#grokvisionmodel).
+> * [**HuggingFaceEmbedding**](https://andreshere00.github.io/Splitter_MR/api_reference/embedding/#huggingfaceembedding): Use any Sentence Transformers model (local or from Hugging Face Hub) for fast, local, or cloud embeddings.
+> * [**HuggingFaceVisionModel**](https://andreshere00.github.io/Splitter_MR/api_reference/model#huggingfacevisionmodel): Leverage Hugging Face’s vision-language models for image-to-text and image captioning.
+>
+> **Version 0.6.1:** SplitterMR now supports `GrokVisionModel`. See documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/model#grokvisionmodel).
 > 
-> **To use HuggingFace or Grok models, you must install SplitterMR with the `multimodal` extra:**
+> **To use HuggingFace, Gemini, Claude or Grok models, you must install SplitterMR with the `multimodal` extra:**
 >
 > ```bash
 > pip install "splitter-mr[multimodal]"

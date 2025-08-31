@@ -1,3 +1,4 @@
+import importlib
 import os
 from typing import TYPE_CHECKING, Any, List, Optional
 
@@ -25,7 +26,7 @@ class GeminiEmbedding(BaseEmbedding):
     Embedding provider using Google Gemini's embedding API.
 
     This class wraps the Gemini API for generating embeddings from text or documents.
-    Requires the `google-generativeai` package and a valid Gemini API key. This class
+    Requires the `google-genai` package and a valid Gemini API key. This class
     is available only if `splitter-mr[multimodal]` is installed.
 
     Typical usage example:
@@ -50,10 +51,11 @@ class GeminiEmbedding(BaseEmbedding):
             api_key (Optional[str]): The Gemini API key. If not provided, reads from the 'GEMINI_API_KEY' environment variable.
 
         Raises:
-            ImportError: If the `google-generativeai` package is not installed.
+            ImportError: If the `google-genai` package is not installed.
             ValueError: If no API key is provided or found in the environment.
         """
-        _require_extra("multimodal", "google.generativeai")
+        _require_extra("multimodal", "google.genai")
+        genai = importlib.import_module("google.genai")
         self.api_key = api_key or os.getenv("GEMINI_API_KEY")
         if not self.api_key:
             raise ValueError(
@@ -63,12 +65,12 @@ class GeminiEmbedding(BaseEmbedding):
         self.client = genai.Client(api_key)
         self.models = self.client.models
 
-    def get_client(self):
+    def get_client(self) -> "genai.Client":
         """
         Return the underlying Gemini API client.
 
         Returns:
-            The loaded Gemini API module (`google.generativeai`).
+            The loaded Gemini API module (`google.genai`).
         """
         return self.client
 
