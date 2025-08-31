@@ -3,16 +3,16 @@
 > [!IMPORTANT]
 > **Breaking Change! Version v0.6.0**
 >
-> - Dependencies are now split into **core** (installed by default) and **optional extras** for heavy or specialized features.
->   - Example: to use MarkItDown and Docling readers, install with:
->     ```bash
->     pip install "splitter-mr[markitdown,docling]"
->     ```
->   - To install *all* optional features:
->     ```bash
->     pip install "splitter-mr[all]"
->     ```
->   - This change reduces install time and keeps core installs lightweight.
+> Dependencies are now split into **core** (installed by default) and **optional extras** for heavy or specialized features.
+> - Example: to use MarkItDown and Docling readers, install with:
+>   ```bash
+>   pip install "splitter-mr[markitdown,docling]"
+>   ```
+> - To install *all* optional features:
+>   ```bash
+>   pip install "splitter-mr[all]"
+>   ```
+> - This change reduces install time and keeps core installs lightweight.
 
 ## v0.6.3
 
@@ -22,7 +22,7 @@
 >
 > ```bash
 > pip install "splitter-mr[multimodal]"
-> `
+> ```
 
 ### Features
 
@@ -58,11 +58,11 @@ Add HuggingFace Model and Embedding support.
 
 - Add `HuggingFaceVisionModel` to documentation.
 - Update architecture diagram.
-- Update README.md
+- Update `README.md`.
 
 ### Developer features
 
-- Add new dependencies to multimodal group
+- Add new dependencies to multimodal group.
 
 ## v0.6.1
 

@@ -29,18 +29,18 @@
 > [!IMPORTANT]
 > **Breaking Change! Version v0.6.0**
 >
-> * Dependencies are now split into **core** (installed by default) and **optional extras** for heavy or specialized features.
+> Dependencies are now split into **core** (installed by default) and **optional extras** for heavy or specialized features.
 >
->   * **Example**: to use MarkItDown and Docling readers, install with:
+> - **Example**: to use MarkItDown and Docling readers, install with:
 >
->     ```bash
->     pip install "splitter-mr[markitdown,docling]"
->     ```
->   * To install *all* optional features:
+>   ```bash
+>   pip install "splitter-mr[markitdown,docling]"
+>   ```
+> - To install **all** optional features:
 >
->     ```bash
->     pip install "splitter-mr[all]"
->     ```
+>   ```bash
+>   pip install "splitter-mr[all]"
+>   ```
 
 ## Features
 
@@ -234,14 +234,14 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
     - [X] Add OpenAI embeddings model support.
     - [X] Add Azure OpenAI embeddings model support.
     - [X] Add HuggingFace embeddings model support.
-    - [ ] Add Gemini embeddings model support.
+    - [X] Add Gemini embeddings model support.
     - [ ] Add Claude Anthropic embeddings model support.
 - [ ] Add Vision models:
     - [X] Add OpenAI vision model support.
     - [X] Add Azure OpenAI embeddings model support.
     - [X] Add Grok VLMs model support.
     - [X] Add HuggingFace VLMs model support.
-    - [ ] Add Gemini VLMs model support.
+    - [X] Add Gemini VLMs model support.
     - [ ] Add Claude Anthropic VLMs model support.
 - [ ] Add asynchronous methods for Splitters and Readers.
 - [ ] Add batch methods to process several documents at once.
