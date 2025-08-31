@@ -1,7 +1,9 @@
+import sys
+import types
+
 import numpy as np
 import pytest
 
-# Import the module under test
 import splitter_mr.embedding.embeddings.huggingface_embedding as hf_emb_mod
 from splitter_mr.embedding.embeddings.huggingface_embedding import HuggingFaceEmbedding
 
@@ -74,24 +76,25 @@ class DummySentenceTransformer:
 
 
 @pytest.fixture(autouse=True)
-def patch_external_deps(monkeypatch):
+def patch_sentence_transformers(monkeypatch):
     """
-    Replace SentenceTransformer with a dummy class and provide a torch-like shim
-    inside the module under test so all code paths are exercised without real deps.
+    Provide a dummy `sentence_transformers` module so the production code's
+    `from sentence_transformers import SentenceTransformer` inside __init__
+    imports our dummy class.
     """
-    # Patch the symbol used inside the module under test
-    monkeypatch.setattr(
-        hf_emb_mod, "SentenceTransformer", DummySentenceTransformer, raising=True
-    )
+    dummy_mod = types.ModuleType("sentence_transformers")
+    dummy_mod.SentenceTransformer = DummySentenceTransformer
+    monkeypatch.setitem(sys.modules, "sentence_transformers", dummy_mod)
 
-    # Also patch the external module symbol (defensive; not strictly required,
-    # but keeps everything consistent if the test imports the external module).
-    import sentence_transformers as st
 
-    monkeypatch.setattr(
-        st, "SentenceTransformer", DummySentenceTransformer, raising=True
-    )
+@pytest.fixture(autouse=True)
+def patch_require_extra(monkeypatch):
+    # Make the extra-check a no-op for tests
+    monkeypatch.setattr(hf_emb_mod, "_require_extra", lambda *a, **k: None)
 
+
+@pytest.fixture(autouse=True)
+def patch_torch(monkeypatch):
     # Ensure `torch` is considered "available" (non-None) in our module
     monkeypatch.setattr(hf_emb_mod, "torch", DummyTorch(), raising=True)
 
@@ -102,7 +105,8 @@ def patch_external_deps(monkeypatch):
 def test_init_success_and_get_client():
     emb = HuggingFaceEmbedding(model_name="dummy/model", device="mps")
     assert emb.model_name == "dummy/model"
-    assert isinstance(emb.get_client(), DummySentenceTransformer)
+    # The model instance is our DummySentenceTransformer (imported at runtime)
+    assert emb.get_client().__class__.__name__ == "DummySentenceTransformer"
     # Device string is passed through to the SentenceTransformer dummy
     assert emb.get_client()._device == "mps"
 
@@ -112,7 +116,13 @@ def test_init_failure(monkeypatch):
         def __init__(self, *a, **k):
             raise Exception("boom")
 
-    monkeypatch.setattr(hf_emb_mod, "SentenceTransformer", RaisingST, raising=True)
+    # Patch the import target (the dummy `sentence_transformers` module)
+    monkeypatch.setattr(
+        sys.modules["sentence_transformers"],
+        "SentenceTransformer",
+        RaisingST,
+        raising=True,
+    )
     with pytest.raises(ValueError, match="Failed to load SentenceTransformer"):
         HuggingFaceEmbedding("anything")
 
@@ -266,7 +276,7 @@ def test_enforce_max_length_single_ok(monkeypatch):
     assert isinstance(out, list)
 
 
-def test_enforce_max_length_single_too_long(monkeypatch):
+def test_enforce_max_length_single_too_long():
     emb = HuggingFaceEmbedding(enforce_max_length=True)
     # 9 tokens > default 8
     long_text = "a b c d e f g h i"
@@ -274,7 +284,7 @@ def test_enforce_max_length_single_too_long(monkeypatch):
         emb.embed_text(long_text)
 
 
-def test_enforce_max_length_batch_too_long(monkeypatch):
+def test_enforce_max_length_batch_too_long():
     emb = HuggingFaceEmbedding(enforce_max_length=True)
     texts = ["one two three", "a b c d e f g h i"]  # second is 9 tokens
 

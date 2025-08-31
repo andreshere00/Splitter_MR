@@ -155,7 +155,7 @@ class PDFPlumberReader:
 
                 image_description = image_placeholder
                 if model:
-                    annotation = model.extract_text(file=img_b64, prompt=prompt)
+                    annotation = model.analyze_content(file=img_b64, prompt=prompt)
                     image_description += f"\n{annotation}"
 
                 images.append(
@@ -172,7 +172,7 @@ class PDFPlumberReader:
                 print(f"Error encoding image: {e}")
         return images
 
-    def extract_text(
+    def analyze_content(
         self, page, page_num: int, table_bboxes: List[Tuple[float, float, float, float]]
     ) -> List[Dict[str, Any]]:
         """
@@ -224,7 +224,7 @@ class PDFPlumberReader:
             prompt=prompt,
             image_placeholder=image_placeholder,
         )
-        texts = self.extract_text(
+        texts = self.analyze_content(
             page=page, page_num=page_num, table_bboxes=table_bboxes
         )
         blocks = tables + images + texts
@@ -386,7 +386,7 @@ class PDFPlumberReader:
         descriptions: List[str] = []
         for i, img_b64 in enumerate(page_images_b64, start=1):
             try:
-                description = model.extract_text(
+                description = model.analyze_content(
                     file=img_b64, prompt=prompt, **parameters
                 )
             except Exception as e:

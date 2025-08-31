@@ -20,7 +20,7 @@ class DummyVisionModel:
     def get_client(self):
         return None
 
-    def extract_text(self, file, prompt=None, **kwargs):
+    def analyze_content(self, file, prompt=None, **kwargs):
         # Return a string that encodes what was sent, for assertion
         return f"EXTRACTED_TEXT:{file[:10]}:{prompt or 'NO_PROMPT'}"
 
@@ -726,7 +726,7 @@ def test_image_file_base64_encoding(create_image):
     img_path = create_image("jpeg")
 
     class CheckBase64Model(DummyVisionModel):
-        def extract_text(self, file, prompt=None, **kwargs):
+        def analyze_content(self, file, prompt=None, **kwargs):
             import base64
 
             # Should be a base64 string

@@ -89,19 +89,19 @@ def test_get_client_returns_client(monkeypatch, mod):
 
 
 # -----------------------
-# extract_text: validation
+# analyze_content: validation
 # -----------------------
 
 
-def test_extract_text_raises_when_no_file(monkeypatch, mod):
+def test_analyze_content_raises_when_no_file(monkeypatch, mod):
     monkeypatch.setattr(mod, "Client", DummyClient)
     model = mod.GrokVisionModel(api_key="key")
     with pytest.raises(ValueError) as e:
-        model.extract_text(file=None)
+        model.analyze_content(file=None)
     assert "No file content provided" in str(e.value)
 
 
-def test_extract_text_unsupported_mime_raises(monkeypatch, mod):
+def test_analyze_content_unsupported_mime_raises(monkeypatch, mod):
     """
     Force mime resolution to 'image/webp' and mark it unsupported.
     """
@@ -113,16 +113,16 @@ def test_extract_text_unsupported_mime_raises(monkeypatch, mod):
     monkeypatch.setattr(mod, "SUPPORTED_GROK_MIME_TYPES", {"image/png", "image/jpeg"})
 
     with pytest.raises(ValueError) as e:
-        model.extract_text(file="Zm9v", file_ext="webp")
+        model.analyze_content(file="Zm9v", file_ext="webp")
     assert "Unsupported image MIME type: image/webp" in str(e.value)
 
 
 # -----------------------
-# extract_text: mime paths
+# analyze_content: mime paths
 # -----------------------
 
 
-def test_extract_text_mime_from_custom_map(monkeypatch, mod):
+def test_analyze_content_mime_from_custom_map(monkeypatch, mod):
     """
     GROK_MIME_BY_EXTENSION provides the mapping (preferred branch).
     """
@@ -135,7 +135,7 @@ def test_extract_text_mime_from_custom_map(monkeypatch, mod):
     # Also ensure DEFAULT_IMAGE_CAPTION_PROMPT exists
     monkeypatch.setattr(mod, "DEFAULT_IMAGE_CAPTION_PROMPT", "Describe image")
 
-    resp = model.extract_text(file="QUJD", file_ext="heic", prompt="What's in this?")
+    resp = model.analyze_content(file="QUJD", file_ext="heic", prompt="What's in this?")
     assert resp == "dummy-response"
 
     # Assert the request composed the DataURI with the resolved MIME
@@ -154,7 +154,7 @@ def test_extract_text_mime_from_custom_map(monkeypatch, mod):
     )  # no-op, just making sure nothing else breaks
 
 
-def test_extract_text_mime_from_mimetypes_map(monkeypatch, mod):
+def test_analyze_content_mime_from_mimetypes_map(monkeypatch, mod):
     """
     When GROK_MIME_BY_EXTENSION lacks the ext, fallback to mimetypes.types_map.
     """
@@ -167,14 +167,14 @@ def test_extract_text_mime_from_mimetypes_map(monkeypatch, mod):
     # monkeypatch the 'mimetypes.types_map' used by the module
     mod.mimetypes.types_map[".jpg"] = "image/jpeg"
 
-    out = model.extract_text(file="QUJD", file_ext="jpg")
+    out = model.analyze_content(file="QUJD", file_ext="jpg")
     assert out == "dummy-response"
     call = model.client.chat.completions.calls[-1]
     msg = call["messages"][0]
     assert msg.content[1].image_url.url.startswith("data:image/jpeg;base64,")
 
 
-def test_extract_text_mime_default_png(monkeypatch, mod):
+def test_analyze_content_mime_default_png(monkeypatch, mod):
     """
     If neither custom map nor mimetypes knows the ext, defaults to image/png.
     """
@@ -187,14 +187,14 @@ def test_extract_text_mime_default_png(monkeypatch, mod):
     # Ensure mimetypes has no mapping for '.xyz'
     mod.mimetypes.types_map.pop(".xyz", None)
 
-    out = model.extract_text(file="QUJD", file_ext="xyz")
+    out = model.analyze_content(file="QUJD", file_ext="xyz")
     assert out == "dummy-response"
     call = model.client.chat.completions.calls[-1]
     msg = call["messages"][0]
     assert msg.content[1].image_url.url.startswith("data:image/png;base64,")
 
 
-def test_extract_text_file_ext_is_case_insensitive(monkeypatch, mod):
+def test_analyze_content_file_ext_is_case_insensitive(monkeypatch, mod):
     monkeypatch.setattr(mod, "Client", DummyClient)
     model = mod.GrokVisionModel(api_key="key")
 
@@ -202,7 +202,7 @@ def test_extract_text_file_ext_is_case_insensitive(monkeypatch, mod):
     monkeypatch.setattr(mod, "SUPPORTED_GROK_MIME_TYPES", {"image/jpeg"})
     mod.mimetypes.types_map[".jpg"] = "image/jpeg"
 
-    out = model.extract_text(file="QUJD", file_ext="JPG")
+    out = model.analyze_content(file="QUJD", file_ext="JPG")
     assert out == "dummy-response"
     call = model.client.chat.completions.calls[-1]
     msg = call["messages"][0]
@@ -214,7 +214,7 @@ def test_extract_text_file_ext_is_case_insensitive(monkeypatch, mod):
 # -----------------------
 
 
-def test_extract_text_builds_ordered_content_and_detail(monkeypatch, mod):
+def test_analyze_content_builds_ordered_content_and_detail(monkeypatch, mod):
     """
     Ensures content ordering: text first, then image, and 'detail' is set.
     """
@@ -226,7 +226,7 @@ def test_extract_text_builds_ordered_content_and_detail(monkeypatch, mod):
     monkeypatch.setattr(mod, "SUPPORTED_GROK_MIME_TYPES", {"image/jpeg"})
     mod.mimetypes.types_map[".jpg"] = "image/jpeg"
 
-    out = model.extract_text(
+    out = model.analyze_content(
         file="QUJD",
         file_ext="jpg",
         prompt="Prompt A",
@@ -250,7 +250,7 @@ def test_extract_text_builds_ordered_content_and_detail(monkeypatch, mod):
     assert getattr(msg.content[1].image_url, "detail") == "high"
 
 
-def test_extract_text_uses_default_prompt_constant(monkeypatch, mod):
+def test_analyze_content_uses_default_prompt_constant(monkeypatch, mod):
     """
     If prompt not provided, the function uses DEFAULT_IMAGE_CAPTION_PROMPT.
     """
@@ -262,7 +262,7 @@ def test_extract_text_uses_default_prompt_constant(monkeypatch, mod):
     # define default prompt if missing
     monkeypatch.setattr(mod, "DEFAULT_IMAGE_CAPTION_PROMPT", "DEFAULT PROMPT")
 
-    out = model.extract_text(file="QUJD", file_ext="png")
+    out = model.analyze_content(file="QUJD", file_ext="png")
     assert out == "dummy-response"
 
     call = model.client.chat.completions.calls[-1]

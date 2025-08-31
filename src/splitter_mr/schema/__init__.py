@@ -12,14 +12,14 @@ from .constants import (
     SUPPORTED_VANILLA_IMAGE_EXTENSIONS,
 )
 from .models import (
-    ClientImageContent,
-    ClientImageUrl,
-    ClientPayload,
-    ClientTextContent,
     HFChatImageContent,
     HFChatMessage,
     HFChatTextContent,
     HFClient,
+    OpenAIClientImageContent,
+    OpenAIClientImageUrl,
+    OpenAIClientPayload,
+    OpenAIClientTextContent,
     ReaderOutput,
     SplitterOutput,
 )
@@ -28,10 +28,10 @@ from .prompts import DEFAULT_IMAGE_CAPTION_PROMPT, DEFAULT_IMAGE_EXTRACTION_PROM
 __all__ = [
     "ReaderOutput",
     "SplitterOutput",
-    "ClientImageContent",
-    "ClientImageUrl",
-    "ClientPayload",
-    "ClientTextContent",
+    "OpenAIClientImageContent",
+    "OpenAIClientImageUrl",
+    "OpenAIClientPayload",
+    "OpenAIClientTextContent",
     "HFChatImageContent",
     "HFClient",
     "HFChatMessage",

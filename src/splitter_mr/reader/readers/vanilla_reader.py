@@ -90,7 +90,7 @@ class VanillaReader(BaseReader):
                 surfaced when scanning or when the placeholder occurs in text).
                 Default: ``"<!-- page -->"``.
             vlm_parameters (dict): Extra keyword args forwarded to
-                ``model.extract_text(...)``.
+                ``model.analyze_content(...)``.
 
             Excel / Parquet reading:
             as_table (bool): For Excel (``.xlsx``/``.xls``), if True read as a table
@@ -457,7 +457,7 @@ class VanillaReader(BaseReader):
         img_b64 = base64.b64encode(img_bytes).decode("utf-8")
         prompt = prompt or DEFAULT_IMAGE_EXTRACTION_PROMPT
         vlm_parameters = vlm_parameters or {}
-        extracted = model.extract_text(
+        extracted = model.analyze_content(
             img_b64, prompt=prompt, file_ext=ext, **vlm_parameters
         )
         doc_name = os.path.basename(file_path)

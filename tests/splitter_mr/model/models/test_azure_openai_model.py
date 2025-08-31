@@ -90,7 +90,7 @@ def test_init_env_missing(monkeypatch, missing_env, errmsg):
     assert errmsg in str(exc.value)
 
 
-def test_extract_text_makes_correct_call():
+def test_analyze_content_makes_correct_call():
     mock_client = MagicMock()
     # The ._azure_deployment attribute should be present
     mock_client._azure_deployment = "deployment"
@@ -110,7 +110,7 @@ def test_extract_text_makes_correct_call():
             api_version="ver",
         )
         # Provide dummy base64 bytes for 'file'
-        text = model.extract_text("dGVzdF9pbWFnZQ==", prompt="Extract!")
+        text = model.analyze_content("dGVzdF9pbWFnZQ==", prompt="Extract!")
         # Check if the correct payload was sent
         mock_client.chat.completions.create.assert_called_once()
         called_args = mock_client.chat.completions.create.call_args[1]
@@ -119,7 +119,7 @@ def test_extract_text_makes_correct_call():
         assert text == "Extracted text"
 
 
-def test_extract_text_uses_jpeg_mime_for_jpg_ext():
+def test_analyze_content_uses_jpeg_mime_for_jpg_ext():
     client = _mocked_client("jpeg!")
     with patch(
         "splitter_mr.model.models.azure_openai_model.AzureOpenAI", return_value=client
@@ -130,7 +130,7 @@ def test_extract_text_uses_jpeg_mime_for_jpg_ext():
             azure_deployment="deployment",
             api_version="v",
         )
-        _ = m.extract_text("Zm9v", prompt="p", file_ext="jpg")
+        _ = m.analyze_content("Zm9v", prompt="p", file_ext="jpg")
 
         # Grab the payload sent to the API
         called = client.chat.completions.create.call_args.kwargs
@@ -149,7 +149,7 @@ def test_extract_text_uses_jpeg_mime_for_jpg_ext():
         ("webp", "data:image/webp;base64,"),
     ],
 )
-def test_extract_text_sets_expected_mime_for_common_exts(ext, mime_prefix):
+def test_analyze_content_sets_expected_mime_for_common_exts(ext, mime_prefix):
     client = _mocked_client()
     with patch(
         "splitter_mr.model.models.azure_openai_model.AzureOpenAI", return_value=client
@@ -160,7 +160,7 @@ def test_extract_text_sets_expected_mime_for_common_exts(ext, mime_prefix):
             azure_deployment="deployment",
             api_version="v",
         )
-        _ = m.extract_text("Zm9v", prompt="p", file_ext=ext)
+        _ = m.analyze_content("Zm9v", prompt="p", file_ext=ext)
         called = client.chat.completions.create.call_args.kwargs
         image_part = next(
             x for x in called["messages"][0]["content"] if x["type"] == "image_url"
@@ -168,7 +168,7 @@ def test_extract_text_sets_expected_mime_for_common_exts(ext, mime_prefix):
         assert image_part["image_url"]["url"].startswith(mime_prefix)
 
 
-def test_extract_text_forwards_extra_parameters():
+def test_analyze_content_forwards_extra_parameters():
     client = _mocked_client()
     with patch(
         "splitter_mr.model.models.azure_openai_model.AzureOpenAI", return_value=client
@@ -179,7 +179,7 @@ def test_extract_text_forwards_extra_parameters():
             azure_deployment="deployment",
             api_version="v",
         )
-        _ = m.extract_text(
+        _ = m.analyze_content(
             "Zm9v", prompt="hey", file_ext="png", temperature=0.2, presence_penalty=1
         )
 
@@ -191,7 +191,7 @@ def test_extract_text_forwards_extra_parameters():
         assert called["model"] == "deployment"
 
 
-def test_extract_text_uses_default_prompt_when_omitted():
+def test_analyze_content_uses_default_prompt_when_omitted():
     client = _mocked_client()
     with patch(
         "splitter_mr.model.models.azure_openai_model.AzureOpenAI", return_value=client
@@ -202,7 +202,7 @@ def test_extract_text_uses_default_prompt_when_omitted():
             azure_deployment="deployment",
             api_version="v",
         )
-        _ = m.extract_text("Zm9v")  # no prompt
+        _ = m.analyze_content("Zm9v")  # no prompt
 
         called = client.chat.completions.create.call_args.kwargs
         text_part = called["messages"][0]["content"][0]
@@ -225,7 +225,7 @@ def test_init_respects_env_api_version(monkeypatch):
         assert kwargs["api_version"] == "2029-01-01-preview"
 
 
-def test_extract_text_includes_image_url_block():
+def test_analyze_content_includes_image_url_block():
     client = _mocked_client()
     with patch(
         "splitter_mr.model.models.azure_openai_model.AzureOpenAI", return_value=client
@@ -236,7 +236,7 @@ def test_extract_text_includes_image_url_block():
             azure_deployment="deployment",
             api_version="v",
         )
-        _ = m.extract_text("Zm9v", prompt="go", file_ext="png")
+        _ = m.analyze_content("Zm9v", prompt="go", file_ext="png")
 
         called = client.chat.completions.create.call_args.kwargs
         content = called["messages"][0]["content"]
@@ -246,7 +246,7 @@ def test_extract_text_includes_image_url_block():
         assert "image_url" in kinds
 
 
-def test_extract_text_unknown_ext_falls_back_to_png():
+def test_analyze_content_unknown_ext_falls_back_to_png():
     client = _mocked_client()
     with patch(
         "splitter_mr.model.models.azure_openai_model.AzureOpenAI", return_value=client
@@ -257,7 +257,7 @@ def test_extract_text_unknown_ext_falls_back_to_png():
             azure_deployment="deployment",
             api_version="v",
         )
-        _ = m.extract_text("Zm9v", prompt="p", file_ext="totally-unknown-ext")
+        _ = m.analyze_content("Zm9v", prompt="p", file_ext="totally-unknown-ext")
         called = client.chat.completions.create.call_args.kwargs
         image_part = next(
             x for x in called["messages"][0]["content"] if x["type"] == "image_url"
@@ -266,7 +266,7 @@ def test_extract_text_unknown_ext_falls_back_to_png():
 
 
 @pytest.mark.parametrize("ext", ["tiff", "bmp", "svg", "heic"])
-def test_extract_text_raises_on_unsupported_mime(ext):
+def test_analyze_content_raises_on_unsupported_mime(ext):
     client = _mocked_client()
     with patch(
         "splitter_mr.model.models.azure_openai_model.AzureOpenAI", return_value=client
@@ -278,7 +278,7 @@ def test_extract_text_raises_on_unsupported_mime(ext):
             api_version="v",
         )
         with pytest.raises(ValueError, match="Unsupported image MIME type"):
-            m.extract_text("Zm9v", prompt="p", file_ext=ext)
+            m.analyze_content("Zm9v", prompt="p", file_ext=ext)
 
 
 @pytest.mark.parametrize(
@@ -291,7 +291,7 @@ def test_extract_text_raises_on_unsupported_mime(ext):
         ("webp", "data:image/webp;base64,"),
     ],
 )
-def test_extract_text_accepts_common_mime_types(ext, mime_prefix):
+def test_analyze_content_accepts_common_mime_types(ext, mime_prefix):
     client = MagicMock()
     client._azure_deployment = "deployment"
     mock_resp = MagicMock()
@@ -307,7 +307,7 @@ def test_extract_text_accepts_common_mime_types(ext, mime_prefix):
             azure_deployment="deployment",
             api_version="v",
         )
-        _ = m.extract_text("AAAA", prompt="p", file_ext=ext)
+        _ = m.analyze_content("AAAA", prompt="p", file_ext=ext)
 
         called = client.chat.completions.create.call_args.kwargs
         content = called["messages"][0]["content"]

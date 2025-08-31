@@ -1,4 +1,4 @@
-# Splitter
+# **Splitter**
 
 ## Introduction
 

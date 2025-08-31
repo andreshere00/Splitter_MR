@@ -1,24 +1,23 @@
+import importlib
 import mimetypes
 from typing import Any, Dict, List, Optional, Tuple
-
-import transformers
-from transformers import (
-    AutoConfig,
-    AutoImageProcessor,
-    AutoModel,
-    AutoModelForCausalLM,
-    AutoModelForImageTextToText,
-    AutoModelForPreTraining,
-    AutoModelForVision2Seq,
-    AutoProcessor,
-)
 
 from ...model import BaseVisionModel
 from ...schema import HFChatImageContent, HFChatMessage, HFChatTextContent
 
 
 def _require_extra(extra: str, import_name: Optional[str] = None) -> None:
-    """Raise a helpful error if an optional extra is missing."""
+    """
+    Raise a helpful error if an optional extra is missing.
+
+    Args:
+        extra (str): The name of the optional extra (e.g., ``"multimodal"``).
+        import_name (Optional[str]): The module name to attempt importing. If not
+            provided, ``extra`` is used.
+
+    Raises:
+        ImportError: If the module cannot be imported.
+    """
     mod = import_name or extra
     try:
         __import__(mod)
@@ -32,43 +31,38 @@ def _require_extra(extra: str, import_name: Optional[str] = None) -> None:
 
 class HuggingFaceVisionModel(BaseVisionModel):
     """
-    Implementation of BaseVisionModel using Hugging Face Transformers vision-language models.
+    Vision-language model wrapper using Hugging Face Transformers.
 
-    Loads a local or Hugging Face Hub model that supports image-to-text or multimodal tasks.
-    Accepts a prompt and an image as base64 (without the data URI header), returning only the model's text output.
-    Message construction and validation are performed using Pydantic schema models for safety.
+    This implementation loads a local or Hugging Face Hub model that supports
+    image-to-text or multimodal tasks. It accepts a prompt and an image as
+    base64 (without the data URI header) and returns the model's generated text.
+    Pydantic schema models are used for message validation.
 
     Example:
         ```python
-        import requests
-        import base64
+        import base64, requests
         from splitter_mr.model.models.huggingface_model import HuggingFaceVisionModel
 
-        # Fetch an image and encode as base64 string (without prefix)
-        img_url = "https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/p-blog/candy.JPG"
-        img_bytes = requests.get(img_url).content
+        # Encode an image as base64
+        img_bytes = requests.get(
+            "https://huggingface.co/datasets/huggingface/documentation-images/"
+            "resolve/main/p-blog/candy.JPG"
+        ).content
         img_b64 = base64.b64encode(img_bytes).decode("utf-8")
 
-        # Initialize the model (first call may download weights)
         model = HuggingFaceVisionModel("ds4sd/SmolDocling-256M-preview")
-
-        # Call extract_text
-        prompt = "What animal is on the candy?"
-        result = model.extract_text(prompt, file=img_b64, file_ext="jpg")
-        print(result)
-        ```
-        ```python
-        A small green thing.
+        result = model.analyze_content("What animal is on the candy?", file=img_b64)
+        print(result)  # e.g., "A small green thing."
         ```
     """
 
     DEFAULT_EXT: str = "jpg"
-    FALLBACKS: List[Tuple] = [
-        ("AutoModelForVision2Seq", AutoModelForVision2Seq),
-        ("AutoModelForImageTextToText", AutoModelForImageTextToText),
-        ("AutoModelForCausalLM", AutoModelForCausalLM),
-        ("AutoModelForPreTraining", AutoModelForPreTraining),
-        ("AutoModel", AutoModel),
+    FALLBACKS: List[Tuple[str, Optional[Any]]] = [
+        ("AutoModelForVision2Seq", None),
+        ("AutoModelForImageTextToText", None),
+        ("AutoModelForCausalLM", None),
+        ("AutoModelForPreTraining", None),
+        ("AutoModel", None),
     ]
 
     def __init__(self, model_name: str = "ds4sd/SmolDocling-256M-preview") -> None:
@@ -76,17 +70,26 @@ class HuggingFaceVisionModel(BaseVisionModel):
         Initialize a HuggingFaceVisionModel.
 
         Args:
-            model_name (str): Model repo ID or path (e.g., "ds4sd/SmolDocling-256M-preview").
-                Can be a Hugging Face Hub model or a local path.
+            model_name (str, optional): Model repo ID or local path
+                (e.g., ``"ds4sd/SmolDocling-256M-preview"``).
 
         Raises:
-            RuntimeError: If the model or processor cannot be loaded.
+            ImportError: If the 'multimodal' extra (transformers) is not installed.
+            RuntimeError: If processor or model loading fails after all attempts.
         """
+        _require_extra(extra="multimodal", import_name="transformers")
+
+        transformers = importlib.import_module("transformers")
+
+        AutoProcessor = transformers.AutoProcessor
+        AutoImageProcessor = transformers.AutoImageProcessor
+        AutoConfig = transformers.AutoConfig
+
         self.model_id = model_name
         self.model = None
         self.processor = None
 
-        # Load processor (robust fallback)
+        # Load processor
         try:
             self.processor = AutoProcessor.from_pretrained(
                 self.model_id, trust_remote_code=True
@@ -99,9 +102,9 @@ class HuggingFaceVisionModel(BaseVisionModel):
             except Exception as e:
                 raise RuntimeError("All processor loading attempts failed.") from e
 
-        # Load model (robust fallback)
+        # Load model
         config = AutoConfig.from_pretrained(self.model_id)
-        errors = []
+        errors: List[str] = []
 
         try:
             arch_name = config.architectures[0]
@@ -113,7 +116,10 @@ class HuggingFaceVisionModel(BaseVisionModel):
             errors.append(f"[AutoModel by architecture] {e}")
 
         if self.model is None:
+            resolved: List[Tuple[str, Any]] = []
             for name, cls in self.FALLBACKS:
+                resolved.append((name, cls or getattr(transformers, name)))
+            for name, cls in resolved:
                 try:
                     self.model = cls.from_pretrained(
                         self.model_id, trust_remote_code=True
@@ -128,15 +134,14 @@ class HuggingFaceVisionModel(BaseVisionModel):
             )
 
     def get_client(self) -> Any:
-        """
-        Returns the underlying HuggingFace model object.
+        """Return the underlying HuggingFace model instance.
 
         Returns:
             Any: The instantiated HuggingFace model object.
         """
         return self.model
 
-    def extract_text(
+    def analyze_content(
         self,
         prompt: str,
         file: Optional[bytes],
@@ -144,20 +149,24 @@ class HuggingFaceVisionModel(BaseVisionModel):
         **parameters: Dict[str, Any],
     ) -> str:
         """
-        Extract text from an image using a Hugging Face vision-language model.
+        Extract text from an image using the vision-language model.
 
-        Encodes the image as a data URI with the appropriate MIME type (derived from file extension),
-        builds a Pydantic-validated chat template, and calls the loaded model to generate a textual response.
+        This method encodes an image as a data URI, builds a validated
+        message using schema models, prepares inputs, and calls the model
+        to generate a textual response.
 
         Args:
-            prompt (str): The instruction or caption for the image (e.g., "Describe this image.").
-            file (bytes or str): The image, as a base64-encoded string (no prefix, just the base64 body).
-            file_ext (str, optional): The image file extension (e.g., "png", "jpg"). Defaults to "jpg".
-            **parameters (Any): Additional keyword arguments passed directly to
-                the model's ``generate()`` method (e.g., ``max_new_tokens``, ``temperature``, etc.).
+            prompt (str): Instruction or question for the model
+                (e.g., ``"Describe this image."``).
+            file (Optional[bytes]): Image as a base64-encoded string (without prefix).
+            file_ext (Optional[str], optional): File extension (e.g., ``"jpg"`` or ``"png"``).
+                Defaults to ``"jpg"`` if not provided.
+            **parameters (Dict[str, Any]): Extra keyword arguments passed directly
+                to the model's ``generate()`` method (e.g., ``max_new_tokens``,
+                ``temperature``).
 
         Returns:
-            str: The extracted or generated text returned by the vision-language model.
+            str: The extracted or generated text.
 
         Raises:
             ValueError: If ``file`` is None.
@@ -171,12 +180,9 @@ class HuggingFaceVisionModel(BaseVisionModel):
         img_b64 = file if isinstance(file, str) else file.decode("utf-8")
         img_data_uri = f"data:{mime_type};base64,{img_b64}"
 
-        # Build validated Pydantic chat message
         text_content = HFChatTextContent(type="text", text=prompt)
         image_content = HFChatImageContent(type="image", image=img_data_uri)
         chat_msg = HFChatMessage(role="user", content=[image_content, text_content])
-
-        # Convert to dict for HuggingFace template
         messages = [chat_msg.model_dump(exclude_none=True)]
 
         try:
@@ -202,13 +208,3 @@ class HuggingFaceVisionModel(BaseVisionModel):
             return output_text
         except Exception as e:
             raise RuntimeError(f"Model inference failed: {e}")
-
-    @staticmethod
-    def require_multimodal_extra() -> None:
-        """
-        Advise users that the 'multimodal' extra is required to use this class.
-
-        Raises:
-            ImportError: If 'transformers' is not installed.
-        """
-        _require_extra("multimodal", import_name="transformers")

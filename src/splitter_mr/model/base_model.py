@@ -36,7 +36,7 @@ class BaseVisionModel(ABC):
         """
 
     @abstractmethod
-    def extract_text(
+    def analyze_content(
         self,
         prompt: str,
         file: Optional[bytes],
