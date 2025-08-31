@@ -8,10 +8,10 @@ from ...schema import (
     DEFAULT_IMAGE_CAPTION_PROMPT,
     GROK_MIME_BY_EXTENSION,
     SUPPORTED_GROK_MIME_TYPES,
-    ClientImageContent,
-    ClientImageUrl,
-    ClientPayload,
-    ClientTextContent,
+    OpenAIClientImageContent,
+    OpenAIClientImageUrl,
+    OpenAIClientPayload,
+    OpenAIClientTextContent,
 )
 from ..base_model import BaseVisionModel
 
@@ -66,7 +66,7 @@ class GrokVisionModel(BaseVisionModel):
         """
         return self.client
 
-    def extract_text(
+    def analyze_content(
         self,
         file: Optional[bytes],
         prompt: Optional[str] = None,
@@ -110,7 +110,7 @@ class GrokVisionModel(BaseVisionModel):
             with open("image.jpg", "rb") as f:
                 img_b64 = base64.b64encode(f.read()).decode("utf-8")
 
-            text = model.extract_text(
+            text = model.analyze_content(
                 img_b64, prompt="What's in this image?", file_ext="jpg", detail="high"
             )
             print(text)
@@ -131,13 +131,13 @@ class GrokVisionModel(BaseVisionModel):
 
         prompt = prompt or DEFAULT_IMAGE_CAPTION_PROMPT
 
-        payload_obj = ClientPayload(
+        payload_obj = OpenAIClientPayload(
             role="user",
             content=[
-                ClientTextContent(type="text", text=prompt),
-                ClientImageContent(
+                OpenAIClientTextContent(type="text", text=prompt),
+                OpenAIClientImageContent(
                     type="image_url",
-                    image_url=ClientImageUrl(
+                    image_url=OpenAIClientImageUrl(
                         url=f"data:{mime_type};base64,{file}",
                         detail=detail,
                     ),

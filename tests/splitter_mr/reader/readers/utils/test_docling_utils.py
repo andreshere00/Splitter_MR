@@ -4,7 +4,6 @@ import pytest
 
 from splitter_mr.reader.utils.docling_utils import (
     DoclingPipelineFactory,
-    get_vlm_url_and_headers,
     markdown_pipeline,
     page_image_pipeline,
     vlm_pipeline,
@@ -35,7 +34,7 @@ class DummyModel:
     def get_client(self):
         return self._client
 
-    def extract_text(self, prompt, file):
+    def analyze_content(self, prompt, file):
         return f"{self._text}:prompt={prompt}"
 
 
@@ -76,37 +75,6 @@ def patch_docling(monkeypatch):
     docling_utils.AzureOpenAI = DummyAzureClient
     docling_utils.OpenAI = DummyOpenAIClient
     yield
-
-
-def test_get_vlm_url_and_headers_azure_success():
-    client = DummyAzureClient(
-        endpoint="https://myep", deployment="dep", version="2024-06-01", api_key="abc"
-    )
-    url, headers = get_vlm_url_and_headers(client)
-    assert url.startswith("https://myep/openai/deployments/dep/chat/completions")
-    assert "api-version=2024-06-01" in url
-    assert headers == {"Authorization": "Bearer abc"}
-
-
-def test_get_vlm_url_and_headers_azure_missing():
-    client = DummyAzureClient(endpoint=None, deployment="dep", version="v1")
-    with pytest.raises(ValueError):
-        get_vlm_url_and_headers(client)
-
-
-def test_get_vlm_url_and_headers_openai_success():
-    client = DummyOpenAIClient(api_key="OPENAIKEY")
-    url, headers = get_vlm_url_and_headers(client)
-    assert url.startswith("https://api.openai.com/v1/chat/completions")
-    assert headers == {"Authorization": "Bearer OPENAIKEY"}
-
-
-def test_get_vlm_url_and_headers_invalid_client():
-    class UnknownClient:
-        api_key = "whatever"
-
-    with pytest.raises(ValueError):
-        get_vlm_url_and_headers(UnknownClient())
 
 
 def test_page_image_pipeline_with_model(monkeypatch):

@@ -8,10 +8,10 @@ from ...schema import (
     DEFAULT_IMAGE_CAPTION_PROMPT,
     OPENAI_MIME_BY_EXTENSION,
     SUPPORTED_OPENAI_MIME_TYPES,
-    ClientImageContent,
-    ClientImageUrl,
-    ClientPayload,
-    ClientTextContent,
+    OpenAIClientImageContent,
+    OpenAIClientImageUrl,
+    OpenAIClientPayload,
+    OpenAIClientTextContent,
 )
 from ..base_model import BaseVisionModel
 
@@ -81,7 +81,7 @@ class AzureOpenAIVisionModel(BaseVisionModel):
         """Returns the AzureOpenAI client instance."""
         return self.client
 
-    def extract_text(
+    def analyze_content(
         self,
         file: Optional[bytes],
         prompt: str = DEFAULT_IMAGE_CAPTION_PROMPT,
@@ -118,7 +118,7 @@ class AzureOpenAIVisionModel(BaseVisionModel):
             model = AzureOpenAIVisionModel(...)
             with open("image.jpg", "rb") as f:
                 img_b64 = base64.b64encode(f.read()).decode("utf-8")
-            text = model.extract_text(img_b64, prompt="Describe this image", file_ext="jpg")
+            text = model.analyze_content(img_b64, prompt="Describe this image", file_ext="jpg")
             print(text)
             ```
         """
@@ -135,13 +135,15 @@ class AzureOpenAIVisionModel(BaseVisionModel):
         if mime_type not in SUPPORTED_OPENAI_MIME_TYPES:
             raise ValueError(f"Unsupported image MIME type: {mime_type}")
 
-        payload_obj = ClientPayload(
+        payload_obj = OpenAIClientPayload(
             role="user",
             content=[
-                ClientTextContent(type="text", text=prompt),
-                ClientImageContent(
+                OpenAIClientTextContent(type="text", text=prompt),
+                OpenAIClientImageContent(
                     type="image_url",
-                    image_url=ClientImageUrl(url=f"data:{mime_type};base64,{file}"),
+                    image_url=OpenAIClientImageUrl(
+                        url=f"data:{mime_type};base64,{file}"
+                    ),
                 ),
             ],
         )

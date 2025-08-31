@@ -14,6 +14,18 @@
 >     ```
 >   - This change reduces install time and keeps core installs lightweight.
 
+## v0.6.3
+
+### Features
+
+- Add `GeminiVisionModel` class to Vision models.
+- Add `GeminiEmbedding` class to embedding models.
+- Apply lazy import strategy to classes which require `extra`s to be installed (e.g., `docling`, `markitdown`, etc.).
+
+### Documentation
+
+- Update documentation.
+
 ## v0.6.2
 
 > \[!IMPORTANT]

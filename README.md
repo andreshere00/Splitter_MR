@@ -7,26 +7,25 @@
 
 **SplitterMR** is a library for chunking data into convenient text blocks compatible with your LLM applications.
 
-> \[!IMPORTANT]
+> [!IMPORTANT]
 >
-> **Version 0.6.2: HuggingFace Providers**
+> **Version 0.6.1 & 0.6.2: HuggingFace Providers**
 > SplitterMR now supports **HuggingFace** as a backend for both embedding and vision models:
 >
 > * **HuggingFaceEmbedding**: Use any Sentence Transformers model (local or from Hugging Face Hub) for fast, local, or cloud embeddings.
 > * **HuggingFaceVisionModel**: Leverage Hugging Face’s vision-language models for image-to-text and image captioning.
 >
-> **To use HuggingFace models, you must install SplitterMR with the `multimodal` extra:**
+> See documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/model#huggingfacevisionmodel)
+>
+> NSplitterMR now supports `GrokVisionModel`. See documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/model#grokvisionmodel).
+> 
+> **To use HuggingFace or Grok models, you must install SplitterMR with the `multimodal` extra:**
 >
 > ```bash
 > pip install "splitter-mr[multimodal]"
 > ```
->
-> **Version 0.6.1**
->
-> New Vision Model added: `GrokVisionModel`. See documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/model#grokvisionmodel).
->
 
-> \[!IMPORTANT]
+> [!IMPORTANT]
 > **Breaking Change! Version v0.6.0**
 >
 > * Dependencies are now split into **core** (installed by default) and **optional extras** for heavy or specialized features.
@@ -92,7 +91,7 @@ SplitterMR allows you to split files in many different ways depending on your ne
 - **Models:**
     - The **`BaseModel`** component is used to read non-text content using a Visual Language Model (VLM).
     - Supported models are `AzureOpenAI`, `OpenAI` and `Grok`, but more models will be available soon.
-    - All the models have a `extract_text` method which returns the LLM response based on a prompt, the client and the model parameters.
+    - All the models have a `analyze_content` method which returns the LLM response based on a prompt, the client and the model parameters.
 - **Splitters**
     - The **`BaseSplitter`** components take the **`ReaderOutput`** text content and divide that text into meaningful chunks for LLM or other downstream use.
     - Splitter classes (e.g., **`CharacterSplitter`**, **`SentenceSplitter`**, **`RecursiveSplitter`**, etc.) allow flexible chunking strategies with optional overlap and rich configuration.

@@ -3,61 +3,20 @@ import io
 import re
 import warnings
 from pathlib import Path
-from typing import Any, Callable, Dict, Tuple
-from urllib.parse import urlencode, urljoin
+from typing import Callable, Dict  # , Any, Tuple
 
 from docling.datamodel.base_models import InputFormat
 from docling.datamodel.pipeline_options import PdfPipelineOptions
 from docling.document_converter import DocumentConverter, PdfFormatOption
 from docling_core.types.doc import ImageRefMode
-from openai import AzureOpenAI, OpenAI
+
+# from openai import AzureOpenAI, OpenAI
 from PIL.Image import Image
 
 from ...model import BaseVisionModel
 from ...schema import DEFAULT_IMAGE_CAPTION_PROMPT, DEFAULT_IMAGE_EXTRACTION_PROMPT
 
-# ---- Helpers ---- #
-
-
-def get_vlm_url_and_headers(client: Any) -> Tuple[str, dict]:
-    """
-    Build URL and headers for AzureOpenAI or OpenAI VLM endpoints using urllib.parse.
-
-    Args:
-        client: An instance of AzureOpenAI or OpenAI.
-
-    Returns:
-        Tuple containing the full endpoint URL and headers dictionary.
-
-    Raises:
-        ValueError: If required Azure parameters are missing or client type is unsupported.
-    """
-    headers = {"Authorization": f"Bearer {client.api_key}"}
-
-    if isinstance(client, AzureOpenAI):
-        endpoint = client._azure_endpoint
-        deployment = client._azure_deployment
-        version = client._api_version
-        if not all([endpoint, deployment, version]):
-            raise ValueError(
-                "Missing Azure VLM config: endpoint, deployment, or api_version"
-            )
-        base = str(endpoint).rstrip("/") + "/"
-        path = f"openai/deployments/{deployment}/chat/completions"
-        url = urljoin(base, path)
-        query = urlencode({"api-version": version})
-        full_url = str(f"{url}?{query}")
-        return full_url, headers
-
-    if isinstance(client, OpenAI):
-        base = "https://api.openai.com/"
-        path = "v1/chat/completions"
-        full_url = str(urljoin(base, path))
-        return full_url, headers
-
-    # TODO: Add support to Grok and other models
-
-    raise ValueError(f"Unsupported client type: {type(client)}")
+# from urllib.parse import urlencode, urljoin
 
 
 # ---- Pipelines ---- #
@@ -129,7 +88,7 @@ def page_image_pipeline(
         pil_img = page.image.pil_image
         img_base64 = image_to_base64(pil_img)
         if model:
-            text = model.extract_text(prompt=prompt, file=img_base64)
+            text = model.analyze_content(prompt=prompt, file=img_base64)
             output_md += f"{page_placeholder}\n\n{text.strip()}\n\n"
         else:
             # Embed the image in markdown
@@ -193,7 +152,7 @@ def vlm_pipeline(
             alt_text = match.group(1)
             img_b64 = match.group(2).replace("\n", "")  # Remove line breaks
             try:
-                desc = model.extract_text(prompt=prompt, file=img_b64)
+                desc = model.analyze_content(prompt=prompt, file=img_b64)
                 if not desc or not desc.strip():
                     warnings.warn(
                         f"No description generated for image with alt text '{alt_text}'"

@@ -12,7 +12,7 @@ class DummyModel(BaseVisionModel):
     def get_client(self):
         return "dummy-client"
 
-    def extract_text(self, prompt: str, file: bytes = None, **parameters) -> str:
+    def analyze_content(self, prompt: str, file: bytes = None, **parameters) -> str:
         # just echo the input for testing
         return f"extract:{prompt}"
 
@@ -26,4 +26,4 @@ def test_BaseVisionModel_cannot_be_instantiated():
 def test_dummy_model_instantiable_and_methods_work():
     dummy = DummyModel()
     assert dummy.get_client() == "dummy-client"
-    assert dummy.extract_text("PROMPT") == "extract:PROMPT"
+    assert dummy.analyze_content("PROMPT") == "extract:PROMPT"
