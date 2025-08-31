@@ -31,12 +31,12 @@ def _mock_create_returning(text="Extracted text!"):
     return mock_response
 
 
-def test_extract_text_calls_api(openai_vision_model):
+def test_analyze_content_calls_api(openai_vision_model):
     with patch.object(
         openai_vision_model.client.chat.completions, "create"
     ) as mock_create:
         mock_create.return_value = _mock_create_returning("Extracted text!")
-        text = openai_vision_model.extract_text("SOME_BASE64", prompt="What's here?")
+        text = openai_vision_model.analyze_content("SOME_BASE64", prompt="What's here?")
         mock_create.assert_called_once()
         args = mock_create.call_args.kwargs
         assert args["model"] == "gpt-4.1"
@@ -63,14 +63,14 @@ def test_init_missing_key_raises():
         OpenAIVisionModel()
 
 
-def test_extract_text_custom_params():
+def test_analyze_content_custom_params():
     mock_client = MagicMock()
     mock_client.chat.completions.create.return_value = _mock_create_returning("foo")
     with patch(
         "splitter_mr.model.models.openai_model.OpenAI", return_value=mock_client
     ):
         model = OpenAIVisionModel(api_key="x", model_name="vision")
-        out = model.extract_text("dGVzdA==", prompt="Extract!", temperature=0.2)
+        out = model.analyze_content("dGVzdA==", prompt="Extract!", temperature=0.2)
         called = mock_client.chat.completions.create.call_args.kwargs
         assert called["model"] == "vision"
         assert called["messages"][0]["content"][0]["text"] == "Extract!"
@@ -78,24 +78,24 @@ def test_extract_text_custom_params():
         assert out == "foo"
 
 
-def test_extract_text_uses_default_prompt_when_omitted(openai_vision_model):
+def test_analyze_content_uses_default_prompt_when_omitted(openai_vision_model):
     with patch.object(
         openai_vision_model.client.chat.completions, "create"
     ) as mock_create:
         mock_create.return_value = _mock_create_returning("ok")
-        _ = openai_vision_model.extract_text("AAAA")
+        _ = openai_vision_model.analyze_content("AAAA")
         called = mock_create.call_args.kwargs
         text_part = called["messages"][0]["content"][0]
         assert text_part["type"] == "text"
         assert text_part["text"] == DEFAULT_IMAGE_CAPTION_PROMPT
 
 
-def test_extract_text_includes_image_url_block_png(openai_vision_model):
+def test_analyze_content_includes_image_url_block_png(openai_vision_model):
     with patch.object(
         openai_vision_model.client.chat.completions, "create"
     ) as mock_create:
         mock_create.return_value = _mock_create_returning("ok")
-        _ = openai_vision_model.extract_text("Zm9vYmFy", prompt="go")
+        _ = openai_vision_model.analyze_content("Zm9vYmFy", prompt="go")
         called = mock_create.call_args.kwargs
         content = called["messages"][0]["content"]
         kinds = [c["type"] for c in content]
@@ -105,19 +105,19 @@ def test_extract_text_includes_image_url_block_png(openai_vision_model):
 
 
 @pytest.mark.parametrize("ext", ["tiff", "bmp", "svg", "heic"])
-def test_extract_text_raises_on_unsupported_mime(openai_vision_model, ext):
+def test_analyze_content_raises_on_unsupported_mime(openai_vision_model, ext):
     # If the extension maps to an unsupported MIME type, we should error out
     with patch.object(
         openai_vision_model.client.chat.completions, "create"
     ) as mock_create:
         with pytest.raises(ValueError):
-            openai_vision_model.extract_text("BASE64DATA", file_ext=ext)
+            openai_vision_model.analyze_content("BASE64DATA", file_ext=ext)
 
         # Make sure we never hit the network call
         mock_create.assert_not_called()
 
 
-def test_extract_text_accepts_jpg_and_normalizes_to_jpeg(openai_vision_model):
+def test_analyze_content_accepts_jpg_and_normalizes_to_jpeg(openai_vision_model):
     # jpg should resolve to image/jpeg and proceed without error
     with patch.object(
         openai_vision_model.client.chat.completions, "create"
@@ -126,7 +126,7 @@ def test_extract_text_accepts_jpg_and_normalizes_to_jpeg(openai_vision_model):
         mock_response.choices = [MagicMock(message=MagicMock(content="ok"))]
         mock_create.return_value = mock_response
 
-        _ = openai_vision_model.extract_text("AAAA", file_ext="jpg")
+        _ = openai_vision_model.analyze_content("AAAA", file_ext="jpg")
 
         mock_create.assert_called_once()
         called = mock_create.call_args.kwargs

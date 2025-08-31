@@ -1,4 +1,7 @@
-from typing import Any, List, Optional, Union
+from typing import TYPE_CHECKING, Any, List, Optional, Union
+
+if TYPE_CHECKING:
+    from sentence_transformers import SentenceTransformer
 
 try:
     import torch
@@ -9,7 +12,6 @@ except Exception:
     TorchDevice = Union[str, object]
 
 import numpy as np
-from sentence_transformers import SentenceTransformer
 
 from ..base_embedding import BaseEmbedding
 
@@ -34,7 +36,8 @@ class HuggingFaceEmbedding(BaseEmbedding):
     This class wraps a local (or HF Hub) SentenceTransformer model to produce
     dense embeddings for text. It provides a consistent interface with your
     `BaseEmbedding` and convenient options for device selection and optional
-    input-length validation.
+    input-length validation. This class is available only if
+    `splitter-mr[multimodal]` is installed.
 
     Example:
         ```python
@@ -84,7 +87,10 @@ class HuggingFaceEmbedding(BaseEmbedding):
         Raises:
             ValueError: If the model cannot be loaded.
         """
-        # SentenceTransformer accepts a string device; pass through if provided.
+        _require_extra("multimodal", "sentence_transformers")
+
+        from sentence_transformers import SentenceTransformer
+
         st_device = str(device) if device is not None else None
         try:
             self.model = SentenceTransformer(model_name, device=st_device)
@@ -97,7 +103,7 @@ class HuggingFaceEmbedding(BaseEmbedding):
         self.normalize = normalize
         self.enforce_max_length = enforce_max_length
 
-    def get_client(self) -> SentenceTransformer:
+    def get_client(self) -> "SentenceTransformer":
         """Return the underlying `SentenceTransformer` instance."""
         return self.model
 
@@ -255,13 +261,3 @@ class HuggingFaceEmbedding(BaseEmbedding):
             return [list(map(float, row)) for row in mat]  # type: ignore[arg-type]
 
         raise RuntimeError(f"Unexpected batch embedding output type: {type(mat)}")
-
-    @staticmethod
-    def require_multimodal_extra() -> None:
-        """
-        Advise users that the 'multimodal' extra is required to use this class.
-
-        Raises:
-            ImportError: If 'sentence-transformers' is not installed.
-        """
-        _require_extra("multimodal", import_name="sentence_transformers")

@@ -242,6 +242,12 @@
 <circle cx="1822" cy="434" r="10" fill="#00074D"/>
 <circle cx="1856" cy="434" r="10" fill="#00074D"/>
 <circle cx="1890" cy="434" r="10" fill="#00074D"/>
+<circle cx="417" cy="1142" r="10" fill="#00074D"/>
+<circle cx="451" cy="1142" r="10" fill="#00074D"/>
+<circle cx="485" cy="1142" r="10" fill="#00074D"/>
+<circle cx="1357" cy="1142" r="10" fill="#00074D"/>
+<circle cx="1391" cy="1142" r="10" fill="#00074D"/>
+<circle cx="1425" cy="1142" r="10" fill="#00074D"/>
 <rect x="87" y="1003" width="80" height="80" fill="white"/>
 <rect x="267" y="1003" width="80" height="80" fill="#00074D"/>
 <rect x="347" y="1003" width="40" height="80" fill="#00074D"/>

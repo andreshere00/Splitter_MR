@@ -20,7 +20,7 @@ class DummyModel:
     def __init__(self):
         self.calls = []
 
-    def extract_text(self, file, prompt=None, **kw):
+    def analyze_content(self, file, prompt=None, **kw):
         self.calls.append({"file": file, "prompt": prompt, **kw})
         return "Dummy caption"
 
@@ -236,7 +236,7 @@ def test_extract_tables_filters_invalid(mock_open):
     assert bboxes == [(0, 10, 100, 50)]
 
 
-def test_extract_text_excludes_table_rows():
+def test_analyze_content_excludes_table_rows():
     reader = PDFPlumberReader()
     words = [
         {"text": "Header", "top": 20, "bottom": 30, "x0": 10},
@@ -247,7 +247,7 @@ def test_extract_text_excludes_table_rows():
     page = MagicMock()
     page.extract_words.return_value = words
 
-    lines = reader.extract_text(page, 1, table_bbox)
+    lines = reader.analyze_content(page, 1, table_bbox)
     assert [line["content"] for line in lines] == ["Outside"]
 
 

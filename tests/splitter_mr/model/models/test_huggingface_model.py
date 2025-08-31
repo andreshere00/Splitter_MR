@@ -187,21 +187,21 @@ def test_model_loads_with_custom_model():
 
 
 @pytest.mark.parametrize("prompt", ["What animal is on the candy?", "Describe colours"])
-def test_extract_text_success(model, fake_img_b64, prompt):
-    assert "fake vision model answer" in model.extract_text(prompt, fake_img_b64)
+def test_analyze_content_success(model, fake_img_b64, prompt):
+    assert "fake vision model answer" in model.analyze_content(prompt, fake_img_b64)
 
 
-def test_extract_text_png(model, fake_img_b64):
-    assert model.extract_text("Describe", fake_img_b64, file_ext="png")
+def test_analyze_content_png(model, fake_img_b64):
+    assert model.analyze_content("Describe", fake_img_b64, file_ext="png")
 
 
-def test_extract_text_missing_image(model):
+def test_analyze_content_missing_image(model):
     with pytest.raises(ValueError):
-        model.extract_text("Prompt", None)
+        model.analyze_content("Prompt", None)
 
 
-def test_extract_text_unknown_extension(model, fake_img_b64):
-    assert model.extract_text("Prompt", fake_img_b64, file_ext="zzz")
+def test_analyze_content_unknown_extension(model, fake_img_b64):
+    assert model.analyze_content("Prompt", fake_img_b64, file_ext="zzz")
 
 
 def test_prepare_input_failure(model, fake_img_b64, monkeypatch):
@@ -211,7 +211,7 @@ def test_prepare_input_failure(model, fake_img_b64, monkeypatch):
         lambda *_a, **_k: (_ for _ in ()).throw(Exception("boom")),
     )
     with pytest.raises(RuntimeError, match="Failed to prepare input"):
-        model.extract_text("Prompt", fake_img_b64)
+        model.analyze_content("Prompt", fake_img_b64)
 
 
 def test_inference_failure(model, fake_img_b64, monkeypatch):
@@ -227,7 +227,7 @@ def test_inference_failure(model, fake_img_b64, monkeypatch):
         lambda *_a, **_k: (_ for _ in ()).throw(Exception("boom")),
     )
     with pytest.raises(RuntimeError, match="Model inference failed"):
-        model.extract_text("Prompt", fake_img_b64)
+        model.analyze_content("Prompt", fake_img_b64)
 
 
 def test_model_load_fail(monkeypatch):

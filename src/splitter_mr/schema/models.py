@@ -19,7 +19,7 @@ except ImportError:
     TorchDevice = object
 
 # ------- #
-# Readers #
+# READERS #
 # ------- #
 
 
@@ -109,7 +109,7 @@ class ReaderOutput(BaseModel):
 
 
 # --------- #
-# Splitters #
+# SPLITTERS #
 # --------- #
 
 
@@ -193,13 +193,17 @@ class SplitterOutput(BaseModel):
 
 
 # ------ #
-# Models #
+# MODELS #
 # ------ #
 
+# -------------------------- #
 # ---- API-Based Models ---- #
+# -------------------------- #
+
+# ---- OpenAI models ---- #
 
 
-class ClientTextContent(BaseModel):
+class OpenAIClientTextContent(BaseModel):
     """Text content block for chat payloads.
 
     Attributes:
@@ -211,7 +215,7 @@ class ClientTextContent(BaseModel):
     text: str
 
 
-class ClientImageUrl(BaseModel):
+class OpenAIClientImageUrl(BaseModel):
     """Image URL container for data-URI images.
 
     Attributes:
@@ -227,7 +231,7 @@ class ClientImageUrl(BaseModel):
     )
 
 
-class ClientImageContent(BaseModel):
+class OpenAIClientImageContent(BaseModel):
     """Image content block for chat payloads.
 
     Attributes:
@@ -236,10 +240,10 @@ class ClientImageContent(BaseModel):
     """
 
     type: Literal["image_url"]
-    image_url: ClientImageUrl
+    image_url: OpenAIClientImageUrl
 
 
-class ClientPayload(BaseModel):
+class OpenAIClientPayload(BaseModel):
     """Top-level chat message payload sent to the model.
 
     Attributes:
@@ -248,7 +252,7 @@ class ClientPayload(BaseModel):
     """
 
     role: Literal["user", "system", "assistant"]
-    content: List[ClientTextContent | ClientImageContent]
+    content: List[OpenAIClientTextContent | OpenAIClientImageContent]
 
 
 # ---- HuggingFace Models ---- #
