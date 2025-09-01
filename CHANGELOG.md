@@ -14,6 +14,16 @@
 >   ```
 > - This change reduces install time and keeps core installs lightweight.
 
+## 0.6.4
+
+### Features
+
+- Add new Vision Model: Claude Anthropic models.
+
+### Documentation
+
+- Change font type to Documentation server.
+
 ## v0.6.3
 
 > **Version 0.6.3:** SplitterMR now supports **Gemini** as a backend for both [**embedding**](https://andreshere00.github.io/Splitter_MR/api_reference/embedding#geminiembedding) and [**vision**](https://andreshere00.github.io/Splitter_MR/api_reference/model/#geminivisionmodel) models.

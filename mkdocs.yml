@@ -4,6 +4,8 @@ repo_name: andreshere00/Splitter_MR
 theme:
   name: material
   logo: assets/splitter_mr_logo_reduced_white.svg
+  font:
+    text: Source Sans 3
   icon:
     repo: fontawesome/brands/git-alt
   features:
