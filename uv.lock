@@ -109,6 +109,15 @@ wheels = [
 ]
 
 [[package]]
+name = "aiolimiter"
+version = "1.2.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/f1/23/b52debf471f7a1e42e362d959a3982bdcb4fe13a5d46e63d28868807a79c/aiolimiter-1.2.1.tar.gz", hash = "sha256:e02a37ea1a855d9e832252a105420ad4d15011505512a1a1d814647451b5cca9", size = 7185 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f3/ba/df6e8e1045aebc4778d19b8a3a9bc1808adb1619ba94ca354d9ba17d86c3/aiolimiter-1.2.1-py3-none-any.whl", hash = "sha256:d3f249e9059a20badcb56b61601a83556133655c11d1eb3dd3e04ff069e5f3c7", size = 6711 },
+]
+
+[[package]]
 name = "aiosignal"
 version = "1.4.0"
 source = { registry = "https://pypi.org/simple" }
@@ -4592,6 +4601,7 @@ all = [
     { name = "torch" },
     { name = "torchvision" },
     { name = "transformers" },
+    { name = "voyageai" },
     { name = "xai-sdk" },
 ]
 azure = [
@@ -4623,6 +4633,7 @@ multimodal = [
     { name = "torch" },
     { name = "torchvision" },
     { name = "transformers" },
+    { name = "voyageai" },
 ]
 
 [package.dev-dependencies]
@@ -4716,6 +4727,8 @@ requires-dist = [
     { name = "torchvision", marker = "extra == 'multimodal'", specifier = ">=0.22.1,<0.23" },
     { name = "transformers", marker = "extra == 'all'", specifier = ">=4.52.4" },
     { name = "transformers", marker = "extra == 'multimodal'", specifier = ">=4.52.4" },
+    { name = "voyageai", marker = "extra == 'all'", specifier = ">=0.3.4" },
+    { name = "voyageai", marker = "extra == 'multimodal'", specifier = ">=0.3.4" },
     { name = "xai-sdk", marker = "extra == 'all'", specifier = ">=1.0.1" },
     { name = "xlrd", specifier = ">=2.0.1" },
 ]
@@ -5238,6 +5251,26 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/1c/14/37fcdba2808a6c615681cd216fecae00413c9dab44fb2e57805ecf3eaee3/virtualenv-20.34.0.tar.gz", hash = "sha256:44815b2c9dee7ed86e387b842a84f20b93f7f417f95886ca1996a72a4138eb1a", size = 6003808 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/76/06/04c8e804f813cf972e3262f3f8584c232de64f0cde9f703b46cf53a45090/virtualenv-20.34.0-py3-none-any.whl", hash = "sha256:341f5afa7eee943e4984a9207c025feedd768baff6753cd660c857ceb3e36026", size = 5983279 },
+]
+
+[[package]]
+name = "voyageai"
+version = "0.3.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "aiohttp" },
+    { name = "aiolimiter" },
+    { name = "langchain-text-splitters" },
+    { name = "numpy", marker = "python_full_version < '3.14'" },
+    { name = "pillow" },
+    { name = "pydantic" },
+    { name = "requests" },
+    { name = "tenacity" },
+    { name = "tokenizers" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/b3/50/5d398f1e5ba22200eb3e143fefa620b4285c27b23be2647d0d51c44fe5d3/voyageai-0.3.4.tar.gz", hash = "sha256:b2a526a31859f21782a309d8c40b69d8d8c499308ed96e2d81a6e1b952431c23", size = 20291 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/5b/29/0686a6dfc88efeae03bb668db385cf93ce4f421e5ab513efd4901c8611c9/voyageai-0.3.4-py3-none-any.whl", hash = "sha256:271c085bf261c86bc89e9279bf7a04203ab31e92c0c28133b03f6716d712b5fd", size = 28144 },
 ]
 
 [[package]]

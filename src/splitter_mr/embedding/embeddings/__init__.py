@@ -1,3 +1,4 @@
+from .anthropic_embedding import AnthropicEmbedding
 from .azure_openai_embedding import AzureOpenAIEmbedding
 from .gemini_embedding import GeminiEmbedding
 from .huggingface_embedding import HuggingFaceEmbedding
@@ -8,4 +9,5 @@ __all__ = [
     "OpenAIEmbedding",
     "GeminiEmbedding",
     "HuggingFaceEmbedding",
+    "AnthropicEmbedding",
 ]
