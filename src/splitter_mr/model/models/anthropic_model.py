@@ -34,7 +34,6 @@ class AnthropicVisionModel(BaseVisionModel):
         Args:
             api_key (str, optional): Anthropic API key. Uses ANTHROPIC_API_KEY env var if not provided.
             model_name (str): Vision-capable Claude model name.
-            base_url (str): Anthropic API endpoint base URL.
 
         Raises:
             ValueError: If no API key provided or found in environment.

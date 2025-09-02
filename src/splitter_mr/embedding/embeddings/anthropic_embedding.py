@@ -18,7 +18,7 @@ def _require_extra(extra: str, import_name: Optional[str] = None) -> None:
         ) from e
 
 
-class AnthropicEmbeddings(BaseEmbedding):
+class AnthropicEmbedding(BaseEmbedding):
     """
     Embedding provider aligned with Anthropic's guidance, implemented via Voyage AI.
 

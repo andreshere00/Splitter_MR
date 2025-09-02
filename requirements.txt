@@ -238,7 +238,6 @@ typing-extensions==4.14.1
 typing-inspection==0.4.1
 tzdata==2025.2
 urllib3==2.5.0
-uv==0.8.14
 virtualenv==20.34.0
 voyageai==0.3.4
 wasabi==1.1.3

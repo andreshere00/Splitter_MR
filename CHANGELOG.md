@@ -16,13 +16,19 @@
 
 ## 0.6.4
 
+> **Version 0.6.4:**
+> 
+> SplitterMR now supports **Anthropic Claude** as a backend for both [**embedding**](https://andreshere00.github.io/Splitter_MR/api_reference/embedding#anthropicembeddings) (via [Voyage](https://docs.voyageai.com/docs/embeddings) AI) and [**vision**](https://andreshere00.github.io/Splitter_MR/api_reference/model#anthropicvisionmodel) models.
+
 ### Features
 
 - Add new Vision Model: Claude Anthropic models.
+- Add new Embedding Model: Voyage Anthropic models.
 
 ### Documentation
 
 - Change font type to Documentation server.
+- Update API reference guide with new links and resources.
 
 ## v0.6.3
 

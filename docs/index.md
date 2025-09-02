@@ -1,31 +1,9 @@
-# SplitterMR
-
-<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_logo.svg#gh-light-mode-only" alt="SplitterMR logo" width=100%/>
-<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_logo_white.svg#gh-dark-mode-only" alt="SplitterMR logo" width=100%/>
-
-## Description
+# **SplitterMR**
 
 **SplitterMR** is a library for chunking data into convenient text blocks compatible with your LLM applications.
 
-!!! important
-    
-    **New Vision and Embedding providers**
-    
-    **Version 0.6.3:** SplitterMR now supports **Gemini** as a backend for both [**embedding**](https://andreshere00.github.io/Splitter_MR/api_reference/embedding#geminiembedding) and [**vision**](https://andreshere00.github.io/Splitter_MR/api_reference/model/#geminivisionmodel) models.
-    
-    **Version 0.6.2:** SplitterMR now supports **HuggingFace** as a backend for both embedding and vision models:
-    
-    * [**HuggingFaceEmbedding**](https://andreshere00.github.io/Splitter_MR/api_reference/embedding/#huggingfaceembedding): Use any Sentence Transformers model (local or from Hugging Face Hub) for fast, local, or cloud embeddings.
-    * [**HuggingFaceVisionModel**](https://andreshere00.github.io/Splitter_MR/api_reference/model#huggingfacevisionmodel): Leverage Hugging Face’s vision-language models for image-to-text and image captioning.
-    
-    **Version 0.6.1:** SplitterMR now supports `GrokVisionModel`. See documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/model#grokvisionmodel).
-    
-    **To use HuggingFace, Gemini, Claude or Grok models, you must install SplitterMR with the `multimodal` extra:**
-    
-    ```bash
-    pip install "splitter-mr[multimodal]"
-    ```
-
+<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_logo.svg#gh-light-mode-only" alt="SplitterMR logo" width=100%/>
+<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_logo_white.svg#gh-dark-mode-only" alt="SplitterMR logo" width=100%/>
 
 !!! important
     **Breaking Change! Version v0.6.0**
@@ -42,6 +20,27 @@
       ```bash
       pip install "splitter-mr[all]"
       ```
+
+
+!!! important
+    **New Vision and Embedding providers**
+    
+    **Version 0.6.4:** SplitterMR now supports **Anthropic Claude** as a backend for both [**embedding**](https://andreshere00.github.io/Splitter_MR/api_reference/embedding#anthropicembedding) (via [Voyage](https://docs.voyageai.com/docs/embeddings) AI) and [**vision**](https://andreshere00.github.io/Splitter_MR/api_reference/model#anthropicvisionmodel) models.
+    
+    **Version 0.6.3:** SplitterMR now supports **Gemini** as a backend for both [**embedding**](https://andreshere00.github.io/Splitter_MR/api_reference/embedding#geminiembedding) and [**vision**](https://andreshere00.github.io/Splitter_MR/api_reference/model/#geminivisionmodel) models.
+    
+    **Version 0.6.2:** SplitterMR now supports **HuggingFace** as a backend for both embedding and vision models:
+    
+    - [**HuggingFaceEmbedding**](https://andreshere00.github.io/Splitter_MR/api_reference/embedding/#huggingfaceembedding): Use any Sentence Transformers model (local or from Hugging Face Hub) for fast, local, or cloud embeddings.
+    - [**HuggingFaceVisionModel**](https://andreshere00.github.io/Splitter_MR/api_reference/model#huggingfacevisionmodel): Leverage Hugging Face’s vision-language models for image-to-text and image captioning.
+    
+    **Version 0.6.1:** SplitterMR now supports `GrokVisionModel`. See documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/model#grokvisionmodel).
+    
+    **To use HuggingFace, Gemini, Claude or Grok models**, you must install SplitterMR with the `multimodal` extra:
+    
+    ```bash
+    pip install "splitter-mr[multimodal]"
+    ```
 
 
 ## Features
@@ -235,19 +234,6 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 
 ### Next features
 
-- [X] Add embedding model support.
-    - [X] Add OpenAI embeddings model support.
-    - [X] Add Azure OpenAI embeddings model support.
-    - [X] Add HuggingFace embeddings model support.
-    - [X] Add Gemini embeddings model support.
-    - [ ] Add Claude Anthropic embeddings model support.
-- [ ] Add Vision models:
-    - [X] Add OpenAI vision model support.
-    - [X] Add Azure OpenAI embeddings model support.
-    - [X] Add Grok VLMs model support.
-    - [X] Add HuggingFace VLMs model support.
-    - [X] Add Gemini VLMs model support.
-    - [ ] Add Claude Anthropic VLMs model support.
 - [ ] Add asynchronous methods for Splitters and Readers.
 - [ ] Add batch methods to process several documents at once.
 - [ ] Add support to read formulas.
@@ -256,6 +242,19 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 
 ### Previously implemented
 
+- [X] Add embedding model support.
+    - [X] Add OpenAI embeddings model support.
+    - [X] Add Azure OpenAI embeddings model support.
+    - [X] Add HuggingFace embeddings model support.
+    - [X] Add Gemini embeddings model support.
+    - [X] Add Claude Anthropic embeddings model support.
+- [X] Add Vision models:
+    - [X] Add OpenAI vision model support.
+    - [X] Add Azure OpenAI embeddings model support.
+    - [X] Add Grok VLMs model support.
+    - [X] Add HuggingFace VLMs model support.
+    - [X] Add Gemini VLMs model support.
+    - [X] Add Claude Anthropic VLMs model support.
 - [X] Modularize library into several sub-libraries.
 - [X] Implement a method to split by embedding similarity: `SemanticSplitter`.
 - [X] Add new supported formats to be analyzed with OpenAI and AzureOpenAI models.

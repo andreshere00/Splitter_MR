@@ -8,18 +8,18 @@ Welcome to the **SplitterMR Python API** reference.
 
 ## **Documentation**
 
-### [Model component documentation](./model.md)
+### [Vision Model component](./model.md)
 
-Add VLMs (Visual Language Models) to analyze your images from your documents.
+Extend the reader capabilities using VLMs (Visual Language Models) to analyze visual content from your documents.
 
-### [Reader component documentation](./reader.md)
+### [Reader component](./reader.md)
 
-Use several reading methods to process your files.
+Use different reading methods to process your files before splitting them.
 
-### [Splitter component documentation](./splitter.md)
+### [Splitter component](./splitter.md)
 
-Implement several splitting strategies based on your needs.
+Implement several splitting strategies based on the type of document and use case.
 
-### [Embedding component documentation](./embedding.md)
+### [Embedding component](./embedding.md)
 
-Implement encoder models to perform Semantic Splitting.
+Implement encoder models from different providers to perform Semantic Splitting.
