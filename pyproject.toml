@@ -59,6 +59,7 @@ multimodal = [
     "gitpython>=3.1.45",
     "sentence-transformers>=5.1.0",
     "torch>=2.7.1",
+    "voyageai>=0.3.4",
 ]
 # Optional Azure AI dependencies (large + extra)
 azure = [
@@ -92,6 +93,7 @@ all = [
     "gitpython>=3.1.45",
     "sentence-transformers>=5.1.0",
     "torch>=2.7.1",
+    "voyageai>=0.3.4",
 ]
 
 [tool.setuptools]
