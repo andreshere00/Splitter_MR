@@ -1,20 +1,22 @@
 # **Vision Models**
 
-Reading documents like Word, PDF, or PowerPoint can sometimes be complicated if they contain images. To avoid this problem, **you can use visual language models (VLMs), which are capable of recognizing images and extracting descriptions from them**. In this prospectus, a model module has been developed, the implementation of which is based on the **BaseVisionModel** class. It is presented below.
+Reading documents like Word, PDF, or PowerPoint can sometimes be complicated if they contain images. To avoid this problem, **you can use visual language models (VLMs), which are capable of recognizing images and extracting descriptions from them**. In this prospectus, a model module has been developed, the implementation of which is based on the [**BaseVisionModel**](#basevisionmodel) class. It is presented below.
 
 ## Which model should I use?
 
 The choice of model depends on your cloud provider, available API keys, and desired level of integration.
-All models inherit from **BaseVisionModel** and provide the same interface for extracting text and descriptions from images.
+All models inherit from [**BaseVisionModel**](#basevisionmodel) and provide the same interface for extracting text and descriptions from images.
 
-| Model                          | When to use                                            | Requirements                                                                         | Features                                                    |
-|------------------------------- |------------------------------------------------------- |--------------------------------------------------------------------------------------|-------------------------------------------------------------|
-| [**OpenAIVisionModel**](#openaivisionmodel)          | If you have an OpenAI API key and want OpenAI cloud    | `OPENAI_API_KEY` (optional: `OPENAI_MODEL`, defaults to `"gpt-4.1"`)                | Simple setup; standard OpenAI chat API                      |
-| [**AzureOpenAIVisionModel**](#azureopenaivisionmodel)     | For Azure OpenAI Services users                        | `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_DEPLOYMENT`, `AZURE_OPENAI_API_VERSION`           | Integrates with Azure; enterprise controls                  |
-| [**GrokVisionModel**](#grokvisionmodel)            | If you have access to xAI’s Grok multimodal model      | `XAI_API_KEY` (optional: `XAI_MODEL`, defaults to `"grok-4"`)                        | Supports data-URIs; optional image quality                  |
-| [**GeminiVisionModel**](#geminivisionmodel)          | If you want Google’s Gemini Vision models              | `GEMINI_API_KEY` + **Multimodal extra:** `pip install splitter-mr[multimodal]`                             | Google Gemini API, multi-modal, high-quality extraction     |
-| [**HuggingFaceVisionModel**](#huggingfacevisionmodel)     | Local/open-source/offline inference                    | **Multimodal extra**: `pip install splitter-mr[multimodal]` (optional: `HF_ACCESS_TOKEN`, for required models)    | Runs locally, uses HF `AutoProcessor` + chat templates      |
-| [**BaseVisionModel**](#basevisionmodel)            | Abstract base, not used directly                       | –                                                                                    | Template to build your own adapters                         |
+| Model                                                 | When to use                                         | Requirements                                                                                                   | Features                                                                                                     |
+| ----------------------------------------------------- | --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| [**OpenAIVisionModel**](#openaivisionmodel)           | If you have an OpenAI API key and want OpenAI cloud | `OPENAI_API_KEY` (optional: `OPENAI_MODEL`, defaults to `"gpt-4.1"`)                                           | Simple setup; standard OpenAI chat API                                                                       |
+| [**AzureOpenAIVisionModel**](#azureopenaivisionmodel) | For Azure OpenAI Services users                     | `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_DEPLOYMENT`, `AZURE_OPENAI_API_VERSION`         | Integrates with Azure; enterprise controls                                                                   |
+| [**GrokVisionModel**](#grokvisionmodel)               | If you have access to xAI’s Grok multimodal model   | `XAI_API_KEY` (optional: `XAI_MODEL`, defaults to `"grok-4"`)                                                  | Supports data-URIs; optional image quality                                                                   |
+| [**GeminiVisionModel**](#geminivisionmodel)           | If you want Google’s Gemini Vision models           | `GEMINI_API_KEY` + **Multimodal extra:** `pip install splitter-mr[multimodal]`                                 | Google Gemini API, multi-modal, high-quality extraction                                                      |
+| [**HuggingFaceVisionModel**](#huggingfacevisionmodel) | Local/open-source/offline inference                 | **Multimodal extra**: `pip install splitter-mr[multimodal]` (optional: `HF_ACCESS_TOKEN`, for required models) | Runs locally, uses HF `AutoProcessor` + chat templates                                                       |
+| [**AnthropicVisionModel**](#anthropicvisionmodel)     | If you have an Anthropic key and want Claude Vision | `ANTHROPIC_API_KEY` (optional: `ANTHROPIC_MODEL`, defaults to `"claude-sonnet-4-20250514"`)                    | Uses OpenAI SDK with Anthropic base URL; data-URI (base64) image input; OpenAI-compatible `chat.completions` |
+| [**BaseVisionModel**](#basevisionmodel)               | Abstract base, not used directly                    | –                                                                                                              | Template to build your own adapters                                                                          |
+
 
 ## Models
 
@@ -61,6 +63,16 @@ All models inherit from **BaseVisionModel** and provide the same interface for e
 ![GeminiVisionModel logo](../assets/gemini_vision_model_button_white.svg#gh-dark-mode-only)
 
 ::: src.splitter_mr.model.models.gemini_model
+    handler: python
+    options:
+      members_order: source
+
+### AnthropicVisionModel
+
+![AnthropicVisionModel logo](../assets/anthropic_vision_model_button.svg#gh-light-mode-only)
+![AnthropicVisionModel logo](../assets/anthropic_vision_model_button_white.svg#gh-dark-mode-only)
+
+::: src.splitter_mr.model.models.anthropic_model
     handler: python
     options:
       members_order: source

@@ -55,7 +55,7 @@ class GrokVisionModel(BaseVisionModel):
         self.client = Client(
             api_key=api_key,
             base_url="https://api.x.ai/v1",
-        )
+        )  # TODO: Change to xAI SDK
 
     def get_client(self) -> Client:
         """
