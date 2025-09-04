@@ -8,6 +8,9 @@ import yaml
 from splitter_mr.reader.readers.vanilla_reader import (
     SimpleHTMLTextExtractor,
     VanillaReader,
+    _read_excel,
+    _read_parquet,
+    _read_text_file,
 )
 from splitter_mr.schema import DEFAULT_IMAGE_EXTRACTION_PROMPT, ReaderOutput
 
@@ -757,3 +760,185 @@ def test_image_ext_custom_supported(monkeypatch, create_image):
     reader = VanillaReader(model=DummyVisionModel())
     out = reader.read(file_path=img_path)
     assert out.conversion_method == "image"
+
+
+def test_init_assigns_model_and_pdf_reader(monkeypatch):
+    class DummyPDF:
+        pass
+
+    monkeypatch.setattr(
+        "splitter_mr.reader.readers.vanilla_reader.PDFPlumberReader", lambda: DummyPDF()
+    )
+    m = object()
+    reader = VanillaReader(model=m)
+    assert reader.model is m
+    assert isinstance(reader.pdf_reader, DummyPDF)
+
+
+def test_dispatch_source_invalid_key():
+    reader = VanillaReader()
+    with pytest.raises(ValueError, match="Unrecognized document source"):
+        reader._dispatch_source("not_a_real_source", "x", {})
+
+
+def test_handle_local_path_rejects_non_string():
+    reader = VanillaReader()
+    with pytest.raises(ValueError, match="file_path must be a string or Path object"):
+        reader._handle_local_path(123, {})
+
+
+def test_handle_fallback_raw_fallback(monkeypatch):
+    reader = VanillaReader()
+    # Patch JSON/text to always fail, so fallback hits last branch
+    monkeypatch.setattr(
+        reader,
+        "_handle_explicit_json",
+        lambda r, k: (_ for _ in ()).throw(Exception("fail")),
+    )
+    monkeypatch.setattr(
+        reader,
+        "_handle_explicit_text",
+        lambda r, k: (_ for _ in ()).throw(Exception("fail")),
+    )
+    result = reader._handle_fallback("raw-stuff", {"document_name": "docname"})
+    assert result == ("docname", None, "raw-stuff", "txt", None)
+
+
+def test_handle_image_to_llm_raises_if_no_model(tmp_path):
+    img = tmp_path / "pic.png"
+    img.write_bytes(b"foo")
+    reader = VanillaReader(model=None)
+    with pytest.raises(ValueError, match="No vision model provided"):
+        reader._handle_image_to_llm(None, str(img))
+
+
+def test_scan_pdf_pages_returns_joined_text(tmp_path):
+    class DummyModel:
+        model_name = "x"
+
+    class DummyPDFPlumber:
+        def describe_pages(self, file_path, model, prompt, resolution=300, **kw):
+            return ["page-a", "page-b"]
+
+    reader = VanillaReader(model=DummyModel())
+    reader.pdf_reader = DummyPDFPlumber()
+    out = reader._scan_pdf_pages(
+        str(tmp_path / "file.pdf"), model=DummyModel(), page_placeholder="ZPAGEZ"
+    )
+    assert out.count("ZPAGEZ") == 2
+    assert "page-a" in out and "page-b" in out
+
+
+def test_surface_page_placeholder_excludes_percent():
+    out = VanillaReader._surface_page_placeholder(
+        scan=True, placeholder="%foo%", text="hello"
+    )
+    assert out is None
+    out2 = VanillaReader._surface_page_placeholder(
+        scan=False, placeholder="PAGE", text="PAGE in text"
+    )
+    assert out2 == "PAGE"
+    out3 = VanillaReader._surface_page_placeholder(
+        scan=False, placeholder="NOTIN", text="absent"
+    )
+    assert out3 is None
+
+
+def test_convert_office_to_pdf_missing_soffice(monkeypatch, tmp_path):
+    # Simulate soffice missing
+    monkeypatch.setattr("shutil.which", lambda cmd: None)
+    reader = VanillaReader()
+    with pytest.raises(RuntimeError, match="LibreOffice/soffice is required"):
+        reader._convert_office_to_pdf(str(tmp_path / "file.docx"))
+
+
+def test_convert_office_to_pdf_subprocess_fail(monkeypatch, tmp_path):
+    # Simulate soffice present but fails
+    monkeypatch.setattr("shutil.which", lambda cmd: True)
+
+    class DummyProc:
+        returncode = 1
+        stderr = b"failed!"
+
+    monkeypatch.setattr("subprocess.run", lambda *a, **k: DummyProc())
+    reader = VanillaReader()
+    with pytest.raises(RuntimeError, match="LibreOffice failed converting"):
+        reader._convert_office_to_pdf(str(tmp_path / "file.docx"))
+
+
+def test_convert_office_to_pdf_pdf_not_found(monkeypatch, tmp_path):
+    monkeypatch.setattr("shutil.which", lambda cmd: True)
+
+    class DummyProc:
+        returncode = 0
+        stderr = b""
+
+    monkeypatch.setattr("subprocess.run", lambda *a, **k: DummyProc())
+    reader = VanillaReader()
+    # output PDF does not exist
+    with pytest.raises(RuntimeError, match="Expected PDF not found"):
+        reader._convert_office_to_pdf(str(tmp_path / "notthere.docx"))
+
+
+def test_read_text_file_yaml(tmp_path):
+    f = tmp_path / "file.yaml"
+    f.write_text("k: v")
+    out = _read_text_file(str(f), "yaml")
+    assert "k: v" in out
+
+
+def test_read_text_file_plain(tmp_path):
+    f = tmp_path / "file.txt"
+    f.write_text("foobar")
+    out = _read_text_file(str(f), "txt")
+    assert out == "foobar"
+
+
+def test_read_parquet_importerror(monkeypatch, tmp_path):
+    # Simulate ImportError in pandas
+    monkeypatch.setattr(
+        pd,
+        "read_parquet",
+        lambda *a, **k: (_ for _ in ()).throw(ImportError("no pyarrow")),
+    )
+    f = tmp_path / "f.parquet"
+    f.write_text("x")
+    with pytest.raises(ImportError):
+        _read_parquet(str(f))
+
+
+def test_read_parquet_valueerror(monkeypatch, tmp_path):
+    # Simulate ValueError in pandas
+    monkeypatch.setattr(
+        pd,
+        "read_parquet",
+        lambda *a, **k: (_ for _ in ()).throw(ValueError("bad file")),
+    )
+    f = tmp_path / "g.parquet"
+    f.write_text("y")
+    with pytest.raises(ValueError):
+        _read_parquet(str(f))
+
+
+def test_read_excel_importerror(monkeypatch, tmp_path):
+    # Simulate ImportError in pandas
+    monkeypatch.setattr(
+        pd,
+        "read_excel",
+        lambda *a, **k: (_ for _ in ()).throw(ImportError("no openpyxl")),
+    )
+    f = tmp_path / "f.xlsx"
+    f.write_text("z")
+    with pytest.raises(ImportError):
+        _read_excel(str(f))
+
+
+def test_read_excel_valueerror(monkeypatch, tmp_path):
+    # Simulate ValueError in pandas
+    monkeypatch.setattr(
+        pd, "read_excel", lambda *a, **k: (_ for _ in ()).throw(ValueError("bad excel"))
+    )
+    f = tmp_path / "f.xlsx"
+    f.write_text("x")
+    with pytest.raises(ValueError):
+        _read_excel(str(f))

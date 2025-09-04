@@ -1,23 +1,12 @@
 import base64
-import importlib
 import mimetypes
 import os
 from typing import Any, Optional
 
+from google import genai
+from google.genai import types
+
 from ...model import BaseVisionModel
-
-
-def _require_extra(extra: str, import_name: Optional[str] = None) -> None:
-    """Raise ImportError with install instructions if a required extra is missing."""
-    mod = import_name or extra
-    try:
-        __import__(mod)
-    except ImportError as e:
-        raise ImportError(
-            f"This feature requires the '{extra}' extra.\n"
-            f"Install it with:\n\n"
-            f"    pip install splitter-mr[{extra}]\n"
-        ) from e
 
 
 class GeminiVisionModel(BaseVisionModel):
@@ -37,11 +26,6 @@ class GeminiVisionModel(BaseVisionModel):
             ImportError: If `google-generativeai` is not installed.
             ValueError: If no API key is provided or 'GEMINI_API_KEY' not set.
         """
-        _require_extra("multimodal", "google.genai")
-
-        # Lazy import so test monkeypatching works
-        genai = importlib.import_module("google.genai")
-        types = importlib.import_module("google.genai.types")
 
         if api_key is None:
             api_key = os.getenv("GEMINI_API_KEY")

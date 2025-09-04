@@ -1,16 +1,43 @@
-import builtins
+import importlib
+import sys
 import types
 import uuid
 import warnings
 
 import pytest
 
-from splitter_mr.reader.readers.docling_reader import DoclingReader, _require_docling
+from splitter_mr.reader.readers.docling_reader import DoclingReader
 from splitter_mr.reader.readers.vanilla_reader import VanillaReader
 from splitter_mr.reader.utils import DoclingPipelineFactory
 from splitter_mr.schema import ReaderOutput
 
-# Helpers
+# ---- Helpers, mocks and fixtures ---- #
+
+PKG = "splitter_mr.reader.utils"
+
+
+def _reload_pkg():
+    """
+    Force a clean re-import of the package under test so monkeypatching
+    importlib.import_module affects the import path resolution each time.
+    """
+    for key in list(sys.modules.keys()):
+        if key == PKG or key.startswith(PKG + "."):
+            sys.modules.pop(key, None)
+    return importlib.import_module(PKG)
+
+
+def test_unknown_attribute_raises_attributeerror():
+    mod = _reload_pkg()
+    with pytest.raises(AttributeError):
+        getattr(mod, "DoesNotExist")
+
+
+def test___dir___matches___all__():
+    mod = _reload_pkg()
+    assert set(dir(mod)) >= set(
+        mod.__all__
+    )  # dir() can include more, but must include __all__
 
 
 # Dummy Model for tests
@@ -224,48 +251,24 @@ def test_page_placeholder_none_when_absent(monkeypatch):
     assert out.page_placeholder is None
 
 
-def test__require_docling_raises_when_missing(monkeypatch):
-    """If docling isn't installed, surface a clear extras message."""
-    real_import = builtins.__import__
+def test_docling_factory_raises_nice_error_when_missing_extra(monkeypatch):
+    """
+    When docling is missing, accessing DoclingPipelineFactory should raise
+    ModuleNotFoundError with a friendly install hint.
+    """
+    real_import_module = importlib.import_module
 
-    def fake_import(name, *args, **kwargs):
-        if name == "docling":
-            raise ImportError("No module named 'docling'")
-        return real_import(name, *args, **kwargs)
+    def fake_import_module(name, package=None):
+        abs_name = importlib.util.resolve_name(name, package) if package else name
+        if abs_name.endswith(".docling_utils"):
+            raise ModuleNotFoundError("docling")
+        return real_import_module(name, package=package)
 
-    monkeypatch.setattr(builtins, "__import__", fake_import)
+    monkeypatch.setattr(importlib, "import_module", fake_import_module)
 
-    with pytest.raises(ImportError) as ei:
-        _require_docling()
-
-    msg = str(ei.value)
+    mod = _reload_pkg()
+    with pytest.raises(ModuleNotFoundError) as excinfo:
+        getattr(mod, "DoclingPipelineFactory")
+    msg = str(excinfo.value)
     assert "requires the 'docling' extra" in msg
-    assert "pip install splitter-mr[docling]" in msg
-
-
-def test_docling_reader_ctor_raises_when_missing(monkeypatch):
-    """Constructor should fail early with the same clear error when extra is missing."""
-    real_import = builtins.__import__
-
-    def fake_import(name, *args, **kwargs):
-        if name == "docling":
-            raise ImportError("No module named 'docling'")
-        return real_import(name, *args, **kwargs)
-
-    monkeypatch.setattr(builtins, "__import__", fake_import)
-
-    with pytest.raises(ImportError) as ei:
-        DoclingReader()
-
-    msg = str(ei.value)
-    assert "requires the 'docling' extra" in msg
-    assert "pip install splitter-mr[docling]" in msg
-
-
-def test__require_docling_noop_when_present(monkeypatch):
-    """If a (stub) docling module is present, no error should be raised."""
-    stub = types.ModuleType("docling")
-    monkeypatch.setitem(__import__("sys").modules, "docling", stub)
-
-    # Should not raise
-    _require_docling()
+    assert "pip install 'splitter-mr[docling]'" in msg

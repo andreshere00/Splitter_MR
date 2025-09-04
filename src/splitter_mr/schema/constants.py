@@ -4,6 +4,15 @@ from typing import Dict, Set
 # Readers #
 # ------- #
 
+# ---- MarkitDown constants ---- #
+
+MARKITDOWN_SUPPORTED_MODELS: Set[str] = {
+    "AzureOpenAIVisionModel",
+    "OpenAIVisionModel",
+    "AnthropicVisionModel",
+    "GrokVisionModel",
+}
+
 # ---- Docling constants ---- #
 
 SUPPORTED_DOCLING_FILE_EXTENSIONS: Set[str] = {

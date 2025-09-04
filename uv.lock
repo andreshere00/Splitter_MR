@@ -1054,6 +1054,15 @@ wheels = [
 ]
 
 [[package]]
+name = "fastjsonschema"
+version = "2.21.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/20/b5/23b216d9d985a956623b6bd12d4086b60f0059b27799f23016af04a74ea1/fastjsonschema-2.21.2.tar.gz", hash = "sha256:b1eb43748041c880796cd077f1a07c3d94e93ae84bba5ed36800a33554ae05de", size = 374130 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/cb/a8/20d0723294217e47de6d9e2e40fd4a9d2f7c4b6ef974babd482a59743694/fastjsonschema-2.21.2-py3-none-any.whl", hash = "sha256:1c797122d0a86c5cace2e54bf4e819c36223b552017172f32c5c024a6b77e463", size = 24024 },
+]
+
+[[package]]
 name = "fastparquet"
 version = "2024.11.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1717,6 +1726,20 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/bf/ce/46fbd9c8119cfc3581ee5643ea49464d168028cfb5caff5fc0596d0cf914/jsonschema_specifications-2025.4.1.tar.gz", hash = "sha256:630159c9f4dbea161a6a2205c3011cc4f18ff381b189fff48bb39b9bf26ae608", size = 15513 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/01/0e/b27cdbaccf30b890c40ed1da9fd4a3593a5cf94dae54fb34f8a4b74fcd3f/jsonschema_specifications-2025.4.1-py3-none-any.whl", hash = "sha256:4653bffbd6584f7de83a67e0d620ef16900b390ddc7939d56684d6c81e33f1af", size = 18437 },
+]
+
+[[package]]
+name = "jupyter-core"
+version = "5.8.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "platformdirs" },
+    { name = "pywin32", marker = "platform_python_implementation != 'PyPy' and sys_platform == 'win32'" },
+    { name = "traitlets" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/99/1b/72906d554acfeb588332eaaa6f61577705e9ec752ddb486f302dafa292d9/jupyter_core-5.8.1.tar.gz", hash = "sha256:0a5f9706f70e64786b75acba995988915ebd4601c8a52e534a40b51c95f59941", size = 88923 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/2f/57/6bffd4b20b88da3800c5d691e0337761576ee688eb01299eae865689d2df/jupyter_core-5.8.1-py3-none-any.whl", hash = "sha256:c28d268fc90fb53f1338ded2eb410704c5449a358406e8a948b75706e24863d0", size = 28880 },
 ]
 
 [[package]]
@@ -2467,6 +2490,21 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/e2/a9/a0c57aee75f77794adaf35322f8b6404cbd0f89ad45c87197a937764b7d0/natsort-8.4.0.tar.gz", hash = "sha256:45312c4a0e5507593da193dedd04abb1469253b601ecaf63445ad80f0a1ea581", size = 76575 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ef/82/7a9d0550484a62c6da82858ee9419f3dd1ccc9aa1c26a1e43da3ecd20b0d/natsort-8.4.0-py3-none-any.whl", hash = "sha256:4732914fb471f56b5cce04d7bae6f164a592c7712e1c85f9ef585e197299521c", size = 38268 },
+]
+
+[[package]]
+name = "nbformat"
+version = "5.10.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "fastjsonschema" },
+    { name = "jsonschema" },
+    { name = "jupyter-core" },
+    { name = "traitlets" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/6d/fd/91545e604bc3dad7dca9ed03284086039b294c6b3d75c0d2fa45f9e9caf3/nbformat-5.10.4.tar.gz", hash = "sha256:322168b14f937a5d11362988ecac2a4952d3d8e3a2cbeb2319584631226d5b3a", size = 142749 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a9/82/0340caa499416c78e5d8f5f05947ae4bc3cba53c9f038ab6e9ed964e22f1/nbformat-5.10.4-py3-none-any.whl", hash = "sha256:3b48d6c8fbca4b299bf3982ea7db1af21580e4fec269ad087b9e81588891200b", size = 78454 },
 ]
 
 [[package]]
@@ -3530,6 +3568,15 @@ wheels = [
 ]
 
 [[package]]
+name = "pypandoc"
+version = "1.15"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/e1/88/26e650d053df5f3874aa3c05901a14166ce3271f58bfe114fd776987efbd/pypandoc-1.15.tar.gz", hash = "sha256:ea25beebe712ae41d63f7410c08741a3cab0e420f6703f95bc9b3a749192ce13", size = 32940 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/61/06/0763e0ccc81754d3eadb21b2cb86cf21bdedc9b52698c2ad6785db7f0a4e/pypandoc-1.15-py3-none-any.whl", hash = "sha256:4ededcc76c8770f27aaca6dff47724578428eca84212a31479403a9731fc2b16", size = 21321 },
+]
+
+[[package]]
 name = "pypdf"
 version = "6.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -4564,7 +4611,6 @@ dependencies = [
     { name = "langchain-text-splitters" },
     { name = "nltk" },
     { name = "numpy" },
-    { name = "openai" },
     { name = "openpyxl" },
     { name = "pdfplumber" },
     { name = "pymupdf" },
@@ -4604,15 +4650,13 @@ all = [
     { name = "voyageai" },
     { name = "xai-sdk" },
 ]
-azure = [
-    { name = "azure-ai-documentintelligence" },
-    { name = "azure-core" },
-    { name = "azure-identity" },
-]
 docling = [
     { name = "docling" },
 ]
 markitdown = [
+    { name = "azure-ai-documentintelligence" },
+    { name = "azure-core" },
+    { name = "azure-identity" },
     { name = "markitdown", extra = ["all"] },
 ]
 multimodal = [
@@ -4648,8 +4692,10 @@ dev = [
     { name = "mkdocs-glightbox" },
     { name = "mkdocs-material" },
     { name = "mkdocstrings", extra = ["python"] },
+    { name = "nbformat" },
     { name = "poethepoet" },
     { name = "pre-commit" },
+    { name = "pypandoc" },
     { name = "pyproject-autoflake" },
     { name = "pytest" },
     { name = "pytest-cov" },
@@ -4664,11 +4710,11 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "azure-ai-documentintelligence", marker = "extra == 'all'", specifier = ">=1.0.2" },
-    { name = "azure-ai-documentintelligence", marker = "extra == 'azure'", specifier = ">=1.0.2" },
+    { name = "azure-ai-documentintelligence", marker = "extra == 'markitdown'", specifier = ">=1.0.2" },
     { name = "azure-core", marker = "extra == 'all'", specifier = ">=1.34.0" },
-    { name = "azure-core", marker = "extra == 'azure'", specifier = ">=1.34.0" },
+    { name = "azure-core", marker = "extra == 'markitdown'", specifier = ">=1.34.0" },
     { name = "azure-identity", marker = "extra == 'all'", specifier = ">=1.23.0" },
-    { name = "azure-identity", marker = "extra == 'azure'", specifier = ">=1.23.0" },
+    { name = "azure-identity", marker = "extra == 'markitdown'", specifier = ">=1.23.0" },
     { name = "beautifulsoup4", specifier = ">=4.13.4" },
     { name = "docling", marker = "extra == 'all'", specifier = ">=2.36.0" },
     { name = "docling", marker = "extra == 'docling'", specifier = ">=2.36.0" },
@@ -4691,7 +4737,6 @@ requires-dist = [
     { name = "numpy", specifier = ">=2.3.0" },
     { name = "onnxruntime", marker = "extra == 'all'", specifier = ">=1.22.0" },
     { name = "onnxruntime", marker = "extra == 'multimodal'", specifier = ">=1.22.0" },
-    { name = "openai", specifier = ">=1.88.0" },
     { name = "openai", marker = "extra == 'all'", specifier = ">=1.99.9" },
     { name = "openai", marker = "extra == 'multimodal'", specifier = ">=1.99.9" },
     { name = "opencv-python-headless", marker = "extra == 'all'", specifier = ">=4.11.0.86" },
@@ -4732,7 +4777,7 @@ requires-dist = [
     { name = "xai-sdk", marker = "extra == 'all'", specifier = ">=1.0.1" },
     { name = "xlrd", specifier = ">=2.0.1" },
 ]
-provides-extras = ["markitdown", "docling", "multimodal", "azure", "all"]
+provides-extras = ["markitdown", "docling", "multimodal", "all"]
 
 [package.metadata.requires-dev]
 dev = [
@@ -4746,8 +4791,10 @@ dev = [
     { name = "mkdocs-glightbox", specifier = ">=0.4.0" },
     { name = "mkdocs-material", specifier = ">=9.6.14" },
     { name = "mkdocstrings", extras = ["python"], specifier = ">=0.29.1" },
+    { name = "nbformat", specifier = ">=5.10.4" },
     { name = "poethepoet", specifier = ">=0.35.0" },
     { name = "pre-commit", specifier = ">=4.2.0" },
+    { name = "pypandoc", specifier = ">=1.15" },
     { name = "pyproject-autoflake", specifier = ">=1.0.2" },
     { name = "pytest", specifier = ">=8.4.0" },
     { name = "pytest-cov", specifier = ">=6.1.1" },
@@ -5128,6 +5175,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/a8/4b/29b4ef32e036bb34e4ab51796dd745cdba7ed47ad142a9f4a1eb8e0c744d/tqdm-4.67.1.tar.gz", hash = "sha256:f8aef9c52c08c13a65f30ea34f4e5aac3fd1a34959879d7e59e63027286627f2", size = 169737 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/d0/30/dc54f88dd4a2b5dc8a0279bdd7270e735851848b762aeb1c1184ed1f6b14/tqdm-4.67.1-py3-none-any.whl", hash = "sha256:26445eca388f82e72884e0d580d5464cd801a3ea01e63e5601bdff9ba6a48de2", size = 78540 },
+]
+
+[[package]]
+name = "traitlets"
+version = "5.14.3"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/eb/79/72064e6a701c2183016abbbfedaba506d81e30e232a68c9f0d6f6fcd1574/traitlets-5.14.3.tar.gz", hash = "sha256:9ed0579d3502c94b4b3732ac120375cda96f923114522847de4b3bb98b96b6b7", size = 161621 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/00/c0/8f5d070730d7836adc9c9b6408dec68c6ced86b304a9b26a14df072a6e8c/traitlets-5.14.3-py3-none-any.whl", hash = "sha256:b74e89e397b1ed28cc831db7aea759ba6640cb3de13090ca145426688ff1ac4f", size = 85359 },
 ]
 
 [[package]]

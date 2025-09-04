@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The **Splitter** component implements the main functionality of this library. This component is designed to deliver classes (inherited from [`**BaseSplitter**`](#basesplitter)) which supports to split a markdown text or a string following many different strategies. 
+The **Splitter** component implements the main functionality of this library. This component is designed to deliver classes (inherited from [**`BaseSplitter`**](#basesplitter)) which supports to split a markdown text or a string following many different strategies. 
 
 ### Splitter strategies description
 

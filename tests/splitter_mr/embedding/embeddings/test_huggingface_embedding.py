@@ -4,7 +4,6 @@ import types
 import numpy as np
 import pytest
 
-import splitter_mr.embedding.embeddings.huggingface_embedding as hf_emb_mod
 from splitter_mr.embedding.embeddings.huggingface_embedding import HuggingFaceEmbedding
 
 # ---- Fixtures, helpers & dummies ---- #
@@ -85,18 +84,6 @@ def patch_sentence_transformers(monkeypatch):
     dummy_mod = types.ModuleType("sentence_transformers")
     dummy_mod.SentenceTransformer = DummySentenceTransformer
     monkeypatch.setitem(sys.modules, "sentence_transformers", dummy_mod)
-
-
-@pytest.fixture(autouse=True)
-def patch_require_extra(monkeypatch):
-    # Make the extra-check a no-op for tests
-    monkeypatch.setattr(hf_emb_mod, "_require_extra", lambda *a, **k: None)
-
-
-@pytest.fixture(autouse=True)
-def patch_torch(monkeypatch):
-    # Ensure `torch` is considered "available" (non-None) in our module
-    monkeypatch.setattr(hf_emb_mod, "torch", DummyTorch(), raising=True)
 
 
 # ---- Test cases ---- #
@@ -327,3 +314,114 @@ def test_length_check_skips_when_unknown(monkeypatch):
     monkeypatch.setattr(emb.model, "encode", fake_encode, raising=True)
     out = emb.embed_text("this can be arbitrarily long without checks")
     assert out == [1.0, 2.0]
+
+
+def test_embed_text_string_numbers_coerced(monkeypatch):
+    emb = HuggingFaceEmbedding()
+
+    class FakeVec:
+        def __iter__(self):
+            return iter(["1.1", "2.2", "3.3"])
+
+    def fake_encode(text, **kwargs):
+        return FakeVec()
+
+    monkeypatch.setattr(emb.model, "encode", fake_encode, raising=True)
+    out = emb.embed_text("ok")
+    assert out == [1.1, 2.2, 3.3]
+
+
+def test_embed_documents_returns_flat_list_if_output_is_flat(monkeypatch):
+    emb = HuggingFaceEmbedding()
+
+    # Simulate model.encode returning [1.5, 2.5, 3.5] for a single input string
+    def fake_encode(texts, **kwargs):
+        return [1.5, 2.5, 3.5]
+
+    monkeypatch.setattr(emb.model, "encode", fake_encode, raising=True)
+    out = emb.embed_documents(["foo"])
+    assert out == [[1.5, 2.5, 3.5]]
+
+
+def test_embed_documents_raises_on_weird_output(monkeypatch):
+    emb = HuggingFaceEmbedding()
+
+    class Weird:
+        pass
+
+    def fake_encode(texts, **kwargs):
+        return Weird()
+
+    monkeypatch.setattr(emb.model, "encode", fake_encode, raising=True)
+    with pytest.raises(RuntimeError, match="Unexpected batch embedding output type"):
+        emb.embed_documents(["foo", "bar"])
+
+
+@pytest.mark.parametrize("bad", [None, 123, 1.1, {}, [], object()])
+def test_embed_text_raises_on_non_str(bad):
+    emb = HuggingFaceEmbedding()
+    with pytest.raises(ValueError, match="must be a non-empty string"):
+        emb.embed_text(bad)
+
+
+def test_max_seq_length_returns_none_if_all_fails(monkeypatch):
+    emb = HuggingFaceEmbedding()
+    # Patch get_max_seq_length to raise and model has no max_seq_length attr
+    monkeypatch.setattr(
+        emb.model,
+        "get_max_seq_length",
+        lambda: (_ for _ in ()).throw(Exception("fail")),
+        raising=True,
+    )
+    if hasattr(emb.model, "max_seq_length"):
+        monkeypatch.delattr(emb.model, "max_seq_length", raising=False)
+    assert emb._max_seq_length() is None
+
+
+def test_count_tokens_returns_none_on_failure(monkeypatch):
+    emb = HuggingFaceEmbedding()
+    monkeypatch.setattr(
+        emb.model,
+        "tokenize",
+        lambda _: (_ for _ in ()).throw(Exception("fail")),
+        raising=True,
+    )
+    assert emb._count_tokens("irrelevant") is None
+
+
+def test_embed_documents_explicit_normalize_embeddings(monkeypatch):
+    emb = HuggingFaceEmbedding(normalize=True)  # default True
+
+    def fake_encode(texts, **kwargs):
+        emb.model._last_kwargs = kwargs
+        return np.ones((2, 2), dtype=np.float32)
+
+    monkeypatch.setattr(emb.model, "encode", fake_encode, raising=True)
+    out = emb.embed_documents(["a", "b"], normalize_embeddings=False)
+    assert out == [[1.0, 1.0], [1.0, 1.0]]
+    assert emb.model._last_kwargs["normalize_embeddings"] is False
+
+
+def test_embed_text_always_sets_convert_to_tensor_false(monkeypatch):
+    emb = HuggingFaceEmbedding()
+
+    def fake_encode(text, **kwargs):
+        emb.model._last_kwargs = kwargs
+        return np.array([9, 8, 7], dtype=np.float32)
+
+    monkeypatch.setattr(emb.model, "encode", fake_encode, raising=True)
+    _ = emb.embed_text("hello", convert_to_tensor=True)
+    assert emb.model._last_kwargs["convert_to_tensor"] is False
+
+
+def test_embed_documents_forwards_all_parameters(monkeypatch):
+    emb = HuggingFaceEmbedding()
+
+    def fake_encode(texts, **kwargs):
+        emb.model._last_kwargs = kwargs
+        return np.ones((2, 2), dtype=np.float32)
+
+    monkeypatch.setattr(emb.model, "encode", fake_encode, raising=True)
+    _ = emb.embed_documents(["a", "b"], batch_size=22, show_progress_bar=False)
+    assert emb.model._last_kwargs["batch_size"] == 22
+    assert emb.model._last_kwargs["show_progress_bar"] is False

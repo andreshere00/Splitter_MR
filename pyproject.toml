@@ -17,7 +17,6 @@ dependencies = [
     "langchain-text-splitters>=0.3.8",
     "nltk>=3.9.1",
     "numpy>=2.3.0",
-    "openai>=1.88.0",
     "openpyxl>=3.1.5",
     "pdfplumber>=0.11.7",
     "pymupdf>=1.26.1",
@@ -33,7 +32,10 @@ dependencies = [
 [project.optional-dependencies]
 # Markitdown dependencies
 markitdown = [
-    "markitdown[all]==0.1.2"
+    "markitdown[all]==0.1.2",
+    "azure-ai-documentintelligence>=1.0.2",
+    "azure-core>=1.34.0",
+    "azure-identity>=1.23.0",
 ]
 # Docling dependencies
 docling = [
@@ -60,12 +62,6 @@ multimodal = [
     "sentence-transformers>=5.1.0",
     "torch>=2.7.1",
     "voyageai>=0.3.4",
-]
-# Optional Azure AI dependencies (large + extra)
-azure = [
-    "azure-ai-documentintelligence>=1.0.2",
-    "azure-core>=1.34.0",
-    "azure-identity>=1.23.0",
 ]
 # All the dependencies
 all = [
@@ -164,6 +160,8 @@ dev = [
     "setuptools-scm>=8.3.1",
     "twine>=6.1.0",
     "wheel>=0.45.1",
+    "pypandoc>=1.15",
+    "nbformat>=5.10.4",
 ]
 
 [project.urls]

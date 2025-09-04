@@ -62,7 +62,7 @@ So, the models can be loaded as follows:
     azure_deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT")
 
     model = AzureOpenAIVisionModel(
-        azure_api_key=azure_api_key,
+        api_key=azure_api_key,
         azure_endpoint=azure_endpoint,
         api_version=api_version,
         azure_deployment=azure_deployment
@@ -224,6 +224,9 @@ Of course, remember that the use of a VLM is not mandatory, and you can read the
 ```python
 from splitter_mr.model import AzureOpenAIVisionModel
 from splitter_mr.reader import DoclingReader
+from dotenv import load_dotenv
+
+load_dotenv()
 
 file = "data/sample_pdf.pdf"
 

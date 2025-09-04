@@ -1,21 +1,9 @@
-import importlib
 import os
 from typing import Any, List, Optional
 
+import voyageai
+
 from ..base_embedding import BaseEmbedding
-
-
-def _require_extra(extra: str, import_name: Optional[str] = None) -> None:
-    """Raise an ImportError with install instructions if a required extra is missing."""
-    mod = import_name or extra
-    try:
-        __import__(mod)
-    except ImportError as e:
-        raise ImportError(
-            f"This feature requires the '{extra}' extra.\n"
-            f"Install it with:\n\n"
-            f"    pip install splitter-mr[{extra}]\n"
-        ) from e
 
 
 class AnthropicEmbedding(BaseEmbedding):
@@ -60,10 +48,6 @@ class AnthropicEmbedding(BaseEmbedding):
             ImportError: If the `multimodal` extra (with `voyageai`) is not installed.
             ValueError: If no API key is provided or found in the environment.
         """
-        # Ensure multimodal extra (which includes voyageai) is installed
-        _require_extra("multimodal", "voyageai")
-
-        voyageai = importlib.import_module("voyageai")
 
         if api_key is None:
             api_key = os.getenv("VOYAGE_API_KEY")

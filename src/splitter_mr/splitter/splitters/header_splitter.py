@@ -2,20 +2,17 @@ import re
 from typing import List, Optional, Tuple
 
 from bs4 import BeautifulSoup
-from langchain_text_splitters import HTMLHeaderTextSplitter, MarkdownHeaderTextSplitter
+from langchain_text_splitters import MarkdownHeaderTextSplitter
 
 from ...schema import ReaderOutput, SplitterOutput
 from ..base_splitter import BaseSplitter
+from .utils import HtmlToMarkdown
 
 
 class HeaderSplitter(BaseSplitter):
     """
     Splits an HTML or Markdown document into chunks based on header levels.
-
-    This splitter converts a list of semantic header names (e.g., ["Header 1", "Header 2"])
-    into the correct header tokens for Markdown ("#", "##", ...) or HTML ("h1", "h2", ...),
-    and uses Langchain's splitters under the hood. You can choose whether to group headers
-    with their following content or split on each leaf element.
+    HTML is always converted to Markdown before splitting for consistency.
 
     Args:
         chunk_size (int, optional): Kept for compatibility. Defaults to 1000.
@@ -24,24 +21,17 @@ class HeaderSplitter(BaseSplitter):
         group_header_with_content (bool, optional): If True (default), keeps each header with
             its following block(s). If False, falls back to line/element splitting.
 
-    Notes:
-        - Only actual Markdown (#) or HTML (<h1>–<h6>) headings are supported.
-        - Output is a SplitterOutput dataclass compatible with splitter_mr.
-
     Example:
         ```python
         from splitter_mr.splitter import HeaderSplitter
 
         reader_output = ReaderOutput(
-            text = '<!DOCTYPE html><html><body><h1>Main Title</h1><h2>Section 1</h2><h2>Section 2</h2></body></html>',
+            text = '<h1>Main Title</h1><h2>Section 1</h2>...',
             ...
         )
         splitter = HeaderSplitter(headers_to_split_on=["Header 1", "Header 2"])
         output = splitter.split(reader_output)
         print(output.chunks)
-        ```
-        ```python
-        ['<!DOCTYPE html><html><body><h1>Main Title</h1>', '<h2>Section 1</h2>', '<h2>Section 2</h2></body></html>']
         ```
     """
 
@@ -53,7 +43,7 @@ class HeaderSplitter(BaseSplitter):
         group_header_with_content: bool = True,
     ):
         """
-        Initializes the TagSplitter with header configuration.
+        Initializes the HeaderSplitter with header configuration.
 
         Args:
             chunk_size (int): Unused, for API compatibility.
@@ -68,10 +58,10 @@ class HeaderSplitter(BaseSplitter):
 
     def _make_tuples(self, filetype: str) -> List[Tuple[str, str]]:
         """
-        Converts semantic header names into tuples for Langchain splitters.
+        Converts semantic header names into tuples for Markdown splitter.
 
         Args:
-            filetype (str): "md" for Markdown, "html" for HTML.
+            filetype (str): "md" for Markdown (always used here).
 
         Returns:
             List[Tuple[str, str]]: Tuples with (header_token, semantic_name).
@@ -84,8 +74,6 @@ class HeaderSplitter(BaseSplitter):
             lvl = self._header_level(header)
             if filetype == "md":
                 tuples.append(("#" * lvl, header))
-            elif filetype == "html":
-                tuples.append((f"h{lvl}", header))
             else:
                 raise ValueError(f"Unsupported filetype: {filetype!r}")
         return tuples
@@ -106,7 +94,7 @@ class HeaderSplitter(BaseSplitter):
         """
         m = re.match(r"header\s*(\d+)", header.lower())
         if not m:
-            raise ValueError(f"Invalid header: {header}")  # Fix error message
+            raise ValueError(f"Invalid header: {header}")
         return int(m.group(1))
 
     @staticmethod
@@ -134,6 +122,7 @@ class HeaderSplitter(BaseSplitter):
     def split(self, reader_output: ReaderOutput) -> SplitterOutput:
         """
         Splits the document into chunks using the configured header levels.
+        HTML input is always converted to Markdown before splitting.
 
         Args:
             reader_output (ReaderOutput): Input object with document text and metadata.
@@ -148,19 +137,17 @@ class HeaderSplitter(BaseSplitter):
             raise ValueError("reader_output.text is empty or None")
 
         filetype = self._guess_filetype(reader_output)
-        tuples = self._make_tuples(filetype)
+        tuples = self._make_tuples("md")  # Always markdown now
 
+        text = reader_output.text
+        # Convert HTML to Markdown if needed
         if filetype == "html":
-            splitter = HTMLHeaderTextSplitter(
-                headers_to_split_on=tuples,
-                return_each_element=False,
-            )
-        else:
-            splitter = MarkdownHeaderTextSplitter(
-                headers_to_split_on=tuples, return_each_line=False, strip_headers=False
-            )
+            text = HtmlToMarkdown().convert(text)
 
-        docs = splitter.split_text(reader_output.text)
+        splitter = MarkdownHeaderTextSplitter(
+            headers_to_split_on=tuples, return_each_line=False, strip_headers=False
+        )
+        docs = splitter.split_text(text)
         chunks = [doc.page_content for doc in docs]
 
         return SplitterOutput(

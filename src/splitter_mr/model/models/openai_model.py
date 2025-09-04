@@ -27,7 +27,7 @@ class OpenAIVisionModel(BaseVisionModel):
     def __init__(
         self,
         api_key: Optional[str] = None,
-        model_name: str = os.getenv("OPENAI_MODEL", "gpt-4.1"),
+        model_name: str = os.getenv("OPENAI_MODEL", "gpt-4o"),
     ) -> None:
         """
         Initialize the OpenAIVisionModel.
@@ -35,7 +35,7 @@ class OpenAIVisionModel(BaseVisionModel):
         Args:
             api_key (str, optional): OpenAI API key. If not provided, uses the
                 ``OPENAI_API_KEY`` environment variable.
-            model_name (str): Vision-capable model name (e.g., ``"gpt-4.1"``).
+            model_name (str): Vision-capable model name (e.g., ``"gpt-4o"``).
 
         Raises:
             ValueError: If no API key is provided or ``OPENAI_API_KEY`` is not set.
