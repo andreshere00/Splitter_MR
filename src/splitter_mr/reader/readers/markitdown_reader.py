@@ -5,38 +5,16 @@ import subprocess
 import tempfile
 import uuid
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, List, Optional, Set
+from typing import Any, List, Set
 
 import fitz
+from markitdown import MarkItDown
+from openai import OpenAI
 from pypdf import PdfReader, PdfWriter
-
-if TYPE_CHECKING:  # pragma: no cover
-    from markitdown import MarkItDown  # type: ignore
 
 from ...model import BaseVisionModel
 from ...schema import DEFAULT_IMAGE_EXTRACTION_PROMPT, ReaderOutput
 from ..base_reader import BaseReader
-
-MarkItDown = None  # noqa: F811
-
-
-def _require_extra(extra: str, import_name: Optional[str] = None) -> None:
-    """
-    Ensure an optional dependency (extra) is installed. If not, raise a clear error.
-    """
-    module = import_name or extra
-    try:
-        __import__(module)
-    except ImportError as e:
-        raise ImportError(
-            f"This feature requires the '{extra}' extra.\n"
-            f"Install it with:\n\n"
-            f"    pip install splitter-mr[{extra}]\n"
-        ) from e
-
-
-def _require_markitdown() -> None:
-    _require_extra("markitdown")
 
 
 class MarkItDownReader(BaseReader):
@@ -49,7 +27,16 @@ class MarkItDownReader(BaseReader):
     """
 
     def __init__(self, model: BaseVisionModel = None) -> None:
-        _require_markitdown()
+        """
+        Initializer method for MarkItDownReader
+
+        Args:
+            model (Optional[BaseVisionModel], optional): An optional vision-language
+                model instance used for PDF pipelines that require image captioning
+                or per-page analysis. If provided, the model’s client and metadata
+                (e.g., Azure deployment settings) are stored for use in downstream
+                processing. Defaults to None.
+        """
         self.model = model
         self.model_name = model.model_name if self.model else None
 
@@ -141,7 +128,7 @@ class MarkItDownReader(BaseReader):
         return temp_files
 
     def _pdf_pages_to_markdown(
-        self, file_path: str, md: "MarkItDown", prompt: str, page_placeholder: str
+        self, file_path: str, md: MarkItDown, prompt: str, page_placeholder: str
     ) -> str:
         """
         Convert each scanned PDF page to markdown using the provided MarkItDown instance.
@@ -210,13 +197,13 @@ class MarkItDownReader(BaseReader):
             ValueError: If provided model is not supported.
         """
         if self.model:
-            if not isinstance(self.model, BaseVisionModel):
+            self.client = self.model.get_client()
+            if not isinstance(self.client, OpenAI):
                 raise ValueError(
-                    "Incompatible client. Only AzureOpenAIVisionModel or OpenAIVisionModel are supported."
+                    "Incompatible client. Only models that use the OpenAI client are supported."
                 )
-            client = self.model.get_client()
             return (
-                MarkItDown(llm_client=client, llm_model=self.model.model_name),
+                MarkItDown(llm_client=self.client, llm_model=self.model.model_name),
                 self.model.model_name,
             )
         else:
@@ -262,8 +249,6 @@ class MarkItDownReader(BaseReader):
             Pellentesque ex felis, cursus ege...
             ```
         """
-        _require_markitdown()
-
         # Initialize MarkItDown reader
         file_path: str | Path = os.fspath(file_path)
         ext: str = os.path.splitext(file_path)[1].lower().lstrip(".")

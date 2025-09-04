@@ -1,24 +1,9 @@
-import importlib
 import os
-from typing import TYPE_CHECKING, Any, List, Optional
+from typing import Any, List, Optional
 
-if TYPE_CHECKING:
-    from google import genai
+from google import genai
 
 from ..base_embedding import BaseEmbedding
-
-
-def _require_extra(extra: str, import_name: Optional[str] = None) -> None:
-    """Raise an ImportError with install instructions if a required extra is missing."""
-    mod = import_name or extra
-    try:
-        __import__(mod)
-    except ImportError as e:
-        raise ImportError(
-            f"This feature requires the '{extra}' extra.\n"
-            f"Install it with:\n\n"
-            f"    pip install splitter-mr[{extra}]\n"
-        ) from e
 
 
 class GeminiEmbedding(BaseEmbedding):
@@ -54,15 +39,13 @@ class GeminiEmbedding(BaseEmbedding):
             ImportError: If the `google-genai` package is not installed.
             ValueError: If no API key is provided or found in the environment.
         """
-        _require_extra("multimodal", "google.genai")
-        genai = importlib.import_module("google.genai")
         self.api_key = api_key or os.getenv("GEMINI_API_KEY")
         if not self.api_key:
             raise ValueError(
                 "Google Gemini API key not provided and 'GEMINI_API_KEY' environment variable not set."
             )
         self.model_name = model_name
-        self.client = genai.Client(api_key)
+        self.client = genai.Client(api_key=api_key)
         self.models = self.client.models
 
     def get_client(self) -> "genai.Client":
@@ -94,7 +77,7 @@ class GeminiEmbedding(BaseEmbedding):
 
         try:
             result = self.models.embed_content(
-                model=self.model_name, content=text, **parameters
+                model=self.model_name, contents=text, **parameters
             )
             embedding = getattr(result, "embedding", None)
             if embedding is None:
@@ -129,7 +112,7 @@ class GeminiEmbedding(BaseEmbedding):
 
         try:
             result = self.models.embed_content(
-                model=self.model_name, content=texts, **parameters
+                model=self.model_name, contents=texts, **parameters
             )
             # The Gemini API returns a list of embeddings under .embeddings
             embeddings = getattr(result, "embeddings", None)

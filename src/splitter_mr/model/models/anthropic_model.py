@@ -2,9 +2,9 @@ import mimetypes
 import os
 from typing import Any, Dict, Optional
 
-from openai import OpenAI  # Anthropic API is OpenAI-compatible via OpenAI SDK >=1.13
+from openai import OpenAI
 
-from ...schema import (  # You may want a SUPPORTED_ANTHROPIC_MIME_TYPES if stricter
+from ...schema import (
     DEFAULT_IMAGE_CAPTION_PROMPT,
     OPENAI_MIME_BY_EXTENSION,
     SUPPORTED_OPENAI_MIME_TYPES,
@@ -46,9 +46,7 @@ class AnthropicVisionModel(BaseVisionModel):
                 )
 
         base_url: str = ("https://api.anthropic.com/v1/",)
-        self.client = OpenAI(
-            api_key=api_key, base_url=base_url
-        )  # TODO: Change to Anthropic SDK
+        self.client = OpenAI(api_key=api_key, base_url=base_url)
         self.model_name = model_name
 
     def get_client(self) -> OpenAI:

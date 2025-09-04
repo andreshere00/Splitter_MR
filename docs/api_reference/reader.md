@@ -2,15 +2,15 @@
 
 ## Introduction
 
-The **Reader** component is designed to read files homogeneously which come from many different formats and extensions. All of these readers are implemented sharing the same parent class, [`**BaseReader**`](#basereader).
+The **Reader** component is designed to read files homogeneously which come from many different formats and extensions. All of these readers are implemented sharing the same parent class, [**`BaseReader`**](#basereader).
 
 ### Which Reader should I use for my project?
 
 Each Reader component extracts document text in different ways. Therefore, choosing the most suitable Reader component depends on your use case.
 
-- If you want to preserve the original structure as much as possible, without any kind of markdown parsing, you can use the [`**VanillaReader**`](#vanillareader) class.
-- In case that you have documents which have presented many tables in its structure or with many visual components (such as images), we strongly recommend to use [`**DoclingReader**`](#doclingreader). 
-- If you are looking to maximize efficiency or make conversions to markdown simpler, we recommend using the [`**MarkItDownReader**`](#markitdownreader) component.
+- If you want to preserve the original structure as much as possible, without any kind of markdown parsing, you can use the [**`VanillaReader`**](#vanillareader) class.
+- In case that you have documents which have presented many tables in its structure or with many visual components (such as images), we strongly recommend to use [**`DoclingReader`**](#doclingreader). 
+- If you are looking to maximize efficiency or make conversions to markdown simpler, we recommend using the [**`MarkItDownReader`**](#markitdownreader) component.
 
 !!! note
 

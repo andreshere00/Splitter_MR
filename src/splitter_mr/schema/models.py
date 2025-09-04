@@ -131,7 +131,7 @@ class SplitterOutput(BaseModel):
     """
 
     chunks: List[str] = Field(default_factory=list)
-    chunk_id: Optional[List[str]] = None
+    chunk_id: List[str] = Field(default_factory=list)
     document_name: Optional[str] = None
     document_path: str = ""
     document_id: Optional[str] = None

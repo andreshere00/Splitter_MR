@@ -45,6 +45,7 @@ docling-parse==4.1.0
 docutils==0.22
 easyocr==1.7.2
 et-xmlfile==2.0.0
+fastjsonschema==2.21.2
 fastparquet==2024.11.0
 ffmpeg==1.4
 ffmpeg-downloader==0.4.0
@@ -85,6 +86,7 @@ jsonpointer==3.0.0
 jsonref==1.1.0
 jsonschema==4.25.0
 jsonschema-specifications==2025.4.1
+jupyter-core==5.8.1
 keyring==25.6.0
 langchain-core==0.3.74
 langchain-text-splitters==0.3.9
@@ -125,6 +127,7 @@ multiprocess==0.70.18
 murmurhash==1.0.13
 mypy-extensions==1.1.0
 natsort==8.4.0
+nbformat==5.10.4
 networkx==3.5
 nh3==0.3.0
 ninja==1.13.0
@@ -168,6 +171,7 @@ pyjwt==2.10.1
 pylatexenc==2.10
 pymdown-extensions==10.16.1
 pymupdf==1.26.3
+pypandoc==1.15
 pypdf==6.0.0
 pypdfium2==4.30.0
 pyproject-autoflake==1.0.2
@@ -231,6 +235,7 @@ toml==0.10.2
 torch==2.7.1
 torchvision==0.22.1
 tqdm==4.67.1
+traitlets==5.14.3
 transformers==4.55.2
 twine==6.1.0
 typer==0.16.0

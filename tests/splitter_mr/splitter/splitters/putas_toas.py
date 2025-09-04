@@ -5,9 +5,7 @@ import pytest
 from splitter_mr.schema import ReaderOutput
 from splitter_mr.splitter import HeaderSplitter
 
-# ---- Helpers, mocks and fixtures ---- #
-
-SAMPLE_MD: str = """# Sample Markdown
+SAMPLE_MD = """# Sample Markdown
 
 This is some basic, sample markdown.
 
@@ -41,7 +39,7 @@ Or an image of bears
 The end ...
 """
 
-SAMPLE_HTML: str = """
+SAMPLE_HTML = """
 
 <h1 id="sample-markdown">Sample Markdown</h1>
 <p>This is some basic, sample markdown.</p>
@@ -97,9 +95,6 @@ def html_reader_output():
     )
 
 
-# ---- Test cases ---- #
-
-
 def test_markdown_splitter_on_md_content(markdown_reader_output):
     with patch(
         "splitter_mr.splitter.splitters.header_splitter.MarkdownHeaderTextSplitter"
@@ -131,18 +126,19 @@ def test_html_conversion_and_split(monkeypatch, html_reader_output):
             MagicMock(page_content="Converted chunk 1"),
             MagicMock(page_content="Converted chunk 2"),
         ]
-        # Patch HtmlToMarkdown WHERE IT IS USED
-        with patch(
-            "splitter_mr.splitter.splitters.header_splitter.HtmlToMarkdown"
-        ) as MockHtmlToMd:
-            mock_converter = MockHtmlToMd.return_value
-            mock_converter.convert.return_value = SAMPLE_MD
-            splitter = HeaderSplitter(headers_to_split_on=["Header 1", "Header 2"])
-            result = splitter.split(html_reader_output)
-            mock_converter.convert.assert_called_once_with(SAMPLE_HTML)
-            mock_md.split_text.assert_called_once_with(SAMPLE_MD)
-            assert result.chunks == ["Converted chunk 1", "Converted chunk 2"]
-            assert result.split_method == "header_splitter"
+    # Patch HtmlToMarkdown to check it is used
+    with patch("splitter_mr.splitter.splitters.utils.HtmlToMarkdown") as MockHtmlToMd:
+        mock_converter = MockHtmlToMd.return_value
+        # Return known markdown on conversion
+        mock_converter.convert.return_value = SAMPLE_MD
+        splitter = HeaderSplitter(headers_to_split_on=["Header 1", "Header 2"])
+        result = splitter.split(html_reader_output)
+        # Should have converted HTML to markdown before splitting
+        mock_converter.convert.assert_called_once_with(SAMPLE_HTML)
+        # Should have split the produced markdown
+        mock_md.split_text.assert_called_once_with(SAMPLE_MD)
+        assert result.chunks == ["Converted chunk 1", "Converted chunk 2"]
+        assert result.split_method == "header_splitter"
 
 
 def test_value_error_on_bad_semantic_header(markdown_reader_output):

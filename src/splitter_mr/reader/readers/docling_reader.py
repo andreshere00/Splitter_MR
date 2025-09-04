@@ -17,23 +17,6 @@ from ..utils import DoclingPipelineFactory
 from .vanilla_reader import VanillaReader
 
 
-def _require_extra(extra: str, import_name: Optional[str] = None) -> None:
-    """Raise a helpful error if an optional extra is missing."""
-    mod = import_name or extra
-    try:
-        __import__(mod)
-    except ImportError as e:
-        raise ImportError(
-            f"This feature requires the '{extra}' extra.\n"
-            f"Install it with:\n\n"
-            f"    pip install splitter-mr[{extra}]\n"
-        ) from e
-
-
-def _require_docling() -> None:
-    _require_extra("docling")
-
-
 class DoclingReader(BaseReader):
     """
     High-level document reader leveraging IBM Docling for flexible document-to-Markdown conversion,
@@ -50,15 +33,22 @@ class DoclingReader(BaseReader):
     )
 
     def __init__(self, model: Optional[BaseVisionModel] = None) -> None:
-        _require_docling()
+        """
+        Initialize a DoclingReader instance.
+
+        Args:
+            model (Optional[BaseVisionModel], optional): An optional vision-language
+                model instance used for PDF pipelines that require image captioning
+                or per-page analysis. If provided, the model’s client and metadata
+                (e.g., Azure deployment settings) are stored for use in downstream
+                processing. Defaults to None.
+        """
         self.model = model
         self.client = None
         self.model_name: Optional[str] = None
         if model:
             self.client = model.get_client()
             self.model_name = model.model_name
-            for attr in ("_azure_deployment", "_azure_endpoint", "_api_version"):
-                setattr(self, attr, getattr(self.client, attr, None))
 
     def read(
         self,

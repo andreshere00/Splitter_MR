@@ -1,4 +1,6 @@
 import base64
+import importlib
+import sys
 from io import BytesIO
 from unittest.mock import MagicMock, patch
 
@@ -7,7 +9,9 @@ import pytest
 from splitter_mr.reader.utils import PDFPlumberReader
 from splitter_mr.schema import DEFAULT_IMAGE_EXTRACTION_PROMPT
 
-# Helpers
+# ---- Helpers, mocks and fixtures ---- #
+
+PKG = "splitter_mr.reader.utils"
 
 
 class DummyModel:
@@ -60,7 +64,7 @@ def _fake_to_image_factory(payload: bytes = b"fakeimg"):
     return _to_image
 
 
-# Test cases
+# ---- Test cases ---- #
 
 
 def test_group_by_lines(mock_word_lines):
@@ -300,3 +304,50 @@ def test_extract_images_encodes_and_annotates():
     model = DummyModel()
     imgs_annot = reader.extract_images(page, page_num=1, model=model)
     assert imgs_annot and "Dummy caption" in imgs_annot[0]["annotation"]
+
+
+def _reload_pkg():
+    """
+    Force a clean re-import of the package under test so monkeypatching
+    importlib.import_module affects the import path resolution each time.
+    """
+    for key in list(sys.modules.keys()):
+        if key == PKG or key.startswith(PKG + "."):
+            sys.modules.pop(key, None)
+    return importlib.import_module(PKG)
+
+
+def test_unknown_attribute_raises_attributeerror():
+    mod = _reload_pkg()
+    with pytest.raises(AttributeError):
+        getattr(mod, "DoesNotExist")
+
+
+def test___dir___matches___all__():
+    mod = _reload_pkg()
+    assert set(dir(mod)) >= set(
+        mod.__all__
+    )  # dir() can include more, but must include __all__
+
+
+def test_pdfplumber_import_succeeds_when_docling_missing(monkeypatch):
+    """
+    Simulate 'docling' extra missing. Accessing PDFPlumberReader should still work.
+    """
+    real_import_module = importlib.import_module
+
+    def fake_import_module(name, package=None):
+        # Resolve absolute module name the same way __getattr__ does
+        abs_name = importlib.util.resolve_name(name, package) if package else name
+        if abs_name.endswith(".docling_utils"):
+            # Simulate missing optional extra
+            raise ModuleNotFoundError("docling")
+        return real_import_module(name, package=package)
+
+    monkeypatch.setattr(importlib, "import_module", fake_import_module)
+
+    mod = _reload_pkg()
+    PDFPlumberReader = getattr(mod, "PDFPlumberReader")
+    # Basic sanity: it's a class/type or callable
+    assert hasattr(PDFPlumberReader, "__name__")
+    assert PDFPlumberReader.__name__ == "PDFPlumberReader"

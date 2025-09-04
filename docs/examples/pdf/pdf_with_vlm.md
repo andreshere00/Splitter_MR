@@ -62,7 +62,7 @@ So, the models can be loaded as follows:
     azure_deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT")
 
     model = AzureOpenAIVisionModel(
-        azure_api_key=azure_api_key,
+        api_key=azure_api_key,
         azure_endpoint=azure_endpoint,
         api_version=api_version,
         azure_deployment=azure_deployment

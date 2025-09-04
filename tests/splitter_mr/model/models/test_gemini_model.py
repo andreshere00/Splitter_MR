@@ -1,13 +1,11 @@
 import base64
-import sys
-import types as pytypes
-from unittest import mock
+from unittest.mock import MagicMock, patch
 
 import pytest
 
 from splitter_mr.model.models.gemini_model import GeminiVisionModel
 
-# ---- Helpers, fixtures and mocks ---- #
+# ----------------- Fixtures/Helpers ------------------
 
 
 @pytest.fixture(autouse=True)
@@ -15,135 +13,176 @@ def clear_env(monkeypatch):
     monkeypatch.delenv("GEMINI_API_KEY", raising=False)
 
 
-def mock_gemini_sdk(monkeypatch):
-    """Creates a fake google.genai module and types.Part."""
-    fake_genai = pytypes.SimpleNamespace()
-    fake_types = pytypes.SimpleNamespace()
+@pytest.fixture
+def mock_client():
+    return MagicMock()
 
-    class FakeClient:
-        def __init__(self, *args, **kwargs):
-            self.models = self
 
-        def generate_content(self, model, contents, **params):
-            class FakeResponse:
-                text = "This is the analyzed image text"
+@pytest.fixture
+def mock_types():
+    part = MagicMock()
+    part.from_bytes = MagicMock(return_value="IMAGE_PART")
+    types = MagicMock()
+    types.Part = part
+    return types
 
-            # Store inputs for later assertion
-            self.called_with = (model, contents, params)
-            return FakeResponse()
 
-    class FakePart:
-        @classmethod
-        def from_bytes(cls, data, mime_type):
-            return ("FakePart", data, mime_type)
+@pytest.fixture
+def mock_sdk(monkeypatch, mock_client, mock_types):
+    # Patch google.genai.Client and google.genai.types
+    with patch(
+        "splitter_mr.model.models.gemini_model.genai.Client", return_value=mock_client
+    ):
+        with patch("splitter_mr.model.models.gemini_model.types", mock_types):
+            yield mock_client, mock_types
 
-    fake_genai.Client = FakeClient
-    fake_genai.configure = lambda api_key: None
-    fake_types.Part = FakePart
 
-    monkeypatch.setitem(
-        sys.modules, "google", pytypes.SimpleNamespace(generativeai=fake_genai)
+# ----------------- __init__ -------------------------
+
+
+def test_init_with_api_key(mock_sdk):
+    mock_client, _ = mock_sdk
+    model = GeminiVisionModel(api_key="KEY123")
+    assert model.api_key == "KEY123"
+    assert model.client is mock_client
+    assert model.model == mock_client.models
+
+
+def test_init_with_env(monkeypatch, mock_sdk):
+    mock_client, _ = mock_sdk
+    monkeypatch.setenv("GEMINI_API_KEY", "ENVKEY")
+    model = GeminiVisionModel()
+    assert model.api_key == "ENVKEY"
+    assert model.client is mock_client
+
+
+def test_init_missing_key():
+    with pytest.raises(ValueError):
+        GeminiVisionModel(api_key=None)
+
+
+# ----------------- get_client -----------------------
+
+
+def test_get_client_returns_sdk_client(mock_sdk):
+    mock_client, _ = mock_sdk
+    model = GeminiVisionModel(api_key="KEY")
+    assert model.get_client() is mock_client
+
+
+# ----------------- analyze_content (happy path) -----
+
+
+def test_analyze_content_success(mock_sdk):
+    mock_client, mock_types = mock_sdk
+    # Patch model.generate_content to return a mock response with text attr
+    fake_response = MagicMock()
+    fake_response.text = "Fake Result"
+    mock_models = MagicMock()
+    mock_models.generate_content.return_value = fake_response
+    mock_client.models = mock_models
+
+    # Compose test image bytes (simulate base64 encoding of image bytes)
+    image_bytes = b"img_data"
+    image_b64 = base64.b64encode(image_bytes).decode("utf-8")
+    model = GeminiVisionModel(api_key="KEY")
+    model.model = mock_models  # replace for .generate_content call
+
+    result = model.analyze_content(
+        prompt="Describe this image",
+        file=image_b64.encode("utf-8"),
+        file_ext="png",
+        temperature=0.5,
     )
-    monkeypatch.setitem(sys.modules, "google.genai", fake_genai)
-    monkeypatch.setitem(sys.modules, "google.genai.types", fake_types)
 
-    return fake_genai, fake_types
-
-
-# ---- Test cases ---- #
-
-
-def test_init_with_api_key(monkeypatch):
-    fake_genai, fake_types = mock_gemini_sdk(monkeypatch)
-    m = GeminiVisionModel(api_key="sk-gemini-key", model_name="gemini-2.5-flash")
-    assert m.api_key == "sk-gemini-key"
-    assert m.model_name == "gemini-2.5-flash"
-    assert hasattr(m.client, "models")
-
-
-def test_init_reads_env(monkeypatch):
-    monkeypatch.setenv("GEMINI_API_KEY", "from-env-key")
-    fake_genai, fake_types = mock_gemini_sdk(monkeypatch)
-    m = GeminiVisionModel(model_name="gemini-2.5-pro")
-    assert m.api_key == "from-env-key"
-    assert m.model_name == "gemini-2.5-pro"
-
-
-def test_init_missing_key(monkeypatch):
-    # No env, no param: should raise ValueError
-    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
-    fake_genai, fake_types = mock_gemini_sdk(monkeypatch)
-    with pytest.raises(ValueError, match="Google Gemini API key not provided"):
-        GeminiVisionModel(model_name="gemini-2.5-pro")
-
-
-def test_import_error(monkeypatch):
-    # Simulate missing dependency
-    monkeypatch.setitem(sys.modules, "google", None)
-    monkeypatch.setitem(sys.modules, "google.genai", None)
-    monkeypatch.setitem(sys.modules, "google.genai.types", None)
-    import splitter_mr.model.models.gemini_model as mod
-
-    with mock.patch.object(mod, "_require_extra") as mreq:
-        mreq.side_effect = ImportError("This feature requires the 'multimodal' extra")
-        with pytest.raises(ImportError, match="multimodal"):
-            mod.GeminiVisionModel(api_key="irrelevant")
-
-
-def test_get_client(monkeypatch):
-    fake_genai, fake_types = mock_gemini_sdk(monkeypatch)
-    m = GeminiVisionModel(api_key="key")
-    client = m.get_client()
-    assert client is m.client
-
-
-def test_analyze_content_success(monkeypatch):
-    fake_genai, fake_types = mock_gemini_sdk(monkeypatch)
-    m = GeminiVisionModel(api_key="key", model_name="gemini-vision")
-    # Prepare a valid base64-encoded image string (just dummy data)
-    img_bytes = b"\x89PNG...."
-    img_b64 = base64.b64encode(img_bytes).decode("utf-8")
-    result = m.analyze_content("Describe this image", img_b64, file_ext="png")
-    assert isinstance(result, str)
-    assert result == "This is the analyzed image text"
-
-
-def test_analyze_content_bytes(monkeypatch):
-    fake_genai, fake_types = mock_gemini_sdk(monkeypatch)
-    m = GeminiVisionModel(api_key="key", model_name="gemini-vision")
-    # Should accept both bytes and str for file
-    img_bytes = base64.b64encode(b"imagecontent")
-    result = m.analyze_content("Describe this image", img_bytes, file_ext="jpg")
-    assert result == "This is the analyzed image text"
-
-
-def test_analyze_content_invalid_base64(monkeypatch):
-    fake_genai, fake_types = mock_gemini_sdk(monkeypatch)
-    m = GeminiVisionModel(api_key="key")
-    with pytest.raises(ValueError, match="Failed to decode base64"):
-        m.analyze_content("prompt", "not-base64-data", file_ext="png")
-
-
-def test_analyze_content_file_none(monkeypatch):
-    fake_genai, fake_types = mock_gemini_sdk(monkeypatch)
-    m = GeminiVisionModel(api_key="key")
-    with pytest.raises(ValueError, match="No image file provided"):
-        m.analyze_content("Some prompt", None)
-
-
-def test_analyze_content_extra_parameters(monkeypatch):
-    fake_genai, fake_types = mock_gemini_sdk(monkeypatch)
-    m = GeminiVisionModel(api_key="key", model_name="gemini-vision")
-    img_bytes = base64.b64encode(b"dummydata").decode("utf-8")
-    # We want to see that extra parameters are passed through
-
-    result = m.analyze_content(
-        "Analyze", img_bytes, file_ext="png", max_tokens=99, temperature=0.5
+    # Ensure correct decode, Part usage, and SDK call
+    mock_types.Part.from_bytes.assert_called_once_with(
+        data=image_bytes, mime_type="image/png"
     )
-    # Access the called_with to verify args
-    called_with = m.model.called_with
-    assert called_with[0] == "gemini-vision"
-    assert any("FakePart" in str(x) for x in called_with[1])
-    assert called_with[2]["max_tokens"] == 99
-    assert called_with[2]["temperature"] == 0.5
-    assert result == "This is the analyzed image text"
+    mock_models.generate_content.assert_called_once_with(
+        model="gemini-2.5-flash",
+        contents=["IMAGE_PART", "Describe this image"],
+        temperature=0.5,
+    )
+    assert result == "Fake Result"
+
+
+# ----------------- analyze_content: input errors ----
+
+
+def test_analyze_content_no_file(mock_sdk):
+    model = GeminiVisionModel(api_key="KEY")
+    with pytest.raises(ValueError) as e:
+        model.analyze_content(prompt="Test", file=None)
+    assert "No image file provided" in str(e.value)
+
+
+@pytest.mark.parametrize("bad_b64", ["badbase64", b"!!!notbase64!!!"])
+def test_analyze_content_bad_base64(mock_sdk, bad_b64):
+    model = GeminiVisionModel(api_key="KEY")
+    with pytest.raises(ValueError) as e:
+        model.analyze_content(prompt="x", file=bad_b64)
+    assert "Failed to decode base64 image data" in str(e.value)
+
+
+# ----------------- analyze_content: SDK/response errors ----
+
+
+def test_analyze_content_sdk_failure(mock_sdk):
+    mock_client, mock_types = mock_sdk
+    mock_models = MagicMock()
+    mock_models.generate_content.side_effect = RuntimeError("fail!")
+    mock_client.models = mock_models
+    image_b64 = base64.b64encode(b"img").decode("utf-8")
+    model = GeminiVisionModel(api_key="KEY")
+    model.model = mock_models
+
+    with pytest.raises(RuntimeError) as e:
+        model.analyze_content(prompt="what?", file=image_b64.encode("utf-8"))
+    assert "Gemini model inference failed" in str(e.value)
+
+
+# ----------------- analyze_content: mime_type fallback ----
+
+
+def test_analyze_content_mime_type_fallback(mock_sdk):
+    mock_client, mock_types = mock_sdk
+    mock_models = MagicMock()
+    mock_models.generate_content.return_value = MagicMock(text="ok")
+    mock_client.models = mock_models
+
+    image_bytes = b"x"
+    image_b64 = base64.b64encode(image_bytes).decode("utf-8")
+    model = GeminiVisionModel(api_key="KEY")
+    model.model = mock_models
+
+    # Use unknown extension to trigger default mime type
+    result = model.analyze_content(
+        prompt="x", file=image_b64.encode("utf-8"), file_ext="unknown"
+    )
+    mock_types.Part.from_bytes.assert_called_once_with(
+        data=image_bytes, mime_type="image/jpeg"
+    )
+    assert result == "ok"
+
+
+# ----------------- analyze_content: accepts string file ----
+
+
+def test_analyze_content_accepts_str_file(mock_sdk):
+    mock_client, mock_types = mock_sdk
+    mock_models = MagicMock()
+    mock_models.generate_content.return_value = MagicMock(text="works")
+    mock_client.models = mock_models
+
+    image_bytes = b"y"
+    image_b64 = base64.b64encode(image_bytes).decode("utf-8")
+    model = GeminiVisionModel(api_key="KEY")
+    model.model = mock_models
+
+    # Pass the base64 string, not bytes
+    result = model.analyze_content(prompt="y", file=image_b64)
+    mock_types.Part.from_bytes.assert_called_once_with(
+        data=image_bytes, mime_type="image/jpeg"
+    )
+    assert result == "works"

@@ -63,7 +63,7 @@ After that, you can explicitly declare the connection parameters as follows:
     azure_deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT")
 
     model = AzureOpenAIVisionModel(
-        azure_api_key=azure_api_key,
+        api_key=azure_api_key,
         azure_endpoint=azure_endpoint,
         api_version=api_version,
         azure_deployment=azure_deployment
@@ -503,6 +503,9 @@ Thank you so much for reading :).
 import os
 from splitter_mr.reader import VanillaReader
 from splitter_mr.model import AzureOpenAIVisionModel
+from dotenv import load_dotenv
+
+load_dotenv()
 
 file = "data/sample_pdf.pdf"
 output_dir = "tmp/vanilla_output"

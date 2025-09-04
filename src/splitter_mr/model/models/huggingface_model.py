@@ -6,29 +6,6 @@ from ...model import BaseVisionModel
 from ...schema import HFChatImageContent, HFChatMessage, HFChatTextContent
 
 
-def _require_extra(extra: str, import_name: Optional[str] = None) -> None:
-    """
-    Raise a helpful error if an optional extra is missing.
-
-    Args:
-        extra (str): The name of the optional extra (e.g., ``"multimodal"``).
-        import_name (Optional[str]): The module name to attempt importing. If not
-            provided, ``extra`` is used.
-
-    Raises:
-        ImportError: If the module cannot be imported.
-    """
-    mod = import_name or extra
-    try:
-        __import__(mod)
-    except ImportError as e:
-        raise ImportError(
-            f"This feature requires the '{extra}' extra.\n"
-            f"Install it with:\n\n"
-            f"    pip install splitter-mr[{extra}]\n"
-        ) from e
-
-
 class HuggingFaceVisionModel(BaseVisionModel):
     """
     Vision-language model wrapper using Hugging Face Transformers.
@@ -77,7 +54,6 @@ class HuggingFaceVisionModel(BaseVisionModel):
             ImportError: If the 'multimodal' extra (transformers) is not installed.
             RuntimeError: If processor or model loading fails after all attempts.
         """
-        _require_extra(extra="multimodal", import_name="transformers")
 
         transformers = importlib.import_module("transformers")
 

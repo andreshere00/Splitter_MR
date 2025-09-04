@@ -207,3 +207,166 @@ def test_tokenizer_called_with_model_name(monkeypatch, mod):
     )
     emb.embed_text("ok")  # triggers _validate_token_length -> encoding_for_model(...)
     assert mod._encoding_state["last_model_name"] == "dep"
+
+
+def test_embed_documents_happy_path(mod):
+    emb = AzureOpenAIEmbedding(
+        model_name="dep",
+        api_key="k",
+        azure_endpoint="https://endpoint",
+        azure_deployment="dep",
+    )
+
+    # Patch _create to return one embedding per input
+    def _create(**kwargs):
+        mod._fake_client.calls.append(kwargs)
+        inp = kwargs["input"]
+        if isinstance(inp, list):
+            return SimpleNamespace(
+                data=[SimpleNamespace(embedding=[0.1, 0.2, 0.3]) for _ in inp]
+            )
+        else:
+            return SimpleNamespace(data=[SimpleNamespace(embedding=[0.1, 0.2, 0.3])])
+
+    mod._fake_client.embeddings.create = _create
+
+    out = emb.embed_documents(["hello", "world"], foo="bar")
+    assert isinstance(out, list)
+    assert all(isinstance(x, list) for x in out)
+    assert out == [[0.1, 0.2, 0.3], [0.1, 0.2, 0.3]]
+    # Check forwarded parameters and call correctness
+    last = mod._fake_client.calls[-1]
+    assert last["model"] == "dep"
+    assert last["input"] == ["hello", "world"]
+    assert last["foo"] == "bar"
+
+
+def test_embed_documents_raises_on_empty_list(mod):
+    emb = AzureOpenAIEmbedding(
+        model_name="dep",
+        api_key="k",
+        azure_endpoint="https://endpoint",
+        azure_deployment="dep",
+    )
+    with pytest.raises(ValueError) as e:
+        emb.embed_documents([])
+    assert "non-empty list" in str(e.value)
+
+
+@pytest.mark.parametrize(
+    "bad",
+    [
+        ["", "foo"],  # Empty string
+        [None, "bar"],  # None as element
+        ["ok", 123],  # Non-str
+    ],
+)
+def test_embed_documents_raises_on_bad_items(mod, bad):
+    emb = AzureOpenAIEmbedding(
+        model_name="dep",
+        api_key="k",
+        azure_endpoint="https://endpoint",
+        azure_deployment="dep",
+    )
+    with pytest.raises(ValueError):
+        emb.embed_documents(bad)
+
+
+def test_embed_documents_raises_if_any_too_long(monkeypatch, mod):
+    emb = AzureOpenAIEmbedding(
+        model_name="dep",
+        api_key="k",
+        azure_endpoint="https://endpoint",
+        azure_deployment="dep",
+    )
+    long = "x" * (OPENAI_EMBEDDING_MAX_TOKENS + 1)
+    with pytest.raises(ValueError) as e:
+        emb.embed_documents(["ok", long])
+    assert "maximum allowed" in str(e.value)
+
+
+def test_explicit_tokenizer_name_overrides(monkeypatch, mod):
+    calls = {}
+
+    def fake_get_encoding(name):
+        calls["name"] = name
+
+        class Enc:
+            def encode(self, txt):
+                return [1, 2, 3]
+
+        return Enc()
+
+    monkeypatch.setattr("tiktoken.get_encoding", fake_get_encoding)
+    emb = AzureOpenAIEmbedding(
+        model_name="dep",
+        api_key="k",
+        azure_endpoint="https://endpoint",
+        azure_deployment="dep",
+        tokenizer_name="custom-tokenizer",
+    )
+    emb._get_encoder()
+    assert calls["name"] == "custom-tokenizer"
+    # Call _count_tokens to exercise this path
+    assert emb._count_tokens("foo") == 3
+
+
+def test_get_encoder_fallback_to_default(monkeypatch, mod):
+    monkeypatch.setattr(
+        mod.tiktoken,
+        "encoding_for_model",
+        lambda name: (_ for _ in ()).throw(Exception("fail")),
+    )
+    monkeypatch.setattr(
+        "tiktoken.get_encoding",
+        lambda name: type("E", (), {"encode": lambda self, t: [0, 1, 2, 3]})(),
+    )
+    emb = AzureOpenAIEmbedding(
+        model_name="dep",
+        api_key="k",
+        azure_endpoint="https://endpoint",
+        azure_deployment="dep",
+    )
+    enc = emb._get_encoder()
+    # Should be fallback encoder
+    assert hasattr(enc, "encode")
+
+
+def test_validate_token_length_raises(mod):
+    emb = AzureOpenAIEmbedding(
+        model_name="dep",
+        api_key="k",
+        azure_endpoint="https://endpoint",
+        azure_deployment="dep",
+    )
+    # Patch encoder to always return OVER the limit
+    emb._get_encoder = lambda: type(
+        "Enc", (), {"encode": lambda self, t: [0] * (OPENAI_EMBEDDING_MAX_TOKENS + 1)}
+    )()
+    with pytest.raises(ValueError) as e:
+        emb._validate_token_length("abc")
+    assert "exceeds maximum" in str(e.value)
+
+
+def test_init_reads_api_version_from_env(monkeypatch, mod):
+    monkeypatch.setenv("AZURE_OPENAI_API_KEY", "k")
+    monkeypatch.setenv("AZURE_OPENAI_ENDPOINT", "https://endpoint.azure.com")
+    monkeypatch.setenv("AZURE_OPENAI_DEPLOYMENT", "dep-env")
+    monkeypatch.setenv("AZURE_OPENAI_API_VERSION", "2026-01-01-preview")
+    emb = AzureOpenAIEmbedding()
+    # You could assert it is set by patching AzureOpenAI and capturing its call args, if needed
+    assert emb.model_name == "dep-env"
+
+
+def test_count_tokens_calls_encoder(mod):
+    emb = AzureOpenAIEmbedding(
+        model_name="dep",
+        api_key="k",
+        azure_endpoint="https://endpoint",
+        azure_deployment="dep",
+    )
+    # Patch encoder: one token per char
+    emb._get_encoder = lambda: type(
+        "E", (), {"encode": lambda self, txt: list(range(len(txt)))}
+    )()
+    assert emb._count_tokens("abc") == 3

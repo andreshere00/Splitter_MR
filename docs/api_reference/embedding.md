@@ -12,7 +12,7 @@ These embeddings can be used in a variety of tasks, such as:
 
 ![Example of an embedding representation](../assets/vectorization.png)
 
-**SplitterMR** takes advantage of these models in [`**SemanticSplitter**`](./splitter.md#semanticsplitter). These representations are used to break text into chunks based on *meaning*, not just size. Sentences with similar context end up together, regardless of length or position.
+**SplitterMR** takes advantage of these models in [**`SemanticSplitter`**](./splitter.md#semanticsplitter). These representations are used to break text into chunks based on *meaning*, not just size. Sentences with similar context end up together, regardless of length or position.
 
 ## Which embedder should I use?
 
@@ -22,14 +22,14 @@ All embedders inherit from [**BaseEmbedding**](#baseembedding) and expose the sa
 | ------------------------------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | [**OpenAIEmbedding**](#openaiembedding)           | You have an OpenAI API key and want to use OpenAI’s hosted embeddings       | `OPENAI_API_KEY`                                                                                                    | Production-ready text embeddings; simple setup; broad ecosystem/tooling support.                                    |
 | [**AzureOpenAIEmbedding**](#azureopenaiembedding) | Your organization uses Azure OpenAI Services                                | `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_DEPLOYMENT`                                          | Enterprise controls, Azure compliance & data residency; integrates with Azure identity.                             |
-| [**GeminiEmbedding**](#geminiembedding)           | You want Google’s Gemini text embeddings                                    | `GEMINI_API_KEY` + **Multimodal extra**: `pip install splitter-mr[multimodal]`                                      | Google Gemini API; modern, high-quality text embeddings.                                                            |
-| [**AnthropicEmbeddings**](#anthropicembedding)   | You want embeddings aligned with Anthropic guidance (via Voyage AI)         | `VOYAGE_API_KEY` + **Multimodal extra**: `pip install splitter-mr[multimodal]`                                      | Voyage AI embeddings (general, code, finance, law, multimodal); supports `input_type` for query/document asymmetry. |
-| [**HuggingFaceEmbedding**](#huggingfaceembedding) | Prefer local/open-source models (Sentence-Transformers); offline capability | **Multimodal extra**: `pip install splitter-mr[multimodal]` (optional: `HF_ACCESS_TOKEN`, only for required models) | No API key; huge model zoo; CPU/GPU/MPS; optional L2 normalization for cosine similarity.                           |
+| [**GeminiEmbedding**](#geminiembedding)           | You want Google’s Gemini text embeddings                                    | `GEMINI_API_KEY` + **Multimodal extra**: `pip install 'splitter-mr[multimodal]'`                                      | Google Gemini API; modern, high-quality text embeddings.                                                            |
+| [**AnthropicEmbeddings**](#anthropicembedding)   | You want embeddings aligned with Anthropic guidance (via Voyage AI)         | `VOYAGE_API_KEY` + **Multimodal extra**: `pip install 'splitter-mr[multimodal]'`                                      | Voyage AI embeddings (general, code, finance, law, multimodal); supports `input_type` for query/document asymmetry. |
+| [**HuggingFaceEmbedding**](#huggingfaceembedding) | Prefer local/open-source models (Sentence-Transformers); offline capability | **Multimodal extra**: `pip install 'splitter-mr[multimodal]'` (optional: `HF_ACCESS_TOKEN`, only for required models) | No API key; huge model zoo; CPU/GPU/MPS; optional L2 normalization for cosine similarity.                           |
 | [**BaseEmbedding**](#baseembedding)               | Abstract base, not used directly                                            | –                                                                                                                   | Implement to plug in a custom or self-hosted embedder.                                                              |
 
 !!! note
 
-    In case that you want to bring your own embedding provider, you can easily implement the class using [`**BaseEmbedding**`](#baseembedding).
+    In case that you want to bring your own embedding provider, you can easily implement the class using [**`BaseEmbedding`**](#baseembedding).
 
 ## Embedders
 

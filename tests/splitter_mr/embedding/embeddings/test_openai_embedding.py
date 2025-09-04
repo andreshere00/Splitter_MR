@@ -19,8 +19,14 @@ class _FakeEmbeddingsClient:
 
     def _create(self, **kwargs: Any):
         self.calls.append(kwargs)
-        # Return shape compatible with response.data[0].embedding
-        return SimpleNamespace(data=[SimpleNamespace(embedding=[0.1, 0.2, 0.3])])
+        inp = kwargs["input"]
+        # Support both single string and list
+        if isinstance(inp, list):
+            return SimpleNamespace(
+                data=[SimpleNamespace(embedding=[0.1, 0.2, 0.3]) for _ in inp]
+            )
+        else:
+            return SimpleNamespace(data=[SimpleNamespace(embedding=[0.1, 0.2, 0.3])])
 
 
 class _FakeEncoder:
@@ -136,3 +142,128 @@ def test_tokenizer_called_with_model_name(mod):
     emb.embed_text("ok")
     # ensure tiktoken.encoding_for_model was invoked with the model name
     assert mod._encoding_state["last_model_name"] == "text-embedding-3-large"
+
+
+def test_get_encoder_uses_tokenizer_name(monkeypatch, mod):
+    emb = OpenAIEmbedding(
+        model_name="text-embedding-3-large",
+        api_key="sk",
+        tokenizer_name="some_tokenizer",
+    )
+    called = {}
+
+    class DummyEncoding:
+        def encode(self, text):
+            return [1, 2, 3]
+
+    def fake_get_encoding(name):
+        called["tokenizer"] = name
+        return DummyEncoding()
+
+    monkeypatch.setattr(mod.tiktoken, "get_encoding", fake_get_encoding)
+    encoder = emb._get_encoder()
+    assert called["tokenizer"] == "some_tokenizer"
+    assert isinstance(encoder, DummyEncoding)
+    # Should *not* call encoding_for_model
+    assert mod._encoding_state["last_model_name"] is None
+
+
+def test_get_encoder_fallback_on_exception(monkeypatch, mod):
+    emb = OpenAIEmbedding(model_name="text-embedding-3-large", api_key="sk")
+    # encoding_for_model will raise, fallback is called
+    monkeypatch.setattr(
+        mod.tiktoken,
+        "encoding_for_model",
+        lambda name: (_ for _ in ()).throw(Exception("fail")),
+    )
+    fallback_called = {}
+
+    class DummyEncoding:
+        def encode(self, text):
+            return [1, 2, 3]
+
+    def fake_get_encoding(name):
+        fallback_called["name"] = name
+        return DummyEncoding()
+
+    monkeypatch.setattr(mod.tiktoken, "get_encoding", fake_get_encoding)
+    emb._get_encoder()
+    assert fallback_called["name"] == mod.OPENAI_EMBEDDING_MODEL_FALLBACK
+
+
+def test_embed_documents_happy_path(mod):
+    emb = OpenAIEmbedding(model_name="text-embedding-3-large", api_key="sk")
+    out = emb.embed_documents(["hello", "world"], foo="bar")
+    assert isinstance(out, list)
+    assert all(isinstance(x, list) for x in out)
+    assert out == [[0.1, 0.2, 0.3], [0.1, 0.2, 0.3]]
+    # Should forward parameters and input
+    last = mod._fake_client.calls[-1]
+    assert last["model"] == "text-embedding-3-large"
+    assert last["input"] == ["hello", "world"]
+    assert last["foo"] == "bar"
+
+
+def test_embed_documents_rejects_empty_list(mod):
+    emb = OpenAIEmbedding(model_name="text-embedding-3-large", api_key="sk")
+    with pytest.raises(ValueError):
+        emb.embed_documents([])
+
+
+@pytest.mark.parametrize(
+    "bad_list", [[""], [None], ["good", ""], [None, "test"], [123, "str"]]
+)
+def test_embed_documents_rejects_bad_items(bad_list, mod):
+    emb = OpenAIEmbedding(model_name="text-embedding-3-large", api_key="sk")
+    with pytest.raises(ValueError):
+        emb.embed_documents(bad_list)  # type: ignore
+
+
+def test_embed_documents_rejects_if_any_too_long(monkeypatch, mod):
+    emb = OpenAIEmbedding(model_name="text-embedding-3-large", api_key="sk")
+    too_long = "x" * (OPENAI_EMBEDDING_MAX_TOKENS + 1)
+    with pytest.raises(ValueError) as e:
+        emb.embed_documents(["short", too_long])
+    assert "exceeds the maximum" in str(e.value)
+
+
+def test_count_tokens_delegates_to_encoder(monkeypatch, mod):
+    emb = OpenAIEmbedding(model_name="text-embedding-3-large", api_key="sk")
+    monkeypatch.setattr(
+        emb,
+        "_get_encoder",
+        lambda: type("E", (), {"encode": lambda s, t: list(range(len(t)))})(),
+    )
+    assert emb._count_tokens("abcd") == 4
+
+
+def test_validate_token_length_raises_if_over(monkeypatch, mod):
+    emb = OpenAIEmbedding(model_name="text-embedding-3-large", api_key="sk")
+    monkeypatch.setattr(
+        emb, "_count_tokens", lambda text: OPENAI_EMBEDDING_MAX_TOKENS + 1
+    )
+    with pytest.raises(ValueError):
+        emb._validate_token_length("fail")
+
+
+def test_embed_text_forwards_parameters(mod):
+    emb = OpenAIEmbedding(model_name="text-embedding-3-large", api_key="sk")
+    _ = emb.embed_text("hi", custom_param=42)
+    last = mod._fake_client.calls[-1]
+    assert last["custom_param"] == 42
+
+
+def test_get_encoder_bubbles_valueerror(monkeypatch, mod):
+    emb = OpenAIEmbedding(model_name="text-embedding-3-large", api_key="sk")
+    monkeypatch.setattr(
+        mod.tiktoken,
+        "encoding_for_model",
+        lambda name: (_ for _ in ()).throw(Exception("fail")),
+    )
+    monkeypatch.setattr(
+        mod.tiktoken,
+        "get_encoding",
+        lambda name: (_ for _ in ()).throw(ValueError("fatal!")),
+    )
+    with pytest.raises(ValueError):
+        emb._get_encoder()
