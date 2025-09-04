@@ -1,32 +1,12 @@
-from typing import TYPE_CHECKING, Any, List, Optional, Union
+from typing import TYPE_CHECKING, Any, List, Optional
 
 if TYPE_CHECKING:
     from sentence_transformers import SentenceTransformer
 
-try:
-    import torch
-
-    TorchDevice = Union[str, "torch.device"]
-except Exception:
-    torch = None
-    TorchDevice = Union[str, object]
-
 import numpy as np
+import torch
 
 from ..base_embedding import BaseEmbedding
-
-
-def _require_extra(extra: str, import_name: Optional[str] = None) -> None:
-    """Raise a helpful error if an optional extra is missing."""
-    mod = import_name or extra
-    try:
-        __import__(mod)
-    except ImportError as e:
-        raise ImportError(
-            f"This feature requires the '{extra}' extra.\n"
-            f"Install it with:\n\n"
-            f"    pip install splitter-mr[{extra}]\n"
-        ) from e
 
 
 class HuggingFaceEmbedding(BaseEmbedding):
@@ -59,7 +39,7 @@ class HuggingFaceEmbedding(BaseEmbedding):
     def __init__(
         self,
         model_name: str = "sentence-transformers/all-MiniLM-L6-v2",
-        device: Optional[TorchDevice] = None,
+        device: Optional[str] = "cpu",
         normalize: bool = True,
         enforce_max_length: bool = False,
     ) -> None:
@@ -87,7 +67,6 @@ class HuggingFaceEmbedding(BaseEmbedding):
         Raises:
             ValueError: If the model cannot be loaded.
         """
-        _require_extra("multimodal", "sentence_transformers")
 
         from sentence_transformers import SentenceTransformer
 

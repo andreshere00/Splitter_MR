@@ -13,7 +13,7 @@ def openai_vision_model():
     with patch("splitter_mr.model.models.openai_model.OpenAI") as MockOpenAI:
         mock_client = MagicMock()
         MockOpenAI.return_value = mock_client
-        model = OpenAIVisionModel(api_key="sk-test", model_name="gpt-4.1")
+        model = OpenAIVisionModel(api_key="sk-test", model_name="gpt-4o")
         return model
 
 
@@ -39,16 +39,16 @@ def test_analyze_content_calls_api(openai_vision_model):
         text = openai_vision_model.analyze_content("SOME_BASE64", prompt="What's here?")
         mock_create.assert_called_once()
         args = mock_create.call_args.kwargs
-        assert args["model"] == "gpt-4.1"
+        assert args["model"] == "gpt-4o"
         assert args["messages"][0]["content"][0]["text"] == "What's here?"
         assert text == "Extracted text!"
 
 
 def test_init_with_argument():
     with patch("splitter_mr.model.models.openai_model.OpenAI") as mock_openai:
-        model = OpenAIVisionModel(api_key="my-secret", model_name="gpt-4.1")
+        model = OpenAIVisionModel(api_key="my-secret", model_name="gpt-4o")
         mock_openai.assert_called_once_with(api_key="my-secret")
-        assert model.model_name == "gpt-4.1"
+        assert model.model_name == "gpt-4o"
 
 
 def test_init_with_env(monkeypatch):

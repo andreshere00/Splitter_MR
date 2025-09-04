@@ -1,13 +1,11 @@
-import builtins
-import types
+import io
+import os
 from unittest.mock import ANY, MagicMock, patch
 
 import pytest
 
-from splitter_mr.reader.readers.markitdown_reader import (
-    MarkItDownReader,
-    _require_markitdown,
-)
+from splitter_mr.model.base_model import BaseVisionModel
+from splitter_mr.reader.readers.markitdown_reader import MarkItDownReader
 
 # Helpers
 
@@ -27,21 +25,30 @@ def mock_split_pdfs(tmp_path):
     return _make
 
 
+class FakeOpenAI:
+    pass  # You only need to pass isinstance(client, OpenAI) in your code
+
+
+class FakeVisionModel(BaseVisionModel):
+    def __init__(self, model_name="gpt-4o-vision"):
+        self.model_name = model_name
+
+    def get_client(self):
+        return FakeOpenAI()  # Returns an "OpenAI" client!
+
+    def analyze_content(self, prompt, file, file_ext, **kwargs):
+        return "dummy"
+
+
 def patch_vision_models():
     """
     Returns (patch_BaseVisionModel, DummyVisionModel).
     """
 
-    class DummyVisionModel:
-        model_name = "gpt-4o-vision"
-
-        def get_client(self):
-            return None
-
     base = "splitter_mr.reader.readers.markitdown_reader"
     return (
-        patch(f"{base}.BaseVisionModel", DummyVisionModel),
-        DummyVisionModel,
+        patch(f"{base}.BaseVisionModel", FakeVisionModel),
+        FakeVisionModel,
     )
 
 
@@ -102,6 +109,7 @@ def test_markitdown_reader_defaults(tmp_path):
         assert hasattr(result, "metadata")
 
 
+@patch("splitter_mr.reader.readers.markitdown_reader.OpenAI", FakeOpenAI)
 def test_scan_pdf_pages_calls_convert_per_page(tmp_path):
     pdf = tmp_path / "multi.pdf"
     pdf.write_text("dummy pdf")
@@ -121,6 +129,7 @@ def test_scan_pdf_pages_calls_convert_per_page(tmp_path):
             assert "llm_prompt" in call.kwargs
 
 
+@patch("splitter_mr.reader.readers.markitdown_reader.OpenAI", FakeOpenAI)
 def test_scan_pdf_pages_uses_custom_prompt(tmp_path):
     pdf = tmp_path / "single.pdf"
     pdf.write_text("dummy pdf")
@@ -138,6 +147,7 @@ def test_scan_pdf_pages_uses_custom_prompt(tmp_path):
         assert kwargs["llm_prompt"] == custom_prompt
 
 
+@patch("splitter_mr.reader.readers.markitdown_reader.OpenAI", FakeOpenAI)
 def test_scan_pdf_pages_splits_each_page(tmp_path):
     """Test PDF is split and scanned page by page with VisionModel."""
     pdf = tmp_path / "multi.pdf"
@@ -166,6 +176,7 @@ def test_scan_pdf_pages_splits_each_page(tmp_path):
         assert result.ocr_method == "gpt-4o-vision"
 
 
+@patch("splitter_mr.reader.readers.markitdown_reader.OpenAI", FakeOpenAI)
 def test_scan_pdf_pages_custom_prompt(tmp_path):
     """Test that a custom prompt is passed for page scanning."""
     pdf = tmp_path / "onepage.pdf"
@@ -466,50 +477,117 @@ def test_split_by_pages_placeholder_not_detected(tmp_path, mock_split_pdfs):
         assert result.page_placeholder == "<!--pagebreak-->"
 
 
-def test__require_markitdown_raises_when_missing(monkeypatch):
-    """If markitdown isn't installed, we surface a clear extras message."""
+def test_convert_to_pdf_raises_if_soffice_missing(tmp_path, monkeypatch):
+    test_file = tmp_path / "dummy.docx"
+    test_file.write_text("fake")
 
-    real_import = builtins.__import__
-
-    def fake_import(name, *args, **kwargs):
-        if name == "markitdown":
-            raise ImportError("No module named 'markitdown'")
-        return real_import(name, *args, **kwargs)
-
-    monkeypatch.setattr(builtins, "__import__", fake_import)
-
-    with pytest.raises(ImportError) as ei:
-        _require_markitdown()
-
-    msg = str(ei.value)
-    assert "requires the 'markitdown' extra" in msg
-    assert "pip install splitter-mr[markitdown]" in msg
+    # Patch shutil.which to simulate "soffice" missing
+    monkeypatch.setattr("shutil.which", lambda _: None)
+    reader = MarkItDownReader()
+    with pytest.raises(RuntimeError) as exc:
+        reader._convert_to_pdf(str(test_file))
+    assert "LibreOffice" in str(exc.value)
 
 
-def test_markitdown_reader_ctor_raises_when_missing(monkeypatch):
-    """Constructor should fail early with the same clear error when extra is missing."""
+def test_convert_to_pdf_raises_on_subprocess_error(tmp_path, monkeypatch):
+    test_file = tmp_path / "fail.docx"
+    test_file.write_text("fake")
+    monkeypatch.setattr("shutil.which", lambda _: "/usr/bin/soffice")
+    monkeypatch.setattr("tempfile.mkdtemp", lambda: str(tmp_path))
 
-    real_import = builtins.__import__
+    # Patch subprocess.run to return failure
+    class DummyResult:
+        returncode = 1
+        stderr = b"conversion failed"
 
-    def fake_import(name, *args, **kwargs):
-        if name == "markitdown":
-            raise ImportError("No module named 'markitdown'")
-        return real_import(name, *args, **kwargs)
-
-    monkeypatch.setattr(builtins, "__import__", fake_import)
-
-    with pytest.raises(ImportError) as ei:
-        MarkItDownReader()
-
-    msg = str(ei.value)
-    assert "requires the 'markitdown' extra" in msg
-    assert "pip install splitter-mr[markitdown]" in msg
+    monkeypatch.setattr("subprocess.run", lambda *a, **k: DummyResult())
+    reader = MarkItDownReader()
+    with pytest.raises(RuntimeError) as exc:
+        reader._convert_to_pdf(str(test_file))
+    assert "Failed to convert" in str(exc.value)
 
 
-def test__require_markitdown_noop_when_present(monkeypatch):
-    """If a (stub) markitdown module is present, no error should be raised."""
-    stub = types.ModuleType("markitdown")
-    monkeypatch.setitem(__import__("sys").modules, "markitdown", stub)
+def test_convert_to_pdf_raises_when_pdf_not_created(tmp_path, monkeypatch):
+    test_file = tmp_path / "fail.docx"
+    test_file.write_text("fake")
+    monkeypatch.setattr("shutil.which", lambda _: "/usr/bin/soffice")
+    monkeypatch.setattr("tempfile.mkdtemp", lambda: str(tmp_path))
 
-    # Should not raise
-    _require_markitdown()
+    class DummyResult:
+        returncode = 0
+        stderr = b""
+
+    monkeypatch.setattr("subprocess.run", lambda *a, **k: DummyResult())
+    reader = MarkItDownReader()
+    with pytest.raises(RuntimeError) as exc:
+        reader._convert_to_pdf(str(test_file))
+    assert "PDF was not created" in str(exc.value)
+
+
+def test_get_markitdown_raises_on_wrong_model():
+    class InvalidVisionModel(BaseVisionModel):
+        def __init__(self, model_name="bad"):
+            self.model_name = model_name
+
+        def get_client(self):
+            return object()  # <-- Not an OpenAI instance!
+
+        def analyze_content(self, prompt, file, file_ext, **kwargs):
+            return "dummy"
+
+    reader = MarkItDownReader(model=InvalidVisionModel())
+    with pytest.raises(ValueError) as exc:
+        reader._get_markitdown()
+    assert "Incompatible client" in str(exc.value)
+
+
+def test_split_pdf_to_temp_pdfs(tmp_path):
+    import pypdf
+
+    # Create a real 2-page PDF
+    pdf_path = tmp_path / "test.pdf"
+    writer = pypdf.PdfWriter()
+    writer.add_blank_page(width=100, height=100)
+    writer.add_blank_page(width=100, height=100)
+    with open(pdf_path, "wb") as f:
+        writer.write(f)
+    reader = MarkItDownReader()
+    files = reader._split_pdf_to_temp_pdfs(str(pdf_path))
+    assert len(files) == 2
+    for f in files:
+        assert f.endswith(".pdf")
+        assert os.path.exists(f)
+        os.remove(f)
+
+
+def test_read_sets_conversion_method_json(tmp_path):
+    file = tmp_path / "foo.json"
+    file.write_text("{}")
+    with patch(
+        "splitter_mr.reader.readers.markitdown_reader.MarkItDown"
+    ) as MockMarkItDown:
+        mock_md = MockMarkItDown.return_value
+        mock_md.convert.return_value = MagicMock(text_content='{"text":"hi"}')
+        reader = MarkItDownReader()
+        result = reader.read(str(file))
+        assert result.conversion_method == "json"
+        assert result.text == '{"text":"hi"}'
+
+
+def test_pdf_pages_to_streams(tmp_path, monkeypatch):
+    pdf_path = tmp_path / "img.pdf"
+    # Simulate fitz.open and pixmap
+    dummy_doc = MagicMock()
+    dummy_doc.__len__.return_value = 2
+    dummy_page = MagicMock()
+    dummy_pixmap = MagicMock()
+    dummy_pixmap.tobytes.return_value = b"FAKEPNG"
+    dummy_page.get_pixmap.return_value = dummy_pixmap
+    dummy_doc.load_page.return_value = dummy_page
+    monkeypatch.setattr("fitz.open", lambda _: dummy_doc)
+    reader = MarkItDownReader()
+    streams = reader._pdf_pages_to_streams(str(pdf_path))
+    assert len(streams) == 2
+    for i, stream in enumerate(streams, 1):
+        assert isinstance(stream, io.BytesIO)
+        assert stream.name == f"page_{i}.png"

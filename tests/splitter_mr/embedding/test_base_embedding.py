@@ -126,3 +126,85 @@ def test_embed_text_raises_runtime_error_on_unexpected_shape():
 def test_constructor_validates_model_name():
     with pytest.raises(ValueError):
         _GoodEmbedding("")  # must provide a model name
+
+
+def test_embed_documents_calls_embed_text_for_each(monkeypatch):
+    emb = _GoodEmbedding("model-ok")
+    calls = []
+
+    def fake_embed_text(text, **kwargs):
+        calls.append((text, kwargs))
+        return [1.0, 2.0, 3.0]
+
+    emb.embed_text = fake_embed_text  # monkeypatch
+    docs = ["a", "b", "c"]
+    params = {"foo": "bar"}
+    result = emb.embed_documents(docs, **params)
+    assert isinstance(result, list)
+    assert result == [[1.0, 2.0, 3.0]] * len(docs)
+    assert [c[0] for c in calls] == docs
+    for text, kwargs in calls:
+        assert kwargs == params
+
+
+def test_embed_documents_raises_if_empty():
+    emb = _GoodEmbedding("model-x")
+    with pytest.raises(ValueError):
+        emb.embed_documents([])
+
+
+def test_embed_documents_propagates_errors_from_embed_text():
+    emb = _GoodEmbedding("model-x")
+
+    def raise_embed_text(*a, **k):
+        raise RuntimeError("fail")
+
+    emb.embed_text = raise_embed_text
+    with pytest.raises(RuntimeError) as exc:
+        emb.embed_documents(["hello"])
+    assert "fail" in str(exc.value)
+
+
+def test_embed_documents_forwards_parameters_to_embed_text():
+    emb = _GoodEmbedding("model-ok")
+    received = []
+
+    def fake_embed_text(text, **params):
+        received.append((text, params))
+        return [0.0, 1.0, 2.0]
+
+    emb.embed_text = fake_embed_text
+    emb.embed_documents(["x", "y"], a=1, b=2)
+    assert received == [("x", {"a": 1, "b": 2}), ("y", {"a": 1, "b": 2})]
+
+
+def test_embed_documents_one_item():
+    emb = _GoodEmbedding("model-ok")
+    vecs = emb.embed_documents(["hi"])
+    assert isinstance(vecs, list)
+    assert len(vecs) == 1
+    assert all(isinstance(x, float) for x in vecs[0])
+
+
+def test_missing_get_client_is_abstract():
+    class _MissingGetClient(BaseEmbedding):
+        def __init__(self, model_name: str):
+            self.model_name = model_name
+
+        def embed_text(self, text, **kw):
+            return [1.0]
+
+    with pytest.raises(TypeError):
+        _MissingGetClient("m")
+
+
+def test_missing_init_is_abstract():
+    class _MissingInit(BaseEmbedding):
+        def get_client(self):
+            return None
+
+        def embed_text(self, t, **kw):
+            return [1.0]
+
+    with pytest.raises(TypeError):
+        _MissingInit()  # type: ignore

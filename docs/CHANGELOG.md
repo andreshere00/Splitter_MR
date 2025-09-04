@@ -12,7 +12,24 @@
 >   ```bash
 >   pip install "splitter-mr[all]"
 >   ```
+
 > - This change reduces install time and keeps core installs lightweight.
+
+## v0.6.5
+
+**Hotfix**: dependency isolation was not guaranteed.
+
+### Features
+
+- Add a util class to convert HTML to Markdown content.
+- Improve Header Splitter to always return its content in markdown format.
+- Add the option to return text in markdown format for HTMLTagSplitter.
+- Add the option to batch content when using HTMLTagSplitter: If `batch=True`, it returns the chunks grouped by tags up to the numbers of characters specified by `chunk_size`. If False, it will return one register per tag.
+
+### Bug fixes
+
+- Dependency isolation was not guaranteed: implement safe lazy imports in all the __init__ methods.
+- Raise test coverage up to 90%. 
 
 ## 0.6.4
 
