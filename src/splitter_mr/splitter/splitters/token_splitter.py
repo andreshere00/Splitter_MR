@@ -11,6 +11,14 @@ from langchain_text_splitters import (
 )
 
 from ...schema import ReaderOutput, SplitterOutput
+from ...schema.constants import (
+    DEFAULT_TOKEN_LANGUAGE,
+    DEFAULT_TOKENIZER,
+    NLTK_DEFAULTS,
+    SPACY_DEFAULTS,
+    SUPPORTED_TOKENIZERS,
+    TIKTOKEN_DEFAULTS,
+)
 from ..base_splitter import BaseSplitter
 
 
@@ -28,9 +36,9 @@ class TokenSplitter(BaseSplitter):
         chunk_size (int): Maximum number of tokens per chunk.
         model_name (str): Specifies the tokenizer and model in the format `tokenizer/model`. Supported tokenizers are:
 
-            - `tiktoken/gpt-4o` (OpenAI GPT-4o tokenizer via tiktoken)
+            - `tiktoken/cl100k_base` (OpenAI tokenizer via tiktoken)
             - `spacy/en_core_web_sm` (spaCy English model)
-            - `nltk/punkt` (NLTK tokenizer models like punkt)
+            - `nltk/punkt_tab` (NLTK Punkt tokenizer variant)
 
         language (str): Language code for NLTK tokenizer (default `"english"`).
 
@@ -42,12 +50,13 @@ class TokenSplitter(BaseSplitter):
     def __init__(
         self,
         chunk_size: int = 1000,
-        model_name: str = "tiktoken/cl100k_base",
-        language: str = "english",
+        model_name: str = DEFAULT_TOKENIZER,
+        language: str = DEFAULT_TOKEN_LANGUAGE,
     ):
         super().__init__(chunk_size)
-        self.model_name = model_name
-        self.language = language
+        # Use centralized defaults (already applied via signature) and keep on instance
+        self.model_name = model_name or DEFAULT_TOKENIZER
+        self.language = language or DEFAULT_TOKEN_LANGUAGE
 
     @staticmethod
     def list_nltk_punkt_languages():
@@ -58,6 +67,16 @@ class TokenSplitter(BaseSplitter):
             if punkt_dir.exists():
                 models.update(f.stem for f in punkt_dir.glob("*.pickle"))
         return sorted(models)
+
+    def _parse_model(self) -> tuple[str, str]:
+        """Parse `tokenizer/model` and validate the format."""
+        if "/" not in self.model_name:
+            raise ValueError(
+                "model_name must be in the format 'tokenizer/model', "
+                f"e.g. '{DEFAULT_TOKENIZER}'."
+            )
+        tokenizer, model = self.model_name.split("/", 1)
+        return tokenizer, model
 
     def split(self, reader_output: ReaderOutput) -> SplitterOutput:
         """
@@ -86,92 +105,73 @@ class TokenSplitter(BaseSplitter):
         Raises:
             RuntimeError: If a spaCy model specified in `model_name` is not available.
             ValueError: If an unsupported tokenizer is specified in `model_name`.
-
-        Example:
-            ```python
-            from splitter_mr.splitter import TokenSplitter
-
-            reader_output = ReaderOutput(
-                text: "The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs.",
-                document_name: "pangrams.txt",
-                document_path: "/https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/pangrams.txt",
-            )
-
-            splitter = TokenSplitter(chunk_size=10, model_name="tiktoken/gpt-4o")
-            output = splitter.split(reader_output)
-            print(output.chunks)
-            ```
-            ```python
-            ['The quick brown fox jumps over the lazy dog.',
-            'Pack my box with five dozen liquor jugs.']
-            ```
         """
-        # Initialize variables
         text = reader_output.text
-        model_name = self.model_name
-        TOKENIZERS = ("tiktoken", "spacy", "nltk")
-        tokenizer, model = model_name.split("/")
+        tokenizer, model = self._parse_model()
 
         if tokenizer == "tiktoken":
-            # Check if the model is available in tiktoken
+            # Validate against installed tiktoken encodings; hint with our common defaults
             available_models = tiktoken.list_encoding_names()
             if model not in available_models:
                 raise ValueError(
                     f"tiktoken encoding '{model}' is not available. "
-                    f"Available encodings are: {available_models}"
+                    f"Available encodings include (subset): {TIKTOKEN_DEFAULTS}. "
+                    f"Full list from tiktoken: {available_models}"
                 )
             splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
                 encoding_name=model,
                 chunk_size=self.chunk_size,
                 chunk_overlap=0,
             )
+
         elif tokenizer == "spacy":
             if not spacy.util.is_package(model):
+                # Try to download; we surface our recommended list in the error if it fails
                 try:
                     spacy.cli.download(model)
                 except Exception as e:
-                    print(
-                        f"spaCy model '{model}' is not available for download. Error: {e}"
-                    )
                     raise RuntimeError(
-                        f"spaCy model '{model}' is not available for download."
+                        f"spaCy model '{model}' is not available for download. "
+                        f"Common models include: {SPACY_DEFAULTS}"
                     ) from e
             spacy.load(model)
             MAX_SAFE_LENGTH = 1_000_000
-            # If text is too long, raise a warning
             if self.chunk_size > MAX_SAFE_LENGTH:
                 warnings.warn(
-                    "Too many characters: the v2.x parser and NER models require roughly 1GB of temporary memory per 100,000 characters in the input",
+                    "Too many characters: the v2.x parser and NER models require roughly "
+                    "1GB of temporary memory per 100,000 characters in the input",
                     UserWarning,
                 )
-            # Set max_length to text length + some buffer
             splitter = SpacyTextSplitter(
                 chunk_size=self.chunk_size,
                 chunk_overlap=0,
                 max_length=MAX_SAFE_LENGTH,
                 pipeline=model,
             )
+
         elif tokenizer == "nltk":
+            # Ensure punkt language is present; download our specified default model if missing
             try:
                 nltk.data.find(f"tokenizers/punkt/{self.language}.pickle")
             except LookupError:
-                nltk.download("punkt")
+                # Use constants instead of hard-coded 'punkt_tab'
+                nltk.download(NLTK_DEFAULTS[0])
             splitter = NLTKTextSplitter(
-                chunk_size=self.chunk_size, chunk_overlap=0, language=self.language
+                chunk_size=self.chunk_size,
+                chunk_overlap=0,
+                language=self.language,
             )
+
         else:
             raise ValueError(
-                f"Unsupported tokenizer '{tokenizer}'. Supported tokenizers: {TOKENIZERS}"
+                f"Unsupported tokenizer '{tokenizer}'. Supported tokenizers: {SUPPORTED_TOKENIZERS}"
             )
 
         chunks = splitter.split_text(text)
-
-        # Generate chunks_id
         chunk_ids = self._generate_chunk_ids(len(chunks))
         metadata = self._default_metadata()
 
-        # Return output
-        output = SplitterOutput(
+        return SplitterOutput(
             chunks=chunks,
             chunk_id=chunk_ids,
             document_name=reader_output.document_name,
@@ -183,9 +183,8 @@ class TokenSplitter(BaseSplitter):
             split_method="token_splitter",
             split_params={
                 "chunk_size": self.chunk_size,
-                "model_name": self.model_name,
-                "language": self.language,
+                "model_name": self.model_name,  # keeps centralized default visible
+                "language": self.language,  # keeps centralized default visible
             },
             metadata=metadata,
         )
-        return output

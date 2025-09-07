@@ -2,7 +2,7 @@ import re
 from typing import List, Union
 
 from ...schema import (  # regex: terminator + trailing quotes/brackets + optional space
-    DEFAULT_SENTENCE_SEPARATOR,
+    DEFAULT_SENTENCE_SEPARATORS,
     ReaderOutput,
     SplitterOutput,
 )
@@ -25,7 +25,7 @@ class SentenceSplitter(BaseSplitter):
         self,
         chunk_size: int = 5,
         chunk_overlap: Union[int, float] = 0,
-        separators: Union[str, List[str]] = DEFAULT_SENTENCE_SEPARATOR,
+        separators: Union[str, List[str]] = DEFAULT_SENTENCE_SEPARATORS,
     ):
         super().__init__(chunk_size)
         self.chunk_overlap = chunk_overlap

@@ -62,6 +62,8 @@ multimodal = [
     "sentence-transformers>=5.1.0",
     "torch>=2.7.1",
     "voyageai>=0.3.4",
+    "pip>=25.2",
+    "xai-sdk>=1.0.1",
 ]
 # All the dependencies
 all = [
@@ -89,7 +91,7 @@ all = [
     "gitpython>=3.1.45",
     "sentence-transformers>=5.1.0",
     "torch>=2.7.1",
-    "voyageai>=0.3.4",
+    "voyageai>=0.3.4"
 ]
 
 [tool.setuptools]
@@ -120,13 +122,17 @@ test = { shell = "uv sync --dev --extra markitdown --extra docling --extra multi
 
 clean = { shell = "echo 'Clean all the cache and temporary files.' && find . -type d -name '__pycache__' -exec rm -rf {} + && find . -type d -name '.pytest_cache' -exec rm -rf {} + && find . -type f -name '*.pyc' -delete && find . -type f -name '*.pyo' -delete && find . -type f -name '*.pyd' -delete && find . -type d -name '*.egg-info' -exec rm -rf {} + && find . -type f -name '*.egg' -delete", help = "Clean cache and temporary files." }
 
-docs = { shell = "uv run mkdocs serve", help = "Deploy Mkdocs server." }
+docs = { shell = "uv sync --dev && uv run mkdocs serve", help = "Deploy Mkdocs server." }
 
 pre-commit = { shell = "uv run pre-commit", help = "Install pre-commit hooks." }
 
 format = { shell = "uv run --dev pyupgrade --exit-zero && uv run --dev isort . && uv run --dev black . && uv run ruff check --fix . && uv run ruff format . && uv run --dev flake8 --max-line-length=101 --ignore=E203,W291,E501,W293 src/", help = "Format the code using pyupgrade, isort, black and flake8"}
 
 deploy-docs = { shell = "uv run mkdocs gh-deploy", help = "Publish Mkdocs server" }
+
+run-notebooks = { shell = "set -e && find notebooks/docs/examples -type f -name '*.ipynb' -print0 | xargs -0 -n1 -I{} sh -c 'echo \"[nbexec] Executing: {}\" && uv run jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=600 \"{}\"'", help = "Execute all example notebooks in-place" }
+
+ipynb-to-md = { shell = "rm -f code_splitter.md fixed_splitter.md header_splitter.md html_tag_splitter.md json_splitter.md paged_splitter.md recursive_character_splitter.md semantic_splitter.md token_splitter.md pdf_docling.md pdf_markitdown.md pdf_vanilla.md pdf_with_vlm.md pdf_without_vlm.md && uv run python notebooks/ipynb2md.py --input notebooks --output docs/examples --template-dir notebooks/templates/markdown_fenced --preprocessor notebooks/truncate_output.py:HeadTailTruncateOutputPreprocessor --cut-until docs/examples --require-cut-until --verbose", help = "Convert notebooks to markdown" }
 
 [tool.autoflake]
 in-place = true
@@ -162,6 +168,16 @@ dev = [
     "wheel>=0.45.1",
     "pypandoc>=1.15",
     "nbformat>=5.10.4",
+    "ipykernel>=6.30.1",
+    "iprogress>=0.4",
+    "nbconvert>=7.16.6",
+    "pip>=25.2",
+    "ipywidgets>=8.1.7",
+    "jinja2>=3.1.6",
+    "jupyter>=1.1.1",
+    "pluggy>=1.6.0",
+    "iniconfig>=2.1.0",
+    "packaging>=25.0",
 ]
 
 [project.urls]

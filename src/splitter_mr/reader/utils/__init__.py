@@ -3,9 +3,11 @@ from typing import TYPE_CHECKING, Any, Dict, Tuple
 
 if TYPE_CHECKING:
     from .docling_utils import DoclingPipelineFactory  # noqa: F401
+    from .html_to_markdown import HtmlToMarkdown  # noqa: F401
     from .pdfplumber_reader import PDFPlumberReader  # noqa: F401
 
 REGISTRY: Dict[str, Tuple[str, str]] = {
+    "HtmlToMarkdown": (".html_to_markdown", "HtmlToMarkdown"),
     "DoclingPipelineFactory": (".docling_utils", "DoclingPipelineFactory"),
     "PDFPlumberReader": (".pdfplumber_reader", "PDFPlumberReader"),
 }

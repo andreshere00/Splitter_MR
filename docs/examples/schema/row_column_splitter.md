@@ -1,12 +1,13 @@
 # **Example**: Splitting Tabular Data with `RowColumnSplitter`
 
-Tabular files such as CSVs, TSVs, or Markdown tables are ubiquitous in business and data workflows, but can become too large for direct LLM ingestion, annotation, or analysis. **SplitterMR’s `RowColumnSplitter` provides flexible chunking for tabular data, letting you split tables by rows, columns, or character size—while preserving the structural integrity of each chunk.**
+Tabular files such as CSVs, TSVs, or Markdown tables are ubiquitous in business and data workflows, but can become too large for direct LLM ingestion, annotation, or analysis. **SplitterMR [`RowColumnSplitter`](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#rowcolumnsplitter) provides flexible chunking for tabular data, letting you split tables by rows, columns, or character size—while preserving the structural integrity of each chunk.**
 
 ![Tabular data example](https://cdn.prod.website-files.com/5ec4696a9b6d337d51632638/66a13775bfe37ea3ea11bbdf_666b29d252001a163f5260a4_65af215b95aef7ce55d2a923_Screenshot%2525202024-01-22%252520at%2525209.13.25%2525E2%252580%2525AFPM.png)
 
 ## Step 1: Read the Tabular File
 
-Let's use the `VanillaReader` to load a CSV file:
+Let's use the [`VanillaReader`](https://andreshere00.github.io/Splitter_MR/api_reference/reader/#vanillareader) to load a CSV file:
+
 
 ```python
 from splitter_mr.reader import VanillaReader
@@ -17,34 +18,26 @@ reader_output = reader.read(file)
 
 # Print metadata and content
 print(reader_output)
-print(reader_output.text)
 ```
 
-**Sample output:**
+    text='id,name,amount,Remark\n1,"Johnson, Smith, and Jones Co.",345.33,Pays on time\n2,"Sam ""Mad Dog"" Smith",993.44,\n3,Barney & Company,0,"Great to work with and always pays with cash."\n4,Johnson\'s Automotive,2344,' document_name='invoices.csv' document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/invoices.csv' document_id='587fd2ce-2a41-4ab2-a9ad-f09ba3db1fe3' conversion_method='txt' reader_method='vanilla' ocr_method=None page_placeholder=None metadata={}
 
-```python
-ReaderOutput(
-    text='id,name,amount,Remark\n1,"Johnson, Smith, and Jones Co.",345.33,Pays on time\n2,"Sam ""Mad Dog"" Smith",993.44,\n3,Barney & Company,0,"Great to work with and always pays with cash."\n4,Johnson\'s Automotive,2344,',
-    document_name='invoices.csv',
-    document_path='https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/invoices.csv',
-    document_id='4eb99715-b11c-4a34-b0be-724ae6e34e4c',
-    conversion_method='csv',
-    reader_method='vanilla',
-    ocr_method=None,
-    metadata={}
-)
-```
+
 
 The content file is extracted accessing to the `text` attribute:
 
-```text
-id,name,amount,Remark
-1,"Johnson, Smith, and Jones Co.",345.33,Pays on time
-2,"Sam ""Mad Dog"" Smith",993.44,
-3,Barney & Company,0,"Great to work with
-and always pays with cash."
-4,Johnson's Automotive,2344,
+
+```python
+print(reader_output.text)
 ```
+
+    id,name,amount,Remark
+    1,"Johnson, Smith, and Jones Co.",345.33,Pays on time
+    2,"Sam ""Mad Dog"" Smith",993.44,
+    3,Barney & Company,0,"Great to work with and always pays with cash."
+    4,Johnson's Automotive,2344,
+
+
 
 Transformed into a markdown table will be:
 
@@ -61,6 +54,7 @@ Transformed into a markdown table will be:
 
 Split into chunks such that each chunk's markdown table representation stays under a character limit:
 
+
 ```python
 from splitter_mr.splitter import RowColumnSplitter
 
@@ -68,8 +62,27 @@ splitter = RowColumnSplitter(chunk_size=200)
 splitter_output = splitter.split(reader_output)
 
 for idx, chunk in enumerate(splitter_output.chunks):
-    print("="*40 + f" Chunk {idx + 1} " + "="*40 + "\n" + chunk + "\n")
+    print("=" * 40 + f" Chunk {idx + 1} " + "=" * 40 + "\n" + chunk + "\n")
 ```
+
+    ======================================== Chunk 1 ========================================
+    | id   | name   | amount   | Remark   |
+    |------|--------|----------|----------|
+    |    1 | Johnson, Smith, and Jones Co. |   345.33 | Pays on time |
+    |    2 | Sam "Mad Dog" Smith |   993.44 |      nan |
+    
+    ======================================== Chunk 2 ========================================
+    | id   | name   | amount   | Remark   |
+    |------|--------|----------|----------|
+    |    3 | Barney & Company |        0 | Great to work with and always pays with cash. |
+    
+    ======================================== Chunk 3 ========================================
+    | id   | name   | amount   | Remark   |
+    |------|--------|----------|----------|
+    |    4 | Johnson's Automotive |     2344 |      nan |
+    
+
+
 
 **Chunk 1:**
 
@@ -97,15 +110,31 @@ Each output chunk is a valid markdown table with the header and as many full row
 
 ### 2.2. **Split by a Fixed Number of Rows**
 
-Set `num_rows` to split the table into smaller tables, each with a fixed number of rows:
+Set [`num_rows`](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#rowcolumnsplitter) to split the table into smaller tables, each with a fixed number of rows:
+
 
 ```python
 splitter = RowColumnSplitter(num_rows=2)
 splitter_output = splitter.split(reader_output)
 
 for idx, chunk in enumerate(splitter_output.chunks):
-    print("="*40 + f" Chunk {idx + 1} " + "="*40 + "\n" + chunk + "\n")
+    print("=" * 40 + f" Chunk {idx + 1} " + "=" * 40 + "\n" + chunk + "\n")
 ```
+
+    ======================================== Chunk 1 ========================================
+    |   id | name                          |   amount | Remark       |
+    |-----:|:------------------------------|---------:|:-------------|
+    |    1 | Johnson, Smith, and Jones Co. |   345.33 | Pays on time |
+    |    2 | Sam "Mad Dog" Smith           |   993.44 | nan          |
+    
+    ======================================== Chunk 2 ========================================
+    |   id | name                 |   amount | Remark                                        |
+    |-----:|:---------------------|---------:|:----------------------------------------------|
+    |    3 | Barney & Company     |        0 | Great to work with and always pays with cash. |
+    |    4 | Johnson's Automotive |     2344 | nan                                           |
+    
+
+
 
 The output will be:
 
@@ -125,37 +154,61 @@ The output will be:
 
 ### 2.3. **Split by a Fixed Number of Columns**
 
-Set `num_cols` to split the table into column groups, each containing a fixed set of columns (e.g., for wide tables):
+Set [`num_cols`](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#rowcolumnsplitter) to split the table into column groups, each containing a fixed set of columns (e.g., for wide tables):
+
 
 ```python
 splitter = RowColumnSplitter(num_cols=2)
 splitter_output = splitter.split(reader_output)
 
 for idx, chunk in enumerate(splitter_output.chunks):
-    print("="*40 + f" Chunk {idx + 1} " + "="*40 + "\n" + chunk + "\n")
+    print("=" * 40 + f" Chunk {idx + 1} " + "=" * 40 + "\n" + chunk + "\n")
 ```
 
-The output will be a list with this format:
+    ======================================== Chunk 1 ========================================
+    [['id', 1, 2, 3, 4], ['name', 'Johnson, Smith, and Jones Co.', 'Sam "Mad Dog" Smith', 'Barney & Company', "Johnson's Automotive"]]
+    
+    ======================================== Chunk 2 ========================================
+    [['amount', 345.33, 993.44, 0.0, 2344.0], ['Remark', 'Pays on time', nan, 'Great to work with and always pays with cash.', nan]]
+    
 
-```python
-======================================== Chunk 1 ========================================
-[['id', 1, 2, 3, 4], ['name', 'Johnson, Smith, and Jones Co.', 'Sam "Mad Dog" Smith', 'Barney & Company', "Johnson's Automotive"]]
 
-======================================== Chunk 2 ========================================
-[['amount', 345.33, 993.44, 0.0, 2344.0], ['Remark', 'Pays on time', nan, 'Great to work with and always pays with cash.', nan]]
-```
 
 ### 2.4. **Add Overlapping Rows/Columns**
 
-Use `chunk_overlap` (int or float between 0 and 1) to specify how many rows or columns are repeated between consecutive chunks for context preservation:
+Use [`chunk_overlap`](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#rowcolumnsplitter) (int or float between 0 and 1) to specify how many rows or columns are repeated between consecutive chunks for context preservation:
+
 
 ```python
 splitter = RowColumnSplitter(chunk_size=150, chunk_overlap=0.2)
 splitter_output = splitter.split(reader_output)
 
 for idx, chunk in enumerate(splitter_output.chunks):
-    print("="*40 + f" Chunk {idx + 1} " + "="*40 + "\n" + chunk + "\n")
+    print("=" * 40 + f" Chunk {idx + 1} " + "=" * 40 + "\n" + chunk + "\n")
 ```
+
+    ======================================== Chunk 1 ========================================
+    | id   | name   | amount   | Remark   |
+    |------|--------|----------|----------|
+    |    1 | Johnson, Smith, and Jones Co. |   345.33 | Pays on time |
+    
+    ======================================== Chunk 2 ========================================
+    | id   | name   | amount   | Remark   |
+    |------|--------|----------|----------|
+    |    2 | Sam "Mad Dog" Smith |   993.44 |      nan |
+    
+    ======================================== Chunk 3 ========================================
+    | id   | name   | amount   | Remark   |
+    |------|--------|----------|----------|
+    
+    
+    ======================================== Chunk 4 ========================================
+    | id   | name   | amount   | Remark   |
+    |------|--------|----------|----------|
+    |    4 | Johnson's Automotive |     2344 |      nan |
+    
+
+
 
 The output is a table with an overlapping row column:
 
@@ -203,7 +256,7 @@ reader = VanillaReader()
 reader_output = reader.read(file)
 
 # Visualize the ReaderOutput object
-print(reader_output)
+print(reader_output.model_dump_json(indent=4))
 
 # Access to the text content
 print(reader_output.text)
@@ -212,6 +265,8 @@ print("*"*20 + " Split by rows based on chunk size " + "*"*20)
 
 splitter = RowColumnSplitter(chunk_size=200)
 splitter_output = splitter.split(reader_output)
+
+print(splitter_output.model_dump_json(indent=4))
 
 for idx, chunk in enumerate(splitter_output.chunks):
     print("="*40 + f" Chunk {idx + 1} " + "="*40 + "\n" + chunk + "\n")

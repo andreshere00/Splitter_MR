@@ -1,22 +1,16 @@
-from typing import Any, Dict, List, Literal, Optional, Tuple, cast
+from typing import Any, Dict, List, Optional, Tuple, cast
 
 import numpy as np
 
 from ...embedding import BaseEmbedding
-from ...schema import ReaderOutput, SplitterOutput
+from ...schema import (
+    DEFAULT_BREAKPOINTS,
+    BreakpointThresholdType,
+    ReaderOutput,
+    SplitterOutput,
+)
 from ...splitter import BaseSplitter
 from .sentence_splitter import SentenceSplitter
-
-BreakpointThresholdType = Literal[
-    "percentile", "standard_deviation", "interquartile", "gradient"
-]
-
-_BREAKPOINT_DEFAULTS: Dict[BreakpointThresholdType, float] = {
-    "percentile": 95.0,
-    "standard_deviation": 3.0,
-    "interquartile": 1.5,
-    "gradient": 95.0,
-}
 
 
 def _cosine_similaritynp(a: List[float], b: List[float], eps: float = 1e-12) -> float:
@@ -103,7 +97,7 @@ class SemanticSplitter(BaseSplitter):
             BreakpointThresholdType, breakpoint_threshold_type
         )
         self.breakpoint_threshold_amount = (
-            _BREAKPOINT_DEFAULTS[self.breakpoint_threshold_type]
+            DEFAULT_BREAKPOINTS[self.breakpoint_threshold_type]
             if breakpoint_threshold_amount is None
             else float(breakpoint_threshold_amount)
         )

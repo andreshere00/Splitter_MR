@@ -1,6 +1,6 @@
 import re
 
-from splitter_mr.splitter.splitters.utils.html_to_markdown import HtmlToMarkdown
+from splitter_mr.reader.utils.html_to_markdown import HtmlToMarkdown
 
 # ---- Helpers, mocks and fixtures ---- #
 

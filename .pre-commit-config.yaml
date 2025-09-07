@@ -35,3 +35,13 @@ repos:
         args: ["-c", "uv pip freeze --exclude-editable > requirements.txt"]
         language: system
         stages: [pre-commit]
+
+      # NEW: convert notebooks to Markdown into docs/examples/**
+      - id: convert-notebooks-md
+        name: Convert notebooks to Markdown for docs
+        entry: poe ipynb-to-md
+        language: system
+        pass_filenames: false
+        always_run: true
+        require_serial: true
+        stages: [pre-commit]

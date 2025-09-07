@@ -3,9 +3,9 @@ from typing import List, Optional
 
 from bs4 import BeautifulSoup
 
+from ...reader.utils.html_to_markdown import HtmlToMarkdown
 from ...schema import ReaderOutput, SplitterOutput
 from ..base_splitter import BaseSplitter
-from .utils.html_to_markdown import HtmlToMarkdown  # Adjust the import as needed
 
 
 class HTMLTagSplitter(BaseSplitter):

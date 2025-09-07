@@ -5,41 +5,29 @@
 <img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_logo.svg#gh-light-mode-only" alt="SplitterMR logo" width=100%/>
 <img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_logo_white.svg#gh-dark-mode-only" alt="SplitterMR logo" width=100%/>
 
-> [!IMPORTANT]
-> **Breaking Change! Version v0.6.0**
->
-> Dependencies are now split into **core** (installed by default) and **optional extras** for heavy or specialized features.
->
-> - **Example**: to use MarkItDown and Docling readers, install with:
->
->   ```bash
->   pip install "splitter-mr[markitdown,docling]"
->   ```
-> - To install **all** optional features:
->
->   ```bash
->   pip install "splitter-mr[all]"
->   ```
+!!! important 
+    
+    "Version 1.0.0 released – First Stable Release!"
 
-> [!IMPORTANT]
-> **New Vision and Embedding providers**
->
-> **Version 0.6.4:** SplitterMR now supports **Anthropic Claude** as a backend for both [**embedding**](https://andreshere00.github.io/Splitter_MR/api_reference/embedding#anthropicembedding) (via [Voyage](https://docs.voyageai.com/docs/embeddings) AI) and [**vision**](https://andreshere00.github.io/Splitter_MR/api_reference/model#anthropicvisionmodel) models.
->
-> **Version 0.6.3:** SplitterMR now supports **Gemini** as a backend for both [**embedding**](https://andreshere00.github.io/Splitter_MR/api_reference/embedding#geminiembedding) and [**vision**](https://andreshere00.github.io/Splitter_MR/api_reference/model/#geminivisionmodel) models.
->
-> **Version 0.6.2:** SplitterMR now supports **HuggingFace** as a backend for both embedding and vision models:
->
-> - [**HuggingFaceEmbedding**](https://andreshere00.github.io/Splitter_MR/api_reference/embedding/#huggingfaceembedding): Use any Sentence Transformers model (local or from Hugging Face Hub) for fast, local, or cloud embeddings.
-> - [**HuggingFaceVisionModel**](https://andreshere00.github.io/Splitter_MR/api_reference/model#huggingfacevisionmodel): Leverage Hugging Face’s vision-language models for image-to-text and image captioning.
->
-> **Version 0.6.1:** SplitterMR now supports `GrokVisionModel`. See documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/model#grokvisionmodel).
-> 
-> **To use HuggingFace, Gemini, Claude or Grok models**, you must install SplitterMR with the `multimodal` extra:
->
-> ```bash
-> pip install "splitter-mr[multimodal]"
-> ```
+    **We are excited to announce the first stable release of SplitterMR (v1.0.0)!** Install it with the following command:
+
+    ```python
+    pip install splitter-mr
+    ```
+
+    #### Key Highlights
+
+    - 🚀 [**Stable API**](#core-install) consolidating all v0.x features.
+    - 📖 **[Readers](https://andreshere00.github.io/Splitter_MR/api_reference/reader/):** Plug-and-play support for Vanilla, MarkItDown, and Docling, covering formats like text, Office, JSON/YAML, images, HTML, and more.
+    - 🪓 **[Splitters](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/):** Extensive library of split strategies, including character, word, sentence, paragraph, token, paged, row/column, JSON, semantic, HTML tag, header, and code splitters.
+    - 🧠 **[Models](https://andreshere00.github.io/Splitter_MR/api_reference/model/):** Multimodal Vision-Language support for OpenAI, Azure, Grok, HuggingFace, Gemini, Claude, and more.
+    - 🗺️ **[Embeddings](https://andreshere00.github.io/Splitter_MR/api_reference/embedding/):** Fully integrated embeddings from OpenAI, Azure, HuggingFace, Gemini, and Claude (via Voyage).
+    - 🎛️ [**Extras system:**](#multiple-extras) Install the minimal core, or extend with `markitdown`, `docling`, `multimodal`, `azure`, or `all` for a batteries-included setup.
+    - 📚 **[Docs](https://andreshere00.github.io/Splitter_MR/):** New API reference, real executed notebook examples, and updated architecture diagrams.
+    - 🔧 **Developer Experience:** CI/CD pipeline, PyPI publishing, pre-commit checks, and improved cleaning instructions.
+    - 🐛 **Bugfixes:** Improved NLTK tokenizers, more robust splitters, and new utilities for HTML => Markdown conversion.
+
+    **Check out the updated documentation, new examples, and join us in making text splitting and document parsing easier than ever!**
 
 ## Features
 
@@ -69,7 +57,7 @@ SplitterMR allows you to split files in many different ways depending on your ne
 | [**Token Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#tokensplitter)        | Splits text into chunks based on the number of tokens, using various tokenization models (e.g., tiktoken, spaCy, NLTK). Useful for ensuring chunks are compatible with LLM context limits. <br> **Parameters:** `chunk_size` (max tokens per chunk), `model_name` (tokenizer/model, e.g., `"tiktoken/cl100k_base"`, `"spacy/en_core_web_sm"`, `"nltk/punkt"`), `language` (for NLTK). <br> **Compatible with:** Text. |
 | [**Paged Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#pagedsplitter)        | Splits text by pages for documents that have page structure. Each chunk contains a specified number of pages, with optional word overlap. <br> **Parameters:** `num_pages` (pages per chunk), `chunk_overlap` (overlapping words). <br> **Compatible with:** Word, PDF, Excel, PowerPoint. |
 | [**Row/Column Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#rowcolumnsplitter)   | For tabular formats, splits data by a set number of rows or columns per chunk, with possible overlap. Row-based and column-based splitting are mutually exclusive. <br> **Parameters:** `num_rows`, `num_cols` (rows/columns per chunk), `overlap` (overlapping rows or columns). <br> **Compatible with:** Tabular formats (csv, tsv, parquet, flat json). |
-| [**JSON Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#jsonrecursivesplitter)         | Recursively splits JSON documents into smaller sub-structures that preserve the original JSON schema. <br> **Parameters:** `max_chunk_size` (max chars per chunk), `min_chunk_size` (min chars per chunk). <br> **Compatible with:** JSON. |
+| [**JSON Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#recursivejsonsplitter)         | Recursively splits JSON documents into smaller sub-structures that preserve the original JSON schema. <br> **Parameters:** `max_chunk_size` (max chars per chunk), `min_chunk_size` (min chars per chunk). <br> **Compatible with:** JSON. |
 | [**Semantic Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#semanticsplitter)     | Splits text into chunks based on semantic similarity, using an embedding model and a max tokens parameter. Useful for meaningful semantic groupings. <br> **Parameters:** `embedding_model` (model for embeddings), `max_tokens` (max tokens per chunk). <br> **Compatible with:** Text. |
 | [**HTML Tag Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#htmltagsplitter)       | Splits HTML content based on a specified tag, or automatically detects the most frequent and shallowest tag if not specified. Each chunk is a complete HTML fragment for that tag. <br> **Parameters:** `chunk_size` (max chars per chunk), `tag` (HTML tag to split on, optional). <br> **Compatible with:** HTML. |
 | [**Header Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#headersplitter)       | Splits Markdown or HTML documents into chunks using header levels (e.g., `#`, `##`, or `<h1>`, `<h2>`). Uses configurable headers for chunking. <br> **Parameters:** `headers_to_split_on` (list of headers and semantic names), `chunk_size` (unused, for compatibility). <br> **Compatible with:** Markdown, HTML. |
@@ -94,7 +82,7 @@ SplitterMR allows you to split files in many different ways depending on your ne
     - All the models have a `analyze_content` method which returns the LLM response based on a prompt, the client and the model parameters.
 - **Splitters**
     - The **`BaseSplitter`** components take the **`ReaderOutput`** text content and divide that text into meaningful chunks for LLM or other downstream use.
-    - Splitter classes (e.g., **`CharacterSplitter`**, **`SentenceSplitter`**, **`RecursiveSplitter`**, etc.) allow flexible chunking strategies with optional overlap and rich configuration.
+    - Splitter classes (e.g., **`CharacterSplitter`**, **`SentenceSplitter`**, **`RecursiveCharacterSplitter`**, etc.) allow flexible chunking strategies with optional overlap and rich configuration.
 - **Embedders**
     - The **`BaseEmbedder`** components are used to encode the text into embeddings. These embeddings are used to split text by semantic similarity.
     - Supported models are `AzureOpenAI` and `OpenAI`, but more models will be available soon.
@@ -229,13 +217,18 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 
 ### Next features
 
+- [ ] **NEW** Provide a MCP server to make queries about the chunked documents.
+- [ ] Add examples on how to implement SplitterMR in RAGs, MCPs and Agentic RAGs.
+- [ ] Add a method to read PDFs using Textract.
+- [ ] Add a new `BaseVisionModel` class to support generic API-provided models.
 - [ ] Add asynchronous methods for Splitters and Readers.
 - [ ] Add batch methods to process several documents at once.
 - [ ] Add support to read formulas.
 - [ ] Add classic **OCR** models: `easyocr` and `pytesseract`.
-- [ ] Add support to generate output in `markdown`, `json`, `yaml` formats.
+- [ ] Add support to generate output in `markdown` for all data types in VanillaReader.
+- [ ] Add methods to support Markdown, JSON and XML data types when returning output.
 
-### Previously implemented
+### Previously implemented (up to `v1.0.0`)
 
 - [X] Add embedding model support.
     - [X] Add OpenAI embeddings model support.
