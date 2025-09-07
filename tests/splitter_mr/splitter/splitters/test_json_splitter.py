@@ -31,19 +31,17 @@ def test_recursive_json_splitter_instantiates_and_calls_splitter(reader_output):
         "splitter_mr.splitter.splitters.json_splitter.RecursiveJsonSplitter"
     ) as MockSplitter:
         mock_splitter = MockSplitter.return_value
-        mock_splitter.split_json.return_value = [
+        mock_splitter.split_text.return_value = [
             '{"foo": {"bar": [1, 2]}}',
             '{"foo": {"bar": [3]}, "baz": "qux"}',
         ]
-
         splitter = RecursiveJSONSplitter(chunk_size=100, min_chunk_size=10)
         result = splitter.split(reader_output)
 
         MockSplitter.assert_called_once_with(max_chunk_size=100, min_chunk_size=90)
-        mock_splitter.split_json.assert_called_once()
-        args, kwargs = mock_splitter.split_json.call_args
-        assert "json_data" in kwargs
-        assert isinstance(kwargs["json_data"], dict)
+        mock_splitter.split_text.assert_called_once_with(
+            json_data=json.loads(reader_output.text), convert_lists=True
+        )
 
         # Check output structure and values
         assert hasattr(result, "chunks")

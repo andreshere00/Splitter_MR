@@ -2,107 +2,152 @@
 
 ![Semantic splitting illustration](https://arxiv.org/html/2410.13070v1/extracted/5932831/images/chunkers.png)
 
-For some documents, the best splitting strategy is to break them at **semantic boundaries** rather than fixed lengths or pages. This is exactly what the [`SemanticSplitter`](../../api_reference/splitter.md#semanticsplitter) does, which uses **cosine similarity** to detect topic or meaning shifts between sentences. This allows to produce semantically coherent chunks.
+For some documents, the best splitting strategy is to break them at **semantic boundaries** rather than fixed lengths or pages. This is exactly what the [**`SemanticSplitter`**](../../api_reference/splitter.md#semanticsplitter) does, which uses **cosine similarity** to detect topic or meaning shifts between sentences. This allows to produce semantically coherent chunks.
 
-In this example, we will read the famous **Pinocchio** tale ([`pinocchio_example.md`](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/pinocchio_example.md)) using `VanillaReader`, and then split it into chunks using `SemanticSplitter`.
+In this example, we will read the famous **Pinocchio** tale ([`pinocchio_example.md`](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/pinocchio_example.md)) using [`VanillaReader`](https://andreshere00.github.io/Splitter_MR/api_reference/reader/#vanillareader), and then split it into chunks using [**`SemanticSplitter`**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#semanticsplitter).
 
 ## Step 1. Read the file
 
-You can read the file using `VanillaReader` or any other `Reader` that outputs a [`ReaderOutput` object](../../api_reference/reader.md#output-format).
+You can read the file using `VanillaReader` or any other [`Reader`](https://andreshere00.github.io/Splitter_MR/api_reference/reader/) that outputs a [`ReaderOutput` object](../../api_reference/reader.md#output-format).
+
 
 ```python
 from splitter_mr.reader import VanillaReader
 
-FILE_PATH = "data/pinocchio_example.md"
+FILE_PATH = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/pinocchio_example.md"
 
 reader = VanillaReader()
 reader_output = reader.read(file_path=FILE_PATH)
 ```
 
+
 The output will look like:
 
+
 ```python
-{
-    "text": "# Pinocchio by Carlo Colodi (*The Tale of a Puppet*)\n\n## Chapter 1\n\n### THE PIECE OF WOOD THAT LAUGHED...",
-    "document_name": "pinocchio_example.md",
-    "document_path": "data/pinocchio_example.md",
-    "document_id": "3603aabf-191a-48ba-9cf1-2e49372aa19a",
-    "conversion_method": "md",
-    "reader_method": "vanilla",
-    "ocr_method": null,
-    "metadata": {}
-}
+print(reader_output.model_dump_json(indent=4))
 ```
+
+    {
+        "text": "# Pinocchio by Carlo Colodi (*The Tale of a Puppet*)\n\n## Chapter 1\n\n### THE PIECE OF WOOD THAT LAUGHED AND CRIED LIKE A CHILD\n\nThere was once upon a time a piece of wood in the shop of an old carpenter named Master Antonio. Everybody, however, called him Master Cherry, on account of the end of his nose, which was always as red and polished as a ripe cherry.\n\nNo sooner had Master Cherry set eyes on the piece of wood than his face beamed with delight, and, rubbing his hands 
+    ...
+     rest of their lives.\n\nGeppetto carried off his fine piece of wood and, thanking Master Antonio, returned limping to his house.",
+        "document_name": "pinocchio_example.md",
+        "document_path": "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/pinocchio_example.md",
+        "document_id": "9ad18596-3dbc-49ba-b428-fbd2db3fd7f4",
+        "conversion_method": "txt",
+        "reader_method": "vanilla",
+        "ocr_method": null,
+        "page_placeholder": null,
+        "metadata": {}
+    }
+
+
 
 Note that this is a Pydantic object, so you can represent it as a JSON dictionary with the `.model_dump_json()` instruction.
 
 ## Step 2. Split by semantic similarity
 
-To split semantically, instantiate the `SemanticSplitter` object with an [embedding backend](../../api_reference/embedding.md#embedders) and call to the `.split()` method:
+To split semantically, instantiate the [`SemanticSplitter`](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#semanticsplitter) object with an [embedding backend](../../api_reference/embedding.md#embedders) and call to the `.split()` method:
+
 
 ```python
-from splitter_mr.embedding import AzureOpenAIEmbedding # can be any other Embedding model.
+from splitter_mr.embedding import (
+    AzureOpenAIEmbedding,
+)  # can be any other Embedding model.
 from splitter_mr.splitter import SemanticSplitter
+from dotenv import load_dotenv
+import os
 
-embedding = AzureOpenAIEmbedding() # can be any other Embedding model.
+load_dotenv
+
+params = {
+    "model_name": os.getenv("AZURE_OPENAI_EMBEDDING"),
+    "api_key": os.getenv("AZURE_OPENAI_API_KEY"),
+    "azure_deployment": os.getenv("AZURE_OPENAI_DEPLOYMENT_EMBEDDING"),
+    "api_version": os.getenv("AZURE_OPENAI_API_VERSION"),
+}
+
+embedding = AzureOpenAIEmbedding(**params)  # can be any other Embedding model.
 
 splitter = SemanticSplitter(embedding)
 splitter_output = splitter.split(reader_output)
 
 for idx, chunk in enumerate(splitter_output.chunks):
-    print("\n" + "*"*80 + f" Chunk {idx} " + "*"*80 + "\n")
+    print("\n" + "*" * 80 + f" Chunk {idx} " + "*" * 80 + "\n")
     print(chunk)
 ```
 
-Example output:
+    
+    ******************************************************************************** Chunk 0 ********************************************************************************
+    
+    # Pinocchio by Carlo Colodi (*The Tale of a Puppet*)
+    
+    ## Chapter 1
+    
+    ### THE PIECE OF WOOD THAT LAUGHED AND CRIED LIKE A CHILD
+    
+    There was once upon a time a piece of wood in the shop of an old carpenter named Master Antonio. Everybody, however, called him Master Cherry, on account of the end of his nose, which was always as red
+    ...
+    n!" "Pudding!" On hearing himself called Pudding for the third time Geppetto, mad with rage, fell upon the carpenter and they fought desperately. When the battle was over, Master Antonio had two more scratches on his nose, and his adversary had lost two buttons off his waistcoat. Their accounts being thus squared, they shook hands and swore to remain good friends for the rest of their lives. Geppetto carried off his fine piece of wood and, thanking Master Antonio, returned limping to his house.
 
-```md
-******************************************************************************** Chunk 0 ********************************************************************************
-# Pinocchio by Carlo Colodi (*The Tale of a Puppet*)
 
-## Chapter 1
-
-### THE PIECE OF WOOD THAT LAUGHED AND CRIED LIKE A CHILD
-
-There was once upon a time a piece of wood in the shop of an old carpenter named Master Antonio. Everybody, however, called him Master Cherry, on account of the end of his nose, which was always as red and polished as a ripe cherry. No sooner had Master Cherry set eyes on the piece of wood than his face beamed with delight, and, rubbing his hands together with satisfaction, he said softly to himself:
-
-...
-
-************************************************************* Chunk 4 ********************************************************************************
-"Yes!" And, becoming more and more angry, from words they came to blows, and, flying at each other, they bit and fought, and scratched. When the fight was over Master Antonio was in possession of Geppetto's yellow wig, and Geppetto discovered that the grey wig belonging to the carpenter remained between his teeth. "Give me back my wig," screamed Master Antonio. ..
-```
 
 ## How it works
 
 The **SemanticSplitter** algorithm:
 
-1. **Sentence Splitting** — Breaks text into individual sentences using `SentenceSplitter`.
+1. **Sentence Splitting** — Breaks text into individual sentences using [`SentenceSplitter`](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#sentencesplitter).
 2. **Sliding Window Context** — Combines each sentence with `buffer_size` neighbors before and after for better semantic representation.
-3. **Embedding Generation** — Uses the provided `BaseEmbedding` model to get vector representations of each combined sentence.
+3. **Embedding Generation** — Uses the provided [`BaseEmbedding`](https://andreshere00.github.io/Splitter_MR/api_reference/embedding#baseembedding) model to get vector representations of each combined sentence.
 4. **Distance Calculation** — Computes **cosine distances** between consecutive embeddings.
 5. **Breakpoint Detection** — Finds points where the distance exceeds a threshold (based on percentile, standard deviation, interquartile range, or gradient).
 6. **Chunk Assembly** — Merges sentences between breakpoints into chunks, ensuring each meets the minimum `chunk_size`.
 
-To consult information more-in-depth about how this algorithm works, you can check the following [section](#annex-semantic-splitting-algorithm).
+To consult information more-in-depth about how this algorithm works, you can check the following [**section**](#annex-semantic-splitting-algorithm).
 
 ## Customizing Parameters
 
 You can adjust how chunks are detected and their minimum length:
 
+
 ```python
 splitter = SemanticSplitter(
     embedding=embedding,
-    buffer_size=1,                     # number of neighbor sentences to include
+    buffer_size=1,  # number of neighbor sentences to include
     breakpoint_threshold_type="percentile",  # method for determining breakpoints
     breakpoint_threshold_amount=80.0,  # threshold value (percentile here)
-    chunk_size=1000                    # minimum characters per chunk
+    chunk_size=1000,  # minimum characters per chunk
 )
 splitter_output = splitter.split(reader_output)
+print(splitter_output.model_dump_json(indent=4))
 ```
+
+    {
+        "chunks": [
+            "# Pinocchio by Carlo Colodi (*The Tale of a Puppet*)\n\n## Chapter 1\n\n### THE PIECE OF WOOD THAT LAUGHED AND CRIED LIKE A CHILD\n\nThere was once upon a time a piece of wood in the shop of an old carpenter named Master Antonio. Everybody, however, called him Master Cherry, on account of the end of his nose, which was always as red and polished as a ripe cherry. No sooner had Master Cherry set eyes on the piece of wood than his face beamed with delight, and, rubbing h
+    ...
+      "document_id": "9ad18596-3dbc-49ba-b428-fbd2db3fd7f4",
+        "conversion_method": "txt",
+        "reader_method": "vanilla",
+        "ocr_method": null,
+        "split_method": "semantic_splitter",
+        "split_params": {
+            "buffer_size": 1,
+            "breakpoint_threshold_type": "percentile",
+            "breakpoint_threshold_amount": 80.0,
+            "number_of_chunks": null,
+            "chunk_size": 1000,
+            "model_name": "es-BPE_GENAI_CLASSIFIER_AGENT-llm-lab-embedding-3-large"
+        },
+        "metadata": {}
+    }
+
+
 
 In this case, more chunks are extracted since the splitter becomes more sensitive to smaller semantic changes.
 
-Other available `breakpoint_threshold_type` values are:
+Other available [`breakpoint_threshold_type`](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#splitter_mr.splitter.splitters.semantic_splitter.SemanticSplitter) values are:
 
 - `"percentile"` — Split at distances above a given percentile.
 - `"standard_deviation"` — Split at mean + (amount × std deviation).
@@ -115,31 +160,52 @@ Alternatively, you can also directly control the **number of chunks** by setting
 
 ## Complete Script
 
+
 ```python
-import json
 from splitter_mr.embedding import AzureOpenAIEmbedding
 from splitter_mr.reader import VanillaReader
 from splitter_mr.splitter import SemanticSplitter
+import os
+from dotenv import load_dotenv
 
-FILE_PATH = "data/pinocchio_example.md"
+load_dotenv()
 
-embedding = AzureOpenAIEmbedding()
+FILE_PATH = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/pinocchio_example.md"
+
+params = {
+    "model_name": os.getenv("AZURE_OPENAI_EMBEDDING"),
+    "api_key": os.getenv("AZURE_OPENAI_API_KEY"),
+    "azure_deployment": os.getenv("AZURE_OPENAI_DEPLOYMENT_EMBEDDING"),
+    "api_version": os.getenv("AZURE_OPENAI_API_VERSION"),
+}
+
+embedding = AzureOpenAIEmbedding(**params)  # can be any other Embedding model.
 reader = VanillaReader()
 reader_output = reader.read(file_path=FILE_PATH)
 
-print("*"*40 + "\n Output from Reader: \n" + "*"*40)
-print(json.dumps(reader_output.model_dump(), indent=4))
+print("*" * 40 + "\n Output from Reader: \n" + "*" * 40)
+print(reader_output.model_dump_json(indent=4))
 
 splitter = SemanticSplitter(embedding)
 splitter_output = splitter.split(reader_output)
 
-print("*"*40 + "\n Output from Splitter: \n" + "*"*40)
-print(json.dumps(splitter_output.model_dump(), indent=4))
+print("*" * 40 + "\n Output from Splitter: \n" + "*" * 40)
+print(splitter_output.model_dump_json(indent=4))
 
 for idx, chunk in enumerate(splitter_output.chunks):
-    print("="*40 + f" Chunk {idx+1} " + "="*40)
+    print("=" * 40 + f" Chunk {idx + 1} " + "=" * 40)
     print(chunk)
 ```
+
+    ****************************************
+     Output from Reader: 
+    ****************************************
+    {
+        "text": "# Pinocchio by Carlo Colodi (*The Tale of a Puppet*)\n\n## Chapter 1\n\n### THE PIECE OF WOOD THAT LAUGHED AND CRIED LIKE A CHILD\n\nThere was once upon a time a piece of wood in the shop of an old carpenter named Master Antonio. Everybody, however, called him Master Cherry, on account of the end of his nose, which was always as red and polished as a ripe cherry.\n\nNo sooner ha
+    ...
+    n!" "Pudding!" On hearing himself called Pudding for the third time Geppetto, mad with rage, fell upon the carpenter and they fought desperately. When the battle was over, Master Antonio had two more scratches on his nose, and his adversary had lost two buttons off his waistcoat. Their accounts being thus squared, they shook hands and swore to remain good friends for the rest of their lives. Geppetto carried off his fine piece of wood and, thanking Master Antonio, returned limping to his house.
+
+
 
 ---
 

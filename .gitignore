@@ -198,11 +198,12 @@ tmp/*
 */tmp
 *tmp*
 
-# Notebooks
-notebooks/*
-notebooks/
-
 # Visual Studio Code settings
 .vscode
+
+# Notebooks data
+notebooks/docs/examples/pdf/data/*
+notebooks/docs/examples/pdf/data
+
 
 *.DS_Store*

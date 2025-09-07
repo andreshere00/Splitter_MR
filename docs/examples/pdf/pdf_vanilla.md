@@ -5,73 +5,158 @@
 <img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/vanilla_reader_button_white.svg#only-dark" alt="VanillaReader logo">
 </p>
 
-In this tutorial we will see how to read a PDF using our custom component, which is based on **PDFPlumber**. Then, we will connect this reader component into Visual Language Models to extract text or get annotations from images inside the PDF. In addition, we will explore which options we have to analyze and extract the content of the PDF in a custom, fast and a comprehensive way. Let's dive in.
+In this tutorial we will see how to read a PDF using our custom component, which is based on **PDFPlumber**. Then, we will connect this reader component into Visual Language Models to extract text or get annotations from images inside the PDF. In addition, we will explore which options we have to analyze and extract the content of the PDF in a custom, fast and comprehensive way. Let's dive in.
 
 !!! note
-    Remember that you can access to the complete documentation of this Reader Component in the [**Developer Guide**](../../api_reference/reader.md#vanillareader).
+Remember that you can access the complete documentation of this Reader Component in the [**Developer Guide**](../../api_reference/reader.md#vanillareader).
 
-## How to connect a VLM to MarkItDownReader
+## How to connect a VLM to VanillaReader
 
 For this tutorial, we will use the same data as the first tutorial. [**Consult reference here**](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/sample_pdf.pdf).
 
-Currently, two models are supported, both from OpenAI: the regular client, **OpenAI** and the available deployments from **Azure**. Hence, you can instantiate wherever you want to your project, or create a new one using as reference the [BaseVisionModel abstract class](../../api_reference/model.md#basevisionmodel).
+To extract image descriptions or perform OCR, instantiate any model that implements the [`BaseModel` interface](../../api_reference/model.md#basemodel) (vision variants inherit from it) and pass it into the `VanillaReader`. Swapping providers only changes the model constructor; your Reader usage remains the same.
 
-Before instantiating the model, you should provide connection parameters. These connections parameters are loaded from environment variables (you can save them in a `.env` in the root of the project or script that you will execute). Consult these snippets:
+### Supported models (and when to use them)
 
-<details> <summary><b>Environment variables definition</b></summary>
-    
-    <h3>For <code>OpenAI</code>:</h3>
+| Model (docs)                                                                    | When to use                                       | Required environment variables                                                                                        |
+| ------------------------------------------------------------------------------- | ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| [`OpenAIVisionModel`](../../api_reference/model.md#openaivisionmodel)           | You have an OpenAI API key and want OpenAI cloud. | `OPENAI_API_KEY` (optional: `OPENAI_MODEL`, defaults to `gpt-4o`)                                                     |
+| [`AzureOpenAIVisionModel`](../../api_reference/model.md#azureopenaivisionmodel) | You use Azure OpenAI Service.                     | `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_DEPLOYMENT`, `AZURE_OPENAI_API_VERSION`                |
+| [`GrokVisionModel`](../../api_reference/model.md#grokvisionmodel)               | You have access to xAI Grok multimodal.           | `XAI_API_KEY` (optional: `XAI_MODEL`, default `grok-4`)                                                               |
+| [`GeminiVisionModel`](../../api_reference/model.md#geminivisionmodel)           | You want Google’s Gemini vision models.           | `GEMINI_API_KEY` (also install extras: `pip install "splitter-mr[multimodal]"`)                                       |
+| [`AnthropicVisionModel`](../../api_reference/model.md#anthropicvisionmodel)     | You have an Anthropic key (Claude Vision).        | `ANTHROPIC_API_KEY` (optional: `ANTHROPIC_MODEL`)                                                                     |
+| [`HuggingFaceVisionModel`](../../api_reference/model.md#huggingfacevisionmodel) | You prefer local/open-source/offline inference.   | Install extras: `pip install "splitter-mr[multimodal]"` (optional: `HF_ACCESS_TOKEN` if the chosen model requires it) |
 
-    ```txt
-    OPENAI_API_KEY=<your-api-key>
-    ```
+> **Note on HuggingFace models:** Not all HF models are supported (e.g., gated or uncommon architectures). A well-tested option is **SmolDocling**.
 
-    <h3>For <code>AzureOpenAI</code>:</h3>
+### Environment variables
 
-    ```txt
-    AZURE_OPENAI_API_KEY=<your-api-key>
-    AZURE_OPENAI_ENDPOINT=<your-endpoint>
-    AZURE_OPENAI_API_VERSION=<your-api-version>
-    AZURE_OPENAI_DEPLOYMENT=<your-model-name>
-    ```
+<details>
+  <summary><b>Show/hide environment variables needed for every provider</b></summary>
+
+  <h4>OpenAI</h4> 
+
+```txt
+# OpenAI
+OPENAI_API_KEY=<your-api-key>
+# (optional) OPENAI_MODEL=gpt-4o
+```
+
+  <h4>Azure OpenAI</h4>
+
+```txt
+# Azure OpenAI
+AZURE_OPENAI_API_KEY=<your-api-key>
+AZURE_OPENAI_ENDPOINT=<your-endpoint>
+AZURE_OPENAI_API_VERSION=<your-api-version>
+AZURE_OPENAI_DEPLOYMENT=<your-model-name>
+```
+
+  <h4>xAI Grok</h4>
+
+```txt
+# xAI Grok
+XAI_API_KEY=<your-api-key>
+# (optional) XAI_MODEL=grok-4
+```
+
+  <h4>Google Gemini</h4>
+
+```txt
+# Google Gemini
+GEMINI_API_KEY=<your-api-key>
+# Also: pip install "splitter-mr[multimodal]"
+```
+
+  <h4>Anthropic (Claude Vision)</h4>
+
+```txt
+# Anthropic (Claude Vision)
+ANTHROPIC_API_KEY=<your-api-key>
+# (optional) ANTHROPIC_MODEL=claude-sonnet-4-20250514
+```
+
+  <h4>Hugging Face (local/open-source)</h4>
+
+```txt
+# Hugging Face (optional, only if needed by the model)
+HF_ACCESS_TOKEN=<your-hf-token>
+# Also: pip install "splitter-mr[multimodal]"
+```
+
 </details>
 
-After that, you can explicitly declare the connection parameters as follows:
+### Instantiation examples
 
-<details> <summary><code>OpenAI</code> and <code>AzureOpenAI</code> <b>implementation example</b></summary>
+<details>
+  <summary><b>Show/hide instantiation snippets for all providers</b></summary>
 
-    <h3>For <code>OpenAI</code></h3>
+  <h4>OpenAI</h4>
 
-    ```python
-    import os
-    from splitter_mr.model import OpenAIVisionModel
+```python
+from splitter_mr.model import OpenAIVisionModel
 
-    api_key = os.getenv("OPENAI_API_KEY")
+# Reads OPENAI_API_KEY (and optional OPENAI_MODEL) from .env if present
+model = OpenAIVisionModel()
+# or pass explicitly:
+# model = OpenAIVisionModel(api_key="...", model_name="gpt-4o")
+```
 
-    model = OpenAIVisionModel(api_key=api_key)
-    ```
+  <h4>Azure OpenAI</h4>
 
-    <h3>For <code>AzureOpenAI</code></h3>
+```python
+from splitter_mr.model import AzureOpenAIVisionModel
 
-    ```python
-    import os
-    from splitter_mr.model import AzureOpenAIVisionModel
+# Reads Azure vars from .env if present
+model = AzureOpenAIVisionModel()
+# or:
+# model = AzureOpenAIVisionModel(
+#     api_key="...",
+#     azure_endpoint="https://<resource>.openai.azure.com/",
+#     api_version="2024-02-15-preview",
+#     azure_deployment="<your-deployment-name>",
+# )
+```
 
-    azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
-    azure_api_key = os.getenv("AZURE_OPENAI_API_KEY")
-    api_version = os.getenv("AZURE_OPENAI_API_VERSION")
-    azure_deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT")
+  <h4>xAI Grok</h4>
 
-    model = AzureOpenAIVisionModel(
-        api_key=azure_api_key,
-        azure_endpoint=azure_endpoint,
-        api_version=api_version,
-        azure_deployment=azure_deployment
-    )
-    ```
+```python
+from splitter_mr.model import GrokVisionModel
+
+# Reads XAI_API_KEY (and optional XAI_MODEL) from .env
+model = GrokVisionModel()
+```
+
+  <h4>Google Gemini</h4>
+
+```python
+from splitter_mr.model import GeminiVisionModel
+
+# Requires GEMINI_API_KEY and the 'multimodal' extra installed
+model = GeminiVisionModel()
+```
+
+  <h4>Anthropic (Claude Vision)</h4>
+
+```python
+from splitter_mr.model import AnthropicVisionModel
+
+# Reads ANTHROPIC_API_KEY (and optional ANTHROPIC_MODEL) from .env
+model = AnthropicVisionModel()
+```
+
+  <h4>Hugging Face (local/open-source)</h4>
+
+```python
+from splitter_mr.model import HuggingFaceVisionModel
+
+# Token only if the model requires gating
+model = HuggingFaceVisionModel()
+```
+
 </details>
 
-Or, alternatively, if you have saved the environment variables as indicated above, you can simply instantiate the model without explicit parameters. For this tutorial, we will use an `AzureOpenAI` deployment.
+
 
 ```python
 from splitter_mr.model import AzureOpenAIVisionModel
@@ -79,419 +164,189 @@ from splitter_mr.model import AzureOpenAIVisionModel
 model = AzureOpenAIVisionModel()
 ```
 
+
 Then, use the Reader component and insert the model as parameter:
+
 
 ```python
 from splitter_mr.reader import VanillaReader
 
-reader = VanillaReader(model = model)
+reader = VanillaReader(model=model)
 ```
 
+
 Then, you can read the file. The result will be an object from the type `ReaderOutput`, which is a dictionary containing some metadata about the file. To get the content, you can access to the `text` attribute:
+
 
 ```python
 file = "data/sample_pdf.pdf"
 
-output = reader.read(file_path = file)
+output = reader.read(file_path=file)
 print(output.text)
 ```
 
-As observed, all the images have been described by the LLM:
+    <!-- page -->
+    
+    A sample PDF
+    Converting PDF files to other formats, such as Markdown, is a surprisingly
+    complex task due to the nature of the PDF format itself. PDF (Portable
+    Document Format) was designed primarily for preserving the visual layout of
+    documents, making them look the same across different devices and
+    platforms. However, this design goal introduces several challenges when trying to
+    extract and convert the underlying content into a more flexible, structured format
+    like Markdown.
+    
+    <!-
+    ...
+    nterpretive challenges. Effective
+    conversion tools must blend text extraction, document analysis, and sometimes
+    machine learning techniques (such as OCR or structure recognition) to produce
+    usable, readable, and faithful Markdown output. As a result, perfect conversion
+    is rarely possible, and manual review and cleanup are often required.
+    
+    <!-- image -->
+    *Caption: A vibrant hummingbird gracefully hovers near orange blossoms, showcasing its iridescent plumage against a soft, blurred background.*
+    
 
-```md
-<!-- page -->
 
-A sample PDF
-Converting PDF files to other formats, such as Markdown, is a surprisingly
-complex task due to the nature of the PDF format itself. PDF (Portable
-Document Format) was designed primarily for preserving the visual layout of
-documents, making them look the same across different devices and
-platforms. However, this design goal introduces several challenges when trying to
-extract and convert the underlying content into a more flexible, structured format
-like Markdown.
 
-<!-- image -->
-*Caption: SplitterMR: A tool designed to efficiently chunk document text for seamless integration into production-ready large language model applications.*
+As observed, all the images have been described by the LLM.
 
-Ilustración 1. SplitterMR logo.
-1. Lack of Structural Information
-Unlike formats such as HTML or DOCX, PDFs generally do not store
-information about the logical structure of the document—such as
-headings, paragraphs, lists, or tables. Instead, PDFs are often a collection
-of text blocks, images, and graphical elements placed at specific
-coordinates on a page. This makes it difficult to accurately infer the
-intended structure, such as determining what text is a heading versus a
-regular paragraph.
-2. Variability in PDF Content
-PDF files can contain a wide range of content types: plain text, styled text,
-images, tables, embedded fonts, and even vector graphics. Some PDFs
-are generated programmatically and have relatively clean underlying text,
-while others may be created from scans, resulting in image-based (non-
-selectable) content that requires OCR (Optical Character Recognition) for
-extraction. The variability in how PDFs are produced leads to inconsistent
-results when converting to Markdown.
-An enumerate:
-1. One
-
-<!-- page -->
-
-2. Two
-3. Three
-3. Preservation of Formatting
-Markdown is a lightweight markup language that supports basic formatting—
-such as headings, bold, italics, links, images, and lists. However, it does not
-support all the visual and layout options available in PDF, such as columns,
-custom fonts, footnotes, floating images, and complex tables. Deciding how (or
-whether) to preserve these elements can be difficult, and often requires trade-
-offs between fidelity and simplicity.
-𝑥2,
-𝑓(𝑥)
-= 𝑥 ∈ [0,1]
-An example list:
-• Element 1
-• Element 2
-• Element 3
-4. Table and Image Extraction
-Tables and images in PDFs present a particular challenge. Tables are often
-visually represented using lines and spacing, with no underlying indication that
-a group of text blocks is actually a table. Extracting these and converting them
-to Markdown tables (which have a much simpler syntax) is error-prone.
-Similarly, extracting images from a PDF and re-inserting them in a way that
-makes sense in Markdown requires careful handling.
-This is a cite.
-5. Multicolumn Layouts and Flowing Text
-Many PDFs use complex layouts with multiple columns, headers, footers, or sidebars.
-Converting these layouts to a single-flowing Markdown document requires decisions
-about reading order and content hierarchy. It's easy to end up with text in the wrong
-order or to lose important contextual information.
-6. Encoding and Character Set Issues
-PDFs can use a variety of text encodings, embedded fonts, and even contain non-
-standard Unicode characters. Extracting text reliably without corruption or data loss is
-not always straightforward, especially for documents with special symbols or non-Latin
-scripts.
-
-<!-- page -->
-
-| Name | Role | Email |
-| --- | --- | --- |
-| Alice Smith | Developer | alice@example.com |
-| Bob Johnson | Designer | bob@example.com |
-| Carol White | Project Lead | carol@example.com |
-
-Conclusion
-While it may seem simple on the surface, converting PDFs to formats like
-Markdown involves a series of technical and interpretive challenges. Effective
-conversion tools must blend text extraction, document analysis, and sometimes
-machine learning techniques (such as OCR or structure recognition) to produce
-usable, readable, and faithful Markdown output. As a result, perfect conversion
-is rarely possible, and manual review and cleanup are often required.
-
-<!-- image -->
-*Caption: A vibrant hummingbird gracefully hovers in front of a bright yellow flower, showcasing its dazzling plumage and agility as it seeks nectar.*
-```
 
 ## Experimenting with some keyword arguments
 
 Suppose that you need to simply get the base64 images from the file. Then, you can use the option `show_base64_images` to get those images:
 
+
 ```python
 reader = VanillaReader()
-output = reader.read(file_path = file, show_base64_images = True)
+output = reader.read(file_path=file, show_base64_images=True)
 print(output.text)
 ```
 
-```md
-<!-- page -->
+    <!-- page -->
+    
+    A sample PDF
+    Converting PDF files to other formats, such as Markdown, is a surprisingly
+    complex task due to the nature of the PDF format itself. PDF (Portable
+    Document Format) was designed primarily for preserving the visual layout of
+    documents, making them look the same across different devices and
+    platforms. However, this design goal introduces several challenges when trying to
+    extract and convert the underlying content into a more flexible, structured format
+    like Markdown.
+    
+    ![I
+    ...
+    ZoerOkErYlYt8Kd5hqwJ25M3asPNGOzltUzt28ekD/tTPjJ300azYwUpzP3ZN1qass7QcBs6OHfPtVG6MArAQWjXsyvGDmsxaARUqXNuxXWUZTyh2OnkuIzOrJ5I6BTvs6uFzbuw0onSdp5zF2HELkwjGjtPEmAoBr5Z71xR2qKrLxI4GMt1IiWqxpkRmw40TlDUidCsGqVDmgiVG27mEr/UhPTZleWWQdWlXdrbUQS3RsndmOMWOneQUo+bCzotfGHYYvjJ19/gu+HZ3CzvEmAkdwm59BdhNIrMIte7nnNqVXN2hoQVBSq46ds7ybXsgU2JHFvsEYkdVOHhpmm9nwY5zV44dTyOY1EVFMutg1xXVYVWpg/U0Aru5ht1IrcmEdeVAGPlLNzl2cCiYvRBTlFQ5T6i1qVG3Yuyaj2RmrjHHvJqWV43tigRDCHUcOxM81w1TLuaFcj0dv99Csfs/1V9aWHQgYUYAAAAASUVORK5CYII=)
+    
 
-A sample PDF
-Converting PDF files to other formats, such as Markdown, is a surprisingly
-complex task due to the nature of the PDF format itself. PDF (Portable
-Document Format) was designed primarily for preserving the visual layout of
-documents, making them look the same across different devices and
-platforms. However, this design goal introduces several challenges when trying to
-extract and convert the underlying content into a more flexible, structured format
-like Markdown.
 
-![Image page 1](data:image/png;base64,iVBORw0KG...=)
-
-...
-
-<!-- page -->
-
-...
-
-<!-- page -->
-
-| Name | Role | Email |
-| --- | --- | --- |
-| Alice Smith | Developer | alice@example.com |
-| Bob Johnson | Designer | bob@example.com |
-| Carol White | Project Lead | carol@example.com |
-
-Conclusion
-While it may seem simple on the surface, converting PDFs to formats like
-Markdown involves a series of technical and interpretive challenges. Effective
-conversion tools must blend text extraction, document analysis, and sometimes
-machine learning techniques (such as OCR or structure recognition) to produce
-usable, readable, and faithful Markdown output. As a result, perfect conversion
-is rarely possible, and manual review and cleanup are often required.
-
-![Image page 3](data:image/png;base64,iVBORw0KGgo..)
-
-```
 
 In addition, you can modify how the image and page placeholders are generated with the options `image_placeholder` and `page_placeholder`. *Note that in this case we are not using any VLM*.
 
+
 ```python
 reader = VanillaReader()
-output = reader.read(file_path = file, image_placeholder = "## Image", page_placeholder = "## Page")
+output = reader.read(
+    file_path=file, image_placeholder="## Image", page_placeholder="## Page"
+)
 print(output.text)
 ```
 
-```md
-## Page
+    ## Page
+    
+    A sample PDF
+    Converting PDF files to other formats, such as Markdown, is a surprisingly
+    complex task due to the nature of the PDF format itself. PDF (Portable
+    Document Format) was designed primarily for preserving the visual layout of
+    documents, making them look the same across different devices and
+    platforms. However, this design goal introduces several challenges when trying to
+    extract and convert the underlying content into a more flexible, structured format
+    like Markdown.
+    
+    ## Image
+    
+    ...
+    arol@example.com |
+    
+    Conclusion
+    While it may seem simple on the surface, converting PDFs to formats like
+    Markdown involves a series of technical and interpretive challenges. Effective
+    conversion tools must blend text extraction, document analysis, and sometimes
+    machine learning techniques (such as OCR or structure recognition) to produce
+    usable, readable, and faithful Markdown output. As a result, perfect conversion
+    is rarely possible, and manual review and cleanup are often required.
+    
+    ## Image
+    
 
-A sample PDF
-Converting PDF files to other formats, such as Markdown, is a surprisingly
-complex task due to the nature of the PDF format itself. PDF (Portable
-Document Format) was designed primarily for preserving the visual layout of
-documents, making them look the same across different devices and
-platforms. However, this design goal introduces several challenges when trying to
-extract and convert the underlying content into a more flexible, structured format
-like Markdown.
 
-## Image
-
-Ilustración 1. SplitterMR logo.
-1. Lack of Structural Information
-Unlike formats such as HTML or DOCX, PDFs generally do not store
-information about the logical structure of the document—such as
-headings, paragraphs, lists, or tables. Instead, PDFs are often a collection
-of text blocks, images, and graphical elements placed at specific
-coordinates on a page. This makes it difficult to accurately infer the
-intended structure, such as determining what text is a heading versus a
-regular paragraph.
-2. Variability in PDF Content
-PDF files can contain a wide range of content types: plain text, styled text,
-images, tables, embedded fonts, and even vector graphics. Some PDFs
-are generated programmatically and have relatively clean underlying text,
-while others may be created from scans, resulting in image-based (non-
-selectable) content that requires OCR (Optical Character Recognition) for
-extraction. The variability in how PDFs are produced leads to inconsistent
-results when converting to Markdown.
-An enumerate:
-1. One
-
-## Page
-
-2. Two
-3. Three
-3. Preservation of Formatting
-Markdown is a lightweight markup language that supports basic formatting—
-such as headings, bold, italics, links, images, and lists. However, it does not
-support all the visual and layout options available in PDF, such as columns,
-custom fonts, footnotes, floating images, and complex tables. Deciding how (or
-whether) to preserve these elements can be difficult, and often requires trade-
-offs between fidelity and simplicity.
-𝑥2,
-𝑓(𝑥)
-= 𝑥 ∈ [0,1]
-An example list:
-• Element 1
-• Element 2
-• Element 3
-4. Table and Image Extraction
-Tables and images in PDFs present a particular challenge. Tables are often
-visually represented using lines and spacing, with no underlying indication that
-a group of text blocks is actually a table. Extracting these and converting them
-to Markdown tables (which have a much simpler syntax) is error-prone.
-Similarly, extracting images from a PDF and re-inserting them in a way that
-makes sense in Markdown requires careful handling.
-This is a cite.
-5. Multicolumn Layouts and Flowing Text
-Many PDFs use complex layouts with multiple columns, headers, footers, or sidebars.
-Converting these layouts to a single-flowing Markdown document requires decisions
-about reading order and content hierarchy. It's easy to end up with text in the wrong
-order or to lose important contextual information.
-6. Encoding and Character Set Issues
-PDFs can use a variety of text encodings, embedded fonts, and even contain non-
-standard Unicode characters. Extracting text reliably without corruption or data loss is
-not always straightforward, especially for documents with special symbols or non-Latin
-scripts.
-
-## Page
-
-| Name | Role | Email |
-| --- | --- | --- |
-| Alice Smith | Developer | alice@example.com |
-| Bob Johnson | Designer | bob@example.com |
-| Carol White | Project Lead | carol@example.com |
-
-Conclusion
-While it may seem simple on the surface, converting PDFs to formats like
-Markdown involves a series of technical and interpretive challenges. Effective
-conversion tools must blend text extraction, document analysis, and sometimes
-machine learning techniques (such as OCR or structure recognition) to produce
-usable, readable, and faithful Markdown output. As a result, perfect conversion
-is rarely possible, and manual review and cleanup are often required.
-
-## Image
-```
 
 But one of the most important features is to scan the PDF as PageImages, to analyze every page with a VLM to extract the content. In order to do that, you can simply activate the option `scan_pdf_pages`. 
 
+
 ```python
-reader = VanillaReader(model = model)
-output = reader.read(file_path = file, scan_pdf_pages = True)
+reader = VanillaReader(model=model)
+output = reader.read(file_path=file, scan_pdf_pages=True)
 print(output.text)
 ```
 
-```md
-<!-- page -->
+    <!-- page -->
+    
+    # A sample PDF
+    
+    Converting PDF files to other formats, such as Markdown, is a surprisingly complex task due to the nature of the PDF format itself. PDF (Portable Document Format) was designed primarily for preserving the visual layout of documents, making them look the same across different devices and platforms. However, this design goal introduces several challenges when trying to extract and convert the underlying content into a more flexible, structured format like Markdown.
+    
+    
+    ...
+    y seem simple on the surface, converting PDFs to formats like Markdown involves a series of technical and interpretive challenges. Effective conversion tools must blend text extraction, document analysis, and sometimes machine learning techniques (such as OCR or structure recognition) to produce usable, readable, and faithful Markdown output. As a result, perfect conversion is rarely possible, and manual review and cleanup are often required.
+    
+    ![Hummingbird](https://example.com/hummingbird.jpg)
 
-# A sample PDF
 
-Converting PDF files to other formats, such as Markdown, is a surprisingly complex task due to the nature of the PDF format itself. PDF (Portable Document Format) was designed primarily for preserving the visual layout of documents, making them look the same across different devices and platforms. However, this design goal introduces several challenges when trying to extract and convert the underlying content into a more flexible, structured format like Markdown.
-
-![Illustración 1. SplitterMR logo](https://dummyimage.com/600x400/000/fff)
-
-## 1. Lack of Structural Information
-
-Unlike formats such as HTML or DOCX, PDFs generally do not store information about the logical structure of the document—such as headings, paragraphs, lists, or tables. Instead, PDFs are often a collection of text blocks, images, and graphical elements placed at specific coordinates on a page. This makes it difficult to accurately infer the intended structure, such as determining what text is a heading versus a regular paragraph.
-
-## 2. Variability in PDF Content
-
-PDF files can contain a wide range of content types: plain text, styled text, images, tables, embedded fonts, and even vector graphics. Some PDFs are generated programmatically and have relatively clean underlying text, while others may be created from scans, resulting in image-based (non-selectable) content that requires OCR (Optical Character Recognition) for extraction. The variability in how PDFs are produced leads to inconsistent results when converting to Markdown.
-
-### An enumerate:
-1. One
-
----
-
-<!-- page -->
-
-1. Two  
-2. Three  
-
-## 3. Preservation of Formatting  
-Markdown is a lightweight markup language that supports basic formatting – such as headings, bold, italics, links, images, and lists. However, it does not support all the visual and layout options available in PDF, such as columns, custom fonts, footnotes, floating images, and complex tables. Deciding how (or whether) to preserve these elements can be difficult, and often requires trade-offs between fidelity and simplicity.
-
-$$f(x) = x^2, \quad x \in [0,1]$$
-
-### An example list:
-- Element 1
-- Element 2
-- Element 3  
-
-## 4. Table and Image Extraction  
-Tables and images in PDFs present a particular challenge. Tables are often visually represented using lines and spacing, with no underlying indication that a group of text blocks is actually a table. Extracting these and converting them to Markdown tables (which have a much simpler syntax) is error-prone. Similarly, extracting images from a PDF and re-inserting them in a way that makes sense in Markdown requires careful handling.
-
----
-
-This is a cite.
-
-## 5. Multicolumn Layouts and Flowing Text  
-Many PDFs use complex layouts with multiple columns, headers, footers, or sidebars. Converting these layouts to a single-flowing Markdown document requires decisions about reading order and content hierarchy. It's easy to end up with text in the wrong order or to lose important contextual information.  
-
-## 6. Encoding and Character Set Issues  
-PDFs can use a variety of text encodings, embedded fonts, and even contain non-standard Unicode characters. Extracting text reliably without corruption or data loss is not always straightforward, especially for documents with special symbols or non-Latin scripts.
-
----
-
-<!-- page -->
-
-| Name          | Role        | Email                |
-|---------------|-------------|----------------------|
-| Alice Smith   | Developer   | alice@example.com    |
-| Bob Johnson    | Designer    | bob@example.com      |
-| Carol White   | Project Lead| carol@example.com    |
-
-## Conclusion
-
-While it may seem simple on the surface, converting PDFs to formats like Markdown involves a series of technical and interpretive challenges. Effective conversion tools must blend text extraction, document analysis, and sometimes machine learning techniques (such as OCR or structure recognition) to produce usable, readable, and faithful Markdown output. As a result, perfect conversion is rarely possible, and manual review and cleanup are often required.
-
-![Hummingbird](<image_url_here>)
-```
 
 Remember that you can always customize the prompt to get one or other results using the parameter `prompt`:
 
+
 ```python
-reader = VanillaReader(model = model)
-output = reader.read(file_path = file, prompt = "Extract the content of this resource in html format")
+reader = VanillaReader(model=model)
+output = reader.read(
+    file_path=file, prompt="Extract the content of this resource in html format"
+)
 print(output.text)
 ```
 
-```html
-<!-- page -->
+    <!-- page -->
+    
+    A sample PDF
+    Converting PDF files to other formats, such as Markdown, is a surprisingly
+    complex task due to the nature of the PDF format itself. PDF (Portable
+    Document Format) was designed primarily for preserving the visual layout of
+    documents, making them look the same across different devices and
+    platforms. However, this design goal introduces several challenges when trying to
+    extract and convert the underlying content into a more flexible, structured format
+    like Markdown.
+    
+    <!-
+    ...
+    0%;
+                height: auto;
+                border: 2px solid #ccc;
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+        </style>
+    </head>
+    <body>
+        <img src="https://example.com/path-to-your-image.jpg" alt="Hummingbird">
+    </body>
+    </html>
+    ```
+    
+    Make sure to replace `"https://example.com/path-to-your-image.jpg"` with the actual URL of your image. This HTML will create a simple webpage that displays the image of the hummingbird with some basic styling.
+    
 
-A sample PDF
-...
 
-<!-- image -->
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SplitterMR</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
-            padding: 50px;
-        }
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-        h1 {
-            color: #333;
-            font-size: 24px;
-            margin: 20px 0;
-        }
-    </style>
-</head>
-<body>
-    <img src="https://www.example.com/path/to/your/logo.png" alt="SplitterMR Logo">
-    <h1>SplitterMR</h1>
-    <p>Chunk your documents text for production-ready LLM applications.</p>
-</body>
-</html>
-
-...
-
-<!-- image -->
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hummingbird</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-            margin: 0;
-        }
-        img {
-            width: 590px;
-            height: 886px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-    </style>
-</head>
-<body>
-    <img src="data:image/gif;base64,R0lGODlhBQAIAFIAAAAAAP///4G+tobTzGWShbxPetW2tZasWJiYgA2pQAAOw==" alt="Hummingbird">
-</body>
-</html>
-```
 
 To sum up, we can see that `VanillaReader` is a good option to extract rapidly and efficiently the text content for a PDF file. Remember that you can customize how the extraction is performed. But remember to consult other reading options in the [Developer guide](../../api_reference/reader.md) or [other tutorials](../examples.md).
 

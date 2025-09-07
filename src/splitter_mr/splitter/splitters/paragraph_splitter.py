@@ -1,7 +1,7 @@
 import re
 from typing import List, Union
 
-from ...schema import ReaderOutput, SplitterOutput
+from ...schema import DEFAULT_PARAGRAPH_SEPARATORS, ReaderOutput, SplitterOutput
 from ..base_splitter import BaseSplitter
 
 
@@ -21,7 +21,7 @@ class ParagraphSplitter(BaseSplitter):
         self,
         chunk_size: int = 3,
         chunk_overlap: Union[int, float] = 0,
-        line_break: Union[str, List[str]] = "\n",
+        line_break: Union[str, List[str]] = DEFAULT_PARAGRAPH_SEPARATORS,
     ):
         super().__init__(chunk_size)
         self.chunk_overlap = chunk_overlap

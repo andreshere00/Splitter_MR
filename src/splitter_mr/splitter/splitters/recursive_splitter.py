@@ -3,6 +3,7 @@ from typing import List, Union
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from ...schema import ReaderOutput, SplitterOutput
+from ...schema.constants import DEFAULT_RECURSIVE_SEPARATORS
 from ..base_splitter import BaseSplitter
 
 
@@ -27,19 +28,7 @@ class RecursiveCharacterSplitter(BaseSplitter):
         self,
         chunk_size: int = 1000,
         chunk_overlap: Union[int, float] = 0.1,
-        separators: Union[str, List[str]] = [
-            "\n\n",
-            "\n",
-            " ",
-            ".",
-            ",",
-            "\u200b",  # Zero-width space
-            "\uff0c",  # Fullwidth comma
-            "\u3001",  # Ideographic comma
-            "\uff0e",  # Fullwidth full stop
-            "\u3002",  # Ideographic full stop
-            "",
-        ],
+        separators: Union[str, List[str]] = DEFAULT_RECURSIVE_SEPARATORS,
     ):
         super().__init__(chunk_size)
         self.chunk_overlap = chunk_overlap

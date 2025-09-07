@@ -161,7 +161,7 @@ def test_split_nltk_downloads_if_missing(monkeypatch, simple_reader_output):
             splitter = TokenSplitter(chunk_size=2, model_name="nltk/punkt")
             output = splitter.split(simple_reader_output)
             assert output.chunks == ["a", "b"]
-        mock_nltk.download.assert_called_once_with("punkt")
+        mock_nltk.download.assert_called_once_with("punkt_tab")
 
 
 def test_list_nltk_punkt_languages(monkeypatch, tmp_path):

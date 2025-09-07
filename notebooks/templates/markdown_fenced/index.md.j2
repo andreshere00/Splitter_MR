@@ -1,0 +1,22 @@
+{% extends 'markdown/index.md.j2' %}
+
+{# Stream outputs (stdout/stderr) #}
+{% block stream %}
+```text
+{{ output.text if output.text is string else output.text | join }}
+```
+{% endblock stream %}
+
+{# Text/plain from execute_result / display_data #}
+{% block data_text %}
+```txt
+{{ output.data['text/plain'] }}
+```
+{% endblock data_text %}
+
+{# Error tracebacks #}
+{% block error %}
+```txt
+{{ output.traceback | join('\n') }}
+```
+{% endblock error %}

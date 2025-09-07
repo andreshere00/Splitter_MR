@@ -8,7 +8,7 @@ from ..base_splitter import BaseSplitter
 
 class RecursiveJSONSplitter(BaseSplitter):
     """
-    JSONRecursiveSplitter splits a JSON string or structure into overlapping or non-overlapping
+    RecursiveJSONSplitter splits a JSON string or structure into overlapping or non-overlapping
     chunks, using the Langchain RecursiveJsonSplitter. This splitter is designed to recursively
     break down JSON data (including nested objects and arrays) into manageable pieces based on keys,
     arrays, or other separators, until the desired chunk size is reached.
@@ -73,7 +73,7 @@ class RecursiveJSONSplitter(BaseSplitter):
             max_chunk_size=self.chunk_size,
             min_chunk_size=int(self.chunk_size - self.min_chunk_size),
         )
-        chunks = splitter.split_json(json_data=text, convert_lists=True)
+        chunks = splitter.split_text(json_data=text, convert_lists=True)
 
         # Generate chunk_ids and metadata
         chunk_ids = self._generate_chunk_ids(len(chunks))

@@ -1,3 +1,38 @@
+# v1.0.x
+
+> **Version 1.0.0: First stable release with full Reader, Splitter, Embedding and Vision model support.**
+
+## v1.0.0
+
+First stable version.
+
+### Features
+
+- Consolidated all features introduced in v0.x series into a stable API.
+- **Readers**: `VanillaReader`, `MarkItDownReader`, `DoclingReader` with support for multiple formats (text, Office, JSON/YAML, images, HTML, etc.).
+- **Splitters**: character, word, sentence, paragraph, recursive, token, paged, row/column, JSON, semantic, HTML tag, header, and code splitting strategies.
+- **Models**: support for multimodal Vision-Language Models (OpenAI, Azure, Grok, HuggingFace, Gemini, Claude).
+- **Embeddings**: OpenAI, Azure, HuggingFace, Gemini, Claude (via Voyage) supported.
+
+### Developer features
+
+- **Optional extras system**: install lightweight **core** by default, extend with `markitdown`, `docling`, `multimodal`, `azure`, or `all`.
+- **CI/CD pipeline**, **PyPI** release, and **pre-commit** checks in place.
+
+### Documentation
+
+**Extensive documentation** with API reference, examples, and architecture diagrams.
+
+### New improvements + Bug fixes
+
+- **Fix:** NLTK tokenizers in `TokenSplitter` are now correct base tokenizer when using `nltk` tokenizers.
+- **Fix:** RecursiveJSONSplitter could not produce outputs since it did not validate correct data type.
+- Now the examples are based on real Jupyter Notebooks executions to ensure that the behavior is the expected one.
+- Added the Notebooks which are used as examples in the `notebooks` section.
+- Update `clean` instruction with `poe`.
+- New constans have been defined.
+- Add new class to transform HTML to Markdown.
+
 # v0.6.x
 
 > [!IMPORTANT]
@@ -28,7 +63,7 @@
 
 ### Bug fixes
 
-- Dependency isolation was not guaranteed: implement safe lazy imports in all the __init__ methods.
+- Dependency isolation was not guaranteed: implement safe lazy imports in all the `__init__` methods.
 - Raise test coverage up to 90%. 
 
 ## 0.6.4
@@ -411,7 +446,7 @@ First version of the project
 - Add first readers, `VanillaReader`: reader which reads the files and format them into a string.
   - `DoclingReader`: reader which uses the docling package to read the files.
   - `MarkItDownReader`: reader which uses the markitdown package to read the files.
-- Add first splitters: `CharacterSplitter`, `RecursiveSplitter`, `WordSplitter`, `SentenceSplitter`, `ParagraphSplitter`, `HTMLTagSplitter`, `JSONSplitter`, `HeaderSplitter`: 
+- Add first splitters: `CharacterSplitter`, `RecursiveCharacterSplitter`, `WordSplitter`, `SentenceSplitter`, `ParagraphSplitter`, `HTMLTagSplitter`, `RecursiveJSONSplitter`, `HeaderSplitter`: 
 - The package can be installed using pip.
 - `README.md` has been updated.
 - Tests cases for main functionalities are available.
