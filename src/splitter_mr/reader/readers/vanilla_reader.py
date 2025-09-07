@@ -23,12 +23,19 @@ from ...schema import (
 )
 from ..base_reader import BaseReader
 from ..utils import PDFPlumberReader
+from ..utils.html_to_markdown import HtmlToMarkdown  # <-- NEW: project converter
 
 
 class VanillaReader(BaseReader):
     """
     Read multiple file types using Python's built-in and standard libraries.
-    Supported: .json, .html, .txt, .xml, .yaml/.yml, .csv, .tsv, .parquet, .pdf
+    Supported: .json, .html/.htm, .txt, .xml, .yaml/.yml, .csv, .tsv, .parquet, .pdf
+
+    **NEW**: HTML handling (local files and URLs):
+      - If ``html_to_markdown=True`` (kw arg), HTML is converted to Markdown using the
+        project's HtmlToMarkdown utility, and the conversion method is reported as ``"md"``.
+      - If ``html_to_markdown=False`` (default), raw HTML is returned without transformation,
+        and the conversion method is ``"html"``.
 
     For PDFs, this reader uses PDFPlumberReader to extract text, tables, and images,
     with options to show or omit images, and to annotate images using a vision model.
@@ -59,46 +66,51 @@ class VanillaReader(BaseReader):
         JSON, YAML, or plain text.
 
         Args:
-        file_path (str | Path): Path to the input file (overridden by
-            ``kwargs['file_path']`` if present).
-        **kwargs: Optional arguments that adjust behavior:
+            file_path (str | Path): Path to the input file (overridden by
+                ``kwargs['file_path']`` if present).
 
-            Source selection:
-            file_path (str): Path to the input file (overrides positional arg).
-            file_url (str): HTTPS/HTTP URL to read from.
-            json_document (dict | str): JSON-like document (dict or JSON string).
-            text_document (str): Raw text content.
+            **kwargs: Optional arguments that adjust behavior:
 
-            Identification/metadata:
-            document_id (str): Explicit document id. Defaults to a new UUID.
-            metadata (dict): Additional metadata to attach to the output.
+                Source selection:
+                    file_path (str): Path to the input file (overrides positional arg).
+                    file_url (str): HTTPS/HTTP URL to read from.
+                    json_document (dict | str): JSON-like document (dict or JSON string).
+                    text_document (str): Raw text content.
 
-            PDF extraction:
-            scan_pdf_pages (bool): If True, rasterize and describe pages using a
-                vision model (VLM). If False (default), use element-wise extraction.
-            model (BaseVisionModel): Vision-capable model used for scanned PDFs and/or
-                image captioning (also used for image files).
-            prompt (str): Prompt for image captioning / page description. Defaults to
-                ``DEFAULT_IMAGE_CAPTION_PROMPT`` for element-wise PDFs and
-                ``DEFAULT_IMAGE_EXTRACTION_PROMPT`` for scanned PDFs/images.
-            resolution (int): DPI when rasterizing pages for VLM. Default: 300.
-            show_base64_images (bool): Include base64-embedded images in PDF output.
-                Default: False.
-            image_placeholder (str): Placeholder for omitted images in PDFs.
-                Default: ``"<!-- image -->"``.
-            page_placeholder (str): Placeholder inserted between PDF pages (only
-                surfaced when scanning or when the placeholder occurs in text).
-                Default: ``"<!-- page -->"``.
-            vlm_parameters (dict): Extra keyword args forwarded to
-                ``model.analyze_content(...)``.
+                Identification/metadata:
+                    document_id (str): Explicit document id. Defaults to a new UUID.
+                    metadata (dict): Additional metadata to attach to the output.
 
-            Excel / Parquet reading:
-            as_table (bool): For Excel (``.xlsx``/``.xls``), if True read as a table
-                using pandas and return CSV text. If False (default), convert to PDF
-                and run the PDF pipeline.
-            excel_engine (str): pandas Excel engine. Default: ``"openpyxl"``.
-            parquet_engine (str): pandas Parquet engine (e.g. ``"pyarrow"``,
-                ``"fastparquet"``). Default: pandas auto-selection.
+                HTML handling:
+                    html_to_markdown (bool): If True, convert HTML to Markdown before
+                        returning. If False (default), return raw HTML as-is.
+
+                PDF extraction:
+                    scan_pdf_pages (bool): If True, rasterize and describe pages using a
+                        vision model (VLM). If False (default), use element-wise extraction.
+                    model (BaseVisionModel): Vision-capable model used for scanned PDFs and/or
+                        image captioning (also used for image files).
+                    prompt (str): Prompt for image captioning / page description. Defaults to
+                        ``DEFAULT_IMAGE_CAPTION_PROMPT`` for element-wise PDFs and
+                        ``DEFAULT_IMAGE_EXTRACTION_PROMPT`` for scanned PDFs/images.
+                    resolution (int): DPI when rasterizing pages for VLM. Default: 300.
+                    show_base64_images (bool): Include base64-embedded images in PDF output.
+                        Default: False.
+                    image_placeholder (str): Placeholder for omitted images in PDFs.
+                        Default: ``"<!-- image -->"``.
+                    page_placeholder (str): Placeholder inserted between PDF pages (only
+                        surfaced when scanning or when the placeholder occurs in text).
+                        Default: ``"<!-- page -->"``.
+                    vlm_parameters (dict): Extra keyword args forwarded to
+                        ``model.analyze_content(...)``.
+
+                Excel / Parquet reading:
+                    as_table (bool): For Excel (``.xlsx``/``.xls``), if True read as a table
+                        using pandas and return CSV text. If False (default), convert to PDF
+                        and run the PDF pipeline.
+                    excel_engine (str): pandas Excel engine. Default: ``"openpyxl"``.
+                    parquet_engine (str): pandas Parquet engine (e.g. ``"pyarrow"``,
+                        ``"fastparquet"``). Default: pandas auto-selection.
 
         Returns:
             ReaderOutput: Unified result containing text, metadata, and extraction info.
@@ -109,23 +121,17 @@ class VanillaReader(BaseReader):
             TypeError: If provided arguments are of unsupported types.
 
         Notes:
-            - PDF extraction now supports image captioning/omission indicators.
+            - HTML control via ``html_to_markdown`` applies to both local files and URLs.
             - For `.parquet` files, content is loaded via pandas and returned as CSV-formatted text.
 
         Example:
             ```python
-            from splitter_mr.readers import VanillaReader
-            from splitter_mr.models import AzureOpenAIVisionModel
+            # Convert HTML to Markdown
+            reader = VanillaReader()
+            md_output = reader.read(file_path="page.html", html_to_markdown=True)
 
-            model = AzureOpenAIVisionModel()
-            reader = VanillaReader(model=model)
-            output = reader.read(file_path="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/lorem_ipsum.pdf")
-            print(output.text)
-            ```
-            ```bash
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget purus non est porta
-            rutrum. Suspendisse euismod lectus laoreet sem pellentesque egestas et et sem.
-            Pellentesque ex felis, cursus ege...
+            # Keep raw HTML as-is
+            html_output = reader.read(file_path="page.html", html_to_markdown=False)
             ```
         """
 
@@ -173,9 +179,9 @@ class VanillaReader(BaseReader):
             raise ValueError(f"Unrecognized document source: {src_type}")
         return handlers[src_type](src_val, kw)
 
-    # ---- individual strategies below – each ~20 lines or fewer ---------- #
+    # ---- individual strategies below – each ~20 lines or fewer ---------- #
 
-    # 1) Local / drive paths
+    # 1) Local / drive paths
     def _handle_local_path(
         self,
         path_like: str | Path,
@@ -195,7 +201,7 @@ class VanillaReader(BaseReader):
         doc_name = os.path.basename(path_str)
         rel_path = os.path.relpath(path_str)
 
-        # ---- type‑specific branches ---- #
+        # ---- type-specific branches ---- #
         # TODO: Refactor to sort the code and make it more readable
         if ext == "pdf":
             return (
@@ -203,7 +209,12 @@ class VanillaReader(BaseReader):
                 rel_path,
                 *self._process_pdf(path_str, kw),
             )
-        if ext in ("json", "html", "txt", "xml", "csv", "tsv", "md", "markdown"):
+        if ext == "html" or ext == "htm":
+            content, conv = _read_html_file(
+                path_str, html_to_markdown=bool(kw.get("html_to_markdown", False))
+            )
+            return doc_name, rel_path, content, conv, None
+        if ext in ("json", "txt", "xml", "csv", "tsv", "md", "markdown"):
             return doc_name, rel_path, _read_text_file(path_str, ext), ext, None
         if ext == "parquet":
             parquet_engine = kw.get(
@@ -275,7 +286,9 @@ class VanillaReader(BaseReader):
         """Fetch via HTTP(S)."""
         if not isinstance(url, str) or not self.is_url(url):
             raise ValueError("file_url must be a valid URL string.")
-        content, conv = _load_via_requests(url)
+        content, conv = _load_via_requests(
+            url, html_to_markdown=bool(kw.get("html_to_markdown", False))
+        )
         name = url.split("/")[-1] or "downloaded_file"
         return name, url, content, conv, None
 
@@ -346,10 +359,10 @@ class VanillaReader(BaseReader):
         if kw.get("scan_pdf_pages"):
             model = kw.get("model", self.model)
             if model is None:
-                raise ValueError("scan_pdf_pages=True requires a vision‑capable model.")
+                raise ValueError("scan_pdf_pages=True requires a vision-capable model.")
             joined = self._scan_pdf_pages(path, model=model, **kw)
             return joined, "png", model.model_name
-        # element‑wise extraction
+        # element-wise extraction
         content = self.pdf_reader.read(
             path,
             model=kw.get("model", self.model),
@@ -503,7 +516,7 @@ class VanillaReader(BaseReader):
         """
         if not shutil.which("soffice"):
             raise RuntimeError(
-                "LibreOffice/soffice is required for Office‑to‑PDF conversion "
+                "LibreOffice/soffice is required for Office-to-PDF conversion "
                 "but was not found in PATH.  Install LibreOffice or use a "
                 "different reader."
             )
@@ -521,7 +534,7 @@ class VanillaReader(BaseReader):
         proc = subprocess.run(cmd, capture_output=True)
         if proc.returncode != 0:
             raise RuntimeError(
-                f"LibreOffice failed converting {file_path} → PDF:\n{proc.stderr.decode()}"
+                f"LibreOffice failed converting {file_path} → PDF:\n{proc.stderr.decode()}"
             )
 
         pdf_name = os.path.splitext(os.path.basename(file_path))[0] + ".pdf"
@@ -614,6 +627,28 @@ def _read_text_file(path: Union[str, Path], ext: str) -> str:
         )
 
 
+def _read_html_file(
+    path: Union[str, Path], *, html_to_markdown: bool
+) -> Tuple[str, str]:
+    """
+    Read an HTML file from disk, optionally converting to Markdown.
+
+    Args:
+        path: Path to the HTML file.
+        html_to_markdown: If True, convert to Markdown; else return raw HTML.
+
+    Returns:
+        Tuple[str, str]: (content, conversion_method) where conversion_method is
+        "md" if converted, otherwise "html".
+    """
+    with open(path, "r", encoding="utf-8") as fh:
+        raw = fh.read()
+    if html_to_markdown:
+        md = HtmlToMarkdown().convert(raw)
+        return md, "md"
+    return raw, "html"
+
+
 def _read_parquet(path: Union[str, Path], *, engine: Optional[str] = None) -> str:
     """Read a Parquet file and return CSV-formatted text.
 
@@ -656,19 +691,28 @@ def _read_excel(path: Union[str, Path], *, engine: str = "openpyxl") -> str:
     return df.to_csv(index=False)
 
 
-def _load_via_requests(url: str) -> Tuple[Any, str]:
+def _load_via_requests(url: str, *, html_to_markdown: bool = False) -> Tuple[Any, str]:
     """Fetch content via HTTP(S) and return a (payload, type) pair.
 
     The ``type`` loosely reflects a "conversion key" used elsewhere to decide
     how the content should be treated downstream.
 
+    Behavior for content types:
+      - application/json or ``*.json``: parsed JSON → (obj, "json")
+      - text/html or ``*.html``/``*.htm``:
+            * if ``html_to_markdown=True``: converted Markdown → (str, "md")
+            * else: raw HTML text → (str, "html")
+      - text/yaml or ``*.yaml``/``*.yml``: parsed YAML → (obj, "json")
+      - Otherwise: raw text → (str, "txt")
+
     Args:
         url: Fully qualified HTTP/HTTPS URL.
+        html_to_markdown: If True, convert HTML responses to Markdown.
 
     Returns:
         Tuple[Any, str]:
-            - payload: Parsed JSON/YAML, extracted HTML text, or raw text.
-            - conv: One of ``{"json", "html", "txt"}``.
+            - payload: Parsed JSON/YAML, Markdown (converted), raw HTML, or raw text.
+            - conv: One of ``{"json", "md", "html", "txt"}``.
 
     Raises:
         requests.HTTPError: If the HTTP request fails (non-2xx).
@@ -677,14 +721,19 @@ def _load_via_requests(url: str) -> Tuple[Any, str]:
     resp.raise_for_status()
     ctype = (resp.headers.get("Content-Type", "") or "").lower()
 
+    # JSON
     if "application/json" in ctype or url.endswith(".json"):
         return resp.json(), "json"
 
-    if "text/html" in ctype or url.endswith(".html"):
-        p = SimpleHTMLTextExtractor()
-        p.feed(resp.text)
-        return p.get_text(), "html"
+    # HTML
+    if "text/html" in ctype or url.endswith((".html", ".htm")):
+        raw_html = resp.text
+        if html_to_markdown:
+            md = HtmlToMarkdown().convert(raw_html)
+            return md, "md"
+        return raw_html, "html"
 
+    # YAML
     if "text/yaml" in ctype or url.endswith((".yaml", ".yml")):
         return yaml.safe_load(resp.text), "json"
 
@@ -693,7 +742,7 @@ def _load_via_requests(url: str) -> Tuple[Any, str]:
 
 
 class SimpleHTMLTextExtractor(HTMLParser):
-    """Extract HTML Structures from a text"""
+    """Extract text from HTML by concatenating text nodes (legacy helper)."""
 
     def __init__(self):
         super().__init__()

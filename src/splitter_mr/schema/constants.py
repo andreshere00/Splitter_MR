@@ -1,4 +1,4 @@
-from typing import Dict, Set
+from typing import Dict, List, Literal, Set
 
 # ------- #
 # Readers #
@@ -111,11 +111,57 @@ OPENAI_EMBEDDING_MODEL_FALLBACK: str = "cl100k_base"
 # Splitters #
 # --------- #
 
-# ---- Sentence Splitters constants ---- #
+# ---- Sentence Splitter constants ---- #
 
-DEFAULT_SENTENCE_SEPARATOR: str = r'(?:\.\.\.|…|[.!?])(?:["”’\'\)\]\}»]*)\s*'
+DEFAULT_SENTENCE_SEPARATORS: str = r'(?:\.\.\.|…|[.!?])(?:["”’\'\)\]\}»]*)\s*'
 
-# ---- Code Splitters constants ---- #
+# ---- Paragraph Splitter constants ---- #
+
+DEFAULT_PARAGRAPH_SEPARATORS: str = "\n"
+
+# ---- Recursive Splitter constants ---- #
+
+DEFAULT_RECURSIVE_SEPARATORS: List[str] = [
+    "\n\n",
+    "\n",
+    " ",
+    ".",
+    ",",
+    "",
+    "\u200b",  # Zero-width space
+    "\uff0c",  # Fullwidth comma
+    "\u3001",  # Ideographic comma
+    "\uff0e",  # Fullwidth full stop
+    "\u3002",  # Ideographic full stop
+]
+
+# ---- Token Splitter constants ---- #
+
+# -> Default settings for TokenSplitter
+
+DEFAULT_TOKENIZER: str = "tiktoken/cl100k_base"
+DEFAULT_TOKEN_LANGUAGE: str = "english"
+SUPPORTED_TOKENIZERS: List[str] = ["tiktoken", "spacy", "nltk"]
+
+# -> Known/default models per tokenizer
+
+TIKTOKEN_DEFAULTS: List[str] = [
+    "cl100k_base",  # GPT-4o, GPT-4-turbo, GPT-3.5-turbo
+    "p50k_base",  # Codex series
+    "r50k_base",  # GPT-3
+]
+
+SPACY_DEFAULTS: List[str] = [
+    "en_core_web_sm",
+    "en_core_web_md",
+    "en_core_web_lg",
+]
+
+NLTK_DEFAULTS: List[str] = [
+    "punkt_tab",
+]
+
+# ---- Code Splitter constants ---- #
 
 SUPPORTED_PROGRAMMING_LANGUAGES: Set[str] = {
     "lua",
@@ -172,4 +218,17 @@ SUPPORTED_PROGRAMMING_LANGUAGES: Set[str] = {
     "pyo",
     "pl",
     "pm",
+}
+
+# ---- Semantic Splitter constants ---- #
+
+BreakpointThresholdType = Literal[
+    "percentile", "standard_deviation", "interquartile", "gradient"
+]
+
+DEFAULT_BREAKPOINTS: Dict[BreakpointThresholdType, float] = {
+    "percentile": 95.0,
+    "standard_deviation": 3.0,
+    "interquartile": 1.5,
+    "gradient": 95.0,
 }

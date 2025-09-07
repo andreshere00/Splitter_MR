@@ -5,72 +5,157 @@
 <img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/markitdown_reader_button_white.svg#only-dark" alt="MarkItDownReader logo">
 </p>
 
-As we have seen in previous examples, reading a PDF is not a simple task. In this case, we will see how to read a PDF using **MarkItDown** framework, and connect this library into Visual Language Models to extract text or get annotations from images.
+As we have seen in previous examples, reading a PDF is not a simple task. In this case, we will see how to read a PDF using the **MarkItDown** framework, and connect this library to Visual Language Models (VLMs) to extract text or get annotations from images.
 
 ## How to connect a VLM to MarkItDownReader
 
-For this example, we will use the same document as the (previous tutorial)[https://github.com/andreshere00/Splitter_MR/blob/main/data/sample_pdf.pdf].
+For this example, we will use the same document as the [previous tutorial](https://github.com/andreshere00/Splitter_MR/blob/main/data/sample_pdf.pdf).
 
-To extract image descriptions or perform OCR, instantiate a vision model and pass it to your `MarkItDownReader`. 
+To extract image descriptions or perform OCR, instantiate any model that implements the [`BaseModel` interface](https://andreshere00.github.io/Splitter_MR/api_reference/model/#basemodel) (vision variants inherit from it) and pass it into the [`MarkItDownReader`](https://andreshere00.github.io/Splitter_MR/api_reference/reader/#markitdownreader). Swapping providers only changes the model constructor; your Reader usage remains the same.
 
-Currently, two models are supported: one from **OpenAI** and one from an **Azure** **OpenAI** deployment. After choosing a model, you simply need to instantiate the `BaseVisionModel` class, which implements one of these VLMs.
+### Supported models (and when to use them)
 
-Before that, you should provide some environment variables (these variables should be saved in a `.env` file in the directory where the Python script will be executed):
+| Model (docs)                                                                                                       | When to use                                       | Required environment variables                                                                                        |
+| ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| [`OpenAIVisionModel`](https://andreshere00.github.io/Splitter_MR/api_reference/model/#openaivisionmodel)           | You have an OpenAI API key and want OpenAI cloud. | `OPENAI_API_KEY` (optional: `OPENAI_MODEL`, defaults to `gpt-4o`)                                                     |
+| [`AzureOpenAIVisionModel`](https://andreshere00.github.io/Splitter_MR/api_reference/model/#azureopenaivisionmodel) | You use Azure OpenAI Service.                     | `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_DEPLOYMENT`, `AZURE_OPENAI_API_VERSION`                |
+| [`GrokVisionModel`](https://andreshere00.github.io/Splitter_MR/api_reference/model/#grokvisionmodel)               | You have access to xAI Grok multimodal.           | `XAI_API_KEY` (optional: `XAI_MODEL`, default `grok-4`)                                                               |
+| [`GeminiVisionModel`](https://andreshere00.github.io/Splitter_MR/api_reference/model/#geminivisionmodel)           | You want Google’s Gemini vision models.           | `GEMINI_API_KEY` (also install extras: `pip install "splitter-mr[multimodal]"`)                                       |
+| [`AnthropicVisionModel`](https://andreshere00.github.io/Splitter_MR/api_reference/model/#anthropicvisionmodel)     | You have an Anthropic key (Claude Vision).        | `ANTHROPIC_API_KEY` (optional: `ANTHROPIC_MODEL`)                                                                     |
+| [`HuggingFaceVisionModel`](https://andreshere00.github.io/Splitter_MR/api_reference/model/#huggingfacevisionmodel) | You prefer local/open-source/offline inference.   | Install extras: `pip install "splitter-mr[multimodal]"` (optional: `HF_ACCESS_TOKEN` if the chosen model requires it) |
 
-<details> <summary>Environment variables definition</summary>
-    
-    <h3>For <code>OpenAI</code>:</h3>
+> **Note on HuggingFace models:** Not all HF models are supported (e.g., gated or uncommon architectures). A well-tested option is **SmolDocling**.
 
-    ```txt
-    OPENAI_API_KEY=<your-api-key>
-    ```
+### Environment variables
 
-    <h3>For <code>AzureOpenAI</code>:</h3>
+Create a `.env` file alongside your Python script:
 
-    ```txt
-    AZURE_OPENAI_API_KEY=<your-api-key>
-    AZURE_OPENAI_ENDPOINT=<your-endpoint>
-    AZURE_OPENAI_API_VERSION=<your-api-version>
-    AZURE_OPENAI_DEPLOYMENT=<your-model-name>
-    ```
+<details>
+  <summary><strong>Show/hide environment variables needed for every provider</strong></summary>
+
+  <h4>OpenAI</h4> 
+
+```txt
+# OpenAI
+OPENAI_API_KEY=<your-api-key>
+# (optional) OPENAI_MODEL=gpt-4o
+```
+
+  <h4>Azure OpenAI</h4>
+
+```txt
+# Azure OpenAI
+AZURE_OPENAI_API_KEY=<your-api-key>
+AZURE_OPENAI_ENDPOINT=<your-endpoint>
+AZURE_OPENAI_API_VERSION=<your-api-version>
+AZURE_OPENAI_DEPLOYMENT=<your-model-name>
+```
+
+  <h4>xAI Grok</h4>
+
+```txt
+# xAI Grok
+XAI_API_KEY=<your-api-key>
+# (optional) XAI_MODEL=grok-4
+```
+
+  <h4>Google Gemini</h4>
+
+```txt
+# Google Gemini
+GEMINI_API_KEY=<your-api-key>
+# Also: pip install "splitter-mr[multimodal]"
+```
+
+  <h4>Anthropic (Claude Vision)</h4>
+
+```txt
+# Anthropic (Claude Vision)
+ANTHROPIC_API_KEY=<your-api-key>
+# (optional) ANTHROPIC_MODEL=claude-sonnet-4-20250514
+```
+
+  <h4>Hugging Face (local/open-source)</h4>
+
+```txt
+# Hugging Face (optional, only if needed by the model)
+HF_ACCESS_TOKEN=<your-hf-token>
+# Also: pip install "splitter-mr[multimodal]"
+```
+
 </details>
 
-So, the models can be loaded as follows:
+### Instantiation examples
 
-<details> <summary><code>OpenAI</code> and <code>AzureOpenAI</code> implementation example</summary>
+<details>
+  <summary><strong>Show/hide instantiation snippets for all providers</strong></summary>
 
-    <h3>For <code>OpenAI</code></h3>
+  <h4>OpenAI</h4>
 
-    ```python
-    import os
-    from splitter_mr.model import OpenAIVisionModel
+```python
+from splitter_mr.model import OpenAIVisionModel
 
-    api_key = os.getenv("OPENAI_API_KEY")
+# Reads OPENAI_API_KEY (and optional OPENAI_MODEL) from .env if present
+model = OpenAIVisionModel()
+# or pass explicitly:
+# model = OpenAIVisionModel(api_key="...", model_name="gpt-4o")
+```
 
-    model = OpenAIVisionModel(api_key=api_key)
-    ```
+  <h4>Azure OpenAI</h4>
 
-    <h3>For <code>AzureOpenAI</code></h3>
+```python
+from splitter_mr.model import AzureOpenAIVisionModel
 
-    ```python
-    import os
-    from splitter_mr.model import AzureOpenAIVisionModel
+# Reads Azure vars from .env if present
+model = AzureOpenAIVisionModel()
+# or:
+# model = AzureOpenAIVisionModel(
+#     api_key="...",
+#     azure_endpoint="https://<resource>.openai.azure.com/",
+#     api_version="2024-02-15-preview",
+#     azure_deployment="<your-deployment-name>",
+# )
+```
 
-    azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
-    azure_api_key = os.getenv("AZURE_OPENAI_API_KEY")
-    api_version = os.getenv("AZURE_OPENAI_API_VERSION")
-    azure_deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT")
+  <h4>xAI Grok</h4>
 
-    model = AzureOpenAIVisionModel(
-        api_key=azure_api_key,
-        azure_endpoint=azure_endpoint,
-        api_version=api_version,
-        azure_deployment=azure_deployment
-    )
-    ```
+```python
+from splitter_mr.model import GrokVisionModel
+
+# Reads XAI_API_KEY (and optional XAI_MODEL) from .env
+model = GrokVisionModel()
+```
+
+  <h4>Google Gemini</h4>
+
+```python
+from splitter_mr.model import GeminiVisionModel
+
+# Requires GEMINI_API_KEY and the 'multimodal' extra installed
+model = GeminiVisionModel()
+```
+
+  <h4>Anthropic (Claude Vision)</h4>
+
+```python
+from splitter_mr.model import AnthropicVisionModel
+
+# Reads ANTHROPIC_API_KEY (and optional ANTHROPIC_MODEL) from .env
+model = AnthropicVisionModel()
+```
+
+  <h4>Hugging Face (local/open-source)</h4>
+
+```python
+from splitter_mr.model import HuggingFaceVisionModel
+
+# Token only if the model requires gating
+model = HuggingFaceVisionModel()
+```
+
 </details>
 
-Alternatively, you can instantiate the model and if the `.env` is present, the variables will be get automatically:
+
 
 ```python
 from splitter_mr.model import AzureOpenAIVisionModel
@@ -80,91 +165,39 @@ file = "data/sample_pdf.pdf"
 model = AzureOpenAIVisionModel()
 ```
 
+
 Then, you can simply pass the model that you have instantiated to the Reader class:
+
 
 ```python
 reader = MarkItDownReader(model=model)
 output = reader.read(file)
 ```
 
+
 This returns a `ReaderOutput` object with all document text and extracted image descriptions via the vision model. You can access metadata like `output.conversion_method`, `output.reader_method`, `output.ocr_method`, etc.
 
 To retrieve the text content, you can simply access to the `text` attribute:
+
 
 ```python
 print(output.text)
 ```
 
-```md
-<!-- page -->
+    <!-- page -->
+    
+    # Description:
+    # A sample PDF
+    
+    Converting PDF files to other formats, such as Markdown, is a surprisingly complex task due to the nature of the PDF format itself. PDF (Portable Document Format) was designed primarily for preserving the visual layout of documents, making them look the same across different devices and platforms. However, this design goal introduces several challenges when trying to extract and convert the underlying content into a more flexible, structured format l
+    ...
+    simple on the surface, converting PDFs to formats like Markdown involves a series of technical and interpretive challenges. Effective conversion tools must blend text extraction, document analysis, and sometimes machine learning techniques (such as OCR or structure recognition) to produce usable, readable, and faithful Markdown output. As a result, perfect conversion is rarely possible, and manual review and cleanup are often required.
+    
+    ![Hummingbird](https://example.com/hummingbird-image)
+    ```
+    
 
-# Description:
-# A sample PDF
 
-Converting PDF files to other formats, such as Markdown, is a surprisingly complex task due to the nature of the PDF format itself. PDF (Portable Document Format) was designed primarily for preserving the visual layout of documents, making them look the same across different devices and platforms. However, this design goal introduces several challenges when trying to extract and convert the underlying content into a more flexible, structured format like Markdown.
-
-![Illustración 1. SplitterMR logo.](path/to/image)
-
-## 1. Lack of Structural Information
-
-Unlike formats such as HTML or DOCX, PDFs generally do not store information about the logical structure of the document—such as headings, paragraphs, lists, or tables. Instead, PDFs are often a collection of text blocks, images, and graphical elements placed at specific coordinates on a page. This makes it difficult to accurately infer the intended structure, such as determining what text is a heading versus a regular paragraph.
-
-## 2. Variability in PDF Content
-
-PDF files can contain a wide range of content types: plain text, styled text, images, tables, embedded fonts, and even vector graphics. Some PDFs are generated programmatically and have relatively clean underlying text, while others may be created from scans, resulting in image-based (non-selectable) content that requires OCR (Optical Character Recognition) for extraction. The variability in how PDFs are produced leads to inconsistent results when converting to Markdown.
-
-## An enumerate:
-
-1. One
-
-<!-- page -->
-
-# Description:
-# 3. Preservation of Formatting
-
-Markdown is a lightweight markup language that supports basic formatting—such as headings, bold, italics, links, images, and lists. However, it does not support all the visual and layout options available in PDF, such as columns, custom fonts, footnotes, floating images, and complex tables. Deciding how (or whether) to preserve these elements can be difficult, and often requires trade-offs between fidelity and simplicity.
-
-\[ f(x) = x^2, \quad x \in [0,1] \]
-
-## An example list:
-
-- Element 1
-- Element 2
-- Element 3
-
-# 4. Table and Image Extraction
-
-Tables and images in PDFs present a particular challenge. Tables are often visually represented using lines and spacing, with no underlying indication that a group of text blocks is actually a table. Extracting these and converting them to Markdown tables (which have a much simpler syntax) is error-prone. Similarly, extracting images from a PDF and re-inserting them in a way that makes sense in Markdown requires careful handling.
-
----
-
-This is a cite.
-
----
-
-# 5. Multicolumn Layouts and Flowing Text
-
-Many PDFs use complex layouts with multiple columns, headers, footers, or sidebars. Converting these layouts to a single-flowing Markdown document requires decisions about reading order and content hierarchy. It's easy to end up with text in the wrong order or to lose important contextual information.
-
-# 6. Encoding and Character Set Issues
-
-PDFs can use a variety of text encodings, embedded fonts, and even contain non-standard Unicode characters. Extracting text reliably without corruption or data loss is not always straightforward, especially for documents with special symbols or non-Latin scripts.
-
-<!-- page -->
-
-# Description:
-| Name         | Role         | Email             |
-|--------------|--------------|-------------------|
-| Alice Smith  | Developer    | alice@example.com  |
-| Bob Johnson   | Designer     | bob@example.com    |
-| Carol White   | Project Lead | carol@example.com  |
-
-## Conclusion
-
-While it may seem simple on the surface, converting PDFs to formats like Markdown involves a series of technical and interpretive challenges. Effective conversion tools must blend text extraction, document analysis, and sometimes machine learning techniques (such as OCR or structure recognition) to produce usable, readable, and faithful Markdown output. As a result, perfect conversion is rarely possible, and manual review and cleanup are often required.
-
-![Hummingbird](https://example.com/hummingbird.jpg)
-```
 
 With the by-default method, you obtain the text extracted from the PDF as it is shown. This method scan the PDF pages as images and process them using a VLM. The result will be a markdown text with all the images detected in every page. Every page is highlighted with a markdown comment as a placeholder: `<!-- page -->`. 
 
@@ -179,44 +212,42 @@ output = reader.read(
     file, 
     scan_pdf_pages = True, 
     prompt = "Return only a short description for these pages"
-    )
+)
 ```
+
 
 In case that needed, it could be interesting split the PDF pages using another placeholder. You can configure that using the `page_placeholder` parameter:
 
+
 ```python
 output = reader.read(
-    file, scan_pdf_pages = True, 
-    prompt = "Return only a short description for these pages", 
-    page_placeholder = "## PAGE"
-    )
+    file,
+    scan_pdf_pages=True,
+    prompt="Return only a short description for these pages",
+    page_placeholder="## PAGE",
+)
 print(output.text)
 ```
 
-The result will be the expected markdown string:
+    ## PAGE
+    
+    # Description:
+    The document discusses the challenges of converting PDF files to more flexible formats like Markdown due to the inherent characteristics of PDFs. It highlights two main issues: the lack of structural information, which complicates the extraction of organized content, and the variability in PDF content types, leading to inconsistent results during conversion.
+    
+    ## PAGE
+    
+    # Description:
+    1. **Preservation of Formatting**: Discusses the limitations of Markdown in replicating co
+    ...
+    d special characters in PDFs, focusing on the risks of data loss and corruption during extraction.
+    
+    ## PAGE
+    
+    # Description:
+    The page summarizes the challenges of converting PDFs to Markdown formats, emphasizing the need for advanced tools that integrate text extraction, document analysis, and machine learning. It concludes that perfect conversion is difficult and often requires manual review and adjustments. Additionally, a table of team members with their roles and contact emails is included.
+    
 
-```md
-## PAGE
 
-# Description:
-This document discusses the complexities of converting PDF files to other formats like Markdown due to the inherent design of PDFs. It highlights two major challenges: the lack of structural information, which complicates understanding the document's layout, and the variability in PDF content types, which can result in inconsistent extraction results.
-
-## PAGE
-
-# Description:
-3. **Preservation of Formatting**: Discusses the limitations of Markdown in preserving complex PDF formatting, such as custom fonts and intricate layouts, and the trade-offs between fidelity and simplicity.
-
-4. **Table and Image Extraction**: Explains the challenges of extracting tables and images from PDFs, emphasizing the difficulties in converting visual representations into a structured format like Markdown.
-
-5. **Multicolumn Layouts and Flowing Text**: Highlights the issues with converting complex PDF layouts into single-column Markdown, addressing potential problems with reading order and content hierarchy.
-
-6. **Encoding and Character Set Issues**: Covers the difficulties in reliably extracting text from PDFs that use various encodings and non-standard characters, including risks of corruption and data loss.
-
-## PAGE
-
-# Description:
-The document discusses the challenges involved in converting PDFs to Markdown format, highlighting the need for sophisticated tools that integrate text extraction and document analysis, as well as machine learning techniques. It emphasizes that achieving perfect conversion is rare, often requiring manual review and cleanup. Additionally, it includes a table with team member details and features an image of a hummingbird.
-```
 
 In comparison, `MarkItDownReader` offers a faster conversion than Docling but with less options to be configured. In that sense, we cannot obtain directly the `base64` images from every image detected in our documents, or write image placeholders easily (despite we can do it using a prompt). In addition, you will always get a `# Description` placeholder every time you use a VLM for extraction and captioning in this Reader. 
 
@@ -264,6 +295,7 @@ markitdown_reader = MarkItDownReader()
 markitdown_output = markitdown_reader.read(file)
 save_markdown(markitdown_output, "no_vlm")
 ```
+
 
 !!! note
     For more on available options, see the [**MarkItDownReader class documentation**](../../api_reference/reader.md#markitdownreader).

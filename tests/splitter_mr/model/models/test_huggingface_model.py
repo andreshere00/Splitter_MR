@@ -178,12 +178,51 @@ def fake_img_b64() -> str:
 # ---- Test cases ---- #
 
 
+def test_get_client(model):
+    assert model.get_client() is model.model
+
+
 def test_model_loads_with_default_model():
     assert HuggingFaceVisionModel().model
 
 
 def test_model_loads_with_custom_model():
     assert HuggingFaceVisionModel(MODEL_ID).model
+
+
+def test_model_fallbacks_on_error(monkeypatch):
+    import transformers
+
+    class AlwaysFailModel:
+        @classmethod
+        def from_pretrained(cls, *a, **k):
+            raise Exception("model load fail")
+
+    class DummyConfig2:
+        architectures = ["AlwaysFailModel"]
+
+    monkeypatch.setattr(
+        transformers.AutoProcessor, "from_pretrained", lambda *a, **k: DummyProcessor()
+    )
+    monkeypatch.setattr(
+        transformers.AutoImageProcessor,
+        "from_pretrained",
+        lambda *a, **k: DummyProcessor(),
+    )
+    monkeypatch.setattr(
+        transformers.AutoConfig, "from_pretrained", lambda *a, **k: DummyConfig2()
+    )
+    monkeypatch.setattr(transformers, "AlwaysFailModel", AlwaysFailModel, raising=False)
+    monkeypatch.setattr(transformers, "DummyModel", DummyModel, raising=False)
+
+    # Patch the class fallback list to use the dummies
+    hf_mod.HuggingFaceVisionModel.FALLBACKS = [
+        ("AlwaysFailModel", AlwaysFailModel),
+        ("DummyModel", DummyModel),
+    ]
+
+    m = HuggingFaceVisionModel("some/model")
+    assert isinstance(m.model, DummyModel)
 
 
 @pytest.mark.parametrize("prompt", ["What animal is on the candy?", "Describe colours"])
@@ -202,6 +241,12 @@ def test_analyze_content_missing_image(model):
 
 def test_analyze_content_unknown_extension(model, fake_img_b64):
     assert model.analyze_content("Prompt", fake_img_b64, file_ext="zzz")
+
+
+def test_analyze_content_with_bytes(model, fake_img_b64):
+    # Pass bytes, not str (simulate an actual base64-encoded bytes object)
+    fake_bytes = fake_img_b64.encode("utf-8")
+    assert "fake vision model answer" in model.analyze_content("Prompt", fake_bytes)
 
 
 def test_prepare_input_failure(model, fake_img_b64, monkeypatch):

@@ -83,7 +83,8 @@ class DoclingReader(BaseReader):
 
         ext: str = os.path.splitext(file_path)[1].lower().lstrip(".")
         if ext not in self.SUPPORTED_EXTENSIONS:
-            warnings.warn(f"Unsupported extension '{ext}'. Using VanillaReader.")
+            msg = f"Unsupported extension '{ext}'. Using VanillaReader."
+            warnings.warn(msg)
             return VanillaReader().read(file_path=file_path, **kwargs)
 
         # Pipeline selection and execution

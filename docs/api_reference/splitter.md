@@ -16,7 +16,7 @@ The **Splitter** component implements the main functionality of this library. Th
 | [**Token Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#tokensplitter)        | Splits text into chunks based on the number of tokens, using various tokenization models (e.g., tiktoken, spaCy, NLTK). Useful for ensuring chunks are compatible with LLM context limits. <br> **Parameters:** `chunk_size` (max tokens per chunk), `model_name` (tokenizer/model, e.g., `"tiktoken/cl100k_base"`, `"spacy/en_core_web_sm"`, `"nltk/punkt"`), `language` (for NLTK). <br> **Compatible with:** Text. |
 | [**Paged Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#pagedsplitter)        | Splits text by pages for documents that have page structure. Each chunk contains a specified number of pages, with optional word overlap. <br> **Parameters:** `num_pages` (pages per chunk), `chunk_overlap` (overlapping words). <br> **Compatible with:** Word, PDF, Excel, PowerPoint. |
 | [**Row/Column Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#rowcolumnsplitter)   | For tabular formats, splits data by a set number of rows or columns per chunk, with possible overlap. Row-based and column-based splitting are mutually exclusive. <br> **Parameters:** `num_rows`, `num_cols` (rows/columns per chunk), `overlap` (overlapping rows or columns). <br> **Compatible with:** Tabular formats (csv, tsv, parquet, flat json). |
-| [**JSON Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#jsonrecursivesplitter)         | Recursively splits JSON documents into smaller sub-structures that preserve the original JSON schema. <br> **Parameters:** `max_chunk_size` (max chars per chunk), `min_chunk_size` (min chars per chunk). <br> **Compatible with:** JSON. |
+| [**JSON Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#recursivejsonsplitter)         | Recursively splits JSON documents into smaller sub-structures that preserve the original JSON schema. <br> **Parameters:** `max_chunk_size` (max chars per chunk), `min_chunk_size` (min chars per chunk). <br> **Compatible with:** JSON. |
 | [**Semantic Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#semanticsplitter)     | Splits text into chunks based on semantic similarity, using an embedding model and a max tokens parameter. Useful for meaningful semantic groupings. <br> **Parameters:** `embedding_model` (model for embeddings), `max_tokens` (max tokens per chunk). <br> **Compatible with:** Text. |
 | [**HTML Tag Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#htmltagsplitter)       | Splits HTML content based on a specified tag, or automatically detects the most frequent and shallowest tag if not specified. Each chunk is a complete HTML fragment for that tag. <br> **Parameters:** `chunk_size` (max chars per chunk), `tag` (HTML tag to split on, optional). <br> **Compatible with:** HTML. |
 | [**Header Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#headersplitter)       | Splits Markdown or HTML documents into chunks using header levels (e.g., `#`, `##`, or `<h1>`, `<h2>`). Uses configurable headers for chunking. <br> **Parameters:** `headers_to_split_on` (list of headers and semantic names), `chunk_size` (unused, for compatibility). <br> **Compatible with:** Markdown, HTML. |
@@ -66,7 +66,7 @@ The **Splitter** component implements the main functionality of this library. Th
     options:
       members_order: source
 
-### RecursiveSplitter
+### RecursiveCharacterSplitter
 
 ::: splitter_mr.splitter.splitters.recursive_splitter
     handler: python
@@ -80,7 +80,7 @@ The **Splitter** component implements the main functionality of this library. Th
     options:
       members_order: source
 
-### JSONRecursiveSplitter
+### RecursiveJSONSplitter
 
 ::: splitter_mr.splitter.splitters.json_splitter
     handler: python
