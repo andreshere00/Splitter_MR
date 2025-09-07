@@ -5,29 +5,29 @@
 <img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_logo.svg#gh-light-mode-only" alt="SplitterMR logo" width=100%/>
 <img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_logo_white.svg#gh-dark-mode-only" alt="SplitterMR logo" width=100%/>
 
-!!! important 
-    
-    "Version 1.0.0 released – First Stable Release!"
-
-    **We are excited to announce the first stable release of SplitterMR (v1.0.0)!** Install it with the following command:
-
-    ```python
-    pip install splitter-mr
-    ```
-
-    #### Key Highlights
-
-    - 🚀 [**Stable API**](#core-install) consolidating all v0.x features.
-    - 📖 **[Readers](https://andreshere00.github.io/Splitter_MR/api_reference/reader/):** Plug-and-play support for Vanilla, MarkItDown, and Docling, covering formats like text, Office, JSON/YAML, images, HTML, and more.
-    - 🪓 **[Splitters](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/):** Extensive library of split strategies, including character, word, sentence, paragraph, token, paged, row/column, JSON, semantic, HTML tag, header, and code splitters.
-    - 🧠 **[Models](https://andreshere00.github.io/Splitter_MR/api_reference/model/):** Multimodal Vision-Language support for OpenAI, Azure, Grok, HuggingFace, Gemini, Claude, and more.
-    - 🗺️ **[Embeddings](https://andreshere00.github.io/Splitter_MR/api_reference/embedding/):** Fully integrated embeddings from OpenAI, Azure, HuggingFace, Gemini, and Claude (via Voyage).
-    - 🎛️ [**Extras system:**](#multiple-extras) Install the minimal core, or extend with `markitdown`, `docling`, `multimodal`, `azure`, or `all` for a batteries-included setup.
-    - 📚 **[Docs](https://andreshere00.github.io/Splitter_MR/):** New API reference, real executed notebook examples, and updated architecture diagrams.
-    - 🔧 **Developer Experience:** CI/CD pipeline, PyPI publishing, pre-commit checks, and improved cleaning instructions.
-    - 🐛 **Bugfixes:** Improved NLTK tokenizers, more robust splitters, and new utilities for HTML => Markdown conversion.
-
-    **Check out the updated documentation, new examples, and join us in making text splitting and document parsing easier than ever!**
+> [!IMPORTANT] 
+> 
+> "Version 1.0.0 released – First Stable Release!"
+> 
+> **We are excited to announce the first stable release of SplitterMR (v1.0.0)!** Install it with the following command:
+> 
+> ```python
+> pip install splitter-mr
+> ```
+> 
+> **Highlights:**
+> 
+> - 🚀 [**Stable API**](#core-install) consolidating all v0.x features.
+> - 📖 **[Readers](https://andreshere00.github.io/Splitter_MR/api_reference/reader/):** Plug-and-play support for Vanilla, MarkItDown, and Docling, covering formats like text, Office, JSON/YAML, images, HTML, and more.
+> - 🪓 **[Splitters](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/):** Extensive library of split strategies, including character, word, sentence, paragraph, token, paged, row/column, JSON, semantic, HTML tag, header, and code splitters.
+> - 🧠 **[Models](https://andreshere00.github.io/Splitter_MR/api_reference/model/):** Multimodal Vision-Language support for OpenAI, Azure, Grok, HuggingFace, Gemini, Claude, and more.
+> - 🗺️ **[Embeddings](https://andreshere00.github.io/Splitter_MR/api_reference/embedding/):** Fully integrated embeddings from OpenAI, Azure, HuggingFace, Gemini, and Claude (via Voyage).
+> - 🎛️ [**Extras system:**](#multiple-extras) Install the minimal core, or extend with `markitdown`, `docling`, `multimodal`, `azure`, or `all` for a batteries-included setup.
+> - 📚 **[Docs](https://andreshere00.github.io/Splitter_MR/):** New API reference, real executed notebook examples, and updated architecture diagrams.
+> - 🔧 **Developer Experience:** CI/CD pipeline, PyPI publishing, pre-commit checks, and improved cleaning instructions.
+> - 🐛 **Bugfixes:** Improved NLTK tokenizers, more robust splitters, and new utilities for HTML => Markdown conversion.
+> 
+> **Check out the updated documentation, new examples, and join us in making text splitting and document parsing easier than ever!**
 
 ## Features
 
