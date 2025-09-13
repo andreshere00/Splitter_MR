@@ -2,6 +2,10 @@
 
 > **Version 1.0.0: First stable release with full Reader, Splitter, Embedding and Vision model support.**
 
+## v1.0.1
+
+Add KeywordSplitter to split by regex patterns or specific keywords.
+
 ## v1.0.0
 
 First stable version.
