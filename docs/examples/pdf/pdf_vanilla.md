@@ -14,7 +14,7 @@ Remember that you can access the complete documentation of this Reader Component
 
 For this tutorial, we will use the same data as the first tutorial. [**Consult reference here**](https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/sample_pdf.pdf).
 
-To extract image descriptions or perform OCR, instantiate any model that implements the [`BaseModel` interface](../../api_reference/model.md#basemodel) (vision variants inherit from it) and pass it into the `VanillaReader`. Swapping providers only changes the model constructor; your Reader usage remains the same.
+To extract image descriptions or perform OCR, instantiate any model that implements the [`BaseModel` interface](../../api_reference/model.md#basevisionmodel) (vision variants inherit from it) and pass it into the `VanillaReader`. Swapping providers only changes the model constructor; your Reader usage remains the same.
 
 ### Supported models (and when to use them)
 
