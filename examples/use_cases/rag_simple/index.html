@@ -1,0 +1,1867 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../schema/header_splitter/">
+      
+      
+        <link rel="next" href="../../../CHANGELOG/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.19">
+    
+    
+      
+        <title>Build a simple RAG system - SplitterMR Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+3:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Source Sans 3";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
+    
+      <link rel="stylesheet" href="../../../assets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#example-how-to-create-a-simple-rag-system-using-splittermr" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="SplitterMR Docs" class="md-header__button md-logo" aria-label="SplitterMR Docs" data-md-component="logo">
+      
+  <img src="../../../assets/splitter_mr_logo_reduced_white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SplitterMR Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Build a simple RAG system
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/andreshere00/Splitter_MR" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    andreshere00/Splitter_MR
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="SplitterMR Docs" class="md-nav__button md-logo" aria-label="SplitterMR Docs" data-md-component="logo">
+      
+  <img src="../../../assets/splitter_mr_logo_reduced_white.svg" alt="logo">
+
+    </a>
+    SplitterMR Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/andreshere00/Splitter_MR" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    andreshere00/Splitter_MR
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Developer Guide
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Developer Guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api_reference/api_reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api_reference/reader/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Readers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api_reference/splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Splitters
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api_reference/model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vision models
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api_reference/embedding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Embedding models
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Examples
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Examples
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Reading
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Reading
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pdf/pdf_without_vlm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Read PDFs without VLMs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pdf/pdf_with_vlm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Read PDFs using VLMs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pdf/pdf_vanilla/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Read files with VanillaReader using VLMs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pdf/pdf_docling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Read files with Docling using VLMs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pdf/pdf_markitdown/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Read files with MarkItDown using VLMs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Text-based splitting
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            Text-based splitting
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../text/keyword_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by regular expressions
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../text/fixed_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by grammatical groups
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../text/recursive_character_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by characters recursively
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../text/token_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by tokens
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../text/paged_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by pages
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../text/semantic_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by semantic similarity
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Schema-based splitting
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            Schema-based splitting
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../schema/html_tag_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by HTML Tags
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../schema/code_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../schema/json_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split JSON recursively
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../schema/row_column_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split tables by rows or columns
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../schema/header_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split Markdown and HTML files by headers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Use cases
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            Use cases
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Build a simple RAG system
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Build a simple RAG system
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Requirements
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#first-step-prepare-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      First step. Prepare environment
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#second-step-process-the-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      Second step: Process the file
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#third-step-set-up-the-vector-database-and-upload-the-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      Third step: Set up the vector database and upload the content
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fourth-step-create-the-retrieval-component" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fourth step: Create the Retrieval component
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fifth-step-prepare-input-and-output-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fifth Step: Prepare input and output format
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sixth-step-testing-the-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sixth Step: testing the RAG
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CHANGELOG
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Requirements
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#first-step-prepare-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      First step. Prepare environment
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#second-step-process-the-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      Second step: Process the file
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#third-step-set-up-the-vector-database-and-upload-the-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      Third step: Set up the vector database and upload the content
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fourth-step-create-the-retrieval-component" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fourth step: Create the Retrieval component
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fifth-step-prepare-input-and-output-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fifth Step: Prepare input and output format
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sixth-step-testing-the-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sixth Step: testing the RAG
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="example-how-to-create-a-simple-rag-system-using-splittermr"><strong>Example:</strong> How to create a simple RAG system using SplitterMR<a class="headerlink" href="#example-how-to-create-a-simple-rag-system-using-splittermr" title="Permanent link">&para;</a></h1>
+<p>In this example, we will see a use case for creating a GenAI application using <strong>SplitterMR</strong>. Concretely, we will build a RAG system to process Pinocchio's Tale and ask some questions about this book. Let's see how to do it!</p>
+<p><img alt="An illustration of Pinocchio Disney's version " src="https://www.researchgate.net/publication/336265669/figure/fig2/AS:810368322519040@1570218272217/Pinocchio-cartoon-character-Credit-Walt-Disney.jpg" /></p>
+<h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
+<ol>
+<li>A <strong>Vector</strong> <strong>Database</strong> =&gt; In this case, we will use <a href="">Qdrant</a>, but other options are available.</li>
+<li>A <strong>generative</strong> <strong>Model</strong> =&gt; In this case, we will use <a href="https://azure.microsoft.com/es-es/products/ai-foundry/models/openai/">Azure OpenAI</a>, but other models can be used.</li>
+<li>An <strong>encoder</strong> <strong>Model</strong> =&gt; It should encode text with the same tokenizer as the generative model. So, we will use <a href="ttps://azure.microsoft.com/es-es/products/ai-foundry/models/openai/">Azure OpenAI</a>.</li>
+<li>The <a href="https://andreshere00.github.io/Splitter_MR/"><strong>SplitterMR</strong></a> library (obviously).</li>
+<li><a href="https://www.docker.com/"><strong>Docker</strong></a> installed. </li>
+<li>A set of <strong>data</strong>. In this case, the dataset is provided via the <a href="https://www.gutenberg.org/ebooks/16865"><strong>Gutenberg project</strong></a>.</li>
+</ol>
+<h2 id="first-step-prepare-environment">First step. Prepare environment<a class="headerlink" href="#first-step-prepare-environment" title="Permanent link">&para;</a></h2>
+<p>Firstly, we will import the libraries that we need:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span><span class="p">,</span> <span class="n">find_dotenv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">batched</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">qdrant_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">QdrantClient</span><span class="p">,</span> <span class="n">models</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">AzureOpenAI</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">VanillaReader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.splitter</span><span class="w"> </span><span class="kn">import</span> <span class="n">KeywordSplitter</span>
+</code></pre></div>
+<p>Then, it is necessary to save as constants the environment variables that we will use:</p>
+<div class="highlight"><pre><span></span><code><span class="n">load_dotenv</span><span class="p">(</span><span class="n">dotenv_path</span><span class="o">=</span><span class="n">find_dotenv</span><span class="p">())</span>
+
+<span class="c1"># ---- Large Language model connection details ---- #</span>
+
+<span class="c1"># =&gt; Generative model</span>
+
+<span class="n">AZURE_OPENAI_API_KEY</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;AZURE_OPENAI_API_KEY&quot;</span><span class="p">)</span>
+<span class="n">AZURE_OPENAI_ENDPOINT</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;AZURE_OPENAI_ENDPOINT&quot;</span><span class="p">)</span>
+<span class="n">AZURE_OPENAI_CHAT_DEPLOYMENT</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;AZURE_OPENAI_CHAT_DEPLOYMENT&quot;</span><span class="p">)</span>
+
+<span class="c1"># =&gt; Embedding model</span>
+
+<span class="n">AZURE_OPENAI_EMBEDDING</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;AZURE_OPENAI_EMBEDDING&quot;</span><span class="p">)</span>
+<span class="n">AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span>
+    <span class="s2">&quot;AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># ---- Vector Database connection ---- #</span>
+
+<span class="n">QDRANT_URL</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;QDRANT_URL&quot;</span><span class="p">)</span>
+<span class="n">QDRANT_API_KEY</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span>
+    <span class="s2">&quot;QDRANT_API_KEY&quot;</span>
+<span class="p">)</span>  <span class="c1"># No needed, but in case that you want to connect to a production DB</span>
+<span class="n">COLLECTION_NAME</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;pinocchio_demo_chunks&quot;</span>
+
+<span class="c1"># ---- Dataset ---- #</span>
+
+<span class="n">FILE_PATH</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;https://www.gutenberg.org/cache/epub/16865/pg16865.txt&quot;</span>  <span class="c1"># URL to Pinocchio&#39;s tale raw text</span>
+</code></pre></div>
+<h2 id="second-step-process-the-file">Second step: Process the file<a class="headerlink" href="#second-step-process-the-file" title="Permanent link">&para;</a></h2>
+<p>You can use any available Reader that you want. In this case, we will use <a href="https://andreshere00.github.io/Splitter_MR/api_reference/reader/#vanillareader"><strong><code>VanillaReader</code></strong></a> since the text does not need any transformations.</p>
+<div class="highlight"><pre><span></span><code><span class="n">reader</span> <span class="o">=</span> <span class="n">VanillaReader</span><span class="p">()</span>
+<span class="n">reader_output</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">FILE_PATH</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">reader_output</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+<div class="codehilite"><pre><span></span><code>{
+    &quot;text&quot;: &quot;﻿The Project Gutenberg eBook of Pinocchio: The Tale of a Puppet\r\n    \r\nThis ebook is for the use of anyone anywhere in the United States and\r\nmost other parts of the world at no cost and with almost no restrictions\r\nwhatsoever. You may copy it, give it away or re-use it under the terms\r\nof the Project Gutenberg License included with this ebook or online\r\nat www.gutenberg.org. If you are not located in the United States,\r\nyou will have to check the laws of the country
+...
+tions to the Project Gutenberg Literary\r\nArchive Foundation, how to help produce our new eBooks, and how to\r\nsubscribe to our email newsletter to hear about new eBooks.\r\n\r\n\r\n&quot;,
+    &quot;document_name&quot;: &quot;pg16865.txt&quot;,
+    &quot;document_path&quot;: &quot;https://www.gutenberg.org/cache/epub/16865/pg16865.txt&quot;,
+    &quot;document_id&quot;: &quot;4c00ac02-e833-4f62-a665-ff6c1095e583&quot;,
+    &quot;conversion_method&quot;: &quot;txt&quot;,
+    &quot;reader_method&quot;: &quot;vanilla&quot;,
+    &quot;ocr_method&quot;: null,
+    &quot;page_placeholder&quot;: null,
+    &quot;metadata&quot;: {}
+}
+</code></pre></div>
+
+<p>Then, a splitting strategy is needed to create smaller pieces of text that can be easily processed by the LLM. In this case, since the Pinocchio's tale is sorted by chapters, we can use the <a href="https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#keywordsplitter"><strong><code>KeywordSplitter</code></strong></a>. Then, we can define the regex pattern which follows the book to enumerate the chapers to provide the splitting pattern. As we can see, this pattern is composed by <code>CHAPTER</code> in uppercase plus the chapter number in roman numbers (e.g., <code>CHAPTER I</code>, <code>CHAPTER V</code>, etc.). Hence, our pattern will be: </p>
+<div class="highlight"><pre><span></span><code><span class="n">REGEX_PATTERN</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="sa">r</span><span class="s2">&quot;CHAPTER\s+[IVXLCDM]+&quot;</span><span class="p">]</span>
+<span class="n">splitter</span> <span class="o">=</span> <span class="n">KeywordSplitter</span><span class="p">(</span>
+    <span class="n">patterns</span><span class="o">=</span><span class="n">REGEX_PATTERN</span><span class="p">,</span>
+    <span class="n">include_delimiters</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">,</span>
+    <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">,</span>
+    <span class="n">chunk_size</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">splitter_output</span> <span class="o">=</span> <span class="n">splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">splitter_output</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+<div class="codehilite"><pre><span></span><code>{
+    &quot;chunks&quot;: [
+        &quot;﻿The Project Gutenberg eBook of Pinocchio: The Tale of a Puppet\r\n    \r\nThis ebook is for the use of anyone anywhere in the United States and\r\nmost other parts of the world at no cost and with almost no restrictions\r\nwhatsoever. You may copy it, give it away or re-use it under the terms\r\nof the Project Gutenberg License included with this ebook or online\r\nat www.gutenberg.org. If you are not located in the United States,\r\nyou will have to check the laws of
+...
+90122
+                ],
+                [
+                    203258,
+                    203271
+                ],
+                [
+                    214484,
+                    214496
+                ],
+                [
+                    222566,
+                    222579
+                ]
+            ],
+            &quot;include_delimiters&quot;: &quot;after&quot;,
+            &quot;flags&quot;: 2,
+            &quot;pattern_names&quot;: [
+                &quot;k0&quot;
+            ],
+            &quot;chunk_size&quot;: 100000
+        }
+    }
+}
+</code></pre></div>
+
+<p>The output will be a <a href="https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#output-format"><code>SplitterOutput</code></a> object, with the following fields:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="n">splitter_output</span><span class="o">.</span><span class="n">model_json_schema</span><span class="p">())</span>
+</code></pre></div>
+<div class="codehilite"><pre><span></span><code>{&#39;description&#39;: &#39;Pydantic model defining the output structure for all splitters.\n\nAttributes:\n    chunks: List of text chunks produced by splitting.\n    chunk_id: List of unique IDs corresponding to each chunk.\n    document_name: The name of the document.\n    document_path: The path to the document.\n    document_id: A unique identifier for the document.\n    conversion_method: The method used for document conversion.\n    reader_method: The method used for reading the document.\n    ocr_m
+...
+t&#39;: None, &#39;title&#39;: &#39;Reader Method&#39;}, &#39;ocr_method&#39;: {&#39;anyOf&#39;: [{&#39;type&#39;: &#39;string&#39;}, {&#39;type&#39;: &#39;null&#39;}], &#39;default&#39;: None, &#39;title&#39;: &#39;Ocr Method&#39;}, &#39;split_method&#39;: {&#39;default&#39;: &#39;&#39;, &#39;title&#39;: &#39;Split Method&#39;, &#39;type&#39;: &#39;string&#39;}, &#39;split_params&#39;: {&#39;anyOf&#39;: [{&#39;additionalProperties&#39;: True, &#39;type&#39;: &#39;object&#39;}, {&#39;type&#39;: &#39;null&#39;}], &#39;title&#39;: &#39;Split Params&#39;}, &#39;metadata&#39;: {&#39;anyOf&#39;: [{&#39;additionalProperties&#39;: True, &#39;type&#39;: &#39;object&#39;}, {&#39;type&#39;: &#39;null&#39;}], &#39;title&#39;: &#39;Metadata&#39;}}, &#39;title&#39;: &#39;SplitterOutput&#39;, &#39;type&#39;: &#39;object&#39;}
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code><span class="c1"># Inspect counts</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;Chunks: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">splitter_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">)</span><span class="si">}</span><span class="s2"> | First chunk_id: </span><span class="si">{</span><span class="n">splitter_output</span><span class="o">.</span><span class="n">chunk_id</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">splitter_output</span><span class="o">.</span><span class="n">chunk_id</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="kc">None</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</code></pre></div>
+<div class="codehilite"><pre><span></span><code>Chunks: 37 | First chunk_id: ea3c39a3-fb32-485f-9910-c44f3e59de8e
+</code></pre></div>
+
+<p>As we can see, we have created 37 chunks (which matches with the number of Pinocchio chapters). Trying to process all of these chunks by an LLM could be hard since the model has a limited window context. So, we can apply an attention mechanism to retrieve only those chunks which are related to the query. To do that, we can build a RAG system. Let's see how can do it! </p>
+<h2 id="third-step-set-up-the-vector-database-and-upload-the-content">Third step: Set up the vector database and upload the content<a class="headerlink" href="#third-step-set-up-the-vector-database-and-upload-the-content" title="Permanent link">&para;</a></h2>
+<p>To build the RAG, it is necessary to embed the documents that we will use. Firstly, we will instantiate our AzureOpenAI class and check for the embedding dimension to ensure that the encoder model is working properly:</p>
+<div class="highlight"><pre><span></span><code><span class="n">client</span> <span class="o">=</span> <span class="n">AzureOpenAI</span><span class="p">(</span>
+    <span class="n">api_key</span><span class="o">=</span><span class="n">AZURE_OPENAI_API_KEY</span><span class="p">,</span>
+    <span class="n">azure_endpoint</span><span class="o">=</span><span class="n">AZURE_OPENAI_ENDPOINT</span><span class="p">,</span>
+    <span class="n">azure_deployment</span><span class="o">=</span><span class="n">AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT</span><span class="p">,</span>
+    <span class="n">api_version</span><span class="o">=</span><span class="s2">&quot;2025-03-01-preview&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Helper to get embedding dimension from a probe call</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_embedding_dimension</span><span class="p">(</span><span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="n">vec</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;dim-probe&quot;</span><span class="p">])</span>
+        <span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="o">.</span><span class="n">embedding</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
+
+
+<span class="n">EMBEDDING_DIM</span> <span class="o">=</span> <span class="n">_embedding_dimension</span><span class="p">(</span><span class="n">AZURE_OPENAI_EMBEDDING</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Embedding dim: </span><span class="si">{</span><span class="n">EMBEDDING_DIM</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="codehilite"><pre><span></span><code>Embedding dim: 3072
+</code></pre></div>
+
+<p>Now we will instantiate the Qdrant client. Remember that it is necessary to have Docker installed and run a server. Execute the following instructions:</p>
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">python</span> <span class="n">qdrant_server</span><span class="o">.</span><span class="n">py</span>
+</code></pre></div>
+<div class="codehilite"><pre><span></span><code>Container &#39;qdrant_db&#39; is already running.
+Waiting for Qdrant health: http://localhost:6333/healthz
+Qdrant is up! REST: http://localhost:6333
+gRPC: localhost: http://localhost:6334
+</code></pre></div>
+
+<p>So, we can create (or recreate, for idempotence purposes) our collection in Qdrant to start to work with.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Instantiate the Qdrant client</span>
+<span class="n">qdrant</span> <span class="o">=</span> <span class="n">QdrantClient</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">QDRANT_URL</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="n">QDRANT_API_KEY</span><span class="p">)</span>
+
+<span class="c1"># Chcekc if the collection exists. In case that exists, delete it.</span>
+<span class="k">if</span> <span class="n">COLLECTION_NAME</span> <span class="ow">in</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">qdrant</span><span class="o">.</span><span class="n">get_collections</span><span class="p">()</span><span class="o">.</span><span class="n">collections</span><span class="p">]:</span>
+    <span class="c1"># optional: recreate from scratch</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">qdrant</span><span class="o">.</span><span class="n">delete_collection</span><span class="p">(</span><span class="n">COLLECTION_NAME</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+<span class="c1"># Create the collection</span>
+<span class="n">qdrant</span><span class="o">.</span><span class="n">create_collection</span><span class="p">(</span>
+    <span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_NAME</span><span class="p">,</span>
+    <span class="n">vectors_config</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">VectorParams</span><span class="p">(</span>
+        <span class="n">size</span><span class="o">=</span><span class="n">EMBEDDING_DIM</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">Distance</span><span class="o">.</span><span class="n">DOT</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Collection &#39;</span><span class="si">{</span><span class="n">COLLECTION_NAME</span><span class="si">}</span><span class="s2">&#39; ready.&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="codehilite"><pre><span></span><code>Collection &#39;pinocchio_demo_chunks&#39; ready.
+</code></pre></div>
+
+<p>In order to upload successfully to the database, we will create the variables that we need:</p>
+<ul>
+<li><code>texts</code>, representing the chunks.</li>
+<li><code>chunk_ids</code>, representing the unique identifier for each chunk.</li>
+<li><code>base_payload</code>, all the remaining information about how the file and chunks have been processed.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="n">texts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">splitter_output</span><span class="o">.</span><span class="n">chunks</span>
+<span class="n">chunk_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">splitter_output</span><span class="o">.</span><span class="n">chunk_id</span>
+
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunk_ids</span><span class="p">),</span> <span class="s2">&quot;Mismatch: chunks vs chunk_ids length&quot;</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">chunk_ids</span><span class="p">))</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunk_ids</span><span class="p">),</span> <span class="s2">&quot;Duplicate chunk_ids found&quot;</span>
+
+<span class="n">base_payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">splitter_output</span><span class="o">.</span><span class="n">document_name</span><span class="p">,</span>
+    <span class="s2">&quot;document_path&quot;</span><span class="p">:</span> <span class="n">splitter_output</span><span class="o">.</span><span class="n">document_path</span><span class="p">,</span>
+    <span class="s2">&quot;document_id&quot;</span><span class="p">:</span> <span class="n">splitter_output</span><span class="o">.</span><span class="n">document_id</span><span class="p">,</span>
+    <span class="s2">&quot;conversion_method&quot;</span><span class="p">:</span> <span class="n">splitter_output</span><span class="o">.</span><span class="n">conversion_method</span><span class="p">,</span>
+    <span class="s2">&quot;reader_method&quot;</span><span class="p">:</span> <span class="n">splitter_output</span><span class="o">.</span><span class="n">reader_method</span><span class="p">,</span>
+    <span class="s2">&quot;ocr_method&quot;</span><span class="p">:</span> <span class="n">splitter_output</span><span class="o">.</span><span class="n">ocr_method</span><span class="p">,</span>
+    <span class="s2">&quot;split_method&quot;</span><span class="p">:</span> <span class="n">splitter_output</span><span class="o">.</span><span class="n">split_method</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>We process this information as a list of tuples with the previous information. In fact, we are creating the <a href="https://qdrant.tech/documentation/concepts/points/">points</a> to be uploaded into our Qdrant instance.</p>
+<div class="highlight"><pre><span></span><code><span class="n">all_points</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">any</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">chunk_text</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">texts</span><span class="p">):</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">base_payload</span><span class="p">)</span>
+    <span class="n">payload</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;chunk_id&quot;</span><span class="p">:</span> <span class="n">chunk_ids</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+            <span class="s2">&quot;chunk_index&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span>
+            <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">chunk_text</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">all_points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">chunk_ids</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">chunk_text</span><span class="p">,</span> <span class="n">payload</span><span class="p">))</span>
+</code></pre></div>
+<p>Finally, we embed our content and we can upsert it into batches. This can be performed via the following code:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Embed &amp; upsert in batches</span>
+<span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">pack</span> <span class="ow">in</span> <span class="n">batched</span><span class="p">(</span><span class="n">all_points</span><span class="p">,</span> <span class="mi">64</span><span class="p">):</span>
+    <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">pid</span> <span class="k">for</span> <span class="n">pid</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">pack</span><span class="p">]</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">txt</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">txt</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">pack</span><span class="p">]</span>
+    <span class="n">payloads</span> <span class="o">=</span> <span class="p">[</span><span class="n">pl</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">pl</span> <span class="ow">in</span> <span class="n">pack</span><span class="p">]</span>
+
+    <span class="n">emb</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">inputs</span>
+    <span class="p">)</span>
+    <span class="n">vectors</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">embedding</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">emb</span><span class="o">.</span><span class="n">data</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">vectors</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">),</span> <span class="s2">&quot;Embedding count != ids count&quot;</span>
+
+    <span class="n">qdrant</span><span class="o">.</span><span class="n">upsert</span><span class="p">(</span>
+        <span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_NAME</span><span class="p">,</span>
+        <span class="n">points</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">Batch</span><span class="p">(</span><span class="n">ids</span><span class="o">=</span><span class="n">ids</span><span class="p">,</span> <span class="n">vectors</span><span class="o">=</span><span class="n">vectors</span><span class="p">,</span> <span class="n">payloads</span><span class="o">=</span><span class="n">payloads</span><span class="p">),</span>
+        <span class="n">wait</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># ensure write is persisted before proceeding</span>
+    <span class="p">)</span>
+    <span class="n">total</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Upserted </span><span class="si">{</span><span class="n">total</span><span class="si">}</span><span class="s2"> chunks to Qdrant.&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="codehilite"><pre><span></span><code>Upserted 37 chunks to Qdrant.
+</code></pre></div>
+
+<p>As we seen, we have uploaded all the 37 chunks into Qdrant. After this, our RAG system is almost ready to be used.</p>
+<h2 id="fourth-step-create-the-retrieval-component">Fourth step: Create the Retrieval component<a class="headerlink" href="#fourth-step-create-the-retrieval-component" title="Permanent link">&para;</a></h2>
+<p>Once all the documents have been upserted, we need to create a retrieval function which allow us to compare the user query with the embedded information from the Vector Database. We can use this function:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">retrieve</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Use Qdrant&#39;s query_points for flexible retrieval capabilities.&quot;&quot;&quot;</span>
+    <span class="n">q_vec</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="p">[</span><span class="n">query</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="o">.</span><span class="n">embedding</span>
+    <span class="p">)</span>
+
+    <span class="n">res</span> <span class="o">=</span> <span class="n">qdrant</span><span class="o">.</span><span class="n">query_points</span><span class="p">(</span>
+        <span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_NAME</span><span class="p">,</span>
+        <span class="n">query</span><span class="o">=</span><span class="n">q_vec</span><span class="p">,</span>
+        <span class="n">limit</span><span class="o">=</span><span class="n">k</span><span class="p">,</span>
+        <span class="n">with_payload</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">hits</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">points</span>  <span class="c1"># Extract the actual list of hits</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">hits</span><span class="p">:</span>
+        <span class="n">pl</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">payload</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="n">h</span><span class="o">.</span><span class="n">score</span><span class="p">,</span>
+                <span class="s2">&quot;chunk_id&quot;</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;chunk_id&quot;</span><span class="p">,</span> <span class="n">h</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
+                <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;document_id&quot;</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;document_id&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;chunk_index&quot;</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;chunk_index&quot;</span><span class="p">),</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">results</span>
+</code></pre></div>
+<h2 id="fifth-step-prepare-input-and-output-format">Fifth Step: Prepare input and output format<a class="headerlink" href="#fifth-step-prepare-input-and-output-format" title="Permanent link">&para;</a></h2>
+<p>We will interact with the RAG system via prompts. So, we will firstly create a <code>SYSTEM_PROMPT</code> to indicate how to generate the responses and we will process the response to get the answer as we want to. We can use this function:</p>
+<div class="highlight"><pre><span></span><code><span class="n">SYSTEM_PROMPT</span> <span class="o">=</span> <span class="s2">&quot;Answer the user&#39;s question concisely but precisely using ONLY the provided context. Cite sources as [chunk_id] next to claims.&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">answer_with_rag</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">any</span><span class="p">]:</span>
+    <span class="n">hits</span> <span class="o">=</span> <span class="n">retrieve</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+    <span class="c1"># Compose context block with per-chunk headers</span>
+    <span class="n">context_blocks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">hits</span><span class="p">:</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;[chunk_id: </span><span class="si">{</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;chunk_id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">] source: </span><span class="si">{</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> (idx </span><span class="si">{</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;chunk_index&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="c1"># Keep chunks modest to stay in token limits</span>
+        <span class="n">chunk_text</span> <span class="o">=</span> <span class="n">h</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">][:</span><span class="mi">2000</span><span class="p">]</span>
+        <span class="n">context_blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">header</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">chunk_text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">context</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">context_blocks</span><span class="p">)</span>
+
+    <span class="n">client</span> <span class="o">=</span> <span class="n">AzureOpenAI</span><span class="p">(</span>
+        <span class="n">azure_deployment</span><span class="o">=</span><span class="n">AZURE_OPENAI_CHAT_DEPLOYMENT</span><span class="p">,</span>
+        <span class="n">api_key</span><span class="o">=</span><span class="n">AZURE_OPENAI_API_KEY</span><span class="p">,</span>
+        <span class="n">api_version</span><span class="o">=</span><span class="s2">&quot;2025-03-01-preview&quot;</span><span class="p">,</span>
+        <span class="n">azure_endpoint</span><span class="o">=</span><span class="n">AZURE_OPENAI_ENDPOINT</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">SYSTEM_PROMPT</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Question: </span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">Context:</span><span class="se">\n</span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">},</span>
+    <span class="p">]</span>
+
+    <span class="n">resp</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">AZURE_OPENAI_CHAT_DEPLOYMENT</span><span class="p">,</span>
+        <span class="n">messages</span><span class="o">=</span><span class="n">messages</span><span class="p">,</span>
+        <span class="n">temperature</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">output</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">query</span><span class="p">,</span>
+        <span class="s2">&quot;hits&quot;</span><span class="p">:</span> <span class="n">hits</span><span class="p">,</span>
+        <span class="s2">&quot;answer&quot;</span><span class="p">:</span> <span class="n">resp</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">output</span>
+</code></pre></div>
+<p>With all of these elements, our system is reaedy to be used. Now we only need to build the entrypoint:</p>
+<h2 id="sixth-step-testing-the-rag">Sixth Step: testing the RAG<a class="headerlink" href="#sixth-step-testing-the-rag" title="Permanent link">&para;</a></h2>
+<p>To test the RAG, we can launch a set of answers and see how the model is answering. To test if the answers are correct or not, we can create a little dataset with the questions and the ground truth.</p>
+<table>
+<thead>
+<tr>
+<th><code>question</code></th>
+<th><code>ground_truth</code></th>
+<th><code>answer</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Who is the author of <em>Pinocchio: The Tale of a Puppet</em>?</strong></td>
+<td>Carlo Collodi</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>In Chapter V (“The Flying Egg”), what strange thing happens instead of cooking the egg — i.e. what creature emerges from it?</strong></td>
+<td>A little chicken</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>In which chapter does Geppetto give Pinocchio new feet, and how does he do this?</strong></td>
+<td>Chapter VIII; Geppetto makes new feet out of two pieces of well-seasoned wood, uses glue (melted in an eggshell) to fasten them, then paints/finishes them so the joints are invisible.</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>In Chapter XIII (“The Inn of the Red Craw-Fish”), what does Pinocchio dream about, and what does the ghost of the Talking-Cricket advise him to do?</strong></td>
+<td>He dreams of a field full of shrubs bearing gold sovereigns; the Cricket tells him to go back and give his remaining sovereigns to his poor father instead of trusting those who promise riches overnight.</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>In Chapter XXXI, what is Pinocchio’s status or situation, and is there a change from earlier chapters?</strong></td>
+<td>In Chapter XXXI, Pinocchio enjoys five months of happiness; this is a period of good fortune and contentment, contrasting with his many earlier hardships.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Finally, we ask to the generative model to get the answers:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># ---- 8) EXAMPLE QUERY ----</span>
+
+<span class="c1"># Test questions &amp; ground truths</span>
+<span class="n">qa_pairs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;Who is the author of _Pinocchio: The Tale of a Puppet_?&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ground_truth&quot;</span><span class="p">:</span> <span class="s2">&quot;Carlo Collodi&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;answer&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;In Chapter V (“The Flying Egg”), what strange thing happens instead of cooking the egg — i.e. what creature emerges from it?&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ground_truth&quot;</span><span class="p">:</span> <span class="s2">&quot;A little chicken&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;answer&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;In which chapter does Geppetto give Pinocchio new feet, and how does he do this?&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ground_truth&quot;</span><span class="p">:</span> <span class="s2">&quot;Chapter VIII; Geppetto makes new feet out of two pieces of well-seasoned wood, uses glue (melted in an eggshell) to fasten them, then paints/finishes them so the joints are invisible.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;answer&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;In Chapter XIII (“The Inn of the Red Craw-Fish”), what does Pinocchio dream about, and what does the ghost of the Talking-Cricket advise him to do?&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ground_truth&quot;</span><span class="p">:</span> <span class="s2">&quot;He dreams of a field full of shrubs bearing gold sovereigns; the Cricket tells him to go back and give his remaining sovereigns to his poor father instead of trusting those who promise riches overnight.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;answer&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;In Chapter XXXI, what is Pinocchio’s status or situation, and is there a change from earlier chapters?&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ground_truth&quot;</span><span class="p">:</span> <span class="s2">&quot;In Chapter XXXI, Pinocchio enjoys five months of happiness; this is a period of good fortune and contentment, contrasting with his many earlier hardships.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;answer&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">]</span>
+
+<span class="c1"># Get answers</span>
+<span class="n">answers</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">qa</span> <span class="ow">in</span> <span class="n">qa_pairs</span><span class="p">:</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">answer_with_rag</span><span class="p">(</span><span class="n">qa</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">],</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">answers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="s2">&quot;answer&quot;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Q: </span><span class="si">{</span><span class="n">qa</span><span class="p">[</span><span class="s1">&#39;question&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">A: </span><span class="si">{</span><span class="n">out</span><span class="p">[</span><span class="s1">&#39;answer&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;-&#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">40</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="codehilite"><pre><span></span><code>Q: Who is the author of _Pinocchio: The Tale of a Puppet_?
+A: The author of _Pinocchio: The Tale of a Puppet_ is Carlo Collodi [ea3c39a3-fb32-485f-9910-c44f3e59de8e].
+----------------------------------------
+Q: In Chapter V (“The Flying Egg”), what strange thing happens instead of cooking the egg — i.e. what creature emerges from it?
+A: In Chapter V, instead of cooking the egg, a creature emerges from it, specifically a &quot;large dog&quot; [chunk_id: 18dc09bc].
+----------------------------------------
+Q
+...
+at his past disobedience has led to his troubles. This marks a significant change from earlier chapters where he often acted impulsively and selfishly, such as when he stole grapes and faced dire consequences for his actions. His newfound resolve to improve himself indicates a growth in character and a shift towards responsibility and gratitude, particularly towards his father and the Fairy who helped him [chunk_id: 986b6dee-064f-4759-b5f1-1b699a9e3c21].
+----------------------------------------
+</code></pre></div>
+
+<p>We can see which chunks have been retrieved to see if the retrieved content is the expected one:</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">qa</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">qa_pairs</span><span class="p">):</span>
+    <span class="n">hits</span> <span class="o">=</span> <span class="n">retrieve</span><span class="p">(</span><span class="n">qa</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">],</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Q</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">qa</span><span class="p">[</span><span class="s1">&#39;question&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">hits</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;chunk_id: </span><span class="si">{</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;chunk_id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, score: </span><span class="si">{</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;score&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, text sample: </span><span class="si">{</span><span class="n">h</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span><span class="si">!r}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+</code></pre></div>
+<div class="codehilite"><pre><span></span><code>Q1: Who is the author of _Pinocchio: The Tale of a Puppet_?
+chunk_id: ea3c39a3-fb32-485f-9910-c44f3e59de8e, score: 0.5768, text sample: &#39;\ufeffThe Project Gutenberg eBook of Pinocchio: The Tale of a Puppet\r\n    \r\nThis ebook is for the use of anyone anywhere in the United States and\r\nmost other parts of the world at no cost and with almost no restrictions\r\nwhatsoever. You may copy it, give it away or re-use it under the terms\r\nof the Project Gutenberg License included with this ebook o
+...
+ter\r\nwaiting and waiting, he found that no one came, absolutely no one, then\r\nhe remembered his poor father, and, thinking he was dying, he stammered\r\nout:\r\n\r\n&quot;Oh, papa! papa! if only you were here!&quot;\r\n\r\n[Illustration: Four Rabbits as Black as Ink Entered Carrying a Little\r\nBier]\r\n\r\nHis breath failed him and he could say no more. He shut his eyes, opened\r\nhis mouth, stretched his legs, gave a long shudder, and hung stiff and\r\ninsensible.\r\n\r\n\r\n\r\n\r\n[Illustration]&#39;
+</code></pre></div>
+
+<p>Now, let's compare the expected outputs with the actual outputs, and see if the generative model have answered correctly according to the provided context.</p>
+<table>
+<thead>
+<tr>
+<th><strong><code>question</code></strong></th>
+<th><strong><code>ground_truth</code></strong></th>
+<th><strong><code>answer</code></strong></th>
+<th><strong><code>score</code></strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Who is the author of <em>Pinocchio: The Tale of a Puppet</em>?</strong></td>
+<td>Carlo Collodi</td>
+<td>The author of <em>Pinocchio: The Tale of a Puppet</em> is Carlo Collodi <code>[ea3c39a3-fb32-485f-9910-c44f3e59de8e]</code>.</td>
+<td>1</td>
+</tr>
+<tr>
+<td><strong>In Chapter V (“The Flying Egg”), what strange thing happens instead of cooking the egg — i.e. what creature emerges from it?</strong></td>
+<td>A little chicken</td>
+<td>In Chapter V, instead of cooking the egg, a creature emerges from it, specifically a "large dog" <code>[chunk_id: 18dc09bc]</code>.</td>
+<td>0</td>
+</tr>
+<tr>
+<td><strong>In which chapter does Geppetto give Pinocchio new feet, and how does he do this?</strong></td>
+<td>Chapter VIII; Geppetto makes new feet out of two pieces of well-seasoned wood, uses glue (melted in an eggshell) to fasten them, then paints/finishes them so the joints are invisible.</td>
+<td>Geppetto gives Pinocchio new feet in <strong>Chapter VIII</strong>. After Pinocchio expresses his desire for new feet, Geppetto initially refuses, wanting to punish him for his naughtiness. However, seeing Pinocchio's pitiable state, Geppetto decides to make the feet. He works diligently with two small pieces of well-seasoned wood and, in less than an hour, finishes the new feet. He then uses melted glue to attach them to Pinocchio while the puppet pretends to sleep, ensuring that the joining is seamless and unnoticeable <code>[chunk_id: 8aee64ab-1b08-43b1-bbe6-78b8662bac55]</code>.</td>
+<td>1</td>
+</tr>
+<tr>
+<td><strong>In Chapter XIII (“The Inn of the Red Craw-Fish”), what does Pinocchio dream about, and what does the ghost of the Talking-Cricket advise him to do?</strong></td>
+<td>He dreams of a field full of shrubs bearing gold sovereigns; the Cricket tells him to go back and give his remaining sovereigns to his poor father instead of trusting those who promise riches overnight.</td>
+<td>In Chapter XIII, Pinocchio dreams about the Field of Miracles, where he imagines that he will find great wealth. The ghost of the Talking-Cricket advises him to be cautious and to remember the lessons he has learned about obedience and the consequences of his actions <code>[chunk_id: 46907011-ef61-44d3-973c-6862e3faf075]</code>.</td>
+<td>1</td>
+</tr>
+<tr>
+<td><strong>In Chapter XXXI, what is Pinocchio’s status or situation, and is there a change from earlier chapters?</strong></td>
+<td>In Chapter XXXI, Pinocchio enjoys five months of happiness; this is a period of good fortune and contentment, contrasting with his many earlier hardships.</td>
+<td>In Chapter XXXI, Pinocchio is in a state of reflection and determination to change his ways after experiencing numerous misfortunes. He expresses a desire to become orderly and obedient, recognizing that his past disobedience has led to his troubles. This marks a significant change from earlier chapters where he often acted impulsively and selfishly, such as when he stole grapes and faced dire consequences for his actions. His newfound resolve to improve himself indicates a growth in character and a shift towards responsibility and gratitude, particularly towards his father and the Fairy who helped him <code>[chunk_id: 986b6dee-064f-4759-b5f1-1b699a9e3c21]</code>.</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>Despite that one question has been answered incorrectly, 4 out of 5 answers were correct. Logically, these results can be improved by optimizing the RAG workflow or using other chunk techniques. But this is not the main idea for this tutorial. </p>
+<p><strong>And that's it!</strong> In this tutorial, we have seen how to create a RAG system using SplitterMR. And as you can check, the document processing part was the easiest part! </p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../javascripts/katex.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/katex.min.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/contrib/auto-render.min.js"></script>
+      
+    
+  </body>
+</html>
