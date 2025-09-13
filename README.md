@@ -7,7 +7,7 @@
 
 > [!IMPORTANT] 
 > 
-> "Version 1.0.0 released – First Stable Release!"
+> **Version 1.0.0 released – First Stable Release!**
 > 
 > **We are excited to announce the first stable release of SplitterMR (v1.0.0)!** Install it with the following command:
 > 
@@ -29,7 +29,7 @@
 > 
 > **Check out the updated documentation, new examples, and join us in making text splitting and document parsing easier than ever!**
 >
-> **Version 1.0.1 released - `KeywordSplitter`
+> **Version 1.0.1 released - `KeywordSplitter`**
 >
 > This Splitter allows to divide text based on specific regex patterns or keywords. See documentation [**here**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#keywordsplitter).
 
@@ -58,7 +58,7 @@ SplitterMR allows you to split files in many different ways depending on your ne
 | [**Sentence Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#sentencesplitter)     | Splits text into chunks by a specified number of sentences. Allows overlap defined by a number or percentage of words from the end of the previous chunk. Customizable sentence separators (e.g., `.`, `!`, `?`). <br> **Parameters:** `chunk_size` (max sentences per chunk), `chunk_overlap` (overlapping words: int or %), `sentence_separators` (list of characters). <br> **Compatible with:** Text. |
 | [**Paragraph Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#paragraphsplitter)    | Splits text into chunks based on a specified number of paragraphs. Allows overlapping by word count or percentage, and customizable line breaks. <br> **Parameters:** `chunk_size` (max paragraphs per chunk), `chunk_overlap` (overlapping words: int or %), `line_break` (delimiter(s) for paragraphs). <br> **Compatible with:** Text. |
 | [**Recursive Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#recursivesplitter)    | Recursively splits text based on a hierarchy of separators (e.g., paragraph, sentence, word, character) until chunks reach a target size. Tries to preserve semantic units as long as possible. <br> **Parameters:** `chunk_size` (max chars per chunk), `chunk_overlap` (overlapping chars), `separators` (list of characters to split on, e.g., `["\n\n", "\n", " ", ""]`). <br> **Compatible with:** Text.                                                                                   |
-| [**Keyword Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#keywordsplitter) | Splits text into chunks around matches of specified keywords, using one or more regex patterns. Supports precise boundary control—matched keywords can be included `before`, `after`, `both` sides, or omitted from the split. Each keyword can have a custom name (via `dict`) for metadata counting. Secondary soft-wrapping by `chunk_size` is supported. <br> **Parameters:** `patterns` (list of regex patterns, or `dict` mapping names to patterns), `include_delimiters` (`"before"`, `"after"`, `"both"`, or `"none"`), `flags` (regex flags, e.g. `re.MULTILINE`), `chunk_size` (max chars per chunk, soft-wrapped). <br> **Compatible with:** Text. |
+| **NEW** [**Keyword Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#keywordsplitter) | Splits text into chunks around matches of specified keywords, using one or more regex patterns. Supports precise boundary control—matched keywords can be included `before`, `after`, `both` sides, or omitted from the split. Each keyword can have a custom name (via `dict`) for metadata counting. Secondary soft-wrapping by `chunk_size` is supported. <br> **Parameters:** `patterns` (list of regex patterns, or `dict` mapping names to patterns), `include_delimiters` (`"before"`, `"after"`, `"both"`, or `"none"`), `flags` (regex flags, e.g. `re.MULTILINE`), `chunk_size` (max chars per chunk, soft-wrapped). <br> **Compatible with:** Text. |
 | [**Token Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#tokensplitter)        | Splits text into chunks based on the number of tokens, using various tokenization models (e.g., tiktoken, spaCy, NLTK). Useful for ensuring chunks are compatible with LLM context limits. <br> **Parameters:** `chunk_size` (max tokens per chunk), `model_name` (tokenizer/model, e.g., `"tiktoken/cl100k_base"`, `"spacy/en_core_web_sm"`, `"nltk/punkt"`), `language` (for NLTK). <br> **Compatible with:** Text. |
 | [**Paged Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#pagedsplitter)        | Splits text by pages for documents that have page structure. Each chunk contains a specified number of pages, with optional word overlap. <br> **Parameters:** `num_pages` (pages per chunk), `chunk_overlap` (overlapping words). <br> **Compatible with:** Word, PDF, Excel, PowerPoint. |
 | [**Row/Column Splitter**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#rowcolumnsplitter)   | For tabular formats, splits data by a set number of rows or columns per chunk, with possible overlap. Row-based and column-based splitting are mutually exclusive. <br> **Parameters:** `num_rows`, `num_cols` (rows/columns per chunk), `overlap` (overlapping rows or columns). <br> **Compatible with:** Tabular formats (csv, tsv, parquet, flat json). |
@@ -114,7 +114,6 @@ pip install splitter-mr
 | **`markitdown`** | Adds [MarkItDown](https://github.com/microsoft/markitdown) support for rich-text document parsing (HTML, DOCX, etc.). | `pip install "splitter-mr[markitdown]"` |
 | **`docling`**    | Adds [Docling](https://github.com/ibm/docling) support for high-quality PDF/document to Markdown conversion.          | `pip install "splitter-mr[docling]"`    |
 | **`multimodal`** | Enables computer vision, OCR, and audio features — includes **PyTorch**, EasyOCR, OpenCV, Transformers, etc.          | `pip install "splitter-mr[multimodal]"` |
-| **`azure`**      | Installs Azure AI SDKs for integrating with Azure Document Intelligence and other Azure AI services.                  | `pip install "splitter-mr[azure]"`      |
 | **`all`**        | Installs **everything** above (MarkItDown + Docling + Multimodal + Azure). **Heavy install** (\~GBs).                 | `pip install "splitter-mr[all]"`        |
 
 ### Multiple extras
@@ -232,6 +231,10 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 - [ ] Add classic **OCR** models: `easyocr` and `pytesseract`.
 - [ ] Add support to generate output in `markdown` for all data types in VanillaReader.
 - [ ] Add methods to support Markdown, JSON and XML data types when returning output.
+
+### Previously implemented (`^v1.0.0`)
+
+- [X] Add `KeywordSplitter` support.
 
 ### Previously implemented (up to `v1.0.0`)
 
