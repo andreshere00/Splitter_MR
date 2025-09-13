@@ -3,6 +3,7 @@ from .code_splitter import CodeSplitter
 from .header_splitter import HeaderSplitter
 from .html_tag_splitter import HTMLTagSplitter
 from .json_splitter import RecursiveJSONSplitter
+from .keyword_splitter import KeywordSplitter
 from .paged_splitter import PagedSplitter
 from .paragraph_splitter import ParagraphSplitter
 from .recursive_splitter import RecursiveCharacterSplitter
@@ -18,6 +19,7 @@ __all__ = [
     "HeaderSplitter",
     "HTMLTagSplitter",
     "PagedSplitter",
+    "KeywordSplitter",
     "RecursiveCharacterSplitter",
     "RecursiveJSONSplitter",
     "RowColumnSplitter",

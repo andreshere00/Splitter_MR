@@ -178,6 +178,8 @@ dev = [
     "pluggy>=1.6.0",
     "iniconfig>=2.1.0",
     "packaging>=25.0",
+    "qdrant-client>=1.15.1",
+    "bert-score>=0.3.13",
 ]
 
 [project.urls]
