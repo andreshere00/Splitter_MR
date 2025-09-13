@@ -29,11 +29,7 @@
 > 
 > **Check out the updated documentation, new examples, and join us in making text splitting and document parsing easier than ever!**
 >
-<<<<<<< HEAD
-> **Version 1.0.1 released - `KeywordSplitter`**
-=======
 > **Version 1.0.1 released** - `KeywordSplitter`
->>>>>>> d8ec823 (docs: add new documentation examples for KeywordSplitter)
 >
 > This Splitter allows to divide text based on specific regex patterns or keywords. See documentation [**here**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#keywordsplitter).
 
