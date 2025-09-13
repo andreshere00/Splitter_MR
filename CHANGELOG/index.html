@@ -1,0 +1,1694 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../examples/schema/header_splitter/">
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.19">
+    
+    
+      
+        <title>CHANGELOG - SplitterMR Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+3:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Source Sans 3";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
+    
+      <link rel="stylesheet" href="../assets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#v10x" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="SplitterMR Docs" class="md-header__button md-logo" aria-label="SplitterMR Docs" data-md-component="logo">
+      
+  <img src="../assets/splitter_mr_logo_reduced_white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SplitterMR Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              CHANGELOG
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/andreshere00/Splitter_MR" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    andreshere00/Splitter_MR
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="SplitterMR Docs" class="md-nav__button md-logo" aria-label="SplitterMR Docs" data-md-component="logo">
+      
+  <img src="../assets/splitter_mr_logo_reduced_white.svg" alt="logo">
+
+    </a>
+    SplitterMR Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/andreshere00/Splitter_MR" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    andreshere00/Splitter_MR
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Developer Guide
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Developer Guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api_reference/api_reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api_reference/reader/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Readers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api_reference/splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Splitters
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api_reference/model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vision models
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api_reference/embedding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Embedding models
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Examples
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Examples
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Reading
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Reading
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/pdf/pdf_without_vlm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Read PDFs without VLMs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/pdf/pdf_with_vlm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Read PDFs using VLMs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/pdf/pdf_vanilla/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Read files with VanillaReader using VLMs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/pdf/pdf_docling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Read files with Docling using VLMs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/pdf/pdf_markitdown/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Read files with MarkItDown using VLMs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Text-based splitting
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            Text-based splitting
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/text/fixed_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by grammatical groups
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/text/recursive_character_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by characters recursively
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/text/token_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by tokens
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/text/paged_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by pages
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/text/semantic_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by semantic similarity
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Schema-based splitting
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            Schema-based splitting
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/schema/html_tag_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by HTML Tags
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/schema/code_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/schema/json_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split JSON recursively
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/schema/row_column_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split tables by rows or columns
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/schema/header_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split Markdown and HTML files by headers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    CHANGELOG
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    CHANGELOG
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#v101" class="md-nav__link">
+    <span class="md-ellipsis">
+      v1.0.1
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v100" class="md-nav__link">
+    <span class="md-ellipsis">
+      v1.0.0
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="v1.0.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#developer-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Developer features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#new-improvements-bug-fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      New improvements + Bug fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#v101" class="md-nav__link">
+    <span class="md-ellipsis">
+      v1.0.1
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v100" class="md-nav__link">
+    <span class="md-ellipsis">
+      v1.0.0
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="v1.0.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#developer-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Developer features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#new-improvements-bug-fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      New improvements + Bug fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="v10x">v1.0.x<a class="headerlink" href="#v10x" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Version 1.0.0: First stable release with full Reader, Splitter, Embedding and Vision model support.</strong></p>
+</blockquote>
+<h2 id="v101">v1.0.1<a class="headerlink" href="#v101" title="Permanent link">&para;</a></h2>
+<p>Add KeywordSplitter to split by regex patterns or specific keywords.</p>
+<h2 id="v100">v1.0.0<a class="headerlink" href="#v100" title="Permanent link">&para;</a></h2>
+<p>First stable version.</p>
+<h3 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Consolidated all features introduced in v0.x series into a stable API.</li>
+<li><strong>Readers</strong>: <code>VanillaReader</code>, <code>MarkItDownReader</code>, <code>DoclingReader</code> with support for multiple formats (text, Office, JSON/YAML, images, HTML, etc.).</li>
+<li><strong>Splitters</strong>: character, word, sentence, paragraph, recursive, token, paged, row/column, JSON, semantic, HTML tag, header, and code splitting strategies.</li>
+<li><strong>Models</strong>: support for multimodal Vision-Language Models (OpenAI, Azure, Grok, HuggingFace, Gemini, Claude).</li>
+<li><strong>Embeddings</strong>: OpenAI, Azure, HuggingFace, Gemini, Claude (via Voyage) supported.</li>
+</ul>
+<h3 id="developer-features">Developer features<a class="headerlink" href="#developer-features" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Optional extras system</strong>: install lightweight <strong>core</strong> by default, extend with <code>markitdown</code>, <code>docling</code>, <code>multimodal</code>, <code>azure</code>, or <code>all</code>.</li>
+<li><strong>CI/CD pipeline</strong>, <strong>PyPI</strong> release, and <strong>pre-commit</strong> checks in place.</li>
+</ul>
+<h3 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h3>
+<p><strong>Extensive documentation</strong> with API reference, examples, and architecture diagrams.</p>
+<h3 id="new-improvements-bug-fixes">New improvements + Bug fixes<a class="headerlink" href="#new-improvements-bug-fixes" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Fix:</strong> NLTK tokenizers in <code>TokenSplitter</code> are now correct base tokenizer when using <code>nltk</code> tokenizers.</li>
+<li><strong>Fix:</strong> RecursiveJSONSplitter could not produce outputs since it did not validate correct data type.</li>
+<li>Now the examples are based on real Jupyter Notebooks executions to ensure that the behavior is the expected one.</li>
+<li>Added the Notebooks which are used as examples in the <code>notebooks</code> section.</li>
+<li>Update <code>clean</code> instruction with <code>poe</code>.</li>
+<li>New constans have been defined.</li>
+<li>Add new class to transform HTML to Markdown.</li>
+</ul>
+<h1 id="v06x">v0.6.x<a class="headerlink" href="#v06x" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>[!IMPORTANT]
+<strong>Breaking Change! Version v0.6.0</strong></p>
+<p>Dependencies are now split into <strong>core</strong> (installed by default) and <strong>optional extras</strong> for heavy or specialized features.
+- Example: to use MarkItDown and Docling readers, install with:
+  <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;splitter-mr[markitdown,docling]&quot;</span>
+</code></pre></div>
+- To install <em>all</em> optional features:
+  <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;splitter-mr[all]&quot;</span>
+</code></pre></div></p>
+<ul>
+<li>This change reduces install time and keeps core installs lightweight.</li>
+</ul>
+</blockquote>
+<h2 id="v065">v0.6.5<a class="headerlink" href="#v065" title="Permanent link">&para;</a></h2>
+<p><strong>Hotfix</strong>: dependency isolation was not guaranteed.</p>
+<h3 id="features_1">Features<a class="headerlink" href="#features_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Add a util class to convert HTML to Markdown content.</li>
+<li>Improve Header Splitter to always return its content in markdown format.</li>
+<li>Add the option to return text in markdown format for HTMLTagSplitter.</li>
+<li>Add the option to batch content when using HTMLTagSplitter: If <code>batch=True</code>, it returns the chunks grouped by tags up to the numbers of characters specified by <code>chunk_size</code>. If False, it will return one register per tag.</li>
+</ul>
+<h3 id="bug-fixes">Bug fixes<a class="headerlink" href="#bug-fixes" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Dependency isolation was not guaranteed: implement safe lazy imports in all the <code>__init__</code> methods.</li>
+<li>Raise test coverage up to 90%. </li>
+</ul>
+<h2 id="064">0.6.4<a class="headerlink" href="#064" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Version 0.6.4:</strong></p>
+<p>SplitterMR now supports <strong>Anthropic Claude</strong> as a backend for both <a href="https://andreshere00.github.io/Splitter_MR/api_reference/embedding#anthropicembeddings"><strong>embedding</strong></a> (via <a href="https://docs.voyageai.com/docs/embeddings">Voyage</a> AI) and <a href="https://andreshere00.github.io/Splitter_MR/api_reference/model#anthropicvisionmodel"><strong>vision</strong></a> models.</p>
+</blockquote>
+<h3 id="features_2">Features<a class="headerlink" href="#features_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Add new Vision Model: Claude Anthropic models.</li>
+<li>Add new Embedding Model: Voyage Anthropic models.</li>
+</ul>
+<h3 id="documentation_1">Documentation<a class="headerlink" href="#documentation_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Change font type to Documentation server.</li>
+<li>Update API reference guide with new links and resources.</li>
+</ul>
+<h2 id="v063">v0.6.3<a class="headerlink" href="#v063" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Version 0.6.3:</strong> SplitterMR now supports <strong>Gemini</strong> as a backend for both <a href="https://andreshere00.github.io/Splitter_MR/api_reference/embedding#geminiembedding"><strong>embedding</strong></a> and <a href="https://andreshere00.github.io/Splitter_MR/api_reference/model/#geminivisionmodel"><strong>vision</strong></a> models.</p>
+<p><strong>To use HuggingFace, Gemini, Claude or Grok models, you must install SplitterMR with the <code>multimodal</code> extra:</strong></p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;splitter-mr[multimodal]&quot;</span>
+</code></pre></div>
+</blockquote>
+<h3 id="features_3">Features<a class="headerlink" href="#features_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Add <code>GeminiVisionModel</code> class to Vision models.</li>
+<li>Add <code>GeminiEmbedding</code> class to embedding models.</li>
+<li>Apply lazy import strategy to classes which require <code>extra</code>s to be installed (e.g., <code>docling</code>, <code>markitdown</code>, etc.).</li>
+</ul>
+<h3 id="documentation_2">Documentation<a class="headerlink" href="#documentation_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Update documentation.</li>
+</ul>
+<h2 id="v062">v0.6.2<a class="headerlink" href="#v062" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Version 0.6.2:</strong> SplitterMR now supports <strong>HuggingFace</strong> as a backend for both embedding and vision models:</p>
+<ul>
+<li><a href="https://andreshere00.github.io/Splitter_MR/api_reference/embedding/#huggingfaceembedding"><strong>HuggingFaceEmbedding</strong></a>: Use any Sentence Transformers model (local or from Hugging Face Hub) for fast, local, or cloud embeddings.</li>
+<li><a href="https://andreshere00.github.io/Splitter_MR/api_reference/model#huggingfacevisionmodel"><strong>HuggingFaceVisionModel</strong></a>: Leverage Hugging Face’s vision-language models for image-to-text and image captioning.</li>
+</ul>
+<p><strong>To use HuggingFace, Gemini, Claude or Grok models, you must install SplitterMR with the <code>multimodal</code> extra:</strong></p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;splitter-mr[multimodal]&quot;</span>
+</code></pre></div>
+</blockquote>
+<p>Add HuggingFace Model and Embedding support.</p>
+<h3 id="features_4">Features<a class="headerlink" href="#features_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Add <code>HuggingFaceVisionModel</code> class. Note that the support is limited until now.</li>
+<li>Add <code>HuggingFaceEmbedding</code> class.</li>
+</ul>
+<h3 id="documentation_3">Documentation<a class="headerlink" href="#documentation_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Add <code>HuggingFaceVisionModel</code> to documentation.</li>
+<li>Update architecture diagram.</li>
+<li>Update <code>README.md</code>.</li>
+</ul>
+<h3 id="developer-features_1">Developer features<a class="headerlink" href="#developer-features_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Add new dependencies to multimodal group.</li>
+</ul>
+<h2 id="v061">v0.6.1<a class="headerlink" href="#v061" title="Permanent link">&para;</a></h2>
+<p>Add Grok Vision Model.</p>
+<blockquote>
+<p><strong>Version 0.6.1:</strong> SplitterMR now supports <code>GrokVisionModel</code>. See documentation <a href="https://andreshere00.github.io/Splitter_MR/api_reference/model#grokvisionmodel">here</a>.</p>
+<p><strong>To use HuggingFace, Gemini, Claude or Grok models, you must install SplitterMR with the <code>multimodal</code> extra:</strong></p>
+<p><code>``bash
+pip install "splitter-mr[multimodal]"</code></p>
+</blockquote>
+<h3 id="features_5">Features<a class="headerlink" href="#features_5" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Add <code>GrokVisionModel</code>. </li>
+<li>Redefine constants.</li>
+<li>Add new tests.</li>
+</ul>
+<h3 id="documentation_4">Documentation<a class="headerlink" href="#documentation_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Add <code>GrokVisionModel</code> documentation.</li>
+<li>Fix format bugs.</li>
+<li>Add new documentation in Readers about how to install necessary dependencies.</li>
+<li>Add plugin to read formulas appropiately.</li>
+</ul>
+<h2 id="v060">v0.6.0<a class="headerlink" href="#v060" title="Permanent link">&para;</a></h2>
+<p>Divide library into sub packages.</p>
+<h3 id="features_6">Features<a class="headerlink" href="#features_6" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Divide the library into sub-modules.</li>
+</ul>
+<h3 id="developer-features_2">Developer features<a class="headerlink" href="#developer-features_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Add new steps to Dockerfile images.</li>
+<li>Change <code>requirements.txt</code> to don't save editable builds as dependencies.</li>
+<li>Change how the <code>splitter_mr</code> library is installed within Dockerfiles.</li>
+<li>Lighten the weight of the library by making some dependencies optional.</li>
+<li>Change how <code>poe test</code> is executed.</li>
+</ul>
+<h3 id="documentation_5">Documentation<a class="headerlink" href="#documentation_5" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fix Embedding models not showing on Developer Guide overview page.</li>
+</ul>
+<h1 id="v05x">v0.5.x<a class="headerlink" href="#v05x" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>[!IMPORTANT]
+<strong>New version v0.5.0</strong></p>
+<ul>
+<li>Add <strong>embedding models</strong> to encode the text into distributed vectorized representations. See documentation <a href="https://andreshere00.github.io/Splitter_MR/api_reference/embedding/">here</a>. </li>
+<li>Add support for chunking files based on <strong>semantic similarity</strong> between sentences. See documentation <a href="https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#semanticsplitter">here</a>.</li>
+</ul>
+</blockquote>
+<h2 id="v050">v0.5.0<a class="headerlink" href="#v050" title="Permanent link">&para;</a></h2>
+<p>Add <strong>SemanticSplitter</strong> first implementation</p>
+<h3 id="features_7">Features<a class="headerlink" href="#features_7" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Add <code>embedding</code> module.</li>
+<li>Add <code>AzureOpenAI embeddings</code>.</li>
+<li>Add <code>OpenAI embeddings</code>.</li>
+<li>Add <code>BaseEmbeddings</code>, to create your own class.</li>
+<li>Add <code>SemanticSplitter</code> class.</li>
+</ul>
+<h3 id="fixes">Fixes<a class="headerlink" href="#fixes" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fix <code>SentenceSplitter</code> class to be more robust and flexible (separators can be customized using regex pattern).</li>
+</ul>
+<h3 id="developer-features_3">Developer features<a class="headerlink" href="#developer-features_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Update tests.</li>
+</ul>
+<h3 id="documentation_6">Documentation<a class="headerlink" href="#documentation_6" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Update documentation with new embedding module.</li>
+<li>Fix some format errors in Documentation server.</li>
+<li>Add new example documentation page for <code>SemanticSplitter</code>.</li>
+</ul>
+<h1 id="v04x"><strong>v0.4.x</strong><a class="headerlink" href="#v04x" title="Permanent link">&para;</a></h1>
+<h2 id="v040">v0.4.0<a class="headerlink" href="#v040" title="Permanent link">&para;</a></h2>
+<p>PagedSplitter full implementation</p>
+<blockquote>
+<p>[!IMPORTANT]
+<strong>New version v0.4.0</strong></p>
+<p>Add support for reading files and splitting them by pages using <code>PageSplitter</code>. Add support to read more files with <code>VanillaReader</code>.</p>
+<p>➡️ See <a href="https://andreshere00.github.io/Splitter_MR/examples/text/paged_splitter/"><strong>documentation</strong></a>.</p>
+</blockquote>
+<h3 id="features_8">Features<a class="headerlink" href="#features_8" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Add support to read a PDF by pages using <code>MarkItDownReader</code> without LLM.</li>
+<li>Add method to read <code>xlsx</code>, <code>pptx</code>, <code>docx</code> files using <code>VanillaReader</code>.</li>
+<li>Add method to read several image formats using <code>VanillaReader</code>.</li>
+<li>Add support to read excel and parquet files using different engines in <code>VanillaReader</code>.</li>
+<li>Add support to analyze content in several file types using AzureOpenAI and OpenAI models.</li>
+</ul>
+<h3 id="documentation_7">Documentation<a class="headerlink" href="#documentation_7" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Update documentation.</li>
+<li>Fix some hyperlinks in README.</li>
+</ul>
+<h1 id="v03x"><strong>v0.3.x</strong><a class="headerlink" href="#v03x" title="Permanent link">&para;</a></h1>
+<h2 id="v033">v0.3.3<a class="headerlink" href="#v033" title="Permanent link">&para;</a></h2>
+<h3 id="features_9">Features<a class="headerlink" href="#features_9" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Add a method to convert variables to a <code>ReaderOutput</code> object.</li>
+<li>Add a <code>page_placeholder</code> attribute to the <code>ReaderOutput</code> object to distinguish when a file has been read by pages and which placeholder is.</li>
+<li>Add an splitter method which split by pages for supported documents: <code>PagedSplitter</code>. </li>
+</ul>
+<h3 id="developer-features_4">Developer features<a class="headerlink" href="#developer-features_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Refactor the <code>VanillaReader</code> class to be more decoupled.</li>
+</ul>
+<h3 id="documentation_8">Documentation<a class="headerlink" href="#documentation_8" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Update examples in documentation server.</li>
+</ul>
+<h2 id="v032">v0.3.2<a class="headerlink" href="#v032" title="Permanent link">&para;</a></h2>
+<h3 id="features_10">Features<a class="headerlink" href="#features_10" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Add <code>Pydantic</code> models to validate inputs and outputs for <code>BaseReader</code> and <code>BaseSplitter</code> objects.</li>
+<li>Refactor models to modularize into constants, pydantic models and prompts.</li>
+</ul>
+<h3 id="documentation_9">Documentation<a class="headerlink" href="#documentation_9" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Update <code>README.md</code> to handle notes and warnings.</li>
+</ul>
+<h2 id="v031">v0.3.1<a class="headerlink" href="#v031" title="Permanent link">&para;</a></h2>
+<h3 id="features_11">Features<a class="headerlink" href="#features_11" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Add support to read and scan PDF by pages for all the readers, using the parameter <code>scan_pdf_images = True</code>. </li>
+<li>Add support to use different placeholders for images in Vanilla and Docling Readers.</li>
+<li>Add support to split by pages for PDFs. </li>
+<li>Add three different pipelines to DoclingReader to process the document as PageImages, using VLM to provide image captioning and regularly.</li>
+<li>Add three different pipelines to VanillaReader to process the document as PageImages, using VLM to provide image captioning and regularly.</li>
+</ul>
+<h3 id="bugs">Bugs<a class="headerlink" href="#bugs" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Change how the arguments are passed to every Reader to enhance robutsness.</li>
+<li>Add new test cases.</li>
+</ul>
+<h3 id="documentation_10">Documentation<a class="headerlink" href="#documentation_10" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Update examples.</li>
+<li>Change MkDocs server to support both light and dark modes.</li>
+</ul>
+<h2 id="v030">v0.3.0<a class="headerlink" href="#v030" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>[!IMPORTANT]
+<strong>Vision Language Model (VLM) support!</strong></p>
+<p>You can now use vision-capable models (OpenAI Vision, Azure OpenAI Vision) to extract image descriptions and OCR text during file reading. Pass a VLM model to any Reader class via the <code>model</code> parameter. </p>
+<p>➡️ See <a href="https://andreshere00.github.io/Splitter_MR/api_reference/model/"><strong>documentation</strong></a>.</p>
+</blockquote>
+<h3 id="features_12">Features<a class="headerlink" href="#features_12" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Implement <code>AzureOpenAI</code> and <code>OpenAI</code> Vision Models to analyze graphical resources in PDF files.</li>
+<li>Add support to read PDF files to VanillaReader using <code>PDFPlumber</code>.</li>
+</ul>
+<h3 id="documentation_11">Documentation<a class="headerlink" href="#documentation_11" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Update examples.</li>
+<li>Add new examples to documentation.</li>
+<li>Add Reading methods with PDF documentation.</li>
+<li>Add information about implementing VLMs in your reading pipeline.</li>
+<li>Change file names on data folder to be more descriptive.</li>
+<li>Update <code>README.md</code> and <code>CHANGELOG</code>.</li>
+</ul>
+<h3 id="fixes_1">Fixes<a class="headerlink" href="#fixes_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Update tests.</li>
+<li>Update docstrings.</li>
+<li>Update <code>TokenSplitter</code> to raise Exceptions if no valid models are provided.</li>
+<li>Update <code>TokenSplitter</code> to take as default argument a valid tiktoken model.</li>
+<li>Change <code>HTMLTagSplitter</code> to take the headers if a table is provided.</li>
+<li>Change <code>HeaderSplitter</code> to preserve headers in chunks.</li>
+</ul>
+<h1 id="v02x"><strong>v0.2.x</strong><a class="headerlink" href="#v02x" title="Permanent link">&para;</a></h1>
+<h2 id="v022">v0.2.2<a class="headerlink" href="#v022" title="Permanent link">&para;</a></h2>
+<h3 id="features_13">Features<a class="headerlink" href="#features_13" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Implement <code>TokenSplitter</code>: split text into chunks by number of tokens, using selectable tokenizers (<code>tiktoken</code>, <code>spacy</code>, <code>nltk</code>).</li>
+<li><code>MarkItDownReader</code> now supports more file extensions: PDFs, audio, etc.</li>
+</ul>
+<h3 id="fixes_2">Fixes<a class="headerlink" href="#fixes_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>HTMLTagSplitter</code> does not correctly chunking the document as desired.</li>
+<li>Change <code>docstring</code> documentation.</li>
+</ul>
+<h3 id="documentation_12">Documentation<a class="headerlink" href="#documentation_12" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Updated Splitter strategies documentation to include <code>TokenSplitter</code>.</li>
+<li>Expanded example scripts and test scripts for end-to-end manual and automated verification of all Splitter strategies.</li>
+<li>New examples in documentation server for <code>HTMLTagSplitter</code>. </li>
+</ul>
+<h3 id="developer-features_5">Developer Features<a class="headerlink" href="#developer-features_5" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Remove <code>Pipfile</code> and <code>Pipfile.lock</code>. </li>
+<li>Update to <a href="https://poethepoet.natn.io/index.html"><code>poethepoet</code></a> as task runner tool </li>
+</ul>
+<h3 id="fixes_3">Fixes<a class="headerlink" href="#fixes_3" title="Permanent link">&para;</a></h3>
+<h2 id="v021">v0.2.1<a class="headerlink" href="#v021" title="Permanent link">&para;</a></h2>
+<h3 id="features_14">Features<a class="headerlink" href="#features_14" title="Permanent link">&para;</a></h3>
+<p>Implement <code>CodeSplitter</code>.</p>
+<h3 id="fixes_4">Fixes<a class="headerlink" href="#fixes_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Change <code>docstring</code> for <code>BaseSplitter</code> to update with current parameters.</li>
+<li>Some minor warnings in documentations when deploying Mkdocs server.</li>
+</ul>
+<h2 id="v020">v0.2.0<a class="headerlink" href="#v020" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>[!IMPORTANT]
+Breaking change!</p>
+<ul>
+<li>All Readers now return <code>ReaderOutput</code> dataclass objects.</li>
+<li>All Splitters now return <code>SplitterOutput</code> dataclass objects.</li>
+</ul>
+<p>You must access fields using <strong>dot notation</strong> (e.g., <code>result.text</code>, <code>result.chunks</code>), not dictionary keys.</p>
+</blockquote>
+<h3 id="features_15">Features<a class="headerlink" href="#features_15" title="Permanent link">&para;</a></h3>
+<p>New splitting strategy: <code>RowColumnSplitter</code> for flexible splitting of tabular data.</p>
+<p>New reader_method attribute in output dataclasses.</p>
+<h3 id="migration">Migration<a class="headerlink" href="#migration" title="Permanent link">&para;</a></h3>
+<p>Update all code/tests to use attribute access for results from Readers and Splitters.</p>
+<p>Use <code>.to_dict()</code> on output if a dictionary is required.</p>
+<blockquote>
+<p>Update any custom splitter/reader implementations to use the new output dataclasses.</p>
+</blockquote>
+<h1 id="v01x"><strong>v0.1.x</strong><a class="headerlink" href="#v01x" title="Permanent link">&para;</a></h1>
+<h2 id="v013">v0.1.3<a class="headerlink" href="#v013" title="Permanent link">&para;</a></h2>
+<h3 id="features_16">Features<a class="headerlink" href="#features_16" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Add a new splitting strategy: <code>RowColumnSplitter</code>.</li>
+</ul>
+<h3 id="fixes_5">Fixes<a class="headerlink" href="#fixes_5" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Change Readers to properly handle JSON files.</li>
+</ul>
+<h3 id="documentation_13">Documentation<a class="headerlink" href="#documentation_13" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Update documentation.</li>
+</ul>
+<h2 id="v012">v0.1.2<a class="headerlink" href="#v012" title="Permanent link">&para;</a></h2>
+<h3 id="features_17">Features<a class="headerlink" href="#features_17" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Now <code>VanillaReader</code> can read from multiple sources: URL, text, file_path and dictionaries.</li>
+</ul>
+<h3 id="fixes_6">Fixes<a class="headerlink" href="#fixes_6" title="Permanent link">&para;</a></h3>
+<ul>
+<li>By default, the document_id was <code>None</code> instead of and <code>uuid</code> in <code>VanillaReader</code>. </li>
+<li>Some name changes for <code>splitter_method</code> attribute in <code>SplitterOutput</code> method.</li>
+</ul>
+<h3 id="developer-features_6">Developer features<a class="headerlink" href="#developer-features_6" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Extend CI/CD lifecycle. Now it uses Dockerfile to check tests and deploy docs.</li>
+<li>Automate versioning for the Python project.</li>
+<li>The project has been published to <a href="https://pypi.org/project/splitter-mr/">PyPI.org</a>. New versions will be deployed using CI/CD script.</li>
+<li><code>requirements.txt</code> has been added in the root of the project.</li>
+<li>A new stage in <code>pre-commit</code> has been introduced for generating the <code>requirements.txt</code> file.</li>
+<li><code>Makefile</code> extended: new commands to serve <code>mkdocs</code>. Now make clean remove more temporary files.</li>
+</ul>
+<h3 id="documentation_14">Documentation<a class="headerlink" href="#documentation_14" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Update documentation in examples for the Documentation server.</li>
+<li>Documentation server now can be served using Make.</li>
+</ul>
+<h2 id="v011">v0.1.1<a class="headerlink" href="#v011" title="Permanent link">&para;</a></h2>
+<p>Some bug fixes in HeaderSplitter and RecursiveCharacterSplitter, and documentation updates.</p>
+<h3 id="bug-fixes_1">Bug fixes<a class="headerlink" href="#bug-fixes_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>chunk_overlap</code> (between 0 and 1) was not working in the <code>split</code> method from <code>RecursiveCharacterSplitter</code>.</li>
+<li>Some markdown code was not properly formatted in <code>README.md</code>.</li>
+<li>Reformat examples from docstring documentation in every Reader and Splitter classes.</li>
+<li><code>HeaderSplitter</code> was not properly handling the headers in some <code>markdown</code> and <code>HTML</code> files.</li>
+</ul>
+<h3 id="documentation_15">Documentation<a class="headerlink" href="#documentation_15" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Some examples have been provided in the documentation (<code>docs/</code>, and in the <a href="https://andreshere00.github.io/Splitter_MR/">documentation server</a>).</li>
+<li>New examples in docstrings.</li>
+</ul>
+<h2 id="v010">v0.1.0<a class="headerlink" href="#v010" title="Permanent link">&para;</a></h2>
+<p>First version of the project</p>
+<h3 id="functional-features">Functional features<a class="headerlink" href="#functional-features" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Add first readers, <code>VanillaReader</code>: reader which reads the files and format them into a string.</li>
+<li><code>DoclingReader</code>: reader which uses the docling package to read the files.</li>
+<li><code>MarkItDownReader</code>: reader which uses the markitdown package to read the files.</li>
+<li>Add first splitters: <code>CharacterSplitter</code>, <code>RecursiveCharacterSplitter</code>, <code>WordSplitter</code>, <code>SentenceSplitter</code>, <code>ParagraphSplitter</code>, <code>HTMLTagSplitter</code>, <code>RecursiveJSONSplitter</code>, <code>HeaderSplitter</code>: </li>
+<li>The package can be installed using pip.</li>
+<li><code>README.md</code> has been updated.</li>
+<li>Tests cases for main functionalities are available.</li>
+<li>Some data has been added for testing purposes.</li>
+<li>A documentation server is deployed with up-to-date information.</li>
+</ul>
+<h3 id="developer-features_7">Developer features<a class="headerlink" href="#developer-features_7" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Update <code>pyproject.toml</code> project information.</li>
+<li>Add pre-commit configurations (<code>flake8</code>, check commit messages, run test coverage, and update documentation).</li>
+<li>Add first Makefile commands (focused on developers):</li>
+<li><code>make help</code>: Provide a list with all the Make commands.</li>
+<li><code>make clean</code>: Clean temporal files and cache</li>
+<li><code>make shell</code>: Run a <code>uv</code> shell.</li>
+<li><code>make install</code>: Install uv CLI and pre-commit.</li>
+<li><code>make precommit</code>: Install pre-commit hooks.</li>
+<li><code>make format</code>: Run pyupgrade, isort, black, and flake8 for code style.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../javascripts/katex.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/katex.min.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/contrib/auto-render.min.js"></script>
+      
+    
+  </body>
+</html>
