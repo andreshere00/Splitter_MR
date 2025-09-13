@@ -4,6 +4,8 @@ set -e
 echo "🔍 Running test suite and checking for minimum 70% coverage..."
 
 # Run tests with coverage directly (no uv)
+uv sync --extra markitdown --extra docling --extra multimodal
+
 uv run coverage run --source=src -m pytest
 
 uv run coverage report

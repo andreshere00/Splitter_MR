@@ -39,6 +39,7 @@ nav:
       - Read files with Docling using VLMs: examples/pdf/pdf_docling.md
       - Read files with MarkItDown using VLMs: examples/pdf/pdf_markitdown.md
     - Text-based splitting:
+      - Split by regular expressions: examples/text/keyword_splitter.md
       - Split by grammatical groups: examples/text/fixed_splitter.md
       - Split by characters recursively: examples/text/recursive_character_splitter.md
       - Split by tokens: examples/text/token_splitter.md

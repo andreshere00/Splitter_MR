@@ -59,9 +59,10 @@ pip install "splitter-mr[markitdown,docling]"
 ### Output format
 
 ::: splitter_mr.schema.models.ReaderOutput
-handler: python
-options:
-members_order: source
+    handler: python
+    options:
+      extra:
+        members_order: source
 
 ## Readers
 
@@ -70,9 +71,10 @@ To see a comparison between reading methods, refer to the following [**example**
 ### BaseReader
 
 ::: splitter_mr.reader.base_reader
-handler: python
-options:
-members_order: source
+    handler: python
+    options:
+      extra:
+        members_order: source
 
 > 📚 **Note:** file examples are extracted from  the`data` folder in the **GitHub** repository: [**link**](https://github.com/andreshere00/Splitter_MR/tree/main/data).
 
@@ -82,9 +84,10 @@ members_order: source
 ![VanillaReader logo](../assets/vanilla_reader_button_white.svg#gh-dark-mode-only)
 
 ::: splitter_mr.reader.readers.vanilla_reader
-handler: python
-options:
-members_order: source
+    handler: python
+    options:
+      extra:
+        members_order: source
 
 `VanillaReader` uses a helper class to read PDF and use Visual Language Models. This class is `PDFPlumberReader`.
 
@@ -94,9 +97,10 @@ members_order: source
 ![DoclingReader logo](../assets/docling_reader_button_white.svg#gh-dark-mode-only)
 
 ::: splitter_mr.reader.readers.docling_reader
-handler: python
-options:
-members_order: source
+    handler: python
+    options:
+      extra:
+        members_order: source
 
 To execute pipelines, DoclingReader has a utils class, `DoclingUtils`.
 
@@ -106,6 +110,7 @@ To execute pipelines, DoclingReader has a utils class, `DoclingUtils`.
 ![MarkItDownReader logo](../assets/markitdown_reader_button_white.svg#gh-dark-mode-only)
 
 ::: splitter_mr.reader.readers.markitdown_reader
-handler: python
-options:
-members_order: source
+    handler: python
+    options:
+      extra:
+        members_order: source

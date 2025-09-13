@@ -12,6 +12,10 @@ Divide your text recursively by group of words and sentences, based on the chara
 
 Divide your text by gramatical groups, with an specific chunk size and with optional chunk overlap.
 
+### [How to split by regular expressions or keywords](./text/keyword_splitter.md)
+
+Divide your text by regular expressions (`regex` patterns) or specific keywords. 
+
 ### [How to split by pages](./text/paged_splitter.md)
 
 Divide your files (PDF, Word, Excel, PowerPoint) by gramatical groups, with the desired number of pages and optional chunk overlap.

@@ -29,7 +29,7 @@
     
     **Check out the updated documentation, new examples, and join us in making text splitting and document parsing easier than ever!**
     
-    **Version 1.0.1 released - `KeywordSplitter`**
+    **Version 1.0.1 released** - `KeywordSplitter`
     
     This Splitter allows to divide text based on specific regex patterns or keywords. See documentation [**here**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#keywordsplitter).
 
@@ -211,7 +211,7 @@ from splitter_mr.model.models import AzureOpenAIVisionModel
 
 model = AzureOpenAIVisionModel()
 reader = VanillaReader(model=model)
-output = reader.read(file_path="data/lorem_ipsum.pdf")
+output = reader.read(file_path="data/sample_pdf.pdf")
 print(output.text)
 ```
 
