@@ -4,7 +4,19 @@
 
 ## v1.0.1
 
-Add KeywordSplitter to split by regex patterns or specific keywords.
+Add **KeywordSplitter** to split by regex patterns or specific keywords.
+
+### Features 
+
+Add new Splitter: **KeywordSplitter**. This Splitter allows to chunk based on regular expressions and patterns.
+
+### Documentation
+
+Update documentation server to provide more examples
+
+### Developer features
+
+Update pre-commit hooks to sync dependencies when executing the tests.
 
 ## v1.0.0
 
