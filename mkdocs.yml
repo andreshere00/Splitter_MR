@@ -51,6 +51,8 @@ nav:
       - Split JSON recursively: examples/schema/json_splitter.md
       - Split tables by rows or columns: examples/schema/row_column_splitter.md
       - Split Markdown and HTML files by headers: examples/schema/header_splitter.md
+    - Use cases:
+      - Build a simple RAG system: examples/use_cases/rag_simple.md
   - CHANGELOG: CHANGELOG.md
 
 extra_javascript:
