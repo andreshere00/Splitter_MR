@@ -454,9 +454,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#splitter_mr.schema.models.SplitterOutput.validate_and_set_defaults" class="md-nav__link">
+  <a href="#splitter_mr.schema.models.SplitterOutput.append_metadata" class="md-nav__link">
     <span class="md-ellipsis">
-      validate_and_set_defaults
+      append_metadata
     </span>
   </a>
   
@@ -472,9 +472,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#splitter_mr.schema.models.SplitterOutput.append_metadata" class="md-nav__link">
+  <a href="#splitter_mr.schema.models.SplitterOutput.validate_and_set_defaults" class="md-nav__link">
     <span class="md-ellipsis">
-      append_metadata
+      validate_and_set_defaults
     </span>
   </a>
   
@@ -1626,6 +1626,29 @@
   
   
     <li class="md-nav__item">
+      <a href="../../examples/text/keyword_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by regular expressions
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../examples/text/fixed_splitter/" class="md-nav__link">
         
   
@@ -1997,9 +2020,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#splitter_mr.schema.models.SplitterOutput.validate_and_set_defaults" class="md-nav__link">
+  <a href="#splitter_mr.schema.models.SplitterOutput.append_metadata" class="md-nav__link">
     <span class="md-ellipsis">
-      validate_and_set_defaults
+      append_metadata
     </span>
   </a>
   
@@ -2015,9 +2038,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#splitter_mr.schema.models.SplitterOutput.append_metadata" class="md-nav__link">
+  <a href="#splitter_mr.schema.models.SplitterOutput.validate_and_set_defaults" class="md-nav__link">
     <span class="md-ellipsis">
-      append_metadata
+      validate_and_set_defaults
     </span>
   </a>
   
@@ -3260,57 +3283,42 @@
 <div class="doc doc-object doc-function">
 
 
-<h5 id="splitter_mr.schema.models.SplitterOutput.validate_and_set_defaults" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">validate_and_set_defaults</span><span class="p">()</span></code>
+<h5 id="splitter_mr.schema.models.SplitterOutput.append_metadata" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">append_metadata</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span></code>
 
-<a href="#splitter_mr.schema.models.SplitterOutput.validate_and_set_defaults" class="headerlink" title="Permanent link">&para;</a></h5>
+<a href="#splitter_mr.schema.models.SplitterOutput.append_metadata" class="headerlink" title="Permanent link">&para;</a></h5>
 
 
     <div class="doc doc-contents ">
 
-        <p>Validates and sets defaults for the SplitterOutput instance.</p>
+        <p>Append (update) the metadata dictionary with new key-value pairs.</p>
 
 
-<p><span class="doc-section-title">Raises:</span></p>
+<p><span class="doc-section-title">Parameters:</span></p>
     <table>
       <thead>
         <tr>
+          <th>Name</th>
           <th>Type</th>
           <th>Description</th>
+          <th>Default</th>
         </tr>
       </thead>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="ValueError">ValueError</span></code>
+                <code>metadata</code>
+            </td>
+            <td>
+                  <code><span title="typing.Dict">Dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>If <code>chunks</code> is empty or if <code>chunk_id</code> length does not match <code>chunks</code> length.</p>
+                <p>The metadata to add or update.</p>
               </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-<th>Name</th>          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-<td><code>self</code></td>            <td>
-                  <code><a class="autorefs autorefs-internal" title="splitter_mr.schema.models.SplitterOutput" href="#splitter_mr.schema.models.SplitterOutput">SplitterOutput</a></code>
             </td>
             <td>
-              <div class="doc-md-description">
-                <p>The validated and updated instance.</p>
-              </div>
+                <em>required</em>
             </td>
           </tr>
       </tbody>
@@ -3319,55 +3327,25 @@
 
             <details class="quote">
               <summary>Source code in <code>src/splitter_mr/schema/models.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span>
-<span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span>
-<span class="normal">151</span>
-<span class="normal">152</span>
-<span class="normal">153</span>
-<span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span>
-<span class="normal">159</span>
-<span class="normal">160</span>
-<span class="normal">161</span>
-<span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span>
-<span class="normal">166</span>
-<span class="normal">167</span>
-<span class="normal">168</span>
-<span class="normal">169</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">validate_and_set_defaults</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates and sets defaults for the SplitterOutput instance.</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">append_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Append (update) the metadata dictionary with new key-value pairs.</span>
 
-<span class="sd">    Raises:</span>
-<span class="sd">        ValueError: If `chunks` is empty or if `chunk_id` length does not match `chunks` length.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        self (SplitterOutput): The validated and updated instance.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        metadata (Dict[str, Any]): The metadata to add or update.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">chunks</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Chunks list cannot be empty.&quot;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">chunk_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chunk_id</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;chunk_id length (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chunk_id</span><span class="p">)</span><span class="si">}</span><span class="s2">) does not match chunks length (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chunks</span><span class="p">)</span><span class="si">}</span><span class="s2">).&quot;</span>
-            <span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">chunk_id</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">chunks</span><span class="p">]</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">document_id</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">document_id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
-
-    <span class="k">return</span> <span class="bp">self</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3478,42 +3456,57 @@
 <div class="doc doc-object doc-function">
 
 
-<h5 id="splitter_mr.schema.models.SplitterOutput.append_metadata" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">append_metadata</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span></code>
+<h5 id="splitter_mr.schema.models.SplitterOutput.validate_and_set_defaults" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">validate_and_set_defaults</span><span class="p">()</span></code>
 
-<a href="#splitter_mr.schema.models.SplitterOutput.append_metadata" class="headerlink" title="Permanent link">&para;</a></h5>
+<a href="#splitter_mr.schema.models.SplitterOutput.validate_and_set_defaults" class="headerlink" title="Permanent link">&para;</a></h5>
 
 
     <div class="doc doc-contents ">
 
-        <p>Append (update) the metadata dictionary with new key-value pairs.</p>
+        <p>Validates and sets defaults for the SplitterOutput instance.</p>
 
 
-<p><span class="doc-section-title">Parameters:</span></p>
+<p><span class="doc-section-title">Raises:</span></p>
     <table>
       <thead>
         <tr>
-          <th>Name</th>
           <th>Type</th>
           <th>Description</th>
-          <th>Default</th>
         </tr>
       </thead>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>metadata</code>
-            </td>
-            <td>
-                  <code><span title="typing.Dict">Dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
+                  <code><span title="ValueError">ValueError</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The metadata to add or update.</p>
+                <p>If <code>chunks</code> is empty or if <code>chunk_id</code> length does not match <code>chunks</code> length.</p>
               </div>
             </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>self</code></td>            <td>
+                  <code><a class="autorefs autorefs-internal" title="splitter_mr.schema.models.SplitterOutput" href="#splitter_mr.schema.models.SplitterOutput">SplitterOutput</a></code>
+            </td>
             <td>
-                <em>required</em>
+              <div class="doc-md-description">
+                <p>The validated and updated instance.</p>
+              </div>
             </td>
           </tr>
       </tbody>
@@ -3522,25 +3515,55 @@
 
             <details class="quote">
               <summary>Source code in <code>src/splitter_mr/schema/models.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">183</span>
-<span class="normal">184</span>
-<span class="normal">185</span>
-<span class="normal">186</span>
-<span class="normal">187</span>
-<span class="normal">188</span>
-<span class="normal">189</span>
-<span class="normal">190</span>
-<span class="normal">191</span>
-<span class="normal">192</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">append_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Append (update) the metadata dictionary with new key-value pairs.</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_and_set_defaults</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validates and sets defaults for the SplitterOutput instance.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        metadata (Dict[str, Any]): The metadata to add or update.</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If `chunks` is empty or if `chunk_id` length does not match `chunks` length.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        self (SplitterOutput): The validated and updated instance.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">chunks</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Chunks list cannot be empty.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">chunk_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chunk_id</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;chunk_id length (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chunk_id</span><span class="p">)</span><span class="si">}</span><span class="s2">) does not match chunks length (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chunks</span><span class="p">)</span><span class="si">}</span><span class="s2">).&quot;</span>
+            <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chunk_id</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">chunks</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">document_id</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">document_id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="bp">self</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -7568,7 +7591,7 @@ using a greedy strategy.</p>
               </div>
             </td>
             <td>
-                  <code>1000</code>
+                  <code>100000</code>
             </td>
           </tr>
       </tbody>
@@ -7952,7 +7975,7 @@ using a greedy strategy.</p>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">include_delimiters</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;before&quot;</span><span class="p">,</span>
-        <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100000</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the KeywordSplitter.</span>
@@ -8250,7 +8273,7 @@ using a greedy strategy.</p>
 
 
 <h6 id="splitter_mr.splitter.splitters.keyword_splitter.KeywordSplitter.__init__" class="doc doc-heading">
-            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">patterns</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">include_delimiters</span><span class="o">=</span><span class="s1">&#39;before&#39;</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">patterns</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">include_delimiters</span><span class="o">=</span><span class="s1">&#39;before&#39;</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="mi">100000</span><span class="p">)</span></code>
 
 <a href="#splitter_mr.splitter.splitters.keyword_splitter.KeywordSplitter.__init__" class="headerlink" title="Permanent link">&para;</a></h6>
 
@@ -8332,7 +8355,7 @@ using a greedy strategy.</p>
               </div>
             </td>
             <td>
-                  <code>1000</code>
+                  <code>100000</code>
             </td>
           </tr>
       </tbody>
@@ -8367,7 +8390,7 @@ using a greedy strategy.</p>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">include_delimiters</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;before&quot;</span><span class="p">,</span>
-    <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100000</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Initialize the KeywordSplitter.</span>

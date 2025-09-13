@@ -698,6 +698,29 @@
   
   
     <li class="md-nav__item">
+      <a href="../examples/text/keyword_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by regular expressions
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../examples/text/fixed_splitter/" class="md-nav__link">
         
   
@@ -1045,22 +1068,22 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#v100" class="md-nav__link">
-    <span class="md-ellipsis">
-      v1.0.0
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="v1.0.0">
+    <nav class="md-nav" aria-label="v1.0.1">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#features" class="md-nav__link">
     <span class="md-ellipsis">
       Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
     </span>
   </a>
   
@@ -1075,8 +1098,41 @@
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v100" class="md-nav__link">
+    <span class="md-ellipsis">
+      v1.0.0
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="v1.0.0">
+      <ul class="md-nav__list">
+        
           <li class="md-nav__item">
-  <a href="#documentation" class="md-nav__link">
+  <a href="#features_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#developer-features_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Developer features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_1" class="md-nav__link">
     <span class="md-ellipsis">
       Documentation
     </span>
@@ -1139,22 +1195,22 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#v100" class="md-nav__link">
-    <span class="md-ellipsis">
-      v1.0.0
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="v1.0.0">
+    <nav class="md-nav" aria-label="v1.0.1">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#features" class="md-nav__link">
     <span class="md-ellipsis">
       Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
     </span>
   </a>
   
@@ -1169,8 +1225,41 @@
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v100" class="md-nav__link">
+    <span class="md-ellipsis">
+      v1.0.0
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="v1.0.0">
+      <ul class="md-nav__list">
+        
           <li class="md-nav__item">
-  <a href="#documentation" class="md-nav__link">
+  <a href="#features_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#developer-features_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Developer features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_1" class="md-nav__link">
     <span class="md-ellipsis">
       Documentation
     </span>
@@ -1216,10 +1305,15 @@
 <p><strong>Version 1.0.0: First stable release with full Reader, Splitter, Embedding and Vision model support.</strong></p>
 </blockquote>
 <h2 id="v101">v1.0.1<a class="headerlink" href="#v101" title="Permanent link">&para;</a></h2>
-<p>Add KeywordSplitter to split by regex patterns or specific keywords.</p>
-<h2 id="v100">v1.0.0<a class="headerlink" href="#v100" title="Permanent link">&para;</a></h2>
-<p>First stable version.</p>
+<p>Add <strong>KeywordSplitter</strong> to split by regex patterns or specific keywords.</p>
 <h3 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h3>
+<p>Add new Splitter: <strong>KeywordSplitter</strong>. This Splitter allows to chunk based on regular expressions and patterns.</p>
+<h3 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h3>
+<p>Update documentation server to provide more examples</p>
+<h3 id="developer-features">Developer features<a class="headerlink" href="#developer-features" title="Permanent link">&para;</a></h3>
+<p>Update pre-commit hooks to sync dependencies when executing the tests.</p>
+<h2 id="v100">v1.0.0<a class="headerlink" href="#v100" title="Permanent link">&para;</a></h2>
+<h3 id="features_1">Features<a class="headerlink" href="#features_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Consolidated all features introduced in v0.x series into a stable API.</li>
 <li><strong>Readers</strong>: <code>VanillaReader</code>, <code>MarkItDownReader</code>, <code>DoclingReader</code> with support for multiple formats (text, Office, JSON/YAML, images, HTML, etc.).</li>
@@ -1227,12 +1321,12 @@
 <li><strong>Models</strong>: support for multimodal Vision-Language Models (OpenAI, Azure, Grok, HuggingFace, Gemini, Claude).</li>
 <li><strong>Embeddings</strong>: OpenAI, Azure, HuggingFace, Gemini, Claude (via Voyage) supported.</li>
 </ul>
-<h3 id="developer-features">Developer features<a class="headerlink" href="#developer-features" title="Permanent link">&para;</a></h3>
+<h3 id="developer-features_1">Developer features<a class="headerlink" href="#developer-features_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Optional extras system</strong>: install lightweight <strong>core</strong> by default, extend with <code>markitdown</code>, <code>docling</code>, <code>multimodal</code>, <code>azure</code>, or <code>all</code>.</li>
 <li><strong>CI/CD pipeline</strong>, <strong>PyPI</strong> release, and <strong>pre-commit</strong> checks in place.</li>
 </ul>
-<h3 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h3>
+<h3 id="documentation_1">Documentation<a class="headerlink" href="#documentation_1" title="Permanent link">&para;</a></h3>
 <p><strong>Extensive documentation</strong> with API reference, examples, and architecture diagrams.</p>
 <h3 id="new-improvements-bug-fixes">New improvements + Bug fixes<a class="headerlink" href="#new-improvements-bug-fixes" title="Permanent link">&para;</a></h3>
 <ul>
@@ -1261,7 +1355,7 @@
 </blockquote>
 <h2 id="v065">v0.6.5<a class="headerlink" href="#v065" title="Permanent link">&para;</a></h2>
 <p><strong>Hotfix</strong>: dependency isolation was not guaranteed.</p>
-<h3 id="features_1">Features<a class="headerlink" href="#features_1" title="Permanent link">&para;</a></h3>
+<h3 id="features_2">Features<a class="headerlink" href="#features_2" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Add a util class to convert HTML to Markdown content.</li>
 <li>Improve Header Splitter to always return its content in markdown format.</li>
@@ -1278,12 +1372,12 @@
 <p><strong>Version 0.6.4:</strong></p>
 <p>SplitterMR now supports <strong>Anthropic Claude</strong> as a backend for both <a href="https://andreshere00.github.io/Splitter_MR/api_reference/embedding#anthropicembeddings"><strong>embedding</strong></a> (via <a href="https://docs.voyageai.com/docs/embeddings">Voyage</a> AI) and <a href="https://andreshere00.github.io/Splitter_MR/api_reference/model#anthropicvisionmodel"><strong>vision</strong></a> models.</p>
 </blockquote>
-<h3 id="features_2">Features<a class="headerlink" href="#features_2" title="Permanent link">&para;</a></h3>
+<h3 id="features_3">Features<a class="headerlink" href="#features_3" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Add new Vision Model: Claude Anthropic models.</li>
 <li>Add new Embedding Model: Voyage Anthropic models.</li>
 </ul>
-<h3 id="documentation_1">Documentation<a class="headerlink" href="#documentation_1" title="Permanent link">&para;</a></h3>
+<h3 id="documentation_2">Documentation<a class="headerlink" href="#documentation_2" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Change font type to Documentation server.</li>
 <li>Update API reference guide with new links and resources.</li>
@@ -1295,13 +1389,13 @@
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;splitter-mr[multimodal]&quot;</span>
 </code></pre></div>
 </blockquote>
-<h3 id="features_3">Features<a class="headerlink" href="#features_3" title="Permanent link">&para;</a></h3>
+<h3 id="features_4">Features<a class="headerlink" href="#features_4" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Add <code>GeminiVisionModel</code> class to Vision models.</li>
 <li>Add <code>GeminiEmbedding</code> class to embedding models.</li>
 <li>Apply lazy import strategy to classes which require <code>extra</code>s to be installed (e.g., <code>docling</code>, <code>markitdown</code>, etc.).</li>
 </ul>
-<h3 id="documentation_2">Documentation<a class="headerlink" href="#documentation_2" title="Permanent link">&para;</a></h3>
+<h3 id="documentation_3">Documentation<a class="headerlink" href="#documentation_3" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Update documentation.</li>
 </ul>
@@ -1317,18 +1411,18 @@
 </code></pre></div>
 </blockquote>
 <p>Add HuggingFace Model and Embedding support.</p>
-<h3 id="features_4">Features<a class="headerlink" href="#features_4" title="Permanent link">&para;</a></h3>
+<h3 id="features_5">Features<a class="headerlink" href="#features_5" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Add <code>HuggingFaceVisionModel</code> class. Note that the support is limited until now.</li>
 <li>Add <code>HuggingFaceEmbedding</code> class.</li>
 </ul>
-<h3 id="documentation_3">Documentation<a class="headerlink" href="#documentation_3" title="Permanent link">&para;</a></h3>
+<h3 id="documentation_4">Documentation<a class="headerlink" href="#documentation_4" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Add <code>HuggingFaceVisionModel</code> to documentation.</li>
 <li>Update architecture diagram.</li>
 <li>Update <code>README.md</code>.</li>
 </ul>
-<h3 id="developer-features_1">Developer features<a class="headerlink" href="#developer-features_1" title="Permanent link">&para;</a></h3>
+<h3 id="developer-features_2">Developer features<a class="headerlink" href="#developer-features_2" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Add new dependencies to multimodal group.</li>
 </ul>
@@ -1340,13 +1434,13 @@
 <p><code>``bash
 pip install "splitter-mr[multimodal]"</code></p>
 </blockquote>
-<h3 id="features_5">Features<a class="headerlink" href="#features_5" title="Permanent link">&para;</a></h3>
+<h3 id="features_6">Features<a class="headerlink" href="#features_6" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Add <code>GrokVisionModel</code>. </li>
 <li>Redefine constants.</li>
 <li>Add new tests.</li>
 </ul>
-<h3 id="documentation_4">Documentation<a class="headerlink" href="#documentation_4" title="Permanent link">&para;</a></h3>
+<h3 id="documentation_5">Documentation<a class="headerlink" href="#documentation_5" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Add <code>GrokVisionModel</code> documentation.</li>
 <li>Fix format bugs.</li>
@@ -1355,11 +1449,11 @@ pip install "splitter-mr[multimodal]"</code></p>
 </ul>
 <h2 id="v060">v0.6.0<a class="headerlink" href="#v060" title="Permanent link">&para;</a></h2>
 <p>Divide library into sub packages.</p>
-<h3 id="features_6">Features<a class="headerlink" href="#features_6" title="Permanent link">&para;</a></h3>
+<h3 id="features_7">Features<a class="headerlink" href="#features_7" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Divide the library into sub-modules.</li>
 </ul>
-<h3 id="developer-features_2">Developer features<a class="headerlink" href="#developer-features_2" title="Permanent link">&para;</a></h3>
+<h3 id="developer-features_3">Developer features<a class="headerlink" href="#developer-features_3" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Add new steps to Dockerfile images.</li>
 <li>Change <code>requirements.txt</code> to don't save editable builds as dependencies.</li>
@@ -1367,7 +1461,7 @@ pip install "splitter-mr[multimodal]"</code></p>
 <li>Lighten the weight of the library by making some dependencies optional.</li>
 <li>Change how <code>poe test</code> is executed.</li>
 </ul>
-<h3 id="documentation_5">Documentation<a class="headerlink" href="#documentation_5" title="Permanent link">&para;</a></h3>
+<h3 id="documentation_6">Documentation<a class="headerlink" href="#documentation_6" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Fix Embedding models not showing on Developer Guide overview page.</li>
 </ul>
@@ -1382,7 +1476,7 @@ pip install "splitter-mr[multimodal]"</code></p>
 </blockquote>
 <h2 id="v050">v0.5.0<a class="headerlink" href="#v050" title="Permanent link">&para;</a></h2>
 <p>Add <strong>SemanticSplitter</strong> first implementation</p>
-<h3 id="features_7">Features<a class="headerlink" href="#features_7" title="Permanent link">&para;</a></h3>
+<h3 id="features_8">Features<a class="headerlink" href="#features_8" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Add <code>embedding</code> module.</li>
 <li>Add <code>AzureOpenAI embeddings</code>.</li>
@@ -1394,11 +1488,11 @@ pip install "splitter-mr[multimodal]"</code></p>
 <ul>
 <li>Fix <code>SentenceSplitter</code> class to be more robust and flexible (separators can be customized using regex pattern).</li>
 </ul>
-<h3 id="developer-features_3">Developer features<a class="headerlink" href="#developer-features_3" title="Permanent link">&para;</a></h3>
+<h3 id="developer-features_4">Developer features<a class="headerlink" href="#developer-features_4" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Update tests.</li>
 </ul>
-<h3 id="documentation_6">Documentation<a class="headerlink" href="#documentation_6" title="Permanent link">&para;</a></h3>
+<h3 id="documentation_7">Documentation<a class="headerlink" href="#documentation_7" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Update documentation with new embedding module.</li>
 <li>Fix some format errors in Documentation server.</li>
@@ -1413,7 +1507,7 @@ pip install "splitter-mr[multimodal]"</code></p>
 <p>Add support for reading files and splitting them by pages using <code>PageSplitter</code>. Add support to read more files with <code>VanillaReader</code>.</p>
 <p>➡️ See <a href="https://andreshere00.github.io/Splitter_MR/examples/text/paged_splitter/"><strong>documentation</strong></a>.</p>
 </blockquote>
-<h3 id="features_8">Features<a class="headerlink" href="#features_8" title="Permanent link">&para;</a></h3>
+<h3 id="features_9">Features<a class="headerlink" href="#features_9" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Add support to read a PDF by pages using <code>MarkItDownReader</code> without LLM.</li>
 <li>Add method to read <code>xlsx</code>, <code>pptx</code>, <code>docx</code> files using <code>VanillaReader</code>.</li>
@@ -1421,39 +1515,39 @@ pip install "splitter-mr[multimodal]"</code></p>
 <li>Add support to read excel and parquet files using different engines in <code>VanillaReader</code>.</li>
 <li>Add support to analyze content in several file types using AzureOpenAI and OpenAI models.</li>
 </ul>
-<h3 id="documentation_7">Documentation<a class="headerlink" href="#documentation_7" title="Permanent link">&para;</a></h3>
+<h3 id="documentation_8">Documentation<a class="headerlink" href="#documentation_8" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Update documentation.</li>
 <li>Fix some hyperlinks in README.</li>
 </ul>
 <h1 id="v03x"><strong>v0.3.x</strong><a class="headerlink" href="#v03x" title="Permanent link">&para;</a></h1>
 <h2 id="v033">v0.3.3<a class="headerlink" href="#v033" title="Permanent link">&para;</a></h2>
-<h3 id="features_9">Features<a class="headerlink" href="#features_9" title="Permanent link">&para;</a></h3>
+<h3 id="features_10">Features<a class="headerlink" href="#features_10" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Add a method to convert variables to a <code>ReaderOutput</code> object.</li>
 <li>Add a <code>page_placeholder</code> attribute to the <code>ReaderOutput</code> object to distinguish when a file has been read by pages and which placeholder is.</li>
 <li>Add an splitter method which split by pages for supported documents: <code>PagedSplitter</code>. </li>
 </ul>
-<h3 id="developer-features_4">Developer features<a class="headerlink" href="#developer-features_4" title="Permanent link">&para;</a></h3>
+<h3 id="developer-features_5">Developer features<a class="headerlink" href="#developer-features_5" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Refactor the <code>VanillaReader</code> class to be more decoupled.</li>
 </ul>
-<h3 id="documentation_8">Documentation<a class="headerlink" href="#documentation_8" title="Permanent link">&para;</a></h3>
+<h3 id="documentation_9">Documentation<a class="headerlink" href="#documentation_9" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Update examples in documentation server.</li>
 </ul>
 <h2 id="v032">v0.3.2<a class="headerlink" href="#v032" title="Permanent link">&para;</a></h2>
-<h3 id="features_10">Features<a class="headerlink" href="#features_10" title="Permanent link">&para;</a></h3>
+<h3 id="features_11">Features<a class="headerlink" href="#features_11" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Add <code>Pydantic</code> models to validate inputs and outputs for <code>BaseReader</code> and <code>BaseSplitter</code> objects.</li>
 <li>Refactor models to modularize into constants, pydantic models and prompts.</li>
 </ul>
-<h3 id="documentation_9">Documentation<a class="headerlink" href="#documentation_9" title="Permanent link">&para;</a></h3>
+<h3 id="documentation_10">Documentation<a class="headerlink" href="#documentation_10" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Update <code>README.md</code> to handle notes and warnings.</li>
 </ul>
 <h2 id="v031">v0.3.1<a class="headerlink" href="#v031" title="Permanent link">&para;</a></h2>
-<h3 id="features_11">Features<a class="headerlink" href="#features_11" title="Permanent link">&para;</a></h3>
+<h3 id="features_12">Features<a class="headerlink" href="#features_12" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Add support to read and scan PDF by pages for all the readers, using the parameter <code>scan_pdf_images = True</code>. </li>
 <li>Add support to use different placeholders for images in Vanilla and Docling Readers.</li>
@@ -1466,7 +1560,7 @@ pip install "splitter-mr[multimodal]"</code></p>
 <li>Change how the arguments are passed to every Reader to enhance robutsness.</li>
 <li>Add new test cases.</li>
 </ul>
-<h3 id="documentation_10">Documentation<a class="headerlink" href="#documentation_10" title="Permanent link">&para;</a></h3>
+<h3 id="documentation_11">Documentation<a class="headerlink" href="#documentation_11" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Update examples.</li>
 <li>Change MkDocs server to support both light and dark modes.</li>
@@ -1478,12 +1572,12 @@ pip install "splitter-mr[multimodal]"</code></p>
 <p>You can now use vision-capable models (OpenAI Vision, Azure OpenAI Vision) to extract image descriptions and OCR text during file reading. Pass a VLM model to any Reader class via the <code>model</code> parameter. </p>
 <p>➡️ See <a href="https://andreshere00.github.io/Splitter_MR/api_reference/model/"><strong>documentation</strong></a>.</p>
 </blockquote>
-<h3 id="features_12">Features<a class="headerlink" href="#features_12" title="Permanent link">&para;</a></h3>
+<h3 id="features_13">Features<a class="headerlink" href="#features_13" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Implement <code>AzureOpenAI</code> and <code>OpenAI</code> Vision Models to analyze graphical resources in PDF files.</li>
 <li>Add support to read PDF files to VanillaReader using <code>PDFPlumber</code>.</li>
 </ul>
-<h3 id="documentation_11">Documentation<a class="headerlink" href="#documentation_11" title="Permanent link">&para;</a></h3>
+<h3 id="documentation_12">Documentation<a class="headerlink" href="#documentation_12" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Update examples.</li>
 <li>Add new examples to documentation.</li>
@@ -1503,7 +1597,7 @@ pip install "splitter-mr[multimodal]"</code></p>
 </ul>
 <h1 id="v02x"><strong>v0.2.x</strong><a class="headerlink" href="#v02x" title="Permanent link">&para;</a></h1>
 <h2 id="v022">v0.2.2<a class="headerlink" href="#v022" title="Permanent link">&para;</a></h2>
-<h3 id="features_13">Features<a class="headerlink" href="#features_13" title="Permanent link">&para;</a></h3>
+<h3 id="features_14">Features<a class="headerlink" href="#features_14" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Implement <code>TokenSplitter</code>: split text into chunks by number of tokens, using selectable tokenizers (<code>tiktoken</code>, <code>spacy</code>, <code>nltk</code>).</li>
 <li><code>MarkItDownReader</code> now supports more file extensions: PDFs, audio, etc.</li>
@@ -1513,20 +1607,20 @@ pip install "splitter-mr[multimodal]"</code></p>
 <li><code>HTMLTagSplitter</code> does not correctly chunking the document as desired.</li>
 <li>Change <code>docstring</code> documentation.</li>
 </ul>
-<h3 id="documentation_12">Documentation<a class="headerlink" href="#documentation_12" title="Permanent link">&para;</a></h3>
+<h3 id="documentation_13">Documentation<a class="headerlink" href="#documentation_13" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Updated Splitter strategies documentation to include <code>TokenSplitter</code>.</li>
 <li>Expanded example scripts and test scripts for end-to-end manual and automated verification of all Splitter strategies.</li>
 <li>New examples in documentation server for <code>HTMLTagSplitter</code>. </li>
 </ul>
-<h3 id="developer-features_5">Developer Features<a class="headerlink" href="#developer-features_5" title="Permanent link">&para;</a></h3>
+<h3 id="developer-features_6">Developer Features<a class="headerlink" href="#developer-features_6" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Remove <code>Pipfile</code> and <code>Pipfile.lock</code>. </li>
 <li>Update to <a href="https://poethepoet.natn.io/index.html"><code>poethepoet</code></a> as task runner tool </li>
 </ul>
 <h3 id="fixes_3">Fixes<a class="headerlink" href="#fixes_3" title="Permanent link">&para;</a></h3>
 <h2 id="v021">v0.2.1<a class="headerlink" href="#v021" title="Permanent link">&para;</a></h2>
-<h3 id="features_14">Features<a class="headerlink" href="#features_14" title="Permanent link">&para;</a></h3>
+<h3 id="features_15">Features<a class="headerlink" href="#features_15" title="Permanent link">&para;</a></h3>
 <p>Implement <code>CodeSplitter</code>.</p>
 <h3 id="fixes_4">Fixes<a class="headerlink" href="#fixes_4" title="Permanent link">&para;</a></h3>
 <ul>
@@ -1543,7 +1637,7 @@ Breaking change!</p>
 </ul>
 <p>You must access fields using <strong>dot notation</strong> (e.g., <code>result.text</code>, <code>result.chunks</code>), not dictionary keys.</p>
 </blockquote>
-<h3 id="features_15">Features<a class="headerlink" href="#features_15" title="Permanent link">&para;</a></h3>
+<h3 id="features_16">Features<a class="headerlink" href="#features_16" title="Permanent link">&para;</a></h3>
 <p>New splitting strategy: <code>RowColumnSplitter</code> for flexible splitting of tabular data.</p>
 <p>New reader_method attribute in output dataclasses.</p>
 <h3 id="migration">Migration<a class="headerlink" href="#migration" title="Permanent link">&para;</a></h3>
@@ -1554,7 +1648,7 @@ Breaking change!</p>
 </blockquote>
 <h1 id="v01x"><strong>v0.1.x</strong><a class="headerlink" href="#v01x" title="Permanent link">&para;</a></h1>
 <h2 id="v013">v0.1.3<a class="headerlink" href="#v013" title="Permanent link">&para;</a></h2>
-<h3 id="features_16">Features<a class="headerlink" href="#features_16" title="Permanent link">&para;</a></h3>
+<h3 id="features_17">Features<a class="headerlink" href="#features_17" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Add a new splitting strategy: <code>RowColumnSplitter</code>.</li>
 </ul>
@@ -1562,12 +1656,12 @@ Breaking change!</p>
 <ul>
 <li>Change Readers to properly handle JSON files.</li>
 </ul>
-<h3 id="documentation_13">Documentation<a class="headerlink" href="#documentation_13" title="Permanent link">&para;</a></h3>
+<h3 id="documentation_14">Documentation<a class="headerlink" href="#documentation_14" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Update documentation.</li>
 </ul>
 <h2 id="v012">v0.1.2<a class="headerlink" href="#v012" title="Permanent link">&para;</a></h2>
-<h3 id="features_17">Features<a class="headerlink" href="#features_17" title="Permanent link">&para;</a></h3>
+<h3 id="features_18">Features<a class="headerlink" href="#features_18" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Now <code>VanillaReader</code> can read from multiple sources: URL, text, file_path and dictionaries.</li>
 </ul>
@@ -1576,7 +1670,7 @@ Breaking change!</p>
 <li>By default, the document_id was <code>None</code> instead of and <code>uuid</code> in <code>VanillaReader</code>. </li>
 <li>Some name changes for <code>splitter_method</code> attribute in <code>SplitterOutput</code> method.</li>
 </ul>
-<h3 id="developer-features_6">Developer features<a class="headerlink" href="#developer-features_6" title="Permanent link">&para;</a></h3>
+<h3 id="developer-features_7">Developer features<a class="headerlink" href="#developer-features_7" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Extend CI/CD lifecycle. Now it uses Dockerfile to check tests and deploy docs.</li>
 <li>Automate versioning for the Python project.</li>
@@ -1585,7 +1679,7 @@ Breaking change!</p>
 <li>A new stage in <code>pre-commit</code> has been introduced for generating the <code>requirements.txt</code> file.</li>
 <li><code>Makefile</code> extended: new commands to serve <code>mkdocs</code>. Now make clean remove more temporary files.</li>
 </ul>
-<h3 id="documentation_14">Documentation<a class="headerlink" href="#documentation_14" title="Permanent link">&para;</a></h3>
+<h3 id="documentation_15">Documentation<a class="headerlink" href="#documentation_15" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Update documentation in examples for the Documentation server.</li>
 <li>Documentation server now can be served using Make.</li>
@@ -1599,7 +1693,7 @@ Breaking change!</p>
 <li>Reformat examples from docstring documentation in every Reader and Splitter classes.</li>
 <li><code>HeaderSplitter</code> was not properly handling the headers in some <code>markdown</code> and <code>HTML</code> files.</li>
 </ul>
-<h3 id="documentation_15">Documentation<a class="headerlink" href="#documentation_15" title="Permanent link">&para;</a></h3>
+<h3 id="documentation_16">Documentation<a class="headerlink" href="#documentation_16" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Some examples have been provided in the documentation (<code>docs/</code>, and in the <a href="https://andreshere00.github.io/Splitter_MR/">documentation server</a>).</li>
 <li>New examples in docstrings.</li>
@@ -1618,7 +1712,7 @@ Breaking change!</p>
 <li>Some data has been added for testing purposes.</li>
 <li>A documentation server is deployed with up-to-date information.</li>
 </ul>
-<h3 id="developer-features_7">Developer features<a class="headerlink" href="#developer-features_7" title="Permanent link">&para;</a></h3>
+<h3 id="developer-features_8">Developer features<a class="headerlink" href="#developer-features_8" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Update <code>pyproject.toml</code> project information.</li>
 <li>Add pre-commit configurations (<code>flake8</code>, check commit messages, run test coverage, and update documentation).</li>

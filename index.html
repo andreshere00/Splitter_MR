@@ -460,6 +460,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#previously-implemented-v100" class="md-nav__link">
+    <span class="md-ellipsis">
+      Previously implemented (^v1.0.0)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#previously-implemented-up-to-v100" class="md-nav__link">
     <span class="md-ellipsis">
       Previously implemented (up to v1.0.0)
@@ -909,6 +918,29 @@
             Text-based splitting
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="examples/text/keyword_splitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Split by regular expressions
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1404,6 +1436,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#previously-implemented-v100" class="md-nav__link">
+    <span class="md-ellipsis">
+      Previously implemented (^v1.0.0)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#previously-implemented-up-to-v100" class="md-nav__link">
     <span class="md-ellipsis">
       Previously implemented (up to v1.0.0)
@@ -1451,7 +1492,7 @@
 <img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/splitter_mr_logo_white.svg#gh-dark-mode-only" alt="SplitterMR logo" width=100%/></p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
-<p>"Version 1.0.0 released – First Stable Release!"</p>
+<p><strong>Version 1.0.0 released – First Stable Release!</strong></p>
 <p><strong>We are excited to announce the first stable release of SplitterMR (v1.0.0)!</strong> Install it with the following command:</p>
 <div class="highlight"><pre><span></span><code><span class="n">pip</span> <span class="n">install</span> <span class="n">splitter</span><span class="o">-</span><span class="n">mr</span>
 </code></pre></div>
@@ -1468,7 +1509,7 @@
 <li>🐛 <strong>Bugfixes:</strong> Improved NLTK tokenizers, more robust splitters, and new utilities for HTML =&gt; Markdown conversion.</li>
 </ul>
 <p><strong>Check out the updated documentation, new examples, and join us in making text splitting and document parsing easier than ever!</strong></p>
-<p>**Version 1.0.1 released - <code>KeywordSplitter</code></p>
+<p><strong>Version 1.0.1 released</strong> - <code>KeywordSplitter</code></p>
 <p>This Splitter allows to divide text based on specific regex patterns or keywords. See documentation <a href="https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#keywordsplitter"><strong>here</strong></a>.</p>
 </div>
 <h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
@@ -1548,7 +1589,7 @@
 <td>Recursively splits text based on a hierarchy of separators (e.g., paragraph, sentence, word, character) until chunks reach a target size. Tries to preserve semantic units as long as possible. <br> <strong>Parameters:</strong> <code>chunk_size</code> (max chars per chunk), <code>chunk_overlap</code> (overlapping chars), <code>separators</code> (list of characters to split on, e.g., <code>["\n\n", "\n", " ", ""]</code>). <br> <strong>Compatible with:</strong> Text.</td>
 </tr>
 <tr>
-<td><a href="https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#keywordsplitter"><strong>Keyword Splitter</strong></a></td>
+<td><strong>NEW</strong> <a href="https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#keywordsplitter"><strong>Keyword Splitter</strong></a></td>
 <td>Splits text into chunks around matches of specified keywords, using one or more regex patterns. Supports precise boundary control—matched keywords can be included <code>before</code>, <code>after</code>, <code>both</code> sides, or omitted from the split. Each keyword can have a custom name (via <code>dict</code>) for metadata counting. Secondary soft-wrapping by <code>chunk_size</code> is supported. <br> <strong>Parameters:</strong> <code>patterns</code> (list of regex patterns, or <code>dict</code> mapping names to patterns), <code>include_delimiters</code> (<code>"before"</code>, <code>"after"</code>, <code>"both"</code>, or <code>"none"</code>), <code>flags</code> (regex flags, e.g. <code>re.MULTILINE</code>), <code>chunk_size</code> (max chars per chunk, soft-wrapped). <br> <strong>Compatible with:</strong> Text.</td>
 </tr>
 <tr>
@@ -1651,11 +1692,6 @@
 <td><code>pip install "splitter-mr[multimodal]"</code></td>
 </tr>
 <tr>
-<td><strong><code>azure</code></strong></td>
-<td>Installs Azure AI SDKs for integrating with Azure Document Intelligence and other Azure AI services.</td>
-<td><code>pip install "splitter-mr[azure]"</code></td>
-</tr>
-<tr>
 <td><strong><code>all</code></strong></td>
 <td>Installs <strong>everything</strong> above (MarkItDown + Docling + Multimodal + Azure). <strong>Heavy install</strong> (\~GBs).</td>
 <td><code>pip install "splitter-mr[all]"</code></td>
@@ -1728,7 +1764,7 @@
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">AzureOpenAIVisionModel</span><span class="p">()</span>
 <span class="n">reader</span> <span class="o">=</span> <span class="n">VanillaReader</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
-<span class="n">output</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="s2">&quot;data/lorem_ipsum.pdf&quot;</span><span class="p">)</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="s2">&quot;data/sample_pdf.pdf&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 </code></pre></div>
 <p>These VLMs can be used for captioning, annotation or text extraction. In fact, you can use these models to process the files as you want using the <code>prompt</code> parameter in the <code>read</code> method for every class which inherits from <code>BaseReader</code>. </p>
@@ -1749,6 +1785,10 @@
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Add classic <strong>OCR</strong> models: <code>easyocr</code> and <code>pytesseract</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Add support to generate output in <code>markdown</code> for all data types in VanillaReader.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Add methods to support Markdown, JSON and XML data types when returning output.</li>
+</ul>
+<h3 id="previously-implemented-v100">Previously implemented (<code>^v1.0.0</code>)<a class="headerlink" href="#previously-implemented-v100" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Add <code>KeywordSplitter</code> support.</li>
 </ul>
 <h3 id="previously-implemented-up-to-v100">Previously implemented (up to <code>v1.0.0</code>)<a class="headerlink" href="#previously-implemented-up-to-v100" title="Permanent link">&para;</a></h3>
 <ul class="task-list">

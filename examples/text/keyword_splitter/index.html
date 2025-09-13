@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../token_splitter/">
+        <link rel="prev" href="../../pdf/pdf_markitdown/">
       
       
-        <link rel="next" href="../semantic_splitter/">
+        <link rel="next" href="../fixed_splitter/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -20,7 +20,7 @@
     
     
       
-        <title>Split by pages - SplitterMR Docs</title>
+        <title>Split by regular expressions - SplitterMR Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#example-splitting-files-by-pages-using-pagedsplitter" class="md-skip">
+        <a href="#example-split-pinocchio-chapters-using-keywordsplitter" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Split by pages
+              Split by regular expressions
             
           </span>
         </div>
@@ -701,10 +701,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../keyword_splitter/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Split by regular expressions
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -715,6 +737,71 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-read-the-text-using-a-reader-component" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1: Read the text using a Reader component
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-split-the-text-using-keywordsplitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Split the text using KeywordSplitter
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-visualize-the-chunks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 3: Visualize the chunks
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-analyze-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 4: Analyze metadata
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complete script
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -793,32 +880,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Split by pages
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../paged_splitter/" class="md-nav__link">
         
   
   
@@ -829,68 +894,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#step-1-read-the-file" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 1. Read the file
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#split-by-pages" class="md-nav__link">
-    <span class="md-ellipsis">
-      Split by pages
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Split by pages">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#experimenting-with-custom-parameteres" class="md-nav__link">
-    <span class="md-ellipsis">
-      Experimenting with custom parameteres
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#complete-script" class="md-nav__link">
-    <span class="md-ellipsis">
-      Complete script
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1144,35 +1147,38 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#step-1-read-the-file" class="md-nav__link">
+  <a href="#step-1-read-the-text-using-a-reader-component" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 1. Read the file
+      Step 1: Read the text using a Reader component
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#split-by-pages" class="md-nav__link">
+  <a href="#step-2-split-the-text-using-keywordsplitter" class="md-nav__link">
     <span class="md-ellipsis">
-      Split by pages
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Split by pages">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#experimenting-with-custom-parameteres" class="md-nav__link">
-    <span class="md-ellipsis">
-      Experimenting with custom parameteres
+      Step 2: Split the text using KeywordSplitter
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-visualize-the-chunks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 3: Visualize the chunks
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-analyze-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 4: Analyze metadata
+    </span>
+  </a>
   
 </li>
       
@@ -1204,159 +1210,211 @@
   
 
 
-<h1 id="example-splitting-files-by-pages-using-pagedsplitter"><strong>Example</strong>: Splitting Files by pages using <code>PagedSplitter</code><a class="headerlink" href="#example-splitting-files-by-pages-using-pagedsplitter" title="Permanent link">&para;</a></h1>
-<p><img alt="Split by pages illustration" src="https://www.pdfgear.com/pdf-editor-reader/img/how-to-cut-pdf-pages-in-half-1.png" /></p>
-<p>For some documents, one of the best splitting strategies can be divide them by pages. To do so, you can use the <code>PagedSplitter</code>.</p>
-<p>For this example, we will read the file using `VanillaReader. The file can be found on the <a href="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/attention.pdf">GitHub repository</a>, and it consists of a scientific paper (<em>Attention is All You Need</em>) with 15 pages. Let's see how to split it.</p>
-<h2 id="step-1-read-the-file">Step 1. Read the file<a class="headerlink" href="#step-1-read-the-file" title="Permanent link">&para;</a></h2>
-<p>You can read the file using <a href="https://andreshere00.github.io/Splitter_MR/api_reference/reader/#vanillareader"><code>VanillaReader</code></a> or <a href="https://andreshere00.github.io/Splitter_MR/api_reference/reader/#doclingreader"><code>DoclingReader</code></a>. In case that you use <a href="https://andreshere00.github.io/Splitter_MR/api_reference/reader/#markitdownreader"><code>MarkItDownReader</code></a>, you should pass the parameter <code>split_by_pages = True</code>, since MarkItDown by default does not provide any placeholder to split by pages.</p>
-<details class="example">
-<summary>Show Python examples for all Readers</summary>
+<h1 id="example-split-pinocchio-chapters-using-keywordsplitter">Example: Split <em>Pinocchio</em> Chapters Using <code>KeywordSplitter</code><a class="headerlink" href="#example-split-pinocchio-chapters-using-keywordsplitter" title="Permanent link">&para;</a></h1>
+<p><img alt="Example of regex patterns" src="https://miro.medium.com/1*u4NbHgv-TzEE5G6xXnHCbQ.png" /></p>
+<p>The <a href="https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#keywordsplitter"><strong><code>KeywordSplitter</code></strong></a> is a highly versatile text-splitting utility that <strong>divides documents based on custom regular-expression (regex) patterns</strong>. Unlike simpler splitters that break text by fixed lengths (characters, words, or sentences), the KeywordSplitter allows you to identify semantic boundaries—such as headings, section markers, or unique keywords—and chunk your text accordingly.</p>
+<p>This splitter is particularly useful when working with structured or semi-structured text where meaningful sections are defined by repeated markers. Examples include:</p>
+<ul>
+<li>Splitting classic books or plays by chapter headings (e.g., "CHAPTER I", "ACT II").</li>
+<li>Parsing logs by timestamps or error codes.</li>
+<li>Extracting sections from Markdown or plain text documents where a specific keyword (e.g., "TODO" or "NOTE") separates ideas.</li>
+<li>Segmenting transcripts or interview notes at speaker identifiers.</li>
+</ul>
+<p>This notebook demonstrates splitting <em>Pinocchio</em> by chapter markers such as <strong>“CHAPTER I”</strong>, <strong>“CHAPTER II”</strong>, etc., using the <code>KeywordSplitter</code>.</p>
+<h2 id="step-1-read-the-text-using-a-reader-component">Step 1: Read the text using a Reader component<a class="headerlink" href="#step-1-read-the-text-using-a-reader-component" title="Permanent link">&para;</a></h2>
+<p>We will use the <code>VanillaReader</code> to fetch the text from Project Gutenberg:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">VanillaReader</span>
 
-<span class="n">FILE_PATH</span> <span class="o">=</span> <span class="s2">&quot;data/attention.pdf&quot;</span>
+<span class="n">FILE_PATH</span> <span class="o">=</span> <span class="s2">&quot;https://www.gutenberg.org/cache/epub/16865/pg16865.txt&quot;</span>
 
 <span class="n">reader</span> <span class="o">=</span> <span class="n">VanillaReader</span><span class="p">()</span>
 <span class="n">reader_output</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">FILE_PATH</span><span class="p">)</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">DoclingReader</span>
 
-<span class="n">FILE_PATH</span> <span class="o">=</span> <span class="s2">&quot;data/attention.pdf&quot;</span>
-
-<span class="n">reader</span> <span class="o">=</span> <span class="n">DoclingReader</span><span class="p">()</span>
-<span class="n">reader_output</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">FILE_PATH</span><span class="p">)</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">MarkItDownReader</span>
-
-<span class="n">FILE_PATH</span> <span class="o">=</span> <span class="s2">&quot;data/attention.pdf&quot;</span>
-
-<span class="n">reader</span> <span class="o">=</span> <span class="n">MarkItDownReader</span><span class="p">()</span>
-<span class="n">reader_output</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">FILE_PATH</span><span class="p">,</span> <span class="n">split_by_pages</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</code></pre></div>
-</details>
-<p>The output will be the following:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
-
-<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;.*pin_memory.*MPS.*&quot;</span><span class="p">)</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">DoclingReader</span>
-
-<span class="n">FILE_PATH</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/attention.pdf&quot;</span>
-
-<span class="n">reader</span> <span class="o">=</span> <span class="n">DoclingReader</span><span class="p">()</span>
-<span class="n">reader_output</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">FILE_PATH</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">reader_output</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">reader_output</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="mi">1000</span><span class="p">])</span>  <span class="c1"># preview first 1000 characters</span>
 </code></pre></div>
 <div class="codehilite"><pre><span></span><code>{
-    &quot;text&quot;: &quot;Provided proper attribution is provided, Google hereby grants permission to reproduce the tables and figures in this paper solely for use in journalistic or scholarly works.\n\n## Attention Is All You Need\n\nAshish Vaswani ∗ Google Brain avaswani@google.com\n\nNoam Shazeer ∗ Google Brain noam@google.com\n\nNiki Parmar ∗ Google Research nikip@google.com\n\nJakob Uszkoreit ∗ Google Research usz@google.com\n\nLlion Jones ∗ Google Research llion@google.com\n\nAidan N. Gomez ∗ † Unive
+    &quot;text&quot;: &quot;﻿The Project Gutenberg eBook of Pinocchio: The Tale of a Puppet\r\n    \r\nThis ebook is for the use of anyone anywhere in the United States and\r\nmost other parts of the world at no cost and with almost no restrictions\r\nwhatsoever. You may copy it, give it away or re-use it under the terms\r\nof the Project Gutenberg License included with this ebook or online\r\nat www.gutenberg.org. If you are not located in the United States,\r\nyou will have to check the laws of the country
 ...
- heads from the encoder self-attention at layer 5 of 6. The heads clearly learned to perform different tasks.\n\n&lt;!-- image --&gt;&quot;,
-    &quot;document_name&quot;: &quot;attention.pdf&quot;,
-    &quot;document_path&quot;: &quot;https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/attention.pdf&quot;,
-    &quot;document_id&quot;: &quot;04aa7dd7-e397-464d-aa29-4f444be12514&quot;,
-    &quot;conversion_method&quot;: &quot;markdown&quot;,
-    &quot;reader_method&quot;: &quot;docling&quot;,
-    &quot;ocr_method&quot;: null,
-    &quot;page_placeholder&quot;: &quot;&lt;!-- page --&gt;&quot;,
-    &quot;metadata&quot;: {}
+you are located
+before using this eBook.
+
+Title: Pinocchio: The Tale of a Puppet
+
+Author: Carlo Collodi
+
+Illustrator: Alice Carsey
+
+Release date: October 13, 2005 [eBook #16865]
+                Most recently updated: December 12, 2020
+
+Language: English
+
+Credits: Produced by Mark C. Orton, Melissa Er-Raqabi and the Online
+        Distributed Proofreading Team at https://www.pgdp.net.
+
+
+*** START OF THE PROJECT GUTENBERG EBOOK PINOCCHIO: THE TALE OF A PUPPET ***
+
+
+
+
+Produced by Mark C. Orton, Me
+</code></pre></div>
+
+<h2 id="step-2-split-the-text-using-keywordsplitter">Step 2: Split the text using <code>KeywordSplitter</code><a class="headerlink" href="#step-2-split-the-text-using-keywordsplitter" title="Permanent link">&para;</a></h2>
+<p>We define the regex pattern for Roman numeral chapters and instantiate the splitter:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.splitter</span><span class="w"> </span><span class="kn">import</span> <span class="n">KeywordSplitter</span>
+
+<span class="n">chapter_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;CHAPTER\s+[IVXLCDM]+&quot;</span>
+<span class="n">splitter</span> <span class="o">=</span> <span class="n">KeywordSplitter</span><span class="p">(</span>
+    <span class="n">patterns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;chapter&quot;</span><span class="p">:</span> <span class="n">chapter_pattern</span><span class="p">},</span>
+    <span class="n">include_delimiters</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">,</span>
+    <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">splitter_output</span> <span class="o">=</span> <span class="n">splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">splitter_output</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+<div class="codehilite"><pre><span></span><code>{
+    &quot;chunks&quot;: [
+        &quot;﻿The Project Gutenberg eBook of Pinocchio: The Tale of a Puppet\r\n    \r\nThis ebook is for the use of anyone anywhere in the United States and\r\nmost other parts of the world at no cost and with almost no restrictions\r\nwhatsoever. You may copy it, give it away or re-use it under the terms\r\nof the Project Gutenberg License included with this ebook or online\r\nat www.gutenberg.org. If you are not located in the United States,\r\nyou will have to check the laws of
+...
+
+                ],
+                [
+                    203258,
+                    203271
+                ],
+                [
+                    214484,
+                    214496
+                ],
+                [
+                    222566,
+                    222579
+                ]
+            ],
+            &quot;include_delimiters&quot;: &quot;after&quot;,
+            &quot;flags&quot;: 2,
+            &quot;pattern_names&quot;: [
+                &quot;chapter&quot;
+            ],
+            &quot;chunk_size&quot;: 100000
+        }
+    }
 }
 </code></pre></div>
 
-<p>As you can see, the <a href="../../../api_reference/reader/#output-format"><code>ReaderOutput</code> object</a> has an attribute named <code>page_placeholder</code> which allows to identify every page. </p>
-<h2 id="split-by-pages">Split by pages<a class="headerlink" href="#split-by-pages" title="Permanent link">&para;</a></h2>
-<p>So, we can simply instantiate the <code>PageSplitter</code> object and use the <code>split</code> method to get the chunks page-by-page:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.splitter</span><span class="w"> </span><span class="kn">import</span> <span class="n">PagedSplitter</span>
-
-<span class="n">splitter</span> <span class="o">=</span> <span class="n">PagedSplitter</span><span class="p">()</span>
-<span class="n">splitter_output</span> <span class="o">=</span> <span class="n">splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="o">=</span><span class="n">reader_output</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">splitter_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="mi">80</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; Chunk </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="mi">80</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+<p>As you can see, all the chunks start with <code>CHAPTER</code> + a roman number, so the Splitter has divided the text by chapters correctly.</p>
+<h2 id="step-3-visualize-the-chunks">Step 3: Visualize the chunks<a class="headerlink" href="#step-3-visualize-the-chunks" title="Permanent link">&para;</a></h2>
+<p>To visualize the chunks, you can execute the following code:</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">splitter_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; Chunk </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="p">[:</span><span class="mi">800</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-<div class="codehilite"><pre><span></span><code>******************************************************************************** Chunk 0 ********************************************************************************
+<div class="codehilite"><pre><span></span><code>======================================== Chunk 1 ========================================
+﻿The Project Gutenberg eBook of Pinocchio: The Tale of a Puppet
 
-Provided proper attribution is provided, Google hereby grants permission to reproduce the tables and figures in this paper solely for use in journalistic or scholarly works.
-
-## Attention Is All You Need
-
-Ashish Vaswani ∗ Google Brain avaswani@google.com
-
-Noam Shazeer ∗ Google Brain noam@google.com
-
-Niki Parmar ∗ Google Resear
+This ebook is for the use of anyone anywhere in the United States and
+most other parts of the world at no cost and with almost no restrictions
+whatsoever. You may copy it, give it away or re-use it under the terms
+of the Project Gutenberg License included with this ebook or online
+at www.gutenberg.org. If you are not located in the United 
 ...
-ord.
+e
+fever.
 
-&lt;!-- image --&gt;
+Was he trembling from cold or from fear. Perhaps a little from both the
+one and the other. But Pinocchio, thinking it was from fear, said, to
+comfort him:
 
-******************************************************************************** Chunk 14 ********************************************************************************
+&quot;Courage, papa! In a few minutes we shall be safely on shore.&quot;
 
-Input-Input Layer5
+&quot;But where is this blessed shore?&quot; asked the little old man, becoming
+still more frightened, and screwing up his eyes as tailors do when they
+wish to thread a needle. &quot;I have been looking in every direction and I
+see nothing but the sky and the sea.&quot;
 
-Figure 5: Many of the attention heads exhibit behaviour that seems related to the structure of the sentence. We give two such examples above, from two different heads from the encoder self-attention at layer 5 of 6. The heads clearly learned to perform different tasks.
-
-&lt;!-- image --&gt;
+&quot;But I see the s
 </code></pre></div>
 
-<p>Indeed, we have obtained a list of chunks with the extracted content, one per page.</p>
-<h3 id="experimenting-with-custom-parameteres">Experimenting with custom parameteres<a class="headerlink" href="#experimenting-with-custom-parameteres" title="Permanent link">&para;</a></h3>
-<p>In case that we want to split by group of many pages (e.g., <code>3</code>), we can specify that value on the <a href="https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#pagedsplitter"><strong><code>PageSplitter</code></strong></a> object. In addition, we can define an overlap between characters:</p>
-<div class="highlight"><pre><span></span><code><span class="n">splitter</span> <span class="o">=</span> <span class="n">PagedSplitter</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">chunk_overlap</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-<span class="n">splitter_output</span> <span class="o">=</span> <span class="n">splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="o">=</span><span class="n">reader_output</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">splitter_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="mi">80</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; Chunk </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="mi">80</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+<h2 id="step-4-analyze-metadata">Step 4: Analyze metadata<a class="headerlink" href="#step-4-analyze-metadata" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="n">meta</span> <span class="o">=</span> <span class="n">splitter_output</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;keyword_matches&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Chapter matches:&quot;</span><span class="p">,</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Spans:&quot;</span><span class="p">,</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;spans&quot;</span><span class="p">][:</span><span class="mi">5</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Splitter parameters:&quot;</span><span class="p">,</span> <span class="n">splitter_output</span><span class="o">.</span><span class="n">split_params</span><span class="p">)</span>
 </code></pre></div>
-<div class="codehilite"><pre><span></span><code>******************************************************************************** Chunk 0 ********************************************************************************
-
-Provided proper attribution is provided, Google hereby grants permission to reproduce the tables and figures in this paper solely for use in journalistic or scholarly works.
-
-## Attention Is All You Need
-
-Ashish Vaswani ∗ Google Brain avaswani@google.com
-
-Noam Shazeer ∗ Google Brain noam@google.com
-
-Niki Parmar ∗ Google Resear
-...
-lution. Top: Full attentions for head 5. Bottom: Isolated attentions from just the word &#39;its&#39; for attention heads 5 and 6. Note that the attentions are very sharp for this word.
-
-&lt;!-- image --&gt;
-Input-Input Layer5
-
-Figure 5: Many of the attention heads exhibit behaviour that seems related to the structure of the sentence. We give two such examples above, from two different heads from the encoder self-attention at layer 5 of 6. The heads clearly learned to perform different tasks.
-
-&lt;!-- image --&gt;
+<div class="codehilite"><pre><span></span><code>Chapter matches: {&#39;chapter&#39;: 36}
+Spans: [(7063, 7072), (10320, 10330), (14085, 14096), (20136, 20146), (23487, 23496)]
+Splitter parameters: {&#39;include_delimiters&#39;: &#39;after&#39;, &#39;flags&#39;: re.IGNORECASE, &#39;chunk_size&#39;: 100000, &#39;pattern_names&#39;: [&#39;chapter&#39;]}
 </code></pre></div>
 
-<p>And that's it! Try to experiment which values are the best option for your use case. A full reference to this class is available on the <a href="https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#pagedsplitter">API Reference</a>. </p>
-<p>Thank you for reading! :)</p>
+<p>You can also verify the configuration:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="n">splitter_output</span><span class="o">.</span><span class="n">split_params</span><span class="p">)</span>
+</code></pre></div>
+<div class="codehilite"><pre><span></span><code>{&#39;include_delimiters&#39;: &#39;after&#39;, &#39;flags&#39;: re.IGNORECASE, &#39;chunk_size&#39;: 100000, &#39;pattern_names&#39;: [&#39;chapter&#39;]}
+</code></pre></div>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can experiment with:
+* <strong><code>include_delimiters</code></strong> = <code>"after"</code>, <code>"both"</code>, or <code>"none"</code> to control delimiter placement.
+* Adjust <code>chunk_size</code> for soft wrapping inside chapters.
+* Use multiple patterns (dict or list) to split by different keywords simultaneously.</p>
+</div>
+<p><strong>And that’s it!</strong> This notebook demonstrates how to segment <em>Pinocchio</em> into chapters interactively with <a href="https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#keywordsplitter"><code>KeywordSplitter</code></a>.</p>
 <h2 id="complete-script">Complete script<a class="headerlink" href="#complete-script" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">DoclingReader</span> <span class="c1">#, VanillaReader, MarkItDownReader</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.splitter</span><span class="w"> </span><span class="kn">import</span> <span class="n">PagedSplitter</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">VanillaReader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.splitter</span><span class="w"> </span><span class="kn">import</span> <span class="n">KeywordSplitter</span>
 
-<span class="n">FILE_PATH</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/attention.pdf&quot;</span>
+<span class="n">FILE_PATH</span> <span class="o">=</span> <span class="s2">&quot;https://www.gutenberg.org/cache/epub/16865/pg16865.txt&quot;</span>
 
-<span class="n">reader</span> <span class="o">=</span> <span class="n">DoclingReader</span><span class="p">()</span>
+<span class="c1"># Step 1: Read Pinocchio</span>
+<span class="n">reader</span> <span class="o">=</span> <span class="n">VanillaReader</span><span class="p">()</span>
 <span class="n">reader_output</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">FILE_PATH</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">reader_output</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">reader_output</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>  <span class="c1"># inspect ReaderOutput</span>
 
-<span class="n">splitter</span> <span class="o">=</span> <span class="n">PagedSplitter</span><span class="p">()</span>
-<span class="n">splitter_output</span> <span class="o">=</span> <span class="n">splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="o">=</span><span class="n">reader_output</span><span class="p">)</span>
+<span class="c1"># Step 2: Split by chapter markers</span>
+<span class="n">chapter_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;CHAPTER\s+[IVXLCDM]+&quot;</span>
+<span class="n">splitter</span> <span class="o">=</span> <span class="n">KeywordSplitter</span><span class="p">(</span>
+    <span class="n">patterns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;chapter&quot;</span><span class="p">:</span> <span class="n">chapter_pattern</span><span class="p">},</span>
+    <span class="n">include_delimiters</span><span class="o">=</span><span class="s2">&quot;before&quot;</span><span class="p">,</span>
+    <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">,</span>
+    <span class="n">chunk_size</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">splitter_output</span> <span class="o">=</span> <span class="n">splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="p">)</span>
 
+<span class="nb">print</span><span class="p">(</span><span class="n">splitter_output</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>  <span class="c1"># inspect SplitterOutput</span>
+
+<span class="c1"># Step 3: Visualize chunks</span>
 <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">splitter_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span><span class="o">*</span><span class="mi">80</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; Chunk </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span><span class="o">*</span><span class="mi">80</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; Chapter </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="p">[:</span><span class="mi">800</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="n">splitter</span> <span class="o">=</span> <span class="n">PagedSplitter</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">chunk_overlap</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
-<span class="n">splitter_output</span> <span class="o">=</span> <span class="n">splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">reader_output</span><span class="o">=</span><span class="n">reader_output</span><span class="p">)</span>
+<span class="c1"># Step 4: Explore metadata</span>
+<span class="n">meta</span> <span class="o">=</span> <span class="n">splitter_output</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;keyword_matches&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Counts:&quot;</span><span class="p">,</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;First spans:&quot;</span><span class="p">,</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;spans&quot;</span><span class="p">][:</span><span class="mi">5</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Splitter parameters:&quot;</span><span class="p">,</span> <span class="n">splitter_output</span><span class="o">.</span><span class="n">split_params</span><span class="p">)</span>
+</code></pre></div>
+<div class="codehilite"><pre><span></span><code>{
+    &quot;text&quot;: &quot;﻿The Project Gutenberg eBook of Pinocchio: The Tale of a Puppet\r\n    \r\nThis ebook is for the use of anyone anywhere in the United States and\r\nmost other parts of the world at no cost and with almost no restrictions\r\nwhatsoever. You may copy it, give it away or re-use it under the terms\r\nof the Project Gutenberg License included with this ebook or online\r\nat www.gutenberg.org. If you are not located in the United States,\r\nyou will have to check the laws of the country
+...
+resses. Donations are accepted in a number of other
+ways including checks, online payments and credit card donations. To
+donate, please visit: www.gutenberg.org/donate.
 
-<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">splitter_output</span><span class="o">.</span><span class="n">chunks</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span><span class="o">*</span><span class="mi">80</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; Chunk </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span><span class="o">*</span><span class="mi">80</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+Section 5. General Information About Project Gutenberg™ electronic works
+
+Professor
+
+Counts: {&#39;chapter&#39;: 36}
+First spans: [(7063, 7072), (10320, 10330), (14085, 14096), (20136, 20146), (23487, 23496)]
+Splitter parameters: {&#39;include_delimiters&#39;: &#39;before&#39;, &#39;flags&#39;: re.IGNORECASE, &#39;chunk_size&#39;: 3000, &#39;pattern_names&#39;: [&#39;chapter&#39;]}
 </code></pre></div>
 
 
