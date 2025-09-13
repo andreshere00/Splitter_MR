@@ -28,7 +28,8 @@ The **Splitter** component implements the main functionality of this library. Th
 ::: splitter_mr.schema.models.SplitterOutput
     handler: python
     options:
-      members_order: source
+      extra:
+        members_order: source
 
 ## Splitters
 
@@ -37,91 +38,104 @@ The **Splitter** component implements the main functionality of this library. Th
 ::: splitter_mr.splitter.base_splitter
     handler: python
     options:
-      members_order: source
+      extra:
+        members_order: source
 
 ### CharacterSplitter
 
 ::: splitter_mr.splitter.splitters.character_splitter
     handler: python
     options:
-      members_order: source
+      extra:
+        members_order: source
 
 ### WordSplitter
 
 ::: splitter_mr.splitter.splitters.word_splitter
     handler: python
     options:
-      members_order: source
+      extra:
+        members_order: source
 
 ### SentenceSplitter
 
 ::: splitter_mr.splitter.splitters.sentence_splitter
     handler: python
     options:
-      members_order: source
+      extra:
+        members_order: source
 
 ### ParagraphSplitter
 
 ::: splitter_mr.splitter.splitters.paragraph_splitter
     handler: python
     options:
-      members_order: source
+      extra:
+        members_order: source
 
 ### RecursiveCharacterSplitter
 
 ::: splitter_mr.splitter.splitters.recursive_splitter
     handler: python
     options:
-      members_order: source
+      extra:
+        members_order: source
 
 ### KeywordSplitter
 
 ::: splitter_mr.splitter.splitters.keyword_splitter
     handler: python
     options:
-      member_order: source
+      extra:
+        member_order: source
 
 ### HeaderSplitter
 
 ::: splitter_mr.splitter.splitters.header_splitter
     handler: python
     options:
-      members_order: source
+      extra:
+        members_order: source
 
 ### RecursiveJSONSplitter
 
 ::: splitter_mr.splitter.splitters.json_splitter
     handler: python
     options:
-      members_order: source
+      extra:
+        members_order: source
 
 ### HTMLTagSplitter
 
 ::: splitter_mr.splitter.splitters.html_tag_splitter
     handler: python
     options:
-      members_order: source
+      extra:
+        members_order: source
 
 ### RowColumnSplitter
 
 ::: splitter_mr.splitter.splitters.row_column_splitter
     handler: python
     options:
-      members_order: source
+      extra:
+        members_order: source
 
 ### CodeSplitter
 
 ::: splitter_mr.splitter.splitters.code_splitter
     handler: python
     options:
-      members_order: source
+      extra:
+        members_order: source
 
 ### TokenSplitter
 
 ::: splitter_mr.splitter.splitters.token_splitter
     handler: python
     options:
-      members_order: source
+      extra:
+        members_order: source
 
 ### PagedSplitter
 
@@ -130,7 +144,8 @@ Splits text by pages for documents that have page structure. Each chunk contains
 ::: splitter_mr.splitter.splitters.paged_splitter
     handler: python
     options:
-      members_order: source
+      extra:
+        members_order: source
 
 ### SemanticSplitter
 
@@ -139,4 +154,5 @@ Splits text into chunks based on semantic similarity, using an embedding model a
 ::: splitter_mr.splitter.splitters.semantic_splitter
     handler: python
     options:
-      members_order: source
+      extra:
+        members_order: source

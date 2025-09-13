@@ -15,7 +15,7 @@ This is where **Visual Language Models (VLMs)** come in—to analyze and describ
 
 ## Step 1: Load a Model
 
-To extract image descriptions or perform OCR, instantiate any model that implements the [`BaseModel` interface](../../api_reference/model.md#basemodel) (vision variants inherit from it).
+To extract image descriptions or perform OCR, instantiate any model that implements the [`BaseModel` interface](../../api_reference/model.md#basevisionmodel) (vision variants inherit from it).
 
 ### Supported models (and when to use them)
 
