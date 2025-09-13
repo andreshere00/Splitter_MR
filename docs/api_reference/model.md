@@ -25,7 +25,8 @@ All models inherit from [**BaseVisionModel**](#basevisionmodel) and provide the 
 ::: src.splitter_mr.model.base_model
     handler: python
     options:
-      members_order: source
+      extra:
+        members_order: source
 
 ### OpenAIVisionModel
 
@@ -35,7 +36,8 @@ All models inherit from [**BaseVisionModel**](#basevisionmodel) and provide the 
 ::: src.splitter_mr.model.models.openai_model
     handler: python
     options:
-      members_order: source
+      extra:
+        members_order: source
 
 ### AzureOpenAIVisionModel
 
@@ -45,7 +47,8 @@ All models inherit from [**BaseVisionModel**](#basevisionmodel) and provide the 
 ::: src.splitter_mr.model.models.azure_openai_model
     handler: python
     options:
-      members_order: source
+      extra:
+        members_order: source
 
 ### GrokVisionModel
 
@@ -55,7 +58,8 @@ All models inherit from [**BaseVisionModel**](#basevisionmodel) and provide the 
 ::: src.splitter_mr.model.models.grok_model
     handler: python
     options:
-      members_order: source
+      extra:
+        members_order: source
 
 ### GeminiVisionModel
 
@@ -65,7 +69,8 @@ All models inherit from [**BaseVisionModel**](#basevisionmodel) and provide the 
 ::: src.splitter_mr.model.models.gemini_model
     handler: python
     options:
-      members_order: source
+      extra:
+        members_order: source
 
 ### AnthropicVisionModel
 
@@ -75,7 +80,8 @@ All models inherit from [**BaseVisionModel**](#basevisionmodel) and provide the 
 ::: src.splitter_mr.model.models.anthropic_model
     handler: python
     options:
-      members_order: source
+      extra:
+        members_order: source
 
 ### HuggingFaceVisionModel
 
@@ -91,4 +97,5 @@ All models inherit from [**BaseVisionModel**](#basevisionmodel) and provide the 
 ::: src.splitter_mr.model.models.huggingface_model
     handler: python
     options:
-      members_order: source
+      extra:
+        members_order: source

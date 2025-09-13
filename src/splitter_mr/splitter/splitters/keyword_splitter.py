@@ -47,7 +47,7 @@ class KeywordSplitter(BaseSplitter):
         *,
         flags: int = 0,
         include_delimiters: str = "before",
-        chunk_size: int = 1000,
+        chunk_size: int = 100000,
     ) -> None:
         """
         Initialize the KeywordSplitter.
