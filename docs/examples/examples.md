@@ -68,7 +68,13 @@ Read your PDF files and analyze the content using Docling and Visual Language Mo
 
 Read your PDF files and analyze the content using MarkItDown and Visual Language Models.
 
-### VLM Options comparison
+## **Use cases**
+
+### [How to build a simple RAG system](./use_cases/rag_simple.md)
+
+Build your own RAG using Qdrant and the SplitterMR library.
+
+## **VLM Options comparison**
 
 > Coming soon!
 
