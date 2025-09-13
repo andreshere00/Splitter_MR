@@ -20,8 +20,6 @@ Update pre-commit hooks to sync dependencies when executing the tests.
 
 ## v1.0.0
 
-First stable version.
-
 ### Features
 
 - Consolidated all features introduced in v0.x series into a stable API.
