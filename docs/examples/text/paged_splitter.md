@@ -10,6 +10,22 @@ For this example, we will read the file using `VanillaReader. The file can be fo
 
 You can read the file using [`VanillaReader`](https://andreshere00.github.io/Splitter_MR/api_reference/reader/#vanillareader) or [`DoclingReader`](https://andreshere00.github.io/Splitter_MR/api_reference/reader/#doclingreader). In case that you use [`MarkItDownReader`](https://andreshere00.github.io/Splitter_MR/api_reference/reader/#markitdownreader), you should pass the parameter `split_by_pages = True`, since MarkItDown by default does not provide any placeholder to split by pages.
 
+
+```python
+# Deactivate logging
+
+import warnings
+import logging
+
+warnings.filterwarnings("ignore", message=".*pin_memory.*MPS.*")
+
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("openai").setLevel(logging.WARNING)
+logger = logging.getLogger("docling")
+logger.propagate = False
+logger.handlers = []
+```
+
 ??? example "Show Python examples for all Readers"
 
     ```python
@@ -39,40 +55,28 @@ You can read the file using [`VanillaReader`](https://andreshere00.github.io/Spl
     reader_output = reader.read(file_path=FILE_PATH, split_by_pages=True)
     ```
 
-The output will be the following:
-
 
 ```python
-import warnings
-
-warnings.filterwarnings("ignore", message=".*pin_memory.*MPS.*")
-```
-
-
-```python
+from splitter_mr.model import AzureOpenAIVisionModel
 from splitter_mr.reader import DoclingReader
+
+from dotenv import load_dotenv
+
+load_dotenv(
+    dotenv_path="/Users/aherencia/Documents/Projects/Splitter_MR/notebooks/docs/examples/text/.env"
+)
 
 FILE_PATH = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/attention.pdf"
 
-reader = DoclingReader()
+model = AzureOpenAIVisionModel()
+
+reader = DoclingReader(model=model)
 reader_output = reader.read(file_path=FILE_PATH)
-print(reader_output.model_dump_json(indent=4))
 ```
 
-    {
-        "text": "Provided proper attribution is provided, Google hereby grants permission to reproduce the tables and figures in this paper solely for use in journalistic or scholarly works.\n\n## Attention Is All You Need\n\nAshish Vaswani ∗ Google Brain avaswani@google.com\n\nNoam Shazeer ∗ Google Brain noam@google.com\n\nNiki Parmar ∗ Google Research nikip@google.com\n\nJakob Uszkoreit ∗ Google Research usz@google.com\n\nLlion Jones ∗ Google Research llion@google.com\n\nAidan N. Gomez ∗ † Unive
-    ...
-     heads from the encoder self-attention at layer 5 of 6. The heads clearly learned to perform different tasks.\n\n<!-- image -->",
-        "document_name": "attention.pdf",
-        "document_path": "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/attention.pdf",
-        "document_id": "04aa7dd7-e397-464d-aa29-4f444be12514",
-        "conversion_method": "markdown",
-        "reader_method": "docling",
-        "ocr_method": null,
-        "page_placeholder": "<!-- page -->",
-        "metadata": {}
-    }
-
+!!! note
+    
+    The use of any vision model is optional, but it improves the extraction performance. See an [**example**](https://andreshere00.github.io/Splitter_MR/examples/pdf/pdf_docling/) of how to use a **`VisionModel`** to analyze or extract text from graphic resources or refer to the [**`VisionModel`**](https://andreshere00.github.io/Splitter_MR/api_reference/model/) documentation.
 
 
 As you can see, the [`ReaderOutput` object](../../api_reference/reader.md#output-format) has an attribute named `page_placeholder` which allows to identify every page. 
@@ -104,19 +108,14 @@ for idx, chunk in enumerate(splitter_output.chunks):
     
     Noam Shazeer ∗ Google Brain noam@google.com
     
-    Niki Parmar ∗ Google Resear
+    Llion Jones ∗ Google Resear
     ...
-    ord.
-    
-    <!-- image -->
-    
-    ******************************************************************************** Chunk 14 ********************************************************************************
-    
-    Input-Input Layer5
+    ut-Input Layer5
     
     Figure 5: Many of the attention heads exhibit behaviour that seems related to the structure of the sentence. We give two such examples above, from two different heads from the encoder self-attention at layer 5 of 6. The heads clearly learned to perform different tasks.
     
     <!-- image -->
+    *Caption: A pair of graphical representations showing the strength of word associations in two different text datasets, with green and red color codings indicating varying connection intensities.*
 
 
 
@@ -147,16 +146,14 @@ for idx, chunk in enumerate(splitter_output.chunks):
     
     Noam Shazeer ∗ Google Brain noam@google.com
     
-    Niki Parmar ∗ Google Resear
+    Llion Jones ∗ Google Resear
     ...
-    lution. Top: Full attentions for head 5. Bottom: Isolated attentions from just the word 'its' for attention heads 5 and 6. Note that the attentions are very sharp for this word.
-    
-    <!-- image -->
-    Input-Input Layer5
+    ut-Input Layer5
     
     Figure 5: Many of the attention heads exhibit behaviour that seems related to the structure of the sentence. We give two such examples above, from two different heads from the encoder self-attention at layer 5 of 6. The heads clearly learned to perform different tasks.
     
     <!-- image -->
+    *Caption: A pair of graphical representations showing the strength of word associations in two different text datasets, with green and red color codings indicating varying connection intensities.*
 
 
 
@@ -168,11 +165,16 @@ Thank you for reading! :)
 
 ```python
 from splitter_mr.reader import DoclingReader #, VanillaReader, MarkItDownReader
+from splitter_mr.model import AzureOpenAIVisionModel
 from splitter_mr.splitter import PagedSplitter
+from dotenv import load_dotenv
+
+load_dotenv()
 
 FILE_PATH = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/attention.pdf"
 
-reader = DoclingReader()
+model = AzureOpenAIVisionModel()
+reader = DoclingReader(model = model)
 reader_output = reader.read(file_path=FILE_PATH)
 
 print(reader_output.model_dump_json(indent=4))
