@@ -20,6 +20,7 @@ First, we instantiate our `VanillaReader` object:
 ```python
 from splitter_mr.reader import VanillaReader
 
+FILE_PATH: str = "data/sample_pdf.pdf"
 reader = VanillaReader()
 ```
 
@@ -28,8 +29,7 @@ To read the file, you simply call to the `read` method:
 
 
 ```python
-file = "data/sample_pdf.pdf"
-reader_output = reader.read(file)
+reader_output = reader.read(FILE_PATH)
 ```
 
 
@@ -46,7 +46,7 @@ print(reader_output.model_dump_json(indent=4))
     structure recognition) to produce\nusable, readable, and faithful Markdown output. As a result, perfect conversion\nis rarely possible, and manual review and cleanup are often required.\n\n<!-- image -->\n",
         "document_name": "sample_pdf.pdf",
         "document_path": "data/sample_pdf.pdf",
-        "document_id": "df3944d6-eb56-4d25-ae87-27db76138063",
+        "document_id": "f4c6b28d-2c05-4025-9781-faf019a2176d",
         "conversion_method": "pdf",
         "reader_method": "vanilla",
         "ocr_method": null,
@@ -107,7 +107,7 @@ The process is analogous to `VanillaReader`. So, we instantiate the `MarkItDownR
 from splitter_mr.reader import MarkItDownReader
 
 reader = MarkItDownReader()
-reader_output = reader.read(file)
+reader_output = reader.read(FILE_PATH)
 
 print(reader_output.text)
 ```
@@ -154,26 +154,40 @@ Let's see how it works for this use case:
 ```python
 from splitter_mr.reader import DoclingReader
 
-FILE_PATH = "data/sample_pdf.pdf"
-
 reader = DoclingReader()
 reader_output = reader.read(file_path=FILE_PATH)
 print(reader_output.text)
 ```
 
+    2025-10-02 22:07:13,178 - INFO - detected formats: [<InputFormat.PDF: 'pdf'>]
+    2025-10-02 22:07:13,207 - INFO - Going to convert document batch...
+    2025-10-02 22:07:13,208 - INFO - Initializing pipeline for StandardPdfPipeline with options hash e3309ea8218dc3b978b4932281c99b2a
+    2025-10-02 22:07:13,215 - INFO - Loading plugin 'docling_defaults'
+    2025-10-02 22:07:13,217 - INFO - Registered ocr engines: ['easyocr', 'ocrmac', 'rapidocr', 'tesserocr', 'tesseract']
+    2025-10-02 22:07:13,288 - INFO - Accelerator device: 'mps'
+    2025-10-02 22:07:15,367 - INFO - Accelerator device: 'mps'
+    2025-10-02 22:07:16,659 - INFO - Accelerator device: 'mps'
+    2025-10-02 22:07:17,224 - INFO - Loading plugin 'docling_defaults'
+    2025-10-02 22:07:17,225 - INFO - Registered picture descriptions: ['vlm', 'api']
+    2025-10-02 22:07:17,225 - INFO - Processing document sample_pdf.pdf
+    2025-10-02 22:07:19,270 - INFO - Finished converting document sample_pdf.pdf in 6.09 sec.
+
+
     ## A sample PDF
     
     Converting PDF files to other formats, such as Markdown, is a surprisingly complex task due to the nature of the PDF format itself . PDF (Portable Document Format) was designed primarily for preserving the visual layout of documents, making them look the same across different devices and platforms. However, this design goal introduces several challenges when trying to extract and convert the underlying content into a more flexible, structured format like Markdown.
     
-    Ilustración 1
+    <!-- image --
     ...
-    ple.com |
-    
-    ## Conclusion
-    
-    While it may seem simple on the surface, converting PDFs to formats like Markdown involves a series of technical and interpretive challenges. Effective conversion tools must blend text extraction, document analysis, and sometimes machine learning techniques (such as OCR or structure recognition) to produce usable, readable, and faithful Markdown output. As a result, perfect conversion is rarely possible, and manual review and cleanup are often required.
+    machine learning techniques (such as OCR or structure recognition) to produce usable, readable, and faithful Markdown output. As a result, perfect conversion is rarely possible, and manual review and cleanup are often required.
     
     <!-- image -->
+    
+    | Name        | Role         | Email             |
+    |-------------|--------------|-------------------|
+    | Alice Smith | Developer    | alice@example.com |
+    | Bob Johnson | Designer     | bob@example.com   |
+    | Carol White | Project Lead | carol@example.com |
 
 
 
@@ -213,27 +227,32 @@ def get_reader_output(file, reader=VanillaReader()):
 FILE_PATH = "data/sample_pdf.pdf"
 
 print("*" * 20 + " Vanilla Reader " + "*" * 20)
-vanilla_output = get_reader_output(file, reader=VanillaReader())
+vanilla_output = get_reader_output(FILE_PATH, reader=VanillaReader())
 
 print("*" * 20 + " MarkItDown Reader " + "*" * 20)
-markitdown_output = get_reader_output(file, reader=MarkItDownReader())
+markitdown_output = get_reader_output(FILE_PATH, reader=MarkItDownReader())
 
 print("*" * 20 + " Docling Reader " + "*" * 20)
-markitdown_output = get_reader_output(file, reader=DoclingReader())
+markitdown_output = get_reader_output(FILE_PATH, reader=DoclingReader())
 ```
 
     ******************** Vanilla Reader ********************
-    
-    Time taken by 'get_reader_output': 0.1170 seconds
-    
-    ******************** MarkItDown Reader ********************
-    
-    Time taken by 'get_reader_output': 0.0624 seconds
-    
-    ******************** Docling Reader ********************
-    
-    Time taken by 'get_reader_output': 4.4744 seconds
-    
+
+
+
+    ---------------------------------------------------------------------------
+
+    NameError                                 Traceback (most recent call last)
+
+    Cell In[7], line 27
+         24 FILE_PATH = "data/sample_pdf.pdf"
+         26 print("*" * 20 + " Vanilla Reader " + "*" * 20)
+    ---> 27 vanilla_output = get_reader_output(file, reader=VanillaReader())
+         29 print("*" * 20 + " MarkItDown Reader " + "*" * 20)
+         30 markitdown_output = get_reader_output(file, reader=MarkItDownReader())
+
+
+    NameError: name 'file' is not defined
 
 
 

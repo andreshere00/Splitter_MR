@@ -127,7 +127,8 @@ print(splitter_output.model_dump_json(indent=4))
         "chunks": [
             "# Pinocchio by Carlo Colodi (*The Tale of a Puppet*)\n\n## Chapter 1\n\n### THE PIECE OF WOOD THAT LAUGHED AND CRIED LIKE A CHILD\n\nThere was once upon a time a piece of wood in the shop of an old carpenter named Master Antonio. Everybody, however, called him Master Cherry, on account of the end of his nose, which was always as red and polished as a ripe cherry. No sooner had Master Cherry set eyes on the piece of wood than his face beamed with delight, and, rubbing h
     ...
-      "document_id": "9ad18596-3dbc-49ba-b428-fbd2db3fd7f4",
+    in/data/pinocchio_example.md",
+        "document_id": "9ad18596-3dbc-49ba-b428-fbd2db3fd7f4",
         "conversion_method": "txt",
         "reader_method": "vanilla",
         "ocr_method": null,
@@ -138,7 +139,7 @@ print(splitter_output.model_dump_json(indent=4))
             "breakpoint_threshold_amount": 80.0,
             "number_of_chunks": null,
             "chunk_size": 1000,
-            "model_name": "es-BPE_GENAI_CLASSIFIER_AGENT-llm-lab-embedding-3-large"
+            "model_name": "text-embedding-3-large"
         },
         "metadata": {}
     }
