@@ -1279,6 +1279,19 @@
 <p>For this example, we will read the file using `VanillaReader. The file can be found on the <a href="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/attention.pdf">GitHub repository</a>, and it consists of a scientific paper (<em>Attention is All You Need</em>) with 15 pages. Let's see how to split it.</p>
 <h2 id="step-1-read-the-file">Step 1. Read the file<a class="headerlink" href="#step-1-read-the-file" title="Permanent link">&para;</a></h2>
 <p>You can read the file using <a href="https://andreshere00.github.io/Splitter_MR/api_reference/reader/#vanillareader"><code>VanillaReader</code></a> or <a href="https://andreshere00.github.io/Splitter_MR/api_reference/reader/#doclingreader"><code>DoclingReader</code></a>. In case that you use <a href="https://andreshere00.github.io/Splitter_MR/api_reference/reader/#markitdownreader"><code>MarkItDownReader</code></a>, you should pass the parameter <code>split_by_pages = True</code>, since MarkItDown by default does not provide any placeholder to split by pages.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Deactivate logging</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;.*pin_memory.*MPS.*&quot;</span><span class="p">)</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;httpx&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;openai&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;docling&quot;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">handlers</span> <span class="o">=</span> <span class="p">[]</span>
+</code></pre></div>
 <details class="example">
 <summary>Show Python examples for all Readers</summary>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">VanillaReader</span>
@@ -1303,34 +1316,26 @@
 <span class="n">reader_output</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">FILE_PATH</span><span class="p">,</span> <span class="n">split_by_pages</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 </details>
-<p>The output will be the following:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">AzureOpenAIVisionModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">DoclingReader</span>
 
-<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;.*pin_memory.*MPS.*&quot;</span><span class="p">)</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">DoclingReader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+
+<span class="n">load_dotenv</span><span class="p">(</span>
+    <span class="n">dotenv_path</span><span class="o">=</span><span class="s2">&quot;/Users/aherencia/Documents/Projects/Splitter_MR/notebooks/docs/examples/text/.env&quot;</span>
+<span class="p">)</span>
 
 <span class="n">FILE_PATH</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/attention.pdf&quot;</span>
 
-<span class="n">reader</span> <span class="o">=</span> <span class="n">DoclingReader</span><span class="p">()</span>
-<span class="n">reader_output</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">FILE_PATH</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">reader_output</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
-</code></pre></div>
-<div class="codehilite"><pre><span></span><code>{
-    &quot;text&quot;: &quot;Provided proper attribution is provided, Google hereby grants permission to reproduce the tables and figures in this paper solely for use in journalistic or scholarly works.\n\n## Attention Is All You Need\n\nAshish Vaswani ∗ Google Brain avaswani@google.com\n\nNoam Shazeer ∗ Google Brain noam@google.com\n\nNiki Parmar ∗ Google Research nikip@google.com\n\nJakob Uszkoreit ∗ Google Research usz@google.com\n\nLlion Jones ∗ Google Research llion@google.com\n\nAidan N. Gomez ∗ † Unive
-...
- heads from the encoder self-attention at layer 5 of 6. The heads clearly learned to perform different tasks.\n\n&lt;!-- image --&gt;&quot;,
-    &quot;document_name&quot;: &quot;attention.pdf&quot;,
-    &quot;document_path&quot;: &quot;https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/attention.pdf&quot;,
-    &quot;document_id&quot;: &quot;04aa7dd7-e397-464d-aa29-4f444be12514&quot;,
-    &quot;conversion_method&quot;: &quot;markdown&quot;,
-    &quot;reader_method&quot;: &quot;docling&quot;,
-    &quot;ocr_method&quot;: null,
-    &quot;page_placeholder&quot;: &quot;&lt;!-- page --&gt;&quot;,
-    &quot;metadata&quot;: {}
-}
-</code></pre></div>
+<span class="n">model</span> <span class="o">=</span> <span class="n">AzureOpenAIVisionModel</span><span class="p">()</span>
 
+<span class="n">reader</span> <span class="o">=</span> <span class="n">DoclingReader</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
+<span class="n">reader_output</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">FILE_PATH</span><span class="p">)</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The use of any vision model is optional, but it improves the extraction performance. See an <a href="https://andreshere00.github.io/Splitter_MR/examples/pdf/pdf_docling/"><strong>example</strong></a> of how to use a <strong><code>VisionModel</code></strong> to analyze or extract text from graphic resources or refer to the <a href="https://andreshere00.github.io/Splitter_MR/api_reference/model/"><strong><code>VisionModel</code></strong></a> documentation.</p>
+</div>
 <p>As you can see, the <a href="../../../api_reference/reader/#output-format"><code>ReaderOutput</code> object</a> has an attribute named <code>page_placeholder</code> which allows to identify every page. </p>
 <h2 id="split-by-pages">Split by pages<a class="headerlink" href="#split-by-pages" title="Permanent link">&para;</a></h2>
 <p>So, we can simply instantiate the <code>PageSplitter</code> object and use the <code>split</code> method to get the chunks page-by-page:</p>
@@ -1353,19 +1358,14 @@ Ashish Vaswani ∗ Google Brain avaswani@google.com
 
 Noam Shazeer ∗ Google Brain noam@google.com
 
-Niki Parmar ∗ Google Resear
+Llion Jones ∗ Google Resear
 ...
-ord.
-
-&lt;!-- image --&gt;
-
-******************************************************************************** Chunk 14 ********************************************************************************
-
-Input-Input Layer5
+ut-Input Layer5
 
 Figure 5: Many of the attention heads exhibit behaviour that seems related to the structure of the sentence. We give two such examples above, from two different heads from the encoder self-attention at layer 5 of 6. The heads clearly learned to perform different tasks.
 
 &lt;!-- image --&gt;
+*Caption: A pair of graphical representations showing the strength of word associations in two different text datasets, with green and red color codings indicating varying connection intensities.*
 </code></pre></div>
 
 <p>Indeed, we have obtained a list of chunks with the extracted content, one per page.</p>
@@ -1388,27 +1388,30 @@ Ashish Vaswani ∗ Google Brain avaswani@google.com
 
 Noam Shazeer ∗ Google Brain noam@google.com
 
-Niki Parmar ∗ Google Resear
+Llion Jones ∗ Google Resear
 ...
-lution. Top: Full attentions for head 5. Bottom: Isolated attentions from just the word &#39;its&#39; for attention heads 5 and 6. Note that the attentions are very sharp for this word.
-
-&lt;!-- image --&gt;
-Input-Input Layer5
+ut-Input Layer5
 
 Figure 5: Many of the attention heads exhibit behaviour that seems related to the structure of the sentence. We give two such examples above, from two different heads from the encoder self-attention at layer 5 of 6. The heads clearly learned to perform different tasks.
 
 &lt;!-- image --&gt;
+*Caption: A pair of graphical representations showing the strength of word associations in two different text datasets, with green and red color codings indicating varying connection intensities.*
 </code></pre></div>
 
 <p>And that's it! Try to experiment which values are the best option for your use case. A full reference to this class is available on the <a href="https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#pagedsplitter">API Reference</a>. </p>
 <p>Thank you for reading! :)</p>
 <h2 id="complete-script">Complete script<a class="headerlink" href="#complete-script" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">DoclingReader</span> <span class="c1">#, VanillaReader, MarkItDownReader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">AzureOpenAIVisionModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.splitter</span><span class="w"> </span><span class="kn">import</span> <span class="n">PagedSplitter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+
+<span class="n">load_dotenv</span><span class="p">()</span>
 
 <span class="n">FILE_PATH</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/attention.pdf&quot;</span>
 
-<span class="n">reader</span> <span class="o">=</span> <span class="n">DoclingReader</span><span class="p">()</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">AzureOpenAIVisionModel</span><span class="p">()</span>
+<span class="n">reader</span> <span class="o">=</span> <span class="n">DoclingReader</span><span class="p">(</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="p">)</span>
 <span class="n">reader_output</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">FILE_PATH</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">reader_output</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>

@@ -1293,11 +1293,11 @@
 <p>First, we instantiate our <code>VanillaReader</code> object: </p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">VanillaReader</span>
 
+<span class="n">FILE_PATH</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;data/sample_pdf.pdf&quot;</span>
 <span class="n">reader</span> <span class="o">=</span> <span class="n">VanillaReader</span><span class="p">()</span>
 </code></pre></div>
 <p>To read the file, you simply call to the <code>read</code> method:</p>
-<div class="highlight"><pre><span></span><code><span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;data/sample_pdf.pdf&quot;</span>
-<span class="n">reader_output</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">reader_output</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">FILE_PATH</span><span class="p">)</span>
 </code></pre></div>
 <p>The result will be a <code>ReaderOutput</code> object with the following structure:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="n">reader_output</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
@@ -1308,7 +1308,7 @@
 structure recognition) to produce\nusable, readable, and faithful Markdown output. As a result, perfect conversion\nis rarely possible, and manual review and cleanup are often required.\n\n&lt;!-- image --&gt;\n&quot;,
     &quot;document_name&quot;: &quot;sample_pdf.pdf&quot;,
     &quot;document_path&quot;: &quot;data/sample_pdf.pdf&quot;,
-    &quot;document_id&quot;: &quot;df3944d6-eb56-4d25-ae87-27db76138063&quot;,
+    &quot;document_id&quot;: &quot;f4c6b28d-2c05-4025-9781-faf019a2176d&quot;,
     &quot;conversion_method&quot;: &quot;pdf&quot;,
     &quot;reader_method&quot;: &quot;vanilla&quot;,
     &quot;ocr_method&quot;: null,
@@ -1355,7 +1355,7 @@ is rarely possible, and manual review and cleanup are often required.
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">MarkItDownReader</span>
 
 <span class="n">reader</span> <span class="o">=</span> <span class="n">MarkItDownReader</span><span class="p">()</span>
-<span class="n">reader_output</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+<span class="n">reader_output</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">FILE_PATH</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">reader_output</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 </code></pre></div>
@@ -1391,25 +1391,39 @@ is rarely possible, and manual review and cleanup are often required.
 <p>Let's see how it works for this use case:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">splitter_mr.reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">DoclingReader</span>
 
-<span class="n">FILE_PATH</span> <span class="o">=</span> <span class="s2">&quot;data/sample_pdf.pdf&quot;</span>
-
 <span class="n">reader</span> <span class="o">=</span> <span class="n">DoclingReader</span><span class="p">()</span>
 <span class="n">reader_output</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">FILE_PATH</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">reader_output</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 </code></pre></div>
-<div class="codehilite"><pre><span></span><code>## A sample PDF
+<div class="codehilite"><pre><span></span><code>2025-10-02 22:07:13,178 - INFO - detected formats: [&lt;InputFormat.PDF: &#39;pdf&#39;&gt;]
+2025-10-02 22:07:13,207 - INFO - Going to convert document batch...
+2025-10-02 22:07:13,208 - INFO - Initializing pipeline for StandardPdfPipeline with options hash e3309ea8218dc3b978b4932281c99b2a
+2025-10-02 22:07:13,215 - INFO - Loading plugin &#39;docling_defaults&#39;
+2025-10-02 22:07:13,217 - INFO - Registered ocr engines: [&#39;easyocr&#39;, &#39;ocrmac&#39;, &#39;rapidocr&#39;, &#39;tesserocr&#39;, &#39;tesseract&#39;]
+2025-10-02 22:07:13,288 - INFO - Accelerator device: &#39;mps&#39;
+2025-10-02 22:07:15,367 - INFO - Accelerator device: &#39;mps&#39;
+2025-10-02 22:07:16,659 - INFO - Accelerator device: &#39;mps&#39;
+2025-10-02 22:07:17,224 - INFO - Loading plugin &#39;docling_defaults&#39;
+2025-10-02 22:07:17,225 - INFO - Registered picture descriptions: [&#39;vlm&#39;, &#39;api&#39;]
+2025-10-02 22:07:17,225 - INFO - Processing document sample_pdf.pdf
+2025-10-02 22:07:19,270 - INFO - Finished converting document sample_pdf.pdf in 6.09 sec.
+
+
+## A sample PDF
 
 Converting PDF files to other formats, such as Markdown, is a surprisingly complex task due to the nature of the PDF format itself . PDF (Portable Document Format) was designed primarily for preserving the visual layout of documents, making them look the same across different devices and platforms. However, this design goal introduces several challenges when trying to extract and convert the underlying content into a more flexible, structured format like Markdown.
 
-Ilustración 1
+&lt;!-- image --
 ...
-ple.com |
-
-## Conclusion
-
-While it may seem simple on the surface, converting PDFs to formats like Markdown involves a series of technical and interpretive challenges. Effective conversion tools must blend text extraction, document analysis, and sometimes machine learning techniques (such as OCR or structure recognition) to produce usable, readable, and faithful Markdown output. As a result, perfect conversion is rarely possible, and manual review and cleanup are often required.
+machine learning techniques (such as OCR or structure recognition) to produce usable, readable, and faithful Markdown output. As a result, perfect conversion is rarely possible, and manual review and cleanup are often required.
 
 &lt;!-- image --&gt;
+
+| Name        | Role         | Email             |
+|-------------|--------------|-------------------|
+| Alice Smith | Developer    | alice@example.com |
+| Bob Johnson | Designer     | bob@example.com   |
+| Carol White | Project Lead | carol@example.com |
 </code></pre></div>
 
 <p>We can see that the layout is generally better. All the text has been preserved, but markdown format is more present. We can see that headers, tables and lists are markdown formatted, despite bold or italics are not showing. In addition, formulas (<code>&lt;!-- formula-not-decoded --&gt;</code>) and images (<code>&lt;!-- Image --&gt;</code>) are detected too, despite no description or rendering is provided. Sometimes the line spacing is inconsistent as it was in MarkItDown. However, in general terms, it could be said that it is the method that best formats Markdown.</p>
@@ -1442,25 +1456,31 @@ While it may seem simple on the surface, converting PDFs to formats like Markdow
 <span class="n">FILE_PATH</span> <span class="o">=</span> <span class="s2">&quot;data/sample_pdf.pdf&quot;</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="mi">20</span> <span class="o">+</span> <span class="s2">&quot; Vanilla Reader &quot;</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="mi">20</span><span class="p">)</span>
-<span class="n">vanilla_output</span> <span class="o">=</span> <span class="n">get_reader_output</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">reader</span><span class="o">=</span><span class="n">VanillaReader</span><span class="p">())</span>
+<span class="n">vanilla_output</span> <span class="o">=</span> <span class="n">get_reader_output</span><span class="p">(</span><span class="n">FILE_PATH</span><span class="p">,</span> <span class="n">reader</span><span class="o">=</span><span class="n">VanillaReader</span><span class="p">())</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="mi">20</span> <span class="o">+</span> <span class="s2">&quot; MarkItDown Reader &quot;</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="mi">20</span><span class="p">)</span>
-<span class="n">markitdown_output</span> <span class="o">=</span> <span class="n">get_reader_output</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">reader</span><span class="o">=</span><span class="n">MarkItDownReader</span><span class="p">())</span>
+<span class="n">markitdown_output</span> <span class="o">=</span> <span class="n">get_reader_output</span><span class="p">(</span><span class="n">FILE_PATH</span><span class="p">,</span> <span class="n">reader</span><span class="o">=</span><span class="n">MarkItDownReader</span><span class="p">())</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="mi">20</span> <span class="o">+</span> <span class="s2">&quot; Docling Reader &quot;</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="mi">20</span><span class="p">)</span>
-<span class="n">markitdown_output</span> <span class="o">=</span> <span class="n">get_reader_output</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">reader</span><span class="o">=</span><span class="n">DoclingReader</span><span class="p">())</span>
+<span class="n">markitdown_output</span> <span class="o">=</span> <span class="n">get_reader_output</span><span class="p">(</span><span class="n">FILE_PATH</span><span class="p">,</span> <span class="n">reader</span><span class="o">=</span><span class="n">DoclingReader</span><span class="p">())</span>
 </code></pre></div>
 <div class="codehilite"><pre><span></span><code>******************** Vanilla Reader ********************
 
-Time taken by &#39;get_reader_output&#39;: 0.1170 seconds
 
-******************** MarkItDown Reader ********************
 
-Time taken by &#39;get_reader_output&#39;: 0.0624 seconds
+---------------------------------------------------------------------------
 
-******************** Docling Reader ********************
+NameError                                 Traceback (most recent call last)
 
-Time taken by &#39;get_reader_output&#39;: 4.4744 seconds
+Cell In[7], line 27
+     24 FILE_PATH = &quot;data/sample_pdf.pdf&quot;
+     26 print(&quot;*&quot; * 20 + &quot; Vanilla Reader &quot; + &quot;*&quot; * 20)
+---&gt; 27 vanilla_output = get_reader_output(file, reader=VanillaReader())
+     29 print(&quot;*&quot; * 20 + &quot; MarkItDown Reader &quot; + &quot;*&quot; * 20)
+     30 markitdown_output = get_reader_output(file, reader=MarkItDownReader())
+
+
+NameError: name &#39;file&#39; is not defined
 </code></pre></div>
 
 <p>As we can observe, although DoclingReader offers a really good conversion, it's a resource-intensive method, and therefore takes the longest to return the result. On the other hand, MarkItDownReader, although it preserves the markdown format the least, is the fastest of all. <code>VanillaReader</code> offers a balance between computation time and format preservation.</p>
