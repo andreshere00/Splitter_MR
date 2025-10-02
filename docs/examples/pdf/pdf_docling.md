@@ -183,13 +183,13 @@ print(docling_output.model_dump_json(indent=4))
     {
         "text": "## A sample PDF\n\nConverting PDF files to other formats, such as Markdown, is a surprisingly complex task due to the nature of the PDF format itself . PDF (Portable Document Format) was designed primarily for preserving the visual layout of documents, making them look the same across different devi
     ...
-    mmingbird hovers gracefully in front of a bright orange flower, showcasing the beauty of nature and the delicate balance between pollinators and plants.*",
+    <!-- image -->\n*Caption: A vibrant hummingbird hovers gracefully in front of a bright orange flower, showcasing the beauty of nature and the delicate balance between pollinators and plants.*",
         "document_name": "sample_pdf.pdf",
         "document_path": "data/sample_pdf.pdf",
         "document_id": "69de2a09-2477-4b34-a6a9-c955a44d5f15",
         "conversion_method": "markdown",
         "reader_method": "docling",
-        "ocr_method": "es-BPE_GENAI_CLASSIFIER_AGENT-llm-lab-ext-4o-mini",
+        "ocr_method": "gpt-4o-mini",
         "page_placeholder": "<!-- page -->",
         "metadata": {}
     }

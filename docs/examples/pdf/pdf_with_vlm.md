@@ -1,13 +1,14 @@
 # **Example**: Reading files with Visual Language Models to Provide Image Annotations
 
 !!! warning
-This tutorial has been redone and it is **deprecated**. See new versions here:
 
-```
-1. [VanillaReader](./pdf_vanilla.md).
-2. [DoclingReader](./pdf_docling.md).
-3. [MarkItDownReader](./pdf_markitdown.md).
-```
+    This tutorial has been redone and it is **deprecated**. See new versions here:
+
+    ```
+    1. [VanillaReader](./pdf_vanilla.md).
+    2. [DoclingReader](./pdf_docling.md).
+    3. [MarkItDownReader](./pdf_markitdown.md).
+    ```
 
 When reading a PDF file or other files which contain images, it can be useful to provide descriptive text alongside those images. Since images in a Markdown file are typically rendered by encoding them in base64 format, you may alternatively want to include a description of each image instead.
 
