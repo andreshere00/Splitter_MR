@@ -204,6 +204,7 @@ tmp/*
 # Notebooks data
 notebooks/docs/examples/pdf/data/*
 notebooks/docs/examples/pdf/data
-
+notebooks/docs/examples/rag
+notebooks/docs/examples/rag/qdrant_storage
 
 *.DS_Store*
