@@ -1,3 +1,8 @@
+# ---------------------------------- #
+# ------------ Splitter ------------ #
+# ---------------------------------- #
+
+
 class SplitterInputWarning(UserWarning):
     """
     Warning raised when the splitter input is suspicious (e.g., empty text or
