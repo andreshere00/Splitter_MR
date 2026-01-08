@@ -29,9 +29,9 @@
     
     **Check out the updated documentation, new examples, and join us in making text splitting and document parsing easier than ever!**
     
-    **Version 1.0.1 released** - `KeywordSplitter`
+    **Version 1.1.0** - Custom error and warning handling
     
-    This Splitter allows to divide text based on specific regex patterns or keywords. See documentation [**here**](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/#keywordsplitter).
+    Now you can control better your application workflow by using the custom exceptions and warnings. You can check them here: [**Link**](https://andreshere00.github.io/Splitter_MR/api_reference/exceptions/).
 
 
 ## Features
@@ -225,7 +225,7 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 
 ### Next features
 
-- [ ] **NEW** Provide a MCP server to make queries about the chunked documents.
+- [ ] Provide a MCP server to make queries about the chunked documents.
 - [ ] Add examples on how to implement SplitterMR in RAGs, MCPs and Agentic RAGs.
 - [ ] Add a method to read PDFs using Textract.
 - [ ] Add a new `BaseVisionModel` class to support generic API-provided models.
@@ -238,6 +238,7 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 
 ### Previously implemented (`^v1.0.0`)
 
+- [X] Add custom Error and Warning handling for better logging and traceability.
 - [X] Add `KeywordSplitter` support.
 
 ### Previously implemented (up to `v1.0.0`)
