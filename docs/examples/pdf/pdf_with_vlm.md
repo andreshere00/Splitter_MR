@@ -218,7 +218,9 @@ When using a `VanillaReader` class, the image is highlighted with a `> **Caption
 ```python
 from splitter_mr.reader import VanillaReader
 
-PROMPT: str = "Describe the resource in a concise way: e.g., <!---- Caption: Image shows ...!--->:"
+PROMPT: str = (
+    "Describe the resource in a concise way: e.g., <!-- Caption: Image shows ... -->:"
+)
 
 reader = VanillaReader(model=model)
 reader_output = reader.read(file_path=FILE_PATH, prompt=PROMPT)
@@ -237,12 +239,12 @@ print(reader_output.text)
     vitae orci scelerisque convallis quis ac purus.
     Cras sed neque vel justo auctor interdum a sit amet quam.
     ...
-    or eu
+    tortor eu
     dapibus. Nullam et ipsum tortor. Nulla imperdiet enim velit, commodo facilisis elit
     tempus quis. Cras in interdum augue.
     
     <!-- image -->
-    <!---- Caption: Image shows a figure wearing a teal hoodie, with their hands on their head and a black face featuring glowing circular eyes, set against a dark background. The figure's expression conveys a sense of surprise or shock. ---!>
+    <!-- Caption: Image shows a figure wearing a teal hoodie, with their hands on their head and a black face featuring glowing circular eyes, set against a dark background. The figure's expression conveys a sense of surprise or shock. -->
     
     | It seems like | This is a table | But I am not sure |
     | --- | --- | --- |
@@ -270,7 +272,7 @@ print(md_reader_output.text)
     <!-- page -->
     
     # Description:
-    <!---- Caption: Image shows a vibrant, colorful lizard peering out from a pink and orange floral background, showcasing its bright features and intricate details against a soft, blurred setting. ---!>
+    <!-- Caption: Image shows a vibrant, colorful lizard peering out from a pink and orange floral background, showcasing its bright features and intricate details against a soft, blurred setting. -->
     
 
 
@@ -401,7 +403,7 @@ reader_output = reader.read(file_path = FILE_PATH)
 
 print(reader_output.text)
 
-PROMPT: str = "Describe the resource in a concise way: e.g., <!---- Caption: Image shows ...!--->:"
+PROMPT: str = "Describe the resource in a concise way: e.g., <!-- Caption: Image shows ... -->:"
 
 reader_output_with_dif_prompt = reader.read(
     FILE_PATH, 
