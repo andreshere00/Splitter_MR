@@ -40,7 +40,7 @@ class OpenRouterVisionModel(BaseVisionModel):
         Args:
             api_key (str, optional): OpenRouter API key. Uses OPENROUTER_API_KEY env
                 var if not provided.
-            model_name (str): OpenRouter model slug (e.g. ``openai/gpt-4o``).
+            model_name (str): OpenRouter model slug (e.g. ``openai/gpt-5.6-luna``).
             site_url (str, optional): Optional site URL for OpenRouter app attribution
                 (``HTTP-Referer`` header). Uses OPENROUTER_SITE_URL if not provided.
             app_name (str, optional): Optional app name for OpenRouter attribution

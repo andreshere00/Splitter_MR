@@ -77,17 +77,30 @@ def test_init_with_env(monkeypatch):
     [
         ("AZURE_OPENAI_API_KEY", "API key"),
         ("AZURE_OPENAI_ENDPOINT", "endpoint"),
-        ("AZURE_OPENAI_DEPLOYMENT", "deployment name"),
     ],
 )
 def test_init_env_missing(monkeypatch, missing_env, errmsg):
     monkeypatch.setenv("AZURE_OPENAI_API_KEY", "x")
     monkeypatch.setenv("AZURE_OPENAI_ENDPOINT", "x")
-    monkeypatch.setenv("AZURE_OPENAI_DEPLOYMENT", "x")
+    monkeypatch.delenv("AZURE_OPENAI_DEPLOYMENT", raising=False)
     monkeypatch.delenv(missing_env, raising=False)
     with pytest.raises(ValueError) as exc:
         AzureOpenAIVisionModel()
     assert errmsg in str(exc.value)
+
+
+def test_init_uses_default_deployment_when_env_missing(monkeypatch):
+    from splitter_mr.schema import DEFAULT_AZURE_OPENAI_VISION_DEPLOYMENT
+
+    monkeypatch.setenv("AZURE_OPENAI_API_KEY", "x")
+    monkeypatch.setenv("AZURE_OPENAI_ENDPOINT", "https://example")
+    monkeypatch.delenv("AZURE_OPENAI_DEPLOYMENT", raising=False)
+    with patch(
+        "splitter_mr.model.models.azure_openai_model.AzureOpenAI"
+    ) as mock_client:
+        model = AzureOpenAIVisionModel()
+        mock_client.assert_called_once()
+        assert model.model_name == DEFAULT_AZURE_OPENAI_VISION_DEPLOYMENT
 
 
 def test_analyze_content_makes_correct_call():

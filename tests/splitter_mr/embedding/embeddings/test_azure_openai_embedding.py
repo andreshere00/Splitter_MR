@@ -68,6 +68,7 @@ def clean_env(monkeypatch):
     monkeypatch.delenv("AZURE_OPENAI_API_KEY", raising=False)
     monkeypatch.delenv("AZURE_OPENAI_ENDPOINT", raising=False)
     monkeypatch.delenv("AZURE_OPENAI_DEPLOYMENT", raising=False)
+    monkeypatch.delenv("AZURE_OPENAI_DEPLOYMENT_EMBEDDING", raising=False)
     monkeypatch.delenv("AZURE_OPENAI_API_VERSION", raising=False)
 
 
@@ -127,12 +128,15 @@ def test_init_raises_if_missing_endpoint(monkeypatch):
     assert "endpoint" in str(e.value).lower()
 
 
-def test_init_raises_if_missing_deployment_and_model_name(monkeypatch):
+def test_init_uses_default_deployment_when_env_and_model_name_missing(monkeypatch, mod):
+    from splitter_mr.schema import DEFAULT_AZURE_OPENAI_EMBEDDING_DEPLOYMENT
+
     monkeypatch.setenv("AZURE_OPENAI_API_KEY", "k")
     monkeypatch.setenv("AZURE_OPENAI_ENDPOINT", "https://endpoint")
-    with pytest.raises(ValueError) as e:
-        AzureOpenAIEmbedding()
-    assert "deployment" in str(e.value).lower()
+
+    emb = AzureOpenAIEmbedding()
+    assert emb.model_name == DEFAULT_AZURE_OPENAI_EMBEDDING_DEPLOYMENT
+    assert emb.get_client() is mod._fake_client
 
 
 # ----------------------------- tests: get_client -------------------------------

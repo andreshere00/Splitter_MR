@@ -20,14 +20,14 @@ To extract image descriptions or perform OCR, instantiate any model that impleme
 
 | Model (docs)                                                                    | When to use                                       | Required environment variables                                                                                        |
 | ------------------------------------------------------------------------------- | ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| [`OpenAIVisionModel`](../../api_reference/model.md#openaivisionmodel)           | You have an OpenAI API key and want OpenAI cloud. | `OPENAI_API_KEY` (optional: `OPENAI_MODEL`, defaults to `gpt-4o`)                                                     |
+| [`OpenAIVisionModel`](../../api_reference/model.md#openaivisionmodel)           | You have an OpenAI API key and want OpenAI cloud. | `OPENAI_API_KEY` (optional: `OPENAI_MODEL`, defaults to `gpt-5.6-luna`)                                                     |
 | [`AzureOpenAIVisionModel`](../../api_reference/model.md#azureopenaivisionmodel) | You use Azure OpenAI Service.                     | `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_DEPLOYMENT`, `AZURE_OPENAI_API_VERSION`                |
-| [`GrokVisionModel`](../../api_reference/model.md#grokvisionmodel)               | You have access to xAI Grok multimodal.           | `XAI_API_KEY` (optional: `XAI_MODEL`, default `grok-4`)                                                               |
+| [`GrokVisionModel`](../../api_reference/model.md#grokvisionmodel)               | You have access to xAI Grok multimodal.           | `XAI_API_KEY` (optional: `XAI_MODEL`, default `grok-4.5`)                                                               |
 | [`GeminiVisionModel`](../../api_reference/model.md#geminivisionmodel)           | You want Google’s Gemini vision models.           | `GEMINI_API_KEY` (also install extras: `pip install "splitter-mr[multimodal]"`)                                       |
 | [`AnthropicVisionModel`](../../api_reference/model.md#anthropicvisionmodel)     | You have an Anthropic key (Claude Vision).        | `ANTHROPIC_API_KEY` (optional: `ANTHROPIC_MODEL`)                                                                     |
 | [`HuggingFaceVisionModel`](../../api_reference/model.md#huggingfacevisionmodel) | You prefer local/open-source/offline inference.   | Install extras: `pip install "splitter-mr[multimodal]"` (optional: `HF_ACCESS_TOKEN` if the chosen model requires it) |
 
-> **Note on HuggingFace models:** Not all HF models are supported (e.g., gated or uncommon architectures). A well-tested option is **SmolDocling**.
+> **Note on HuggingFace models:** Not all HF models are supported (e.g., gated or uncommon architectures). A well-tested option is **Granite Docling**.
 
 ### Environment variables
 
@@ -39,13 +39,13 @@ To extract image descriptions or perform OCR, instantiate any model that impleme
 ```txt
 # OpenAI
 OPENAI_API_KEY=<your-api-key>
-# (optional) OPENAI_MODEL=gpt-4o
+# (optional) OPENAI_MODEL=gpt-5.6-luna
 ```
 
-  <h4>Azure OpenAI</h4>
+  <h4>OpenRouter</h4>
 
 ```txt
-# Azure OpenAI
+# OpenRouter
 AZURE_OPENAI_API_KEY=<your-api-key>
 AZURE_OPENAI_ENDPOINT=<your-endpoint>
 AZURE_OPENAI_API_VERSION=<your-api-version>
@@ -57,7 +57,7 @@ AZURE_OPENAI_DEPLOYMENT=<your-model-name>
 ```txt
 # xAI Grok
 XAI_API_KEY=<your-api-key>
-# (optional) XAI_MODEL=grok-4
+# (optional) XAI_MODEL=grok-4.5
 ```
 
   <h4>Google Gemini</h4>
@@ -73,7 +73,7 @@ GEMINI_API_KEY=<your-api-key>
 ```txt
 # Anthropic (Claude Vision)
 ANTHROPIC_API_KEY=<your-api-key>
-# (optional) ANTHROPIC_MODEL=claude-sonnet-4-20250514
+# (optional) ANTHROPIC_MODEL=claude-haiku-4-5
 ```
 
   <h4>Hugging Face (local/open-source)</h4>
@@ -99,7 +99,18 @@ from splitter_mr.model import OpenAIVisionModel
 # Reads OPENAI_API_KEY (and optional OPENAI_MODEL) from .env if present
 model = OpenAIVisionModel()
 # or pass explicitly:
-# model = OpenAIVisionModel(api_key="...", model_name="gpt-4o")
+# model = OpenAIVisionModel(api_key="...", model_name="gpt-5.6-luna")
+```
+
+  <h4>OpenRouter</h4>
+
+```python
+from splitter_mr.model import OpenRouterVisionModel
+
+# Reads OPENROUTER_API_KEY (and optional OPENROUTER_MODEL) from .env if present
+model = OpenRouterVisionModel()
+# or pass explicitly:
+# model = OpenRouterVisionModel(api_key="...", model_name="openai/gpt-5.6-luna")
 ```
 
   <h4>Azure OpenAI</h4>
@@ -107,14 +118,13 @@ model = OpenAIVisionModel()
 ```python
 from splitter_mr.model import AzureOpenAIVisionModel
 
-# Reads Azure vars from .env if present
 model = AzureOpenAIVisionModel()
 # or:
 # model = AzureOpenAIVisionModel(
 #     api_key="...",
 #     azure_endpoint="https://<resource>.openai.azure.com/",
 #     api_version="2024-02-15-preview",
-#     azure_deployment="<your-deployment-name>",
+#     azure_deployment="gpt-5.6-luna",
 # )
 ```
 
@@ -167,12 +177,12 @@ Firstly, we will use a [`VanillaReader`](https://andreshere00.github.io/Splitter
 
 
 ```python
+from splitter_mr.model import OpenRouterVisionModel
 from splitter_mr.reader import VanillaReader
-from splitter_mr.model import AzureOpenAIVisionModel
 
 FILE_PATH = "data/pdfplumber_example.pdf"
 
-model = AzureOpenAIVisionModel()
+model = OpenRouterVisionModel()
 reader = VanillaReader(model=model)
 reader_output = reader.read(file_path=FILE_PATH)
 
@@ -390,7 +400,7 @@ from splitter_mr.model import AzureOpenAIVisionModel
 from splitter_mr.reader import DoclingReader, MarkItDownReader, VanillaReader
 
 # Define the model
-model = AzureOpenAIVisionModel()
+model = OpenRouterVisionModel()
 
 # Readers
 

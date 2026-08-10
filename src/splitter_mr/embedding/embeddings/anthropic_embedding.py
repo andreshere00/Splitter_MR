@@ -3,6 +3,7 @@ from typing import Any, List, Optional
 
 import voyageai
 
+from ...schema import DEFAULT_VOYAGE_EMBEDDING_MODEL
 from ..base_embedding import BaseEmbedding
 
 
@@ -19,7 +20,7 @@ class AnthropicEmbedding(BaseEmbedding):
         ```python
         from splitter_mr.embedding import AnthropicEmbeddings
 
-        embedder = AnthropicEmbeddings(model_name="voyage-3.5")
+        embedder = AnthropicEmbeddings(model_name="voyage-4-large")
         vec = embedder.embed_text("hello world", input_type="document")
         print(len(vec))
         ```
@@ -27,7 +28,7 @@ class AnthropicEmbedding(BaseEmbedding):
 
     def __init__(
         self,
-        model_name: str = "voyage-3.5",
+        model_name: str = os.getenv("VOYAGE_MODEL", DEFAULT_VOYAGE_EMBEDDING_MODEL),
         api_key: Optional[str] = None,
         default_input_type: Optional[str] = "document",
     ) -> None:
@@ -36,8 +37,8 @@ class AnthropicEmbedding(BaseEmbedding):
 
         Args:
             model_name:
-                Voyage embedding model name (e.g., "voyage-3.5", "voyage-3-large",
-                "voyage-code-3", "voyage-finance-2", "voyage-law-2").
+                Voyage embedding model name (e.g., "voyage-4-large", "voyage-4",
+                "voyage-4-lite", "voyage-code-3", "voyage-finance-2", "voyage-law-2").
             api_key:
                 Voyage API key. If not provided, reads from the `VOYAGE_API_KEY`
                 environment variable.

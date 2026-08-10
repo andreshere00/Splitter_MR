@@ -34,7 +34,7 @@ def test_api_key_env(monkeypatch):
     monkeypatch.setenv("GEMINI_API_KEY", DUMMY_API_KEY)
     embedder = GeminiEmbedding()
     assert embedder.api_key == DUMMY_API_KEY
-    assert embedder.model_name == "models/embedding-001"
+    assert embedder.model_name == "gemini-embedding-001"
 
 
 def test_api_key_missing(monkeypatch):
@@ -60,7 +60,7 @@ def test_embed_text_success(monkeypatch):
     vec = embedder.embed_text("Hello world!")
     assert vec == [0.1, 0.2, 0.3]
     fake_models.embed_content.assert_called_once_with(
-        model="models/embedding-001", contents="Hello world!"
+        model="gemini-embedding-001", contents="Hello world!"
     )  # CHANGED: content → contents
 
 
@@ -99,7 +99,7 @@ def test_embed_documents_success(monkeypatch):
     vecs = embedder.embed_documents(["foo", "bar"])
     assert vecs == [[1.0, 2.0], [3.0, 4.0]]
     fake_models.embed_content.assert_called_once_with(
-        model="models/embedding-001", contents=["foo", "bar"]
+        model="gemini-embedding-001", contents=["foo", "bar"]
     )  # CHANGED: content → contents
 
 

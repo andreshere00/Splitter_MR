@@ -40,7 +40,7 @@ class GrokVisionModel(BaseVisionModel):
             api_key (str, optional): Grok API key. If not provided, uses the
                 ``XAI_API_KEY`` environment variable.
             model_name (str, optional): Model identifier to use. If not provided,
-                defaults to ``XAI_MODEL`` environment variable or ``"grok-4"``.
+                defaults to ``XAI_MODEL`` environment variable or ``"grok-4.5"``.
 
         Raises:
             ValueError: If ``api_key`` is not provided or cannot be resolved
