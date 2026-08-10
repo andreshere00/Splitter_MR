@@ -38,7 +38,7 @@ class MarkItDownReader(BaseReader):
 
     Attributes:
         model (BaseVisionModel): The vision model instance used for OCR/Captioning tasks.
-        model_name (str): The identifier of the model (e.g., 'gpt-4o'), used for metadata.
+        model_name (str): The identifier of the model (e.g., 'gpt-5.6-luna'), used for metadata.
         client (OpenAI): The OpenAI-compatible client extracted from the vision model.
 
     Raises:

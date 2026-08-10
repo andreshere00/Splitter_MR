@@ -3,6 +3,7 @@ from typing import Any, List, Optional
 
 from google import genai
 
+from ...schema import DEFAULT_GEMINI_EMBEDDING_MODEL
 from ..base_embedding import BaseEmbedding
 
 
@@ -25,14 +26,17 @@ class GeminiEmbedding(BaseEmbedding):
 
     def __init__(
         self,
-        model_name: str = "models/embedding-001",
+        model_name: str = os.getenv(
+            "GEMINI_EMBEDDING_MODEL", DEFAULT_GEMINI_EMBEDDING_MODEL
+        ),
         api_key: Optional[str] = None,
     ) -> None:
         """
         Initialize the Gemini embedding provider.
 
         Args:
-            model_name (str): The Gemini model identifier to use for embedding. Defaults to "models/embedding-001".
+            model_name (str): The Gemini model identifier to use for embedding.
+                Defaults to ``gemini-embedding-001`` (override via ``GEMINI_EMBEDDING_MODEL``).
             api_key (Optional[str]): The Gemini API key. If not provided, reads from the 'GEMINI_API_KEY' environment variable.
 
         Raises:

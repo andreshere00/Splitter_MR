@@ -19,7 +19,7 @@ def api_key():
 
 @pytest.fixture
 def model_name():
-    return "anthropic/claude-3.5-sonnet"
+    return "claude-haiku-4-5"
 
 
 def _patch_openai_client(monkeypatch):

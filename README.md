@@ -208,9 +208,9 @@ Pass a VLM model to any Reader via the `model` parameter:
 
 ```python
 from splitter_mr.reader import VanillaReader
-from splitter_mr.model.models import AzureOpenAIVisionModel
+from splitter_mr.model.models import OpenRouterVisionModel
 
-model = AzureOpenAIVisionModel()
+model = OpenRouterVisionModel()
 reader = VanillaReader(model=model)
 output = reader.read(file_path="data/sample_pdf.pdf")
 print(output.text)
@@ -246,14 +246,14 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 
 - [X] Add embedding model support.
     - [X] Add OpenAI embeddings model support.
-    - [X] Add Azure OpenAI embeddings model support.
+    - [X] Add OpenRouter embeddings model support.
     - [X] Add HuggingFace embeddings model support.
     - [X] Add Gemini embeddings model support.
     - [X] Add Claude Anthropic embeddings model support.
     - [X] Add OpenRouter embeddings model support.
 - [X] Add Vision models:
     - [X] Add OpenAI vision model support.
-    - [X] Add Azure OpenAI embeddings model support.
+    - [X] Add OpenRouter embeddings model support.
     - [X] Add Grok VLMs model support.
     - [X] Add HuggingFace VLMs model support.
     - [X] Add Gemini VLMs model support.

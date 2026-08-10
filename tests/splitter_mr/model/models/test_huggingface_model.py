@@ -8,7 +8,7 @@ import pytest
 from splitter_mr.model.models import huggingface_model as hf_mod
 from splitter_mr.model.models.huggingface_model import HuggingFaceVisionModel
 
-MODEL_ID = "ds4sd/SmolDocling-256M-preview"
+MODEL_ID = "ibm-granite/granite-docling-258M"
 
 # ---- Fixutes, helpers and patchs ---- #
 

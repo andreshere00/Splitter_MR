@@ -17,14 +17,14 @@ To use a VLM to read images and get annotations, instantiate any model that impl
 
 | Model (docs)                                                                                                       | When to use                                       | Required environment variables                                                                                        |
 | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| [`OpenAIVisionModel`](https://andreshere00.github.io/Splitter_MR/api_reference/model/#openaivisionmodel)           | You have an OpenAI API key and want OpenAI cloud. | `OPENAI_API_KEY` (optional: `OPENAI_MODEL`, defaults to `gpt-4o`)                                                     |
+| [`OpenAIVisionModel`](https://andreshere00.github.io/Splitter_MR/api_reference/model/#openaivisionmodel)           | You have an OpenAI API key and want OpenAI cloud. | `OPENAI_API_KEY` (optional: `OPENAI_MODEL`, defaults to `gpt-5.6-luna`)                                                     |
 | [`AzureOpenAIVisionModel`](https://andreshere00.github.io/Splitter_MR/api_reference/model/#azureopenaivisionmodel) | You use Azure OpenAI Service.                     | `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_DEPLOYMENT`, `AZURE_OPENAI_API_VERSION`                |
-| [`GrokVisionModel`](https://andreshere00.github.io/Splitter_MR/api_reference/model/#grokvisionmodel)               | You have access to xAI Grok multimodal.           | `XAI_API_KEY` (optional: `XAI_MODEL`, default `grok-4`)                                                               |
+| [`GrokVisionModel`](https://andreshere00.github.io/Splitter_MR/api_reference/model/#grokvisionmodel)               | You have access to xAI Grok multimodal.           | `XAI_API_KEY` (optional: `XAI_MODEL`, default `grok-4.5`)                                                               |
 | [`GeminiVisionModel`](https://andreshere00.github.io/Splitter_MR/api_reference/model/#geminivisionmodel)           | You want Google’s Gemini vision models.           | `GEMINI_API_KEY` (also install extras: `pip install "splitter-mr[multimodal]"`)                                       |
 | [`AnthropicVisionModel`](https://andreshere00.github.io/Splitter_MR/api_reference/model/#anthropicvisionmodel)     | You have an Anthropic key (Claude Vision).        | `ANTHROPIC_API_KEY` (optional: `ANTHROPIC_MODEL`)                                                                     |
 | [`HuggingFaceVisionModel`](https://andreshere00.github.io/Splitter_MR/api_reference/model/#huggingfacevisionmodel) | You prefer local/open-source/offline inference.   | Install extras: `pip install "splitter-mr[multimodal]"` (optional: `HF_ACCESS_TOKEN` if the chosen model requires it) |
 
-> **Note on HuggingFace models:** Not all HF models are supported (e.g., gated or uncommon architectures). A well-tested option is **SmolDocling**.
+> **Note on HuggingFace models:** Not all HF models are supported (e.g., gated or uncommon architectures). A well-tested option is **Granite Docling**.
 
 ### Environment variables
 
@@ -37,13 +37,13 @@ Create a `.env` file alongside your Python script:
 ```txt
 # OpenAI
 OPENAI_API_KEY=<your-api-key>
-# (optional) OPENAI_MODEL=gpt-4o
+# (optional) OPENAI_MODEL=gpt-5.6-luna
 ```
 
-  <h4>Azure OpenAI</h4>
+  <h4>OpenRouter</h4>
 
 ```txt
-# Azure OpenAI
+# OpenRouter
 AZURE_OPENAI_API_KEY=<your-api-key>
 AZURE_OPENAI_ENDPOINT=<your-endpoint>
 AZURE_OPENAI_API_VERSION=<your-api-version>
@@ -55,7 +55,7 @@ AZURE_OPENAI_DEPLOYMENT=<your-model-name>
 ```txt
 # xAI Grok
 XAI_API_KEY=<your-api-key>
-# (optional) XAI_MODEL=grok-4
+# (optional) XAI_MODEL=grok-4.5
 ```
 
   <h4>Google Gemini</h4>
@@ -71,7 +71,7 @@ GEMINI_API_KEY=<your-api-key>
 ```txt
 # Anthropic (Claude Vision)
 ANTHROPIC_API_KEY=<your-api-key>
-# (optional) ANTHROPIC_MODEL=claude-sonnet-4-20250514
+# (optional) ANTHROPIC_MODEL=claude-haiku-4-5
 ```
 
   <h4>Hugging Face (local/open-source)</h4>
@@ -97,7 +97,18 @@ from splitter_mr.model import OpenAIVisionModel
 # Reads OPENAI_API_KEY (and optional OPENAI_MODEL) from .env if present
 model = OpenAIVisionModel()
 # or pass explicitly:
-# model = OpenAIVisionModel(api_key="...", model_name="gpt-4o")
+# model = OpenAIVisionModel(api_key="...", model_name="gpt-5.6-luna")
+```
+
+  <h4>OpenRouter</h4>
+
+```python
+from splitter_mr.model import OpenRouterVisionModel
+
+# Reads OPENROUTER_API_KEY (and optional OPENROUTER_MODEL) from .env if present
+model = OpenRouterVisionModel()
+# or pass explicitly:
+# model = OpenRouterVisionModel(api_key="...", model_name="openai/gpt-5.6-luna")
 ```
 
   <h4>Azure OpenAI</h4>
@@ -105,14 +116,13 @@ model = OpenAIVisionModel()
 ```python
 from splitter_mr.model import AzureOpenAIVisionModel
 
-# Reads Azure vars from .env if present
 model = AzureOpenAIVisionModel()
 # or:
 # model = AzureOpenAIVisionModel(
 #     api_key="...",
 #     azure_endpoint="https://<resource>.openai.azure.com/",
 #     api_version="2024-02-15-preview",
-#     azure_deployment="<your-deployment-name>",
+#     azure_deployment="gpt-5.6-luna",
 # )
 ```
 
@@ -156,12 +166,12 @@ model = HuggingFaceVisionModel()
 
 
 ```python
-from splitter_mr.model import AzureOpenAIVisionModel
+from splitter_mr.model import OpenRouterVisionModel
 from splitter_mr.reader import DoclingReader
 
 file = "data/sample_pdf.pdf"
 
-model = AzureOpenAIVisionModel()
+model = OpenRouterVisionModel()
 ```
 
 
@@ -183,13 +193,13 @@ print(docling_output.model_dump_json(indent=4))
     {
         "text": "## A sample PDF\n\nConverting PDF files to other formats, such as Markdown, is a surprisingly complex task due to the nature of the PDF format itself . PDF (Portable Document Format) was designed primarily for preserving the visual layout of documents, making them look the same across different devi
     ...
-    <!-- image -->\n*Caption: A vibrant hummingbird hovers gracefully in front of a bright orange flower, showcasing the beauty of nature and the delicate balance between pollinators and plants.*",
+    !-- image -->\n*Caption: A vibrant hummingbird hovers gracefully in front of a bright orange flower, showcasing the beauty of nature and the delicate balance between pollinators and plants.*",
         "document_name": "sample_pdf.pdf",
         "document_path": "data/sample_pdf.pdf",
         "document_id": "69de2a09-2477-4b34-a6a9-c955a44d5f15",
         "conversion_method": "markdown",
         "reader_method": "docling",
-        "ocr_method": "gpt-4o-mini",
+        "ocr_method": "gpt-5.6-luna",
         "page_placeholder": "<!-- page -->",
         "metadata": {}
     }
@@ -280,7 +290,7 @@ load_dotenv()
 
 file = "data/sample_pdf.pdf"
 
-model = AzureOpenAIVisionModel()
+model = OpenRouterVisionModel()
 docling_reader = DoclingReader(model = model)
 
 # 1. Read PDF using a Visual Language Model

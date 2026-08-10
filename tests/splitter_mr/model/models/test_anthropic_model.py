@@ -20,7 +20,7 @@ def api_key():
 
 @pytest.fixture
 def model_name():
-    return "claude-3-opus-20240229"
+    return "claude-haiku-4-5"
 
 
 def _patch_openai_client(monkeypatch):

@@ -34,7 +34,7 @@ class FakeOpenAI:
 
 
 class FakeVisionModel(BaseVisionModel):
-    def __init__(self, model_name="gpt-4o-vision"):
+    def __init__(self, model_name="gpt-5.6-luna"):
         self.model_name = model_name
 
     def get_client(self):
@@ -214,7 +214,7 @@ def test_scan_pdf_pages_splits_each_page(tmp_path):
         assert "PAGE-MD" in result.text
         # Metadata should reflect scan mode
         assert result.conversion_method == "markdown"
-        assert result.ocr_method == "gpt-4o-vision"
+        assert result.ocr_method == "gpt-5.6-luna"
 
 
 @patch("splitter_mr.reader.readers.markitdown_reader.OpenAI", FakeOpenAI)
@@ -264,7 +264,7 @@ def test_page_placeholder_field(
     )
 
     class DummyVisionModel:
-        model_name = "gpt-4o-vision"
+        model_name = "gpt-5.6-luna"
 
         def get_client(self):
             return FakeOpenAI()
