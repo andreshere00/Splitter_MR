@@ -114,9 +114,7 @@ class OpenRouterVisionModel(BaseVisionModel):
             or "image/png"  # noqa: W503
         )
         if mime_type not in SUPPORTED_OPENAI_MIME_TYPES:
-            raise ValueError(
-                f"Unsupported image MIME type for OpenRouter: {mime_type}"
-            )
+            raise ValueError(f"Unsupported image MIME type for OpenRouter: {mime_type}")
 
         payload_obj = OpenAIClientPayload(
             role="user",
