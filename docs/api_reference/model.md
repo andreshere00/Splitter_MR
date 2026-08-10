@@ -2,10 +2,33 @@
 
 Reading documents like Word, PDF, or PowerPoint can sometimes be complicated if they contain images. To avoid this problem, **you can use visual language models (VLMs), which are capable of recognizing images and extracting descriptions from them**. In this prospectus, a model module has been developed, the implementation of which is based on the [**BaseVisionModel**](#basevisionmodel) class. It is presented below.
 
+## Using `analyze_content`
+
+Every concrete vision model implements **`analyze_content`** to send a text prompt and a base64-encoded image (no `data:` prefix) to the provider and return the model’s text response. Pass the instance to a [**Reader**](./reader.md) as `model=...`, or call it directly when you already have encoded image bytes.
+
+```python
+import base64
+
+from splitter_mr.model import OpenRouterVisionModel
+
+with open("diagram.png", "rb") as f:
+    image_b64 = base64.b64encode(f.read()).decode("utf-8")
+
+model = OpenRouterVisionModel()  # OPENROUTER_API_KEY; optional OPENROUTER_MODEL
+description = model.analyze_content(
+    file=image_b64,
+    prompt="Describe this image in one paragraph.",
+    file_ext="png",
+)
+print(description)
+```
+
+Install the multimodal extra when the provider uses optional SDK dependencies: `pip install 'splitter-mr[multimodal]'`.
+
 ## Which model should I use?
 
 The choice of model depends on your cloud provider, available API keys, and desired level of integration.
-All models inherit from [**BaseVisionModel**](#basevisionmodel) and provide the same interface for extracting text and descriptions from images.
+All models inherit from [**BaseVisionModel**](#basevisionmodel) and implement **`analyze_content`** for image prompts and extraction.
 
 | Model                                                 | When to use                                         | Requirements                                                                                                   | Features                                                                                                     |
 | ----------------------------------------------------- | --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |

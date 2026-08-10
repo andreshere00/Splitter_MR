@@ -14,9 +14,25 @@ These embeddings can be used in a variety of tasks, such as:
 
 **SplitterMR** takes advantage of these models in [**`SemanticSplitter`**](./splitter.md#semanticsplitter). These representations are used to break text into chunks based on *meaning*, not just size. Sentences with similar context end up together, regardless of length or position.
 
+## Using `embed_text` and `embed_documents`
+
+**`embed_text`** returns one embedding vector (`List[float]`) for a single string. **`embed_documents`** embeds many strings in one call when the backend supports batching (recommended for [`SemanticSplitter`](./splitter.md#semanticsplitter)).
+
+```python
+from splitter_mr.embedding import OpenRouterEmbedding
+
+embedder = OpenRouterEmbedding()  # OPENROUTER_API_KEY; optional OPENROUTER_EMBEDDING_MODEL
+
+vector = embedder.embed_text("SplitterMR chunks documents for LLM apps.")
+vectors = embedder.embed_documents(["First sentence.", "Second sentence."])
+print(len(vector), len(vectors))
+```
+
+Token limits are validated on OpenAI-compatible embedders (including OpenRouter) using the same rules as [**OpenAIEmbedding**](#openaiembedding).
+
 ## Which embedder should I use?
 
-All embedders inherit from [**BaseEmbedding**](#baseembedding) and expose the same interface for generating embeddings. Choose based on your cloud provider, credentials, and compliance needs.
+All embedders inherit from [**BaseEmbedding**](#baseembedding) and expose **`embed_text`** and **`embed_documents`** for generating embeddings. Choose based on your cloud provider, credentials, and compliance needs.
 
 | Model                                             | When to use                                                                 | Requirements                                                                                                        | Features                                                                                                            |
 | ------------------------------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |

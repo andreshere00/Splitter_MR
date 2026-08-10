@@ -2,6 +2,25 @@
 
 > **Version 1.0.0: First stable release with full Reader, Splitter, Embedding and Vision model support.**
 
+## v1.2.0
+
+> **Version 1.2.0:**
+>
+> SplitterMR now supports **[OpenRouter](https://openrouter.ai/)** as a backend for both [**embedding**](https://andreshere00.github.io/Splitter_MR/api_reference/embedding#openrouterembedding) and [**vision**](https://andreshere00.github.io/Splitter_MR/api_reference/model#openroutervisionmodel) models.
+>
+> With a single `OPENROUTER_API_KEY`, you can route requests to many provider model slugs through OpenRouter's OpenAI-compatible API.
+
+### Features
+
+- Add new Vision Model: **`OpenRouterVisionModel`**.
+- Add new Embedding Model: **`OpenRouterEmbedding`**.
+- Add OpenRouter defaults and optional attribution headers (`OPENROUTER_SITE_URL`, `OPENROUTER_APP_NAME`).
+
+### Documentation
+
+- Update API reference for vision and embedding models with OpenRouter.
+- Update `.env.template` with OpenRouter environment variables.
+
 ## v1.1.0
 
 **Improved traceability** by adding new custom error and warning handling.
