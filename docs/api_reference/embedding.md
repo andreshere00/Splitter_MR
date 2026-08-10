@@ -24,6 +24,7 @@ All embedders inherit from [**BaseEmbedding**](#baseembedding) and expose the sa
 | [**AzureOpenAIEmbedding**](#azureopenaiembedding) | Your organization uses Azure OpenAI Services                                | `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_DEPLOYMENT`                                          | Enterprise controls, Azure compliance & data residency; integrates with Azure identity.                             |
 | [**GeminiEmbedding**](#geminiembedding)           | You want Google’s Gemini text embeddings                                    | `GEMINI_API_KEY` + **Multimodal extra**: `pip install 'splitter-mr[multimodal]'`                                      | Google Gemini API; modern, high-quality text embeddings.                                                            |
 | [**AnthropicEmbeddings**](#anthropicembedding)   | You want embeddings aligned with Anthropic guidance (via Voyage AI)         | `VOYAGE_API_KEY` + **Multimodal extra**: `pip install 'splitter-mr[multimodal]'`                                      | Voyage AI embeddings (general, code, finance, law, multimodal); supports `input_type` for query/document asymmetry. |
+| [**OpenRouterEmbedding**](#openrouterembedding) | Universal access to many embedding models via OpenRouter                    | `OPENROUTER_API_KEY` (optional: `OPENROUTER_EMBEDDING_MODEL`, defaults to `"openai/text-embedding-3-large"`)          | OpenAI SDK with OpenRouter base URL; any embedding model slug; tiktoken length validation.                            |
 | [**HuggingFaceEmbedding**](#huggingfaceembedding) | Prefer local/open-source models (Sentence-Transformers); offline capability | **Multimodal extra**: `pip install 'splitter-mr[multimodal]'` (optional: `HF_ACCESS_TOKEN`, only for required models) | No API key; huge model zoo; CPU/GPU/MPS; optional L2 normalization for cosine similarity.                           |
 | [**BaseEmbedding**](#baseembedding)               | Abstract base, not used directly                                            | –                                                                                                                   | Implement to plug in a custom or self-hosted embedder.                                                              |
 
@@ -76,6 +77,16 @@ All embedders inherit from [**BaseEmbedding**](#baseembedding) and expose the sa
 ![AnthropicEmbedding logo](../assets/anthropic_embedding_model_button_white.svg#gh-dark-mode-only)
 
 ::: src.splitter_mr.embedding.embeddings.anthropic_embedding
+    handler: python
+    options:
+      members_order: source
+
+### OpenRouterEmbedding
+
+![OpenRouterEmbedding logo](../assets/openrouter_embedding_model_button.svg#gh-light-mode-only)
+![OpenRouterEmbedding logo](../assets/openrouter_embedding_model_button_white.svg#gh-dark-mode-only)
+
+::: src.splitter_mr.embedding.embeddings.openrouter_embedding
     handler: python
     options:
       members_order: source

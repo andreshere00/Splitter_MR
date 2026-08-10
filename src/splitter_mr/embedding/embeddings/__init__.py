@@ -7,10 +7,12 @@ if TYPE_CHECKING:
     from .gemini_embedding import GeminiEmbedding  # noqa: F401
     from .huggingface_embedding import HuggingFaceEmbedding  # noqa: F401
     from .openai_embedding import OpenAIEmbedding  # noqa: F401
+    from .openrouter_embedding import OpenRouterEmbedding  # noqa: F401
 
 REGISTRY: Dict[str, Tuple[str, str]] = {
     "AzureOpenAIEmbedding": (".azure_openai_embedding", "AzureOpenAIEmbedding"),
     "OpenAIEmbedding": (".openai_embedding", "OpenAIEmbedding"),
+    "OpenRouterEmbedding": (".openrouter_embedding", "OpenRouterEmbedding"),
     "GeminiEmbedding": (".gemini_embedding", "GeminiEmbedding"),
     "HuggingFaceEmbedding": (".huggingface_embedding", "HuggingFaceEmbedding"),
     "AnthropicEmbedding": (".anthropic_embedding", "AnthropicEmbedding"),

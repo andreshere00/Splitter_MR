@@ -110,6 +110,7 @@ DEFAULT_ANTHROPIC_ENTRYPOINT: Final[str] = "https://api.anthropic.com/v1/"
 
 DEFAULT_OPENROUTER_ENTRYPOINT: Final[str] = "https://openrouter.ai/api/v1"
 DEFAULT_OPENROUTER_MODEL: Final[str] = "openai/gpt-4o"
+DEFAULT_OPENROUTER_EMBEDDING_MODEL: Final[str] = "openai/text-embedding-3-large"
 
 # ---- Grok Vision Model ---- #
 

@@ -16,6 +16,7 @@ def test_embedding___all___contains_expected_names():
         "GeminiEmbedding",
         "HuggingFaceEmbedding",
         "AnthropicEmbedding",
+        "OpenRouterEmbedding",
     }
     assert set(embedding.__all__) == expected
 
@@ -32,6 +33,7 @@ def test_embedding___dir___returns_sorted_all():
         ("GeminiEmbedding", ".gemini_embedding", "GeminiEmbedding"),
         ("HuggingFaceEmbedding", ".huggingface_embedding", "HuggingFaceEmbedding"),
         ("AnthropicEmbedding", ".anthropic_embedding", "AnthropicEmbedding"),
+        ("OpenRouterEmbedding", ".openrouter_embedding", "OpenRouterEmbedding"),
     ],
 )
 def test_embedding_lazy_getattr_success(monkeypatch, name, module_path, class_name):
@@ -59,6 +61,7 @@ def test_embedding_lazy_getattr_success(monkeypatch, name, module_path, class_na
         "GeminiEmbedding",
         "HuggingFaceEmbedding",
         "AnthropicEmbedding",
+        "OpenRouterEmbedding",
     ],
 )
 def test_embedding_lazy_getattr_missing_optional_dep_raises_multimodal_hint(
@@ -85,6 +88,7 @@ def test_embedding_lazy_getattr_missing_optional_dep_raises_multimodal_hint(
         ("GeminiEmbedding", "GeminiEmbedding"),
         ("HuggingFaceEmbedding", "HuggingFaceEmbedding"),
         ("AnthropicEmbedding", "AnthropicEmbedding"),
+        ("OpenRouterEmbedding", "OpenRouterEmbedding"),
     ],
 )
 def test_embedding_import_succeeds_but_class_missing_raises_attributeerror(
