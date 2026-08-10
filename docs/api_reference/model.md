@@ -15,6 +15,7 @@ All models inherit from [**BaseVisionModel**](#basevisionmodel) and provide the 
 | [**GeminiVisionModel**](#geminivisionmodel)           | If you want Google’s Gemini Vision models           | `GEMINI_API_KEY` + **Multimodal extra:** `pip install 'splitter-mr[multimodal]'`                                 | Google Gemini API, multi-modal, high-quality extraction                                                      |
 | [**HuggingFaceVisionModel**](#huggingfacevisionmodel) | Local/open-source/offline inference                 | **Multimodal extra**: `pip install 'splitter-mr[multimodal]'` (optional: `HF_ACCESS_TOKEN`, for required models) | Runs locally, uses HF `AutoProcessor` + chat templates                                                       |
 | [**AnthropicVisionModel**](#anthropicvisionmodel)     | If you have an Anthropic key and want Claude Vision | `ANTHROPIC_API_KEY` (optional: `ANTHROPIC_MODEL`, defaults to `"claude-sonnet-4-20250514"`)                    | Uses OpenAI SDK with Anthropic base URL; data-URI (base64) image input; OpenAI-compatible `chat.completions` |
+| [**OpenRouterVisionModel**](#openroutervisionmodel)   | Universal access to many vision models via OpenRouter | `OPENROUTER_API_KEY` (optional: `OPENROUTER_MODEL`, defaults to `"openai/gpt-4o"`; optional attribution: `OPENROUTER_SITE_URL`, `OPENROUTER_APP_NAME`) | OpenAI SDK with OpenRouter base URL; any vision-capable model slug; data-URI image input |
 | [**BaseVisionModel**](#basevisionmodel)               | Abstract base, not used directly                    | –                                                                                                              | Template to build your own adapters                                                                          |
 
 
@@ -78,6 +79,17 @@ All models inherit from [**BaseVisionModel**](#basevisionmodel) and provide the 
 ![AnthropicVisionModel logo](../assets/anthropic_vision_model_button_white.svg#gh-dark-mode-only)
 
 ::: src.splitter_mr.model.models.anthropic_model
+    handler: python
+    options:
+      extra:
+        members_order: source
+
+### OpenRouterVisionModel
+
+![OpenRouterVisionModel logo](../assets/openrouter_vision_model_button.svg#gh-light-mode-only)
+![OpenRouterVisionModel logo](../assets/openrouter_vision_model_button_white.svg#gh-dark-mode-only)
+
+::: src.splitter_mr.model.models.openrouter_model
     handler: python
     options:
       extra:

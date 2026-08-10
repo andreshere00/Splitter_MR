@@ -17,6 +17,7 @@ def test___all___contains_expected_names():
         "GrokVisionModel",
         "GeminiVisionModel",
         "AnthropicVisionModel",
+        "OpenRouterVisionModel",
     }
     assert set(vision.__all__) == expected
 
@@ -34,6 +35,7 @@ def test___dir___returns_sorted_all():
         ("GrokVisionModel", ".grok_model", "GrokVisionModel"),
         ("GeminiVisionModel", ".gemini_model", "GeminiVisionModel"),
         ("AnthropicVisionModel", ".anthropic_model", "AnthropicVisionModel"),
+        ("OpenRouterVisionModel", ".openrouter_model", "OpenRouterVisionModel"),
     ],
 )
 def test_lazy_getattr_success(monkeypatch, name, module_path, class_name):
@@ -62,6 +64,7 @@ def test_lazy_getattr_success(monkeypatch, name, module_path, class_name):
         "GrokVisionModel",
         "GeminiVisionModel",
         "AnthropicVisionModel",
+        "OpenRouterVisionModel",
     ],
 )
 def test_lazy_getattr_missing_optional_dep_raises_multimodal_hint(monkeypatch, name):
@@ -87,6 +90,7 @@ def test_lazy_getattr_missing_optional_dep_raises_multimodal_hint(monkeypatch, n
         ("GrokVisionModel", "GrokVisionModel"),
         ("GeminiVisionModel", "GeminiVisionModel"),
         ("AnthropicVisionModel", "AnthropicVisionModel"),
+        ("OpenRouterVisionModel", "OpenRouterVisionModel"),
     ],
 )
 def test_lazy_getattr_import_succeeds_but_class_missing_raises_attributeerror(

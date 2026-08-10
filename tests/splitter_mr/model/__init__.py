@@ -21,6 +21,7 @@ def test_model___all___contains_expected_names():
         "GrokVisionModel",
         "GeminiVisionModel",
         "AnthropicVisionModel",
+        "OpenRouterVisionModel",
     }
 
 
@@ -43,6 +44,7 @@ def test_model_base_class_is_exposed_without_lazy_import():
         "GrokVisionModel",
         "GeminiVisionModel",
         "AnthropicVisionModel",
+        "OpenRouterVisionModel",
     ],
 )
 def test_model___getattr___delegates_to_models(monkeypatch, name):
@@ -81,6 +83,7 @@ def test_model___getattr___unknown_name_raises_attributeerror():
         "GrokVisionModel",
         "GeminiVisionModel",
         "AnthropicVisionModel",
+        "OpenRouterVisionModel",
     ],
 )
 def test_model_import_succeeds_but_class_missing_raises_attributeerror(

@@ -10,12 +10,14 @@ if TYPE_CHECKING:
         GrokVisionModel,
         HuggingFaceVisionModel,
         OpenAIVisionModel,
+        OpenRouterVisionModel,
     )
 
 __all__ = [
     "BaseVisionModel",
     "AzureOpenAIVisionModel",
     "OpenAIVisionModel",
+    "OpenRouterVisionModel",
     "HuggingFaceVisionModel",
     "GrokVisionModel",
     "GeminiVisionModel",

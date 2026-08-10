@@ -106,6 +106,11 @@ assert set(OPENAI_MIME_BY_EXTENSION.values()).issubset(SUPPORTED_OPENAI_MIME_TYP
 DEFAULT_ANTHROPIC_MODEL: Final[str] = "claude-sonnet-4"
 DEFAULT_ANTHROPIC_ENTRYPOINT: Final[str] = "https://api.anthropic.com/v1/"
 
+# ---- OpenRouter Vision Model ---- #
+
+DEFAULT_OPENROUTER_ENTRYPOINT: Final[str] = "https://openrouter.ai/api/v1"
+DEFAULT_OPENROUTER_MODEL: Final[str] = "openai/gpt-4o"
+
 # ---- Grok Vision Model ---- #
 
 DEFAULT_GROK_VISION_MODEL: Final[str] = "grok-4"
