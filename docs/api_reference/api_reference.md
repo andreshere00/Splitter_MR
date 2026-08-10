@@ -10,7 +10,7 @@ Welcome to the **SplitterMR Python API** reference.
 
 ### [Vision Model component](./model.md)
 
-Extend the reader capabilities using VLMs (Visual Language Models) to analyze visual content from your documents.
+Extend reader capabilities using VLMs (Visual Language Models) to analyze visual content from your documents. All vision providers implement [**`BaseVisionModel.analyze_content`**](model.md#basevisionmodel) to run a prompt against a base64-encoded image. For a single OpenRouter key and many upstream models, see [**`OpenRouterVisionModel`**](model.md#openroutervisionmodel).
 
 ### [Reader component](./reader.md)
 
@@ -22,4 +22,4 @@ Implement several splitting strategies based on the type of document and use cas
 
 ### [Embedding component](./embedding.md)
 
-Implement encoder models from different providers to perform Semantic Splitting.
+Implement encoder models from different providers to perform semantic splitting. Embedders expose [**`BaseEmbedding.embed_text`**](embedding.md#baseembedding) and [**`embed_documents`**](embedding.md#baseembedding) to vectorize strings for similarity-based chunking. For OpenRouter-hosted embedding slugs, see [**`OpenRouterEmbedding`**](embedding.md#openrouterembedding).

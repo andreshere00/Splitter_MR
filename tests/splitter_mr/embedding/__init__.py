@@ -3,12 +3,12 @@ import types as _types
 
 import pytest as _pytest
 
-import splitter_mr.embedding.embeddings as embedding_pkg
+import splitter_mr.embedding as embedding_pkg
 
 
 def _make_dummy_embeddings(**attrs):
     mod = _types.SimpleNamespace(**attrs)
-    mod.__name__ = "splitter_mr.model.embedding.embeddings"
+    mod.__name__ = "splitter_mr.embedding.embeddings"
     return mod
 
 
@@ -20,6 +20,7 @@ def test_embedding___all___contains_expected_names():
         "HuggingFaceEmbedding",
         "GeminiEmbedding",
         "AnthropicEmbedding",
+        "OpenRouterEmbedding",
     }
 
 
@@ -28,10 +29,11 @@ def test_embedding___dir___returns_sorted_all():
 
 
 def test_embedding_base_class_is_exposed_without_lazy_import():
-    _sys.modules.pop("splitter_mr.model.embedding.embeddings", None)
+    _sys.modules.pop("splitter_mr.embedding.embeddings", None)
+
     assert hasattr(embedding_pkg, "BaseEmbedding")
     _ = embedding_pkg.BaseEmbedding
-    assert "splitter_mr.model.embedding.embeddings" not in _sys.modules
+    assert "splitter_mr.embedding.embeddings" not in _sys.modules
 
 
 @_pytest.mark.parametrize(
@@ -42,14 +44,16 @@ def test_embedding_base_class_is_exposed_without_lazy_import():
         "HuggingFaceEmbedding",
         "GeminiEmbedding",
         "AnthropicEmbedding",
+        "OpenRouterEmbedding",
     ],
 )
 def test_embedding___getattr___delegates_to_embeddings(monkeypatch, name):
     sentinel = object()
     dummy = _make_dummy_embeddings(**{name: sentinel})
-    monkeypatch.dict(
-        _sys.modules, {"splitter_mr.model.embedding.embeddings": dummy}, clear=False
-    )
+    _sys.modules.pop("splitter_mr.embedding.embeddings", None)
+    if hasattr(embedding_pkg, "embeddings"):
+        monkeypatch.delattr(embedding_pkg, "embeddings", raising=False)
+    monkeypatch.setitem(_sys.modules, "splitter_mr.embedding.embeddings", dummy)
 
     obj = getattr(embedding_pkg, name)
     assert obj is sentinel
@@ -58,9 +62,10 @@ def test_embedding___getattr___delegates_to_embeddings(monkeypatch, name):
 def test_embedding___getattr___repeated_access_returns_same_object(monkeypatch):
     sentinel = object()
     dummy = _make_dummy_embeddings(OpenAIEmbedding=sentinel)
-    monkeypatch.dict(
-        _sys.modules, {"splitter_mr.model.embedding.embeddings": dummy}, clear=False
-    )
+    _sys.modules.pop("splitter_mr.embedding.embeddings", None)
+    if hasattr(embedding_pkg, "embeddings"):
+        monkeypatch.delattr(embedding_pkg, "embeddings", raising=False)
+    monkeypatch.setitem(_sys.modules, "splitter_mr.embedding.embeddings", dummy)
 
     a = embedding_pkg.OpenAIEmbedding
     b = embedding_pkg.OpenAIEmbedding
@@ -83,15 +88,17 @@ def test_embedding___getattr___unknown_name_raises_attributeerror():
         "HuggingFaceEmbedding",
         "GeminiEmbedding",
         "AnthropicEmbedding",
+        "OpenRouterEmbedding",
     ],
 )
 def test_embedding_import_succeeds_but_class_missing_raises_attributeerror(
     monkeypatch, name
 ):
     dummy = _make_dummy_embeddings()
-    monkeypatch.dict(
-        _sys.modules, {"splitter_mr.model.embedding.embeddings": dummy}, clear=False
-    )
+    _sys.modules.pop("splitter_mr.embedding.embeddings", None)
+    if hasattr(embedding_pkg, "embeddings"):
+        monkeypatch.delattr(embedding_pkg, "embeddings", raising=False)
+    monkeypatch.setitem(_sys.modules, "splitter_mr.embedding.embeddings", dummy)
 
     with _pytest.raises(AttributeError) as exc:
         getattr(embedding_pkg, name)

@@ -20,14 +20,18 @@
     - 🚀 [**Stable API**](#core-install) consolidating all v0.x features.
     - 📖 **[Readers](https://andreshere00.github.io/Splitter_MR/api_reference/reader/):** Plug-and-play support for Vanilla, MarkItDown, and Docling, covering formats like text, Office, JSON/YAML, images, HTML, and more.
     - 🪓 **[Splitters](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/):** Extensive library of split strategies, including character, word, sentence, paragraph, token, paged, row/column, JSON, semantic, HTML tag, header, and code splitters.
-    - 🧠 **[Models](https://andreshere00.github.io/Splitter_MR/api_reference/model/):** Multimodal Vision-Language support for OpenAI, Azure, Grok, HuggingFace, Gemini, Claude, and more.
-    - 🗺️ **[Embeddings](https://andreshere00.github.io/Splitter_MR/api_reference/embedding/):** Fully integrated embeddings from OpenAI, Azure, HuggingFace, Gemini, and Claude (via Voyage).
+    - 🧠 **[Models](https://andreshere00.github.io/Splitter_MR/api_reference/model/):** Multimodal Vision-Language support for OpenAI, Azure, Grok, HuggingFace, Gemini, Claude, **OpenRouter**, and more.
+    - 🗺️ **[Embeddings](https://andreshere00.github.io/Splitter_MR/api_reference/embedding/):** Fully integrated embeddings from OpenAI, Azure, HuggingFace, Gemini, Claude (via Voyage), and **OpenRouter**.
     - 🎛️ [**Extras system:**](#multiple-extras) Install the minimal core, or extend with `markitdown`, `docling`, `multimodal`, or `all` for a batteries-included setup.
     - 📚 **[Docs](https://andreshere00.github.io/Splitter_MR/):** New API reference, real executed notebook examples, and updated architecture diagrams.
     - 🔧 **Developer Experience:** CI/CD pipeline, PyPI publishing, pre-commit checks, and improved cleaning instructions.
     - 🐛 **Bugfixes:** Improved NLTK tokenizers, more robust splitters, and new utilities for HTML => Markdown conversion.
     
     **Check out the updated documentation, new examples, and join us in making text splitting and document parsing easier than ever!**
+    
+    **Version 1.2.0** - OpenRouter support
+    
+    Use a single [**OpenRouter**](https://openrouter.ai/) API key to access many vision and embedding models through `OpenRouterVisionModel` and `OpenRouterEmbedding`. See the [vision](https://andreshere00.github.io/Splitter_MR/api_reference/model/#openroutervisionmodel) and [embedding](https://andreshere00.github.io/Splitter_MR/api_reference/embedding/#openrouterembedding) docs.
     
     **Version 1.1.0** - Custom error and warning handling
     
@@ -84,14 +88,14 @@ SplitterMR allows you to split files in many different ways depending on your ne
         - **Conversion** method.
 - **Models:**
     - The **`BaseModel`** component is used to read non-text content using a Visual Language Model (VLM).
-    - Supported models are `AzureOpenAI`, `OpenAI` and `Grok`, but more models will be available soon.
+    - Supported models include `OpenAI`, `AzureOpenAI`, `Grok`, `HuggingFace`, `Gemini`, `Anthropic`, and **`OpenRouter`**.
     - All the models have a `analyze_content` method which returns the LLM response based on a prompt, the client and the model parameters.
 - **Splitters**
     - The **`BaseSplitter`** components take the **`ReaderOutput`** text content and divide that text into meaningful chunks for LLM or other downstream use.
     - Splitter classes (e.g., **`CharacterSplitter`**, **`SentenceSplitter`**, **`RecursiveCharacterSplitter`**, etc.) allow flexible chunking strategies with optional overlap and rich configuration.
 - **Embedders**
     - The **`BaseEmbedder`** components are used to encode the text into embeddings. These embeddings are used to split text by semantic similarity.
-    - Supported models are `AzureOpenAI` and `OpenAI`, but more models will be available soon.
+    - Supported models include `OpenAI`, `AzureOpenAI`, `HuggingFace`, `Gemini`, `Anthropic` (Voyage), and **`OpenRouter`**.
     - All the models have a `encode_text` method which returns the embeddings based on a text, the client and the model parameters.
 
 ## How to install
@@ -238,6 +242,7 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 
 ### Previously implemented (`^v1.0.0`)
 
+- [X] Add OpenRouter support for vision and embedding models.
 - [X] Add custom Error and Warning handling for better logging and traceability.
 - [X] Add `KeywordSplitter` support.
 
@@ -249,6 +254,7 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
     - [X] Add HuggingFace embeddings model support.
     - [X] Add Gemini embeddings model support.
     - [X] Add Claude Anthropic embeddings model support.
+    - [X] Add OpenRouter embeddings model support.
 - [X] Add Vision models:
     - [X] Add OpenAI vision model support.
     - [X] Add Azure OpenAI embeddings model support.
@@ -256,6 +262,7 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
     - [X] Add HuggingFace VLMs model support.
     - [X] Add Gemini VLMs model support.
     - [X] Add Claude Anthropic VLMs model support.
+    - [X] Add OpenRouter VLMs model support.
 - [X] Modularize library into several sub-libraries.
 - [X] Implement a method to split by embedding similarity: `SemanticSplitter`.
 - [X] Add new supported formats to be analyzed with OpenAI and AzureOpenAI models.

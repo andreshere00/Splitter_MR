@@ -30,7 +30,7 @@ class GrokVisionModel(BaseVisionModel):
 
     def __init__(
         self,
-        api_key: Optional[str] = os.getenv("XAI_API_KEY"),
+        api_key: Optional[str] = None,
         model_name: str = os.getenv("XAI_MODEL", DEFAULT_GROK_VISION_MODEL),
     ) -> None:
         """
