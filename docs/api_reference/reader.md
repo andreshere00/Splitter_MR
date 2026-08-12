@@ -11,6 +11,7 @@ Each Reader component extracts document text in different ways. Therefore, choos
 - If you want to preserve the original structure as much as possible, without any kind of markdown parsing, you can use the [**`VanillaReader`**](#vanillareader) class.
 - In case that you have documents which have presented many tables in its structure or with many visual components (such as images), we strongly recommend to use [**`DoclingReader`**](#doclingreader). 
 - If you are looking to maximize efficiency or make conversions to markdown simpler, we recommend using the [**`MarkItDownReader`**](#markitdownreader) component.
+- If you need managed cloud OCR for scanned PDFs, Office files, or images, use [**`TextractReader`**](#textractreader) with AWS Textract.
 
 !!! note
 
@@ -26,11 +27,12 @@ Additionally, the file compatibility depending on the Reader class is given by t
 | [**Vanilla Reader**](#vanillareader)    | `txt`, `md`, `pdf`            | `xlsx`, `docx`, `pptx`    | `csv`, `tsv`, `parquet` | `json`, `yaml`, `html`, `xml`    | `jpg`, `png`, `webp`, `gif`          | Yes                     |
 | [**MarkItDown Reader**](#markitdownreader) | `txt`, `md`, `pdf`            | `docx`, `xlsx`, `pptx`    | `csv`, `tsv`     | `json`, `html`, `xml`             | `jpg`, `png`, `pneg`                 | Yes                     |
 | [**Docling Reader**](#doclingreader)   | `txt`, `md`, `pdf`            | `docx`, `xlsx`, `pptx`    | –                | `html`, `xhtml`                   | `png`, `jpeg`, `tiff`, `bmp`, `webp` | Yes                     |
+| [**Textract Reader**](#textractreader) | `txt`, `md`, `pdf`            | `docx`, `xlsx`, `pptx`    | –                | `json`, `yaml`                    | `png`, `jpg`, `jpeg`, `webp`, `gif`, `bmp`, `tif`, `tiff`, `svg` | No |
 
-## Installing Docling & MarkItDown
+## Installing optional readers
 
 By default, `pip install splitter-mr` installs **core** features only.  
-To use `DoclingReader` and/or `MarkItDownReader`, install the corresponding **extras**:
+To use optional readers, install the corresponding **extras**:
 
 > **Python ≥ 3.11** is required.
 
@@ -46,10 +48,16 @@ pip install "splitter-mr[markitdown]"
 pip install "splitter-mr[docling]"
 ```
 
-**Both:**
+**Textract:**
 
 ```bash
-pip install "splitter-mr[markitdown,docling]"
+pip install "splitter-mr[textract]"
+```
+
+**Multiple readers:**
+
+```bash
+pip install "splitter-mr[markitdown,docling,textract]"
 ```
 
 !!! Note
@@ -114,3 +122,37 @@ To execute pipelines, DoclingReader has a utils class, `DoclingUtils`.
     options:
       extra:
         members_order: source
+
+### TextractReader
+
+::: splitter_mr.reader.readers.textract_reader
+    handler: python
+    options:
+      extra:
+        members_order: source
+
+`TextractReader` performs synchronous AWS Textract OCR on local files. Text-native
+formats (`md`, `json`, `yaml`, `txt`) are delegated to `VanillaReader`, while visual
+formats are normalized to PNG pages before calling `detect_document_text`.
+
+**Requirements**
+
+- Install the extra: `pip install "splitter-mr[textract]"`
+- Configure AWS credentials through the standard boto3 credential chain
+- Install LibreOffice (`soffice`) for Office-to-PDF conversion
+
+**Limits**
+
+- Synchronous Textract requests accept one page per call and up to 10 MB per page
+- Multi-page PDFs are rasterized page-by-page before OCR
+- Plain text detection does not guarantee layout-aware multi-column reading order
+
+**Example**
+
+```python
+from splitter_mr.reader import TextractReader
+
+reader = TextractReader()
+output = reader.read("scanned.pdf")
+print(output.text)
+```
