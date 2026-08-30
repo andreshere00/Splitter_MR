@@ -170,10 +170,21 @@ model = HuggingFaceVisionModel()
 ```python
 from splitter_mr.model import OpenRouterVisionModel
 from splitter_mr.reader import MarkItDownReader
+from dotenv import load_dotenv
+import os
 
-file = "data/sample_pdf.pdf"
+load_dotenv()
+
+ROOT_PATH: str = os.getenv("ROOT_PATH") or "."
+load_dotenv(os.path.join(ROOT_PATH, ".env"))
+FILE_PATH: str = f"{ROOT_PATH}/data/sample_pdf.pdf"
+
 model = OpenRouterVisionModel()
 ```
+
+    /Users/aherencia/Documents/Projects/Professional/Splitter_MR/.venv/lib/python3.12/site-packages/pydub/utils.py:170: RuntimeWarning: Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work
+      warn("Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work", RuntimeWarning)
+
 
 
 Then, you can simply pass the model that you have instantiated to the Reader class:
@@ -181,7 +192,7 @@ Then, you can simply pass the model that you have instantiated to the Reader cla
 
 ```python
 reader = MarkItDownReader(model=model)
-output = reader.read(file)
+output = reader.read(FILE_PATH)
 ```
 
 
@@ -243,7 +254,7 @@ In case that needed, it could be interesting split the PDF pages using another p
 
 ```python
 output = reader.read(
-    file,
+    FILE_PATH,
     scan_pdf_pages=True,
     prompt="Return only a short description for these pages",
     page_placeholder="## PAGE",
@@ -293,7 +304,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-file = "data/sample_pdf.pdf"
+ROOT_PATH: str = os.getenv("ROOT_PATH") or "."
+load_dotenv(os.path.join(ROOT_PATH, ".env"))
+FILE_PATH: str = f"{ROOT_PATH}/data/sample_pdf.pdf"
+
 model = OpenRouterVisionModel()
 # Ensure the output directory exists
 output_dir = os.path.join(os.path.dirname(__file__), "markitdown_output")
@@ -314,14 +328,14 @@ def save_markdown(output, filename_base):
     print(f"Saved: {file_path}")
 
 markitdown_reader = MarkItDownReader(model = model)
-markitdown_output = markitdown_reader.read(file)
+markitdown_output = markitdown_reader.read(FILE_PATH)
 save_markdown(markitdown_output, "vlm")
 
-markitdown_output = markitdown_reader.read(file, scan_pdf_pages = True, prompt = "Return only a short description for these pages", page_placeholder = "## PAGE")
+markitdown_output = markitdown_reader.read(FILE_PATH, scan_pdf_pages = True, prompt = "Return only a short description for these pages", page_placeholder = "## PAGE")
 save_markdown(markitdown_output, "custom_vlm")
 
 markitdown_reader = MarkItDownReader()
-markitdown_output = markitdown_reader.read(file)
+markitdown_output = markitdown_reader.read(FILE_PATH)
 save_markdown(markitdown_output, "no_vlm")
 ```
 

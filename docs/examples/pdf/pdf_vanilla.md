@@ -170,6 +170,14 @@ model = HuggingFaceVisionModel()
 
 ```python
 from splitter_mr.model import OpenRouterVisionModel
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+ROOT_PATH: str = os.getenv("ROOT_PATH") or "."
+load_dotenv(os.path.join(ROOT_PATH, ".env"))
+FILE_PATH: str = f"{ROOT_PATH}/data/sample_pdf.pdf"
 
 model = OpenRouterVisionModel()
 ```
@@ -189,9 +197,7 @@ Then, you can read the file. The result will be an object from the type `ReaderO
 
 
 ```python
-file = "data/sample_pdf.pdf"
-
-output = reader.read(file_path=file)
+output = reader.read(file_path=FILE_PATH)
 print(output.text)
 ```
 
@@ -208,14 +214,14 @@ print(output.text)
     
     <!-
     ...
-    ical and interpretive challenges. Effective
+    ctive
     conversion tools must blend text extraction, document analysis, and sometimes
     machine learning techniques (such as OCR or structure recognition) to produce
     usable, readable, and faithful Markdown output. As a result, perfect conversion
     is rarely possible, and manual review and cleanup are often required.
     
     <!-- image -->
-    *Caption: A vibrant hummingbird with iridescent blue-green feathers feeding on an orange flower against a blurred green background.*
+    *Caption: A vibrant hummingbird hovers beside delicate orange flowers, its iridescent turquoise feathers and outstretched wings captured against a soft green background.*
     
 
 
@@ -230,7 +236,7 @@ Suppose that you need to simply get the base64 images from the file. Then, you c
 
 ```python
 reader = VanillaReader()
-output = reader.read(file_path=file, show_base64_images=True)
+output = reader.read(file_path=FILE_PATH, show_base64_images=True)
 print(output.text)
 ```
 
@@ -258,7 +264,7 @@ In addition, you can modify how the image and page placeholders are generated wi
 ```python
 reader = VanillaReader()
 output = reader.read(
-    file_path=file, image_placeholder="## Image", page_placeholder="## Page"
+    file_path=FILE_PATH, image_placeholder="## Image", page_placeholder="## Page"
 )
 print(output.text)
 ```
@@ -297,20 +303,19 @@ But one of the most important features is to scan the PDF as PageImages, to anal
 
 ```python
 reader = VanillaReader(model=model)
-output = reader.read(file_path=file, scan_pdf_pages=True)
+output = reader.read(file_path=FILE_PATH, scan_pdf_pages=True)
 print(output.text)
 ```
 
     <!-- page -->
     
-    # A sample PDF
+    # A Sample PDF
     
-    Converting PDF files to other formats, such as Markdown, is a surprisingly complex task due to the nature of the PDF format itself. PDF (Portable Document Format) was designed primarily for preserving the visual layout of documents, making them look the same across different devices and platforms. _However, this design goal introduces several challenges when trying to extract and convert the underlying content into a more flexible, structured format like Markdown._
+    **Converting PDF files to other formats, such as Markdown, is a surprisingly complex task due to the nature of the PDF format itself.** PDF (Portable Document Format) was designed primarily for preserving the visual layout of documents, making them look the same across different devices and platforms. *However, this design goal introduces several challenges when trying to extract and convert the underlying content into a more flexible, structured format like Markdo
     ...
-     on the surface, converting PDFs to formats like Markdown involves a series of technical and interpretive challenges. Effective conversion tools must blend text extraction, document analysis, and sometimes machine learning techniques (such as OCR or structure recognition) to produce usable, readable, and faithful Markdown output. As a result, perfect conversion is rarely possible, and manual review and cleanup are often required.
+     it may seem simple on the surface, converting PDFs to formats like Markdown involves a series of technical and interpretive challenges. Effective conversion tools must blend text extraction, document analysis, and sometimes machine learning techniques (such as OCR or structure recognition) to produce usable, readable, and faithful Markdown output. As a result, perfect conversion is rarely possible, and manual review and cleanup are often required.
     
-    ![Image of a hummingbird near orange flowers](attachment/image)
-    
+    ![A hummingbird flying toward orange flowers]
 
 
 
@@ -320,7 +325,7 @@ Remember that you can always customize the prompt to get one or other results us
 ```python
 reader = VanillaReader(model=model)
 output = reader.read(
-    file_path=file, prompt="Extract the content of this resource in html format"
+    file_path=FILE_PATH, prompt="Extract the content of this resource in html format"
 )
 print(output.text)
 ```
@@ -338,23 +343,21 @@ print(output.text)
     
     <!-
     ...
-    mes
-    machine learning techniques (such as OCR or structure recognition) to produce
+    ng techniques (such as OCR or structure recognition) to produce
     usable, readable, and faithful Markdown output. As a result, perfect conversion
     is rarely possible, and manual review and cleanup are often required.
     
     <!-- image -->
     ```html
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Hummingbird Image</title>
-    </head>
-    <body>
-        <img src="https://example.com/path-to-hummingbird-image.jpg" alt="Hummingbird feeding on flower" />
-    </body>
-    </html>
+    <figure>
+      <img
+        src="resource-image.jpg"
+        alt="A colorful hummingbird hovering near orange flowers on a branch."
+      />
+      <figcaption>
+        A turquoise and green hummingbird with outstretched wings feeding near orange flowers.
+      </figcaption>
+    </figure>
     ```
     
 
@@ -374,7 +377,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-file = "data/sample_pdf.pdf"
+ROOT_PATH: str = os.getenv("ROOT_PATH") or "."
+load_dotenv(os.path.join(ROOT_PATH, ".env"))
+FILE_PATH: str = f"{ROOT_PATH}/data/sample_pdf.pdf"
+
 output_dir = "tmp/vanilla_output"
 os.makedirs(output_dir, exist_ok=True)
 
@@ -382,31 +388,31 @@ model = OpenRouterVisionModel()
 
 # 1. Default with model
 reader = VanillaReader(model=model)
-output = reader.read(file_path=file)
+output = reader.read(file_path=FILE_PATH)
 with open(os.path.join(output_dir, "output_with_model.txt"), "w", encoding="utf-8") as f:
     f.write(output.text)
 
 # 2. Default without model, with base64 images shown
 reader = VanillaReader()
-output = reader.read(file_path=file, show_base64_images=True)
+output = reader.read(file_path=FILE_PATH, show_base64_images=True)
 with open(os.path.join(output_dir, "output_with_base64_images.txt"), "w", encoding="utf-8") as f:
     f.write(output.text)
 
 # 3. Default without model, with placeholders
 reader = VanillaReader()
-output = reader.read(file_path=file, image_placeholder="## Image", page_placeholder="## Page")
+output = reader.read(file_path=FILE_PATH, image_placeholder="## Image", page_placeholder="## Page")
 with open(os.path.join(output_dir, "output_with_placeholders.txt"), "w", encoding="utf-8") as f:
     f.write(output.text)
 
 # 4. With model, scan PDF pages
 reader = VanillaReader(model=model)
-output = reader.read(file_path=file, scan_pdf_pages=True)
+output = reader.read(file_path=FILE_PATH, scan_pdf_pages=True)
 with open(os.path.join(output_dir, "output_scan_pdf_pages.txt"), "w", encoding="utf-8") as f:
     f.write(output.text)
 
 # 5. With model, custom prompt
 reader = VanillaReader(model=model)
-output = reader.read(file_path=file, prompt="Extract the content of this resource in html format")
+output = reader.read(file_path=FILE_PATH, prompt="Extract the content of this resource in html format")
 with open(os.path.join(output_dir, "output_html_prompt.txt"), "w", encoding="utf-8") as f:
     f.write(output.text)
 ```

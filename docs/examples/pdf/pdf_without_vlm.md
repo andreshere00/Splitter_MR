@@ -19,8 +19,13 @@ First, we instantiate our `VanillaReader` object:
 
 ```python
 from splitter_mr.reader import VanillaReader
+from dotenv import load_dotenv
+import os
 
-FILE_PATH: str = "data/sample_pdf.pdf"
+load_dotenv()
+
+ROOT_PATH: str = os.getenv("ROOT_PATH") or "."
+FILE_PATH: str = f"{ROOT_PATH}/data/sample_pdf.pdf"
 reader = VanillaReader()
 ```
 
@@ -43,10 +48,10 @@ print(reader_output.model_dump_json(indent=4))
     {
         "text": "<!-- page -->\n\nA sample PDF\nConverting PDF files to other formats, such as Markdown, is a surprisingly\ncomplex task due to the nature of the PDF format itself. PDF (Portable\nDocument Format) was designed primarily for preserving the visual layout of\ndocuments, making them look the same across different devices and\nplatforms. However, this design goal introduces several challenges when trying to\nextract and convert the underlying content into a more flexible, structured for
     ...
-    structure recognition) to produce\nusable, readable, and faithful Markdown output. As a result, perfect conversion\nis rarely possible, and manual review and cleanup are often required.\n\n<!-- image -->\n",
+    cognition) to produce\nusable, readable, and faithful Markdown output. As a result, perfect conversion\nis rarely possible, and manual review and cleanup are often required.\n\n<!-- image -->\n",
         "document_name": "sample_pdf.pdf",
-        "document_path": "data/sample_pdf.pdf",
-        "document_id": "f4c6b28d-2c05-4025-9781-faf019a2176d",
+        "document_path": "../../../../data/sample_pdf.pdf",
+        "document_id": "521a2a56-6428-4b18-970f-c0a03f9215e6",
         "conversion_method": "pdf",
         "reader_method": "vanilla",
         "ocr_method": null,
@@ -112,6 +117,10 @@ reader_output = reader.read(FILE_PATH)
 print(reader_output.text)
 ```
 
+    /Users/aherencia/Documents/Projects/Professional/Splitter_MR/.venv/lib/python3.12/site-packages/pydub/utils.py:170: RuntimeWarning: Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work
+      warn("Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work", RuntimeWarning)
+
+
     A sample PDF
     
     Converting PDF files to other formats, such as Markdown, is a surprisingly
@@ -159,18 +168,18 @@ reader_output = reader.read(file_path=FILE_PATH)
 print(reader_output.text)
 ```
 
-    2025-10-02 22:07:13,178 - INFO - detected formats: [<InputFormat.PDF: 'pdf'>]
-    2025-10-02 22:07:13,207 - INFO - Going to convert document batch...
-    2025-10-02 22:07:13,208 - INFO - Initializing pipeline for StandardPdfPipeline with options hash e3309ea8218dc3b978b4932281c99b2a
-    2025-10-02 22:07:13,215 - INFO - Loading plugin 'docling_defaults'
-    2025-10-02 22:07:13,217 - INFO - Registered ocr engines: ['easyocr', 'ocrmac', 'rapidocr', 'tesserocr', 'tesseract']
-    2025-10-02 22:07:13,288 - INFO - Accelerator device: 'mps'
-    2025-10-02 22:07:15,367 - INFO - Accelerator device: 'mps'
-    2025-10-02 22:07:16,659 - INFO - Accelerator device: 'mps'
-    2025-10-02 22:07:17,224 - INFO - Loading plugin 'docling_defaults'
-    2025-10-02 22:07:17,225 - INFO - Registered picture descriptions: ['vlm', 'api']
-    2025-10-02 22:07:17,225 - INFO - Processing document sample_pdf.pdf
-    2025-10-02 22:07:19,270 - INFO - Finished converting document sample_pdf.pdf in 6.09 sec.
+    2026-08-30 18:49:06,524 - INFO - detected formats: [<InputFormat.PDF: 'pdf'>]
+    2026-08-30 18:49:06,590 - INFO - Going to convert document batch...
+    2026-08-30 18:49:06,591 - INFO - Initializing pipeline for StandardPdfPipeline with options hash e3309ea8218dc3b978b4932281c99b2a
+    2026-08-30 18:49:06,618 - INFO - Loading plugin 'docling_defaults'
+    2026-08-30 18:49:06,621 - INFO - Registered ocr engines: ['easyocr', 'ocrmac', 'rapidocr', 'tesserocr', 'tesseract']
+    2026-08-30 18:49:06,774 - INFO - Accelerator device: 'mps'
+    2026-08-30 18:49:09,315 - INFO - Accelerator device: 'mps'
+    2026-08-30 18:49:10,725 - INFO - Accelerator device: 'mps'
+    2026-08-30 18:49:11,303 - INFO - Loading plugin 'docling_defaults'
+    2026-08-30 18:49:11,305 - INFO - Registered picture descriptions: ['vlm', 'api']
+    2026-08-30 18:49:11,305 - INFO - Processing document sample_pdf.pdf
+    2026-08-30 18:49:13,804 - INFO - Finished converting document sample_pdf.pdf in 7.28 sec.
 
 
     ## A sample PDF
@@ -219,40 +228,49 @@ def timeit(func):
 
 @timeit
 def get_reader_output(file, reader=VanillaReader()):
-    output = reader.read(file)
+    output = reader.read(file_path=file)
     print()
     return output.text
 
 
-FILE_PATH = "data/sample_pdf.pdf"
+FILE_PATH = f"{ROOT_PATH}/data/sample_pdf.pdf"
 
 print("*" * 20 + " Vanilla Reader " + "*" * 20)
-vanilla_output = get_reader_output(FILE_PATH, reader=VanillaReader())
+vanilla_output = get_reader_output(file=FILE_PATH, reader=VanillaReader())
 
 print("*" * 20 + " MarkItDown Reader " + "*" * 20)
-markitdown_output = get_reader_output(FILE_PATH, reader=MarkItDownReader())
+markitdown_output = get_reader_output(file=FILE_PATH, reader=MarkItDownReader())
 
 print("*" * 20 + " Docling Reader " + "*" * 20)
-markitdown_output = get_reader_output(FILE_PATH, reader=DoclingReader())
+markitdown_output = get_reader_output(file=FILE_PATH, reader=DoclingReader())
 ```
 
+    2026-08-30 18:49:52,019 - INFO - detected formats: [<InputFormat.PDF: 'pdf'>]
+
+
     ******************** Vanilla Reader ********************
+    
+    Time taken by 'get_reader_output': 0.1296 seconds
+    
+    ******************** MarkItDown Reader ********************
+    
+    Time taken by 'get_reader_output': 0.0665 seconds
+    
+    ******************** Docling Reader ********************
 
 
-
-    ---------------------------------------------------------------------------
-
-    NameError                                 Traceback (most recent call last)
-
-    Cell In[7], line 27
-         24 FILE_PATH = "data/sample_pdf.pdf"
-         26 print("*" * 20 + " Vanilla Reader " + "*" * 20)
-    ---> 27 vanilla_output = get_reader_output(file, reader=VanillaReader())
-         29 print("*" * 20 + " MarkItDown Reader " + "*" * 20)
-         30 markitdown_output = get_reader_output(file, reader=MarkItDownReader())
+    2026-08-30 18:49:52,022 - INFO - Going to convert document batch...
+    2026-08-30 18:49:52,022 - INFO - Initializing pipeline for StandardPdfPipeline with options hash e3309ea8218dc3b978b4932281c99b2a
+    2026-08-30 18:49:52,023 - INFO - Accelerator device: 'mps'
+    2026-08-30 18:49:54,640 - INFO - Accelerator device: 'mps'
+    2026-08-30 18:49:55,724 - INFO - Accelerator device: 'mps'
+    2026-08-30 18:49:56,359 - INFO - Processing document sample_pdf.pdf
+    2026-08-30 18:49:57,992 - INFO - Finished converting document sample_pdf.pdf in 5.97 sec.
 
 
-    NameError: name 'file' is not defined
+    
+    Time taken by 'get_reader_output': 5.9790 seconds
+    
 
 
 
