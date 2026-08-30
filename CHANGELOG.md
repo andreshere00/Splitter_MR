@@ -4,6 +4,44 @@
 
 ## Unreleased
 
+## v1.4.0
+
+> **Version 1.4.0:**
+>
+> SplitterMR adds an optional [**MCP and REST server**](https://andreshere00.github.io/Splitter_MR/api_reference/server/)
+> (`splitter-mr[mcp]`) for read, split, and read-and-split over HTTP. Vision
+> models, embeddings, and extra splitter constructor arguments are first-class
+> JSON fields. `SemanticSplitter` is available when a top-level `embedding`
+> object is provided.
+
+### Features
+
+- Add optional **`splitter-mr[mcp]`** extra with a FastAPI application, typed REST
+  endpoints (`/api/v1/read`, `/api/v1/split`, `/api/v1/read-and-split`), and a
+  Streamable HTTP MCP server mounted at `/mcp`.
+- Add `splitter-mr-mcp` CLI, `poe serve-mcp`, `Dockerfile.server`, and access
+  controls for server-local files and URL fetches.
+- Align `/api/v1/read` with `BaseReader.read(file_path, model, **kwargs)` and
+  compose `/api/v1/read-and-split` from read then split. Optional `model` JSON
+  constructs a `BaseVisionModel` behind the `multimodal` extra.
+- Accept extra splitter constructor arguments via `kwargs` on `/api/v1/split`
+  and `splitter_kwargs` on `/api/v1/read-and-split`. Optional `embedding` JSON
+  constructs a `BaseEmbedding` so `SemanticSplitter` can run over REST and MCP.
+
+### Breaking changes
+
+- Replace the read request `source` discriminator with method-shaped
+  `file_path`, `reader`, `model`, and `kwargs` fields. Clients that posted
+  `source_type` payloads must switch to the new body.
+
+### Bug fixes
+
+- Fix MCP server startup when PyTorch is not installed by using the optional
+  `TorchDevice` alias in `HFClient` instead of referencing `torch.device` at
+  import time.
+- Expose `HuggingFaceVisionModel.model_name` for reader metadata and pass the
+  Docling vision model through to `VanillaReader` on unsupported extensions.
+
 ### Documentation
 
 - Limit MkDocs page table of contents to headings through level 3 (`###`).
@@ -11,7 +49,11 @@
   Embedding API reference pages.
 - Add [SKILL.md](https://github.com/andreshere00/Splitter_MR/blob/main/SKILL.md) with
   installation guidance and complete workflow examples for reading, splitting,
-  multimodal PDF processing, and RAG ingestion.
+  multimodal PDF processing, RAG ingestion, and the MCP/REST server.
+- Document the method-shaped MCP/REST contracts, optional vision-model and
+  embedding JSON, extra splitter `kwargs`/`splitter_kwargs`, credential
+  environment fallback, and MkDocs on port 8001 versus the API on 8000.
+- Set the MkDocs Material favicon to the SplitterMR pinwheel mark.
 
 ### Developer features
 

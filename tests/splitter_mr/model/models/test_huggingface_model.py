@@ -187,7 +187,10 @@ def test_model_loads_with_default_model():
 
 
 def test_model_loads_with_custom_model():
-    assert HuggingFaceVisionModel(MODEL_ID).model
+    model = HuggingFaceVisionModel(MODEL_ID)
+    assert model.model
+    assert model.model_name == MODEL_ID
+    assert model.model_id == MODEL_ID
 
 
 def test_model_fallbacks_on_error(monkeypatch):

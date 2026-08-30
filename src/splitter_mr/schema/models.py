@@ -313,7 +313,7 @@ class HFClient(BaseModel):
     model: Any
     processor: Any
     tokenizer: Optional[Any] = None
-    device: torch.device = "cpu"
+    device: TorchDevice = "cpu"
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
