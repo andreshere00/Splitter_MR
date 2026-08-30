@@ -83,7 +83,7 @@ class DoclingReader(BaseReader):
         if ext not in SUPPORTED_DOCLING_FILE_EXTENSIONS:
             msg = f"Unsupported extension '{ext}'. Using VanillaReader."
             warnings.warn(msg, BaseReaderWarning)
-            return VanillaReader().read(file_path=file_path, **kwargs)
+            return VanillaReader(model=self.model).read(file_path=file_path, **kwargs)
 
         # Pipeline selection and execution
         pipeline_name, pipeline_args = self._select_pipeline(ext, **kwargs)

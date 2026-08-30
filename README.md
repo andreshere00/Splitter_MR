@@ -22,13 +22,22 @@
 > - 🪓 **[Splitters](https://andreshere00.github.io/Splitter_MR/api_reference/splitter/):** Extensive library of split strategies, including character, word, sentence, paragraph, token, paged, row/column, JSON, semantic, HTML tag, header, and code splitters.
 > - 🧠 **[Models](https://andreshere00.github.io/Splitter_MR/api_reference/model/):** Multimodal Vision-Language support for OpenAI, Azure, Grok, HuggingFace, Gemini, Claude, **OpenRouter**, and more.
 > - 🗺️ **[Embeddings](https://andreshere00.github.io/Splitter_MR/api_reference/embedding/):** Fully integrated embeddings from OpenAI, Azure, HuggingFace, Gemini, Claude (via Voyage), and **OpenRouter**.
-> - 🎛️ [**Extras system:**](#multiple-extras) Install the minimal core, or extend with `markitdown`, `docling`, `textract`, `multimodal`, or `all` for a batteries-included setup.
+> - 🎛️ [**Extras system:**](#multiple-extras) Install the minimal core, or extend with `markitdown`, `docling`, `textract`, `mcp`, `multimodal`, or `all` for a batteries-included setup.
 > - 📚 **[Docs](https://andreshere00.github.io/Splitter_MR/):** New API reference, real executed notebook examples, and updated architecture diagrams.
 > - 🔧 **Developer Experience:** CI/CD pipeline, PyPI publishing, pre-commit checks, and improved cleaning instructions.
 > - 🐛 **Bugfixes:** Improved NLTK tokenizers, more robust splitters, and new utilities for HTML => Markdown conversion.
 > 
 > **Check out the updated documentation, new examples, and join us in making text splitting and document parsing easier than ever!**
 >
+>
+> **Version 1.4.0** - MCP and REST server
+>
+> SplitterMR adds an optional FastAPI/MCP server for read, split, and read-and-split.
+> Install it with `pip install "splitter-mr[mcp]"` and start `splitter-mr-mcp`. Pass
+> vision models as `model`, embeddings as `embedding` (required for `SemanticSplitter`),
+> and extra splitter constructor arguments as `kwargs` on `/api/v1/split` or
+> `splitter_kwargs` on `/api/v1/read-and-split`. See the
+> [server](https://andreshere00.github.io/Splitter_MR/api_reference/server/) docs.
 >
 > **Version 1.3.0** - AWS Textract support
 >
@@ -124,8 +133,9 @@ pip install splitter-mr
 | **`markitdown`** | Adds [MarkItDown](https://github.com/microsoft/markitdown) support for rich-text document parsing (HTML, DOCX, etc.). | `pip install "splitter-mr[markitdown]"` |
 | **`docling`**    | Adds [Docling](https://github.com/ibm/docling) support for high-quality PDF/document to Markdown conversion.          | `pip install "splitter-mr[docling]"`    |
 | **`textract`**   | Adds [AWS Textract](https://docs.aws.amazon.com/textract/) OCR support through boto3 for PDFs, Office files, and images. | `pip install "splitter-mr[textract]"`   |
+| **`mcp`**        | FastAPI application with typed REST endpoints and a Streamable HTTP MCP server. Pass vision models as `model` and embeddings as `embedding`. | `pip install "splitter-mr[mcp]"`        |
 | **`multimodal`** | Enables computer vision, OCR, and audio features — includes **PyTorch**, EasyOCR, OpenCV, Transformers, etc.          | `pip install "splitter-mr[multimodal]"` |
-| **`all`**        | Installs **everything** above (MarkItDown + Docling + Textract + Multimodal + Azure). **Heavy install** (~GBs).       | `pip install "splitter-mr[all]"`        |
+| **`all`**        | Installs **everything** above (MarkItDown + Docling + Textract + MCP + Multimodal + Azure). **Heavy install** (~GBs). | `pip install "splitter-mr[all]"`        |
 
 ### Multiple extras
 
@@ -231,15 +241,99 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 ### Complete workflows
 
 For end-to-end examples covering fixed-size splitting, semantic chunking, multimodal
-PDF reading, and RAG ingestion, see
+PDF reading, RAG ingestion, and the MCP/REST server, see
 [SKILL.md](https://github.com/andreshere00/Splitter_MR/blob/main/SKILL.md).
+
+### MCP and REST server
+
+Install the optional extra and start the FastAPI app. Swagger documents the typed
+REST wrappers; MCP tools share the same pipeline at `/mcp`.
+
+```bash
+pip install "splitter-mr[mcp]"
+splitter-mr-mcp
+```
+
+- Swagger UI: `http://127.0.0.1:8000/docs`
+- ReDoc: `http://127.0.0.1:8000/redoc`
+- OpenAPI: `http://127.0.0.1:8000/openapi.json`
+- Health: `http://127.0.0.1:8000/health`
+- MCP (Streamable HTTP): `http://127.0.0.1:8000/mcp`
+
+```python
+import httpx
+
+payload = {
+    "file_path": "Lorem ipsum dolor sit amet.",
+    "reader": {"reader": "VanillaReader"},
+    "kwargs": {"document_name": "lorem.txt"},
+    "splitter": {"splitter": "CharacterSplitter", "chunk_size": 50, "chunk_overlap": 10},
+}
+response = httpx.post("http://127.0.0.1:8000/api/v1/read-and-split", json=payload)
+print(response.json()["chunks"])
+```
+
+```python
+import asyncio
+from fastmcp import Client
+
+async def main() -> None:
+    async with Client("http://127.0.0.1:8000/mcp") as client:
+        result = await client.call_tool(
+            "read_and_split",
+            {
+                "request": {
+                    "file_path": "Lorem ipsum dolor sit amet.",
+                    "reader": {"reader": "VanillaReader"},
+                    "kwargs": {"document_name": "lorem.txt"},
+                    "splitter": {"splitter": "RecursiveCharacterSplitter"},
+                }
+            },
+        )
+        print(result)
+
+asyncio.run(main())
+```
+
+`POST /api/v1/read` mirrors `BaseReader.read(file_path, model=None, **kwargs)`.
+Pass a vision model as the top-level `model` object (requires
+`splitter-mr[multimodal]`); omit `api_key` to use provider environment variables.
+
+`POST /api/v1/split` accepts a full `ReaderOutput`, a `splitter` discriminator,
+optional extra constructor arguments in `kwargs`, and an optional `embedding`
+object. `kwargs` is how you pass splitter parameters other than `chunk_size` and
+`chunk_overlap` (for example `patterns`, `separators`, `include_delimiters`,
+`headers_to_split_on`, `language`). `SemanticSplitter` requires `embedding`
+(OpenAI, Azure OpenAI, OpenRouter, Gemini, Hugging Face, or Anthropic/Voyage).
+
+`POST /api/v1/read-and-split` uses the same read fields (`file_path`, `reader`,
+`model`, `kwargs`) plus `splitter`, optional `embedding`, and `splitter_kwargs`.
+
+File paths are **server-local** and disabled until `SPLITTER_MR_ALLOWED_ROOT` is set.
+URL sources require `SPLITTER_MR_ALLOW_URLS=true`. The server is stateless and does
+not persist chunks. This version has no authentication: deploy it only on a private
+network or behind an authenticated reverse proxy. Inline API keys may be captured
+by proxies, MCP clients, or traces.
+
+`poe docs` serves MkDocs on port 8001 so it does not collide with
+`splitter-mr-mcp` on port 8000.
+
+Docker:
+
+```bash
+docker build -f Dockerfile.server -t splitter-mr-mcp .
+docker run --rm -p 8000:8000 splitter-mr-mcp
+```
+
+See the [server API reference](https://andreshere00.github.io/Splitter_MR/api_reference/server/)
+for environment variables, tool contracts, and security defaults.
 
 ## Updates
 
 ### Next features
 
-- [ ] Provide a MCP server to make queries about the chunked documents.
-- [ ] Add examples on how to implement SplitterMR in RAGs, MCPs and Agentic RAGs.
+- [ ] Add support to read Latex files using `VanillaReader`.
+- [ ] Persist chunked documents and answer queries over them via MCP.
 - [ ] Add a new `BaseVisionModel` class to support generic API-provided models.
 - [ ] Add asynchronous methods for Splitters and Readers.
 - [ ] Add batch methods to process several documents at once.
@@ -250,6 +344,8 @@ PDF reading, and RAG ingestion, see
 
 ### Previously implemented (`^v1.0.0`)
 
+- [X] Provide an MCP server (and FastAPI REST wrappers) for read, split, and read-and-split.
+- [X] Add examples on how to implement SplitterMR in RAGs, MCPs and Agentic RAGs.
 - [x] Add a method to read PDFs using Textract.
 - [X] Add OpenRouter support for vision and embedding models.
 - [X] Add custom Error and Warning handling for better logging and traceability.

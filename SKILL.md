@@ -51,11 +51,13 @@ Optional extras:
 | `markitdown` | Rich document parsing (HTML, DOCX, etc.) |
 | `docling` | High-quality PDF/document to Markdown conversion |
 | `textract` | AWS Textract OCR for scanned PDFs, Office files, images |
+| `mcp` | FastAPI REST + Streamable HTTP MCP server |
 | `multimodal` | Vision models, HuggingFace embeddings, Gemini, Voyage |
 | `all` | Full install (heavy) |
 
 ```bash
 pip install "splitter-mr[markitdown,docling,multimodal]"
+pip install "splitter-mr[mcp]"
 ```
 
 ## Component selection
@@ -394,6 +396,112 @@ External requirements:
 - Docker or a running Qdrant instance (`QDRANT_URL`).
 - `OPENROUTER_API_KEY` for embeddings and generation.
 - Optional: `pip install qdrant-client openai python-dotenv`.
+
+## Workflow 5: MCP and REST read / split / read-and-split (v1.4.0)
+
+Install `pip install "splitter-mr[mcp]"` and start `splitter-mr-mcp`. Swagger lives
+at `/docs`. MCP tools are mounted at `/mcp`. For vision models or `SemanticSplitter`,
+also install `splitter-mr[multimodal]`.
+
+### One-call workflow
+
+```python
+import httpx
+
+response = httpx.post(
+    "http://127.0.0.1:8000/api/v1/read-and-split",
+    json={
+        "file_path": "Lorem ipsum dolor sit amet.",
+        "reader": {"reader": "VanillaReader"},
+        "kwargs": {"document_name": "lorem.txt"},
+        "splitter": {"splitter": "CharacterSplitter"},
+        "splitter_kwargs": {"chunk_size": 50, "chunk_overlap": 10},
+    },
+)
+splitter_output = response.json()
+print(len(splitter_output["chunks"]))
+```
+
+Vision model on read, extra splitter args on `splitter_kwargs`:
+
+```python
+response = httpx.post(
+    "http://127.0.0.1:8000/api/v1/read-and-split",
+    json={
+        "file_path": "/data/docs/manual.pdf",
+        "reader": {"reader": "VanillaReader"},
+        "model": {"model": "OpenAIVisionModel", "model_name": "gpt-4.1"},
+        "kwargs": {"prompt": "Extract the visible text."},
+        "splitter": {"splitter": "RecursiveCharacterSplitter"},
+        "splitter_kwargs": {"chunk_size": 100, "chunk_overlap": 0.1},
+    },
+)
+```
+
+`SemanticSplitter` requires a top-level `embedding` object:
+
+```python
+response = httpx.post(
+    "http://127.0.0.1:8000/api/v1/read-and-split",
+    json={
+        "file_path": "Lorem ipsum dolor sit amet.",
+        "reader": {"reader": "VanillaReader"},
+        "kwargs": {"document_name": "lorem.txt"},
+        "splitter": {"splitter": "SemanticSplitter"},
+        "embedding": {
+            "embedding": "OpenAIEmbedding",
+            "model_name": "text-embedding-3-large",
+        },
+        "splitter_kwargs": {"chunk_size": 1000, "buffer_size": 1},
+    },
+)
+```
+
+The matching MCP tool is `read_and_split`. It runs the same pipeline and preserves
+reader metadata on `SplitterOutput`.
+
+### Two-step workflow
+
+```python
+import httpx
+
+reader_output = httpx.post(
+    "http://127.0.0.1:8000/api/v1/read",
+    json={
+        "file_path": "Lorem ipsum dolor sit amet.",
+        "reader": {"reader": "VanillaReader"},
+        "kwargs": {"document_name": "lorem.txt"},
+    },
+).json()
+
+splitter_output = httpx.post(
+    "http://127.0.0.1:8000/api/v1/split",
+    json={
+        "reader_output": reader_output,
+        "splitter": {"splitter": "RecursiveCharacterSplitter"},
+        "kwargs": {"chunk_size": 100, "chunk_overlap": 0.1},
+    },
+).json()
+
+assert splitter_output["document_id"] == reader_output["document_id"]
+```
+
+Key points:
+
+- `file_path` mirrors `BaseReader.read`: raw text, JSON, a server-local file, or a URL.
+- `POST /read` and `POST /read-and-split` accept optional `model` JSON to build a
+  `BaseVisionModel` (needs `splitter-mr[multimodal]`).
+- `POST /split` requires the complete `ReaderOutput`. Extra splitter constructor
+  arguments go in `kwargs`. `POST /read-and-split` uses `splitter_kwargs` for the
+  same purpose (read options stay in `kwargs`).
+- `SemanticSplitter` requires a top-level `embedding` object (OpenAI, Azure OpenAI,
+  OpenRouter, Gemini, Hugging Face, or Anthropic/Voyage) and `splitter-mr[multimodal]`.
+- File paths are on the server. Set `SPLITTER_MR_ALLOWED_ROOT` before using them.
+- `url` sources require `SPLITTER_MR_ALLOW_URLS=true`.
+- The server does not persist chunks. Persistent query-over-documents remains a
+  future MCP workflow.
+
+Docs: [Server API](docs/api_reference/server.md)
 
 ## Common patterns
 
