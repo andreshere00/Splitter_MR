@@ -28,9 +28,11 @@
     - 🐛 **Bugfixes:** Improved NLTK tokenizers, more robust splitters, and new utilities for HTML => Markdown conversion.
     
     **Check out the updated documentation, new examples, and join us in making text splitting and document parsing easier than ever!**
-    **Version 1.3.0:**
     
-    SplitterMR adds [**TextractReader**](https://andreshere00.github.io/Splitter_MR/api_reference/reader/#textractreader) for AWS Textract OCR on local PDFs, Office files, and images.
+    
+    **Version 1.3.0** - AWS Textract support
+    
+    SplitterMR adds [**TextractReader**](https://andreshere00.github.io/Splitter_MR/api_reference/reader/#textractreader) for AWS Textract OCR on local PDFs, Office files, and images. Install it with `pip install "splitter-mr[textract]"` and configure the standard boto3 credential chain (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_DEFAULT_REGION`). See the [Reader](https://andreshere00.github.io/Splitter_MR/api_reference/reader/#textractreader) docs.
     
     **Version 1.2.0** - OpenRouter support
     
@@ -45,6 +47,9 @@
 SplitterMR can read data from multiples sources and files. To read the files, it uses the Reader components, which inherits from a Base abstract class, `BaseReader`. This object allows you to read the files as a properly formatted string, or convert the files into another format (such as `markdown` or `json`). 
 
 Currently, there are supported four readers: `VanillaReader`, `MarkItDownReader`, `DoclingReader`, and `TextractReader`. These are the differences between each Reader component:
+
+<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/textract_reader_button.svg#gh-light-mode-only" alt="TextractReader logo"/>
+<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/textract_reader_button_white.svg#gh-dark-mode-only" alt="TextractReader logo"/>
 
 | **Reader**             | **Unstructured files & PDFs** | **MS Office suite files** | **Tabular data** | **Files with hierarchical schema** | **Image files** | **Markdown conversion** |
 |------------------------|-------------------------------|---------------------------|------------------|------------------------------------|-----------------|-------------------------|
@@ -103,7 +108,7 @@ SplitterMR allows you to split files in many different ways depending on your ne
 
 Package is published on [PyPi](https://pypi.org/project/splitter-mr/).  
 
-By default, only the **core dependencies** are installed. If you need additional features (e.g., MarkItDown, Docling, multimodal processing), you can install the corresponding **extras**.
+By default, only the **core dependencies** are installed. If you need additional features (e.g., MarkItDown, Docling, Textract, multimodal processing), you can install the corresponding **extras**.
 
 ### Core install
 
@@ -128,7 +133,7 @@ pip install splitter-mr
 You can combine extras by separating them with commas:
 
 ```bash
-pip install "splitter-mr[markitdown,docling]"
+pip install "splitter-mr[markitdown,docling,textract]"
 ```
 
 ### Using other package managers
@@ -156,7 +161,7 @@ from splitter_mr.reader import VanillaReader
 reader = VanillaReader()
 ```
 
-To read any file, provide the file path within the `read()` method. If you use `DoclingReader` or `MarkItDownReader`, your files will be automatically parsed to markdown text format. The result of this reader will be a `ReaderOutput` object, a dictionary with the following shape:
+To read any file, provide the file path within the `read()` method. If you use `DoclingReader` or `MarkItDownReader`, your files will be automatically parsed to markdown text format. If you use `TextractReader`, visual files are OCR'd with AWS Textract after PNG normalization, while text-native formats (`md`, `json`, `yaml`, `txt`) are delegated to `VanillaReader`. The result of this reader will be a `ReaderOutput` object, a dictionary with the following shape:
 
 ```python 
 reader_output = reader.read('https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/lorem_ipsum.txt')
@@ -233,7 +238,6 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 
 - [ ] Provide a MCP server to make queries about the chunked documents.
 - [ ] Add examples on how to implement SplitterMR in RAGs, MCPs and Agentic RAGs.
-- [x] Add a method to read PDFs using Textract.
 - [ ] Add a new `BaseVisionModel` class to support generic API-provided models.
 - [ ] Add asynchronous methods for Splitters and Readers.
 - [ ] Add batch methods to process several documents at once.
@@ -244,6 +248,7 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 
 ### Previously implemented (`^v1.0.0`)
 
+- [x] Add a method to read PDFs using Textract.
 - [X] Add OpenRouter support for vision and embedding models.
 - [X] Add custom Error and Warning handling for better logging and traceability.
 - [X] Add `KeywordSplitter` support.

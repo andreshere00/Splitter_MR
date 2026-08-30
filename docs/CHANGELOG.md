@@ -18,7 +18,6 @@
 
 - Update Reader API reference, README, and extras matrix with Textract support.
 - Update `.env.template` with AWS credential placeholders.
-- Mark the Textract roadmap item as completed.
 
 ## v1.2.0
 

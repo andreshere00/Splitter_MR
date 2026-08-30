@@ -15,10 +15,11 @@ Each Reader component extracts document text in different ways. Therefore, choos
 
 !!! note
 
-    Remember to visit the official repository and guides for these two last reader classes: 
+    Remember to visit the official repository and guides for these reader classes: 
 
     - **Docling [Developer guide](https://docling-project.github.io/docling/)** 
     - **MarkItDown [GitHub repository](https://github.com/microsoft/markitdown/)**.
+    - **Amazon Textract [Developer guide](https://docs.aws.amazon.com/textract/latest/dg/what-is.html)**.
 
 Additionally, the file compatibility depending on the Reader class is given by the following table:
 
@@ -124,6 +125,9 @@ To execute pipelines, DoclingReader has a utils class, `DoclingUtils`.
         members_order: source
 
 ### TextractReader
+
+![TextractReader logo](../assets/textract_reader_button.svg#gh-light-mode-only)
+![TextractReader logo](../assets/textract_reader_button_white.svg#gh-dark-mode-only)
 
 ::: splitter_mr.reader.readers.textract_reader
     handler: python
