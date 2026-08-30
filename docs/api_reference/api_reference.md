@@ -23,3 +23,7 @@ Implement several splitting strategies based on the type of document and use cas
 ### [Embedding component](./embedding.md)
 
 Implement encoder models from different providers to perform semantic splitting. Embedders expose [**`BaseEmbedding.embed_text`**](embedding.md#baseembedding) and [**`embed_documents`**](embedding.md#baseembedding) to vectorize strings for similarity-based chunking. For OpenRouter-hosted embedding slugs, see [**`OpenRouterEmbedding`**](embedding.md#openrouterembedding).
+
+### [MCP and REST server](./server.md)
+
+Expose the same read, split, and read-and-split pipeline through Swagger-documented REST endpoints and typed MCP tools. Install `splitter-mr[mcp]` and run `splitter-mr-mcp`.

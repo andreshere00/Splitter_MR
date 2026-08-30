@@ -6,8 +6,8 @@ SplitterMR is a Python 3.11+ library that turns files and raw data into structur
 LLM-ready text chunks. Its modular pipeline uses readers to produce `ReaderOutput`
 objects, optional vision models to process non-text content, splitters to produce
 `SplitterOutput` objects, and embedding providers for semantic workflows. The package
-supports lightweight core installation plus optional `markitdown`, `docling`, and
-`multimodal` integrations.
+supports lightweight core installation plus optional `markitdown`, `docling`,
+`textract`, `multimodal`, and `mcp` integrations.
 
 Source code lives in `src/splitter_mr/`; tests mirror it under `tests/splitter_mr/`.
 The root `README.md` and `CHANGELOG.md` are the documentation sources synchronized to
@@ -19,9 +19,10 @@ The root `README.md` and `CHANGELOG.md` are the documentation sources synchroniz
   initialized (normally a usable `.venv` and installed pre-commit hooks).
 - If it is not initialized, run `poe install` from the repository root before coding.
 - Run this setup once per checkout, not before every task.
-- Use Poe tasks from `pyproject.toml`: `poe format`, `poe test`, `poe docs`, and
-  `poe build`. Prefer targeted pytest commands during development, then use `poe test`
-  when full verification is appropriate; the full suite enforces at least 70% coverage.
+- Use Poe tasks from `pyproject.toml`: `poe format`, `poe test`, `poe docs`,
+  `poe build`, and `poe serve-mcp` for the optional FastAPI/MCP server. Prefer
+  targeted pytest commands during development, then use `poe test` when full
+  verification is appropriate; the full suite enforces at least 70% coverage.
 
 ## Development architecture
 
@@ -42,7 +43,12 @@ The root `README.md` and `CHANGELOG.md` are the documentation sources synchroniz
   fields with dot notation. Do not return ad-hoc dictionaries.
 - Preserve the lightweight core: keep optional dependencies behind lazy imports and
   follow the existing registries, `TYPE_CHECKING`, `__getattr__`, and `__all__`
-  patterns in each package.
+  patterns in each package. The FastAPI/MCP server lives in `src/splitter_mr/server/`
+  behind the `mcp` extra. REST and MCP contracts mirror the Python API: `file_path`,
+  `reader`, optional `model`, and `kwargs` for read; `splitter`, optional `embedding`,
+  and `kwargs` (or `splitter_kwargs` on read-and-split) for split. `SemanticSplitter`
+  requires a top-level `embedding` object and `splitter-mr[multimodal]`. Keep the MCP
+  image startable without PyTorch.
 - Export public implementations from the relevant package `__init__.py`, and add
   focused tests in the matching test package.
 

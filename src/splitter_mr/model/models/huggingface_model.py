@@ -69,6 +69,7 @@ class HuggingFaceVisionModel(BaseVisionModel):
         AutoConfig = transformers.AutoConfig
 
         self.model_id = model_name
+        self.model_name = model_name
         self.model = None
         self.processor = None
 

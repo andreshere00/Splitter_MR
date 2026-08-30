@@ -4,6 +4,7 @@ repo_name: andreshere00/Splitter_MR
 theme:
   name: material
   logo: assets/splitter_mr_logo_reduced_white.svg
+  favicon: assets/favicon.png
   font:
     text: Source Sans 3
   icon:
@@ -32,6 +33,7 @@ nav:
     - Embedding models: api_reference/embedding.md
     - Exceptions: api_reference/exceptions.md
     - Warnings: api_reference/warnings.md
+    - MCP and REST server: api_reference/server.md
   - Examples:
     - Overview: examples/examples.md
     - Reading:

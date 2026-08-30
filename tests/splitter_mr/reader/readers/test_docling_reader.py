@@ -243,6 +243,37 @@ def test_unsupported_extension_warns(monkeypatch):
         assert any(issubclass(warn.category, BaseReaderWarning) for warn in w)
 
 
+def test_unsupported_extension_forwards_model_to_vanilla(monkeypatch):
+    captured = {}
+
+    class CapturingVanilla:
+        def __init__(self, model=None):
+            captured["model"] = model
+
+        def read(self, file_path, **kwargs):
+            return ReaderOutput(
+                text="vanilla-output",
+                document_name="file.xyz",
+                document_path=file_path,
+                document_id="id",
+                conversion_method="vanilla",
+                reader_method="vanilla",
+            )
+
+    monkeypatch.setattr(
+        "splitter_mr.reader.readers.docling_reader.VanillaReader",
+        CapturingVanilla,
+    )
+    model = DummyModel()
+    reader = DoclingReader(model=model)
+
+    with warnings.catch_warnings(record=True):
+        warnings.simplefilter("always")
+        reader.read("foo.unsupported")
+
+    assert captured["model"] is model
+
+
 def test_pdf_with_model_no_scan(monkeypatch):
     model = DummyModel()
     reader = DoclingReader(model)
