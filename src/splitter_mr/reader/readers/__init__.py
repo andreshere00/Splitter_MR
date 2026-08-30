@@ -4,12 +4,14 @@ from typing import TYPE_CHECKING, Any, Dict, Tuple
 if TYPE_CHECKING:
     from .docling_reader import DoclingReader  # noqa: F401
     from .markitdown_reader import MarkItDownReader  # noqa: F401
+    from .textract_reader import TextractReader  # noqa: F401
     from .vanilla_reader import VanillaReader  # noqa: F401
 
 REGISTRY: Dict[str, Tuple[str, str]] = {
     "VanillaReader": (".vanilla_reader", "VanillaReader"),
     "MarkItDownReader": (".markitdown_reader", "MarkItDownReader"),
     "DoclingReader": (".docling_reader", "DoclingReader"),
+    "TextractReader": (".textract_reader", "TextractReader"),
 }
 
 __all__ = list(REGISTRY.keys())
@@ -18,6 +20,7 @@ __all__ = list(REGISTRY.keys())
 EXTRA_BY_NAME: Dict[str, str] = {
     "MarkItDownReader": "markitdown",
     "DoclingReader": "docling",
+    "TextractReader": "textract",
 }
 
 

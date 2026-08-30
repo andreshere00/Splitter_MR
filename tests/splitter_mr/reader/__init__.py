@@ -18,6 +18,7 @@ def test___all___contains_expected_names():
         "VanillaReader",
         "MarkItDownReader",
         "DoclingReader",
+        "TextractReader",
     }
 
 
@@ -27,12 +28,15 @@ def test_base_reader_is_exposed():
     assert reader.BaseReader is not None
 
 
-@pytest.mark.parametrize("name", ["VanillaReader", "MarkItDownReader", "DoclingReader"])
+@pytest.mark.parametrize(
+    "name", ["VanillaReader", "MarkItDownReader", "DoclingReader", "TextractReader"]
+)
 def test___getattr___delegates_to_readers(monkeypatch, name):
     sentinels = {
         "VanillaReader": object(),
         "MarkItDownReader": object(),
         "DoclingReader": object(),
+        "TextractReader": object(),
     }
     dummy = _make_dummy_readers(**sentinels)
 

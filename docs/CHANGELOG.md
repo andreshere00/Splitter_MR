@@ -2,6 +2,23 @@
 
 > **Version 1.0.0: First stable release with full Reader, Splitter, Embedding and Vision model support.**
 
+## v1.3.0
+
+> **Version 1.3.0:**
+>
+> SplitterMR adds [**TextractReader**](https://andreshere00.github.io/Splitter_MR/api_reference/reader/#textractreader) for AWS Textract OCR on local PDFs, Office files, and images.
+
+### Features
+
+- Add new Reader: **`TextractReader`** with synchronous `detect_document_text` support.
+- Add optional extra: **`textract`** (`boto3`, `pillow`).
+- Add Textract-specific constants and **`TextractReaderException`**.
+
+### Documentation
+
+- Update Reader API reference, README, and extras matrix with Textract support.
+- Update `.env.template` with AWS credential placeholders.
+
 ## v1.2.0
 
 > **Version 1.2.0:**

@@ -75,6 +75,60 @@ VANILLA_TXT_FILES_EXTENSIONS: Final[FrozenSet[str]] = _litset(
     VANILLA_TXT_FILES_EXTENSIONS_LITERAL
 )
 
+# ---- TextractReader ---- #
+
+TEXTRACT_TEXT_EXTENSIONS_LITERAL = Literal[
+    "md", "markdown", "json", "yaml", "yml", "txt"
+]
+TEXTRACT_TEXT_EXTENSIONS: Final[FrozenSet[str]] = _litset(
+    TEXTRACT_TEXT_EXTENSIONS_LITERAL
+)
+
+TEXTRACT_OFFICE_EXTENSIONS_LITERAL = Literal["docx", "pptx", "xlsx"]
+TEXTRACT_OFFICE_EXTENSIONS: Final[FrozenSet[str]] = _litset(
+    TEXTRACT_OFFICE_EXTENSIONS_LITERAL
+)
+
+TEXTRACT_IMAGE_EXTENSIONS_LITERAL = Literal[
+    "png", "jpg", "jpeg", "webp", "gif", "bmp", "tif", "tiff", "svg"
+]
+TEXTRACT_IMAGE_EXTENSIONS: Final[FrozenSet[str]] = _litset(
+    TEXTRACT_IMAGE_EXTENSIONS_LITERAL
+)
+
+TEXTRACT_PDF_EXTENSIONS_LITERAL = Literal["pdf"]
+TEXTRACT_PDF_EXTENSIONS: Final[FrozenSet[str]] = _litset(
+    TEXTRACT_PDF_EXTENSIONS_LITERAL
+)
+
+TEXTRACT_SUPPORTED_FILE_EXTENSIONS_LITERAL = Literal[
+    "md",
+    "markdown",
+    "json",
+    "yaml",
+    "yml",
+    "txt",
+    "docx",
+    "pptx",
+    "xlsx",
+    "pdf",
+    "png",
+    "jpg",
+    "jpeg",
+    "webp",
+    "gif",
+    "bmp",
+    "tif",
+    "tiff",
+    "svg",
+]
+TEXTRACT_SUPPORTED_FILE_EXTENSIONS: Final[FrozenSet[str]] = _litset(
+    TEXTRACT_SUPPORTED_FILE_EXTENSIONS_LITERAL
+)
+
+TEXTRACT_SYNC_MAX_BYTES: Final[int] = 10 * 1024 * 1024
+TEXTRACT_OCR_METHOD: Final[str] = "aws_textract_detect_document_text"
+
 # ------------- #
 # Vision Models #
 # ------------- #
