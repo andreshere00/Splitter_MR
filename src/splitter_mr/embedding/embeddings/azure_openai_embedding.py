@@ -4,7 +4,11 @@ from typing import Any, List, Optional
 import tiktoken
 from openai import AzureOpenAI
 
-from ...schema import OPENAI_EMBEDDING_MAX_TOKENS, OPENAI_EMBEDDING_MODEL_FALLBACK
+from ...schema import (
+    DEFAULT_AZURE_OPENAI_EMBEDDING_DEPLOYMENT,
+    OPENAI_EMBEDDING_MAX_TOKENS,
+    OPENAI_EMBEDDING_MODEL_FALLBACK,
+)
 from ..base_embedding import BaseEmbedding
 
 
@@ -86,7 +90,13 @@ class AzureOpenAIEmbedding(BaseEmbedding):
                 )
 
         if azure_deployment is None:
-            azure_deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT") or model_name
+            azure_deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT")
+            if not azure_deployment:
+                azure_deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT_EMBEDDING")
+            if not azure_deployment:
+                azure_deployment = model_name
+            if not azure_deployment:
+                azure_deployment = DEFAULT_AZURE_OPENAI_EMBEDDING_DEPLOYMENT
             if not azure_deployment:
                 raise ValueError(
                     "Azure deployment name not provided. Set 'azure_deployment', "

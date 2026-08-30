@@ -43,7 +43,7 @@ class HuggingFaceVisionModel(BaseVisionModel):
         ).content
         img_b64 = base64.b64encode(img_bytes).decode("utf-8")
 
-        model = HuggingFaceVisionModel("ds4sd/SmolDocling-256M-preview")
+        model = HuggingFaceVisionModel("ibm-granite/granite-docling-258M")
         result = model.analyze_content("What animal is on the candy?", file=img_b64)
         print(result)  # e.g., "A small green thing."
         ```
@@ -55,7 +55,7 @@ class HuggingFaceVisionModel(BaseVisionModel):
 
         Args:
             model_name (str, optional): Model repo ID or local path
-                (e.g., ``"ds4sd/SmolDocling-256M-preview"``).
+                (e.g., ``"ibm-granite/granite-docling-258M"``).
 
         Raises:
             ImportError: If the 'multimodal' extra (transformers) is not installed.

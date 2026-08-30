@@ -75,6 +75,60 @@ VANILLA_TXT_FILES_EXTENSIONS: Final[FrozenSet[str]] = _litset(
     VANILLA_TXT_FILES_EXTENSIONS_LITERAL
 )
 
+# ---- TextractReader ---- #
+
+TEXTRACT_TEXT_EXTENSIONS_LITERAL = Literal[
+    "md", "markdown", "json", "yaml", "yml", "txt"
+]
+TEXTRACT_TEXT_EXTENSIONS: Final[FrozenSet[str]] = _litset(
+    TEXTRACT_TEXT_EXTENSIONS_LITERAL
+)
+
+TEXTRACT_OFFICE_EXTENSIONS_LITERAL = Literal["docx", "pptx", "xlsx"]
+TEXTRACT_OFFICE_EXTENSIONS: Final[FrozenSet[str]] = _litset(
+    TEXTRACT_OFFICE_EXTENSIONS_LITERAL
+)
+
+TEXTRACT_IMAGE_EXTENSIONS_LITERAL = Literal[
+    "png", "jpg", "jpeg", "webp", "gif", "bmp", "tif", "tiff", "svg"
+]
+TEXTRACT_IMAGE_EXTENSIONS: Final[FrozenSet[str]] = _litset(
+    TEXTRACT_IMAGE_EXTENSIONS_LITERAL
+)
+
+TEXTRACT_PDF_EXTENSIONS_LITERAL = Literal["pdf"]
+TEXTRACT_PDF_EXTENSIONS: Final[FrozenSet[str]] = _litset(
+    TEXTRACT_PDF_EXTENSIONS_LITERAL
+)
+
+TEXTRACT_SUPPORTED_FILE_EXTENSIONS_LITERAL = Literal[
+    "md",
+    "markdown",
+    "json",
+    "yaml",
+    "yml",
+    "txt",
+    "docx",
+    "pptx",
+    "xlsx",
+    "pdf",
+    "png",
+    "jpg",
+    "jpeg",
+    "webp",
+    "gif",
+    "bmp",
+    "tif",
+    "tiff",
+    "svg",
+]
+TEXTRACT_SUPPORTED_FILE_EXTENSIONS: Final[FrozenSet[str]] = _litset(
+    TEXTRACT_SUPPORTED_FILE_EXTENSIONS_LITERAL
+)
+
+TEXTRACT_SYNC_MAX_BYTES: Final[int] = 10 * 1024 * 1024
+TEXTRACT_OCR_METHOD: Final[str] = "aws_textract_detect_document_text"
+
 # ------------- #
 # Vision Models #
 # ------------- #
@@ -83,7 +137,10 @@ DEFAULT_IMAGE_EXTENSION: Final[str] = "png"
 
 # ---- OpenAI & AzureOpenAI Vision Model ---- #
 
-DEFAULT_OPENAI_MODEL: Final[str] = "gpt-5"
+DEFAULT_OPENAI_MODEL: Final[str] = "gpt-5.6-luna"
+DEFAULT_OPENAI_EMBEDDING_MODEL: Final[str] = "text-embedding-3-large"
+DEFAULT_AZURE_OPENAI_VISION_DEPLOYMENT: Final[str] = "gpt-5.6-luna"
+DEFAULT_AZURE_OPENAI_EMBEDDING_DEPLOYMENT: Final[str] = "text-embedding-3-large"
 
 OPENAI_MIME = Literal["image/png", "image/jpeg", "image/webp", "image/gif"]
 SUPPORTED_OPENAI_MIME_TYPES: Final[FrozenSet[str]] = _litset(OPENAI_MIME)
@@ -103,12 +160,24 @@ assert set(OPENAI_MIME_BY_EXTENSION.values()).issubset(SUPPORTED_OPENAI_MIME_TYP
 )
 # ---- Anthropic Vision Model ---- #
 
-DEFAULT_ANTHROPIC_MODEL: Final[str] = "claude-sonnet-4"
+DEFAULT_ANTHROPIC_MODEL: Final[str] = "claude-haiku-4-5"
 DEFAULT_ANTHROPIC_ENTRYPOINT: Final[str] = "https://api.anthropic.com/v1/"
+
+# ---- OpenRouter Vision Model ---- #
+
+DEFAULT_OPENROUTER_ENTRYPOINT: Final[str] = "https://openrouter.ai/api/v1"
+DEFAULT_OPENROUTER_MODEL: Final[str] = "openai/gpt-5.6-luna"
+DEFAULT_OPENROUTER_EMBEDDING_MODEL: Final[str] = "openai/text-embedding-3-large"
+
+DEFAULT_GEMINI_EMBEDDING_MODEL: Final[str] = "gemini-embedding-001"
+DEFAULT_VOYAGE_EMBEDDING_MODEL: Final[str] = "voyage-4-large"
+DEFAULT_HUGGINGFACE_EMBEDDING_MODEL: Final[str] = (
+    "ibm-granite/granite-embedding-english-r2"
+)
 
 # ---- Grok Vision Model ---- #
 
-DEFAULT_GROK_VISION_MODEL: Final[str] = "grok-4"
+DEFAULT_GROK_VISION_MODEL: Final[str] = "grok-4.5"
 DEFAULT_GROK_ENDPOINT: Final[str] = "https://api.x.ai/v1"
 
 GROK_MIME = Literal["image/png", "image/jpeg"]
@@ -127,11 +196,11 @@ assert set(GROK_MIME_BY_EXTENSION.values()).issubset(SUPPORTED_GROK_MIME_TYPES),
 
 # ---- Gemini Vision Model ---- #
 
-DEFAULT_GEMINI_VISION_MODEL: Final[str] = "gemini-2.5-flash"
+DEFAULT_GEMINI_VISION_MODEL: Final[str] = "gemini-3-flash-preview"
 
 # ---- HuggingFace Vision Model ---- #
 
-DEFAULT_HUGGINGFACE_MODEL: Final[str] = "ds4sd/SmolDocling-256M-preview"
+DEFAULT_HUGGINGFACE_MODEL: Final[str] = "ibm-granite/granite-docling-258M"
 
 DEFAULT_IMAGE_TOKENS: Final[Mapping[str, str]] = MappingProxyType(
     {

@@ -52,23 +52,15 @@ To split semantically, instantiate the [`SemanticSplitter`](https://andreshere00
 
 
 ```python
-from splitter_mr.embedding import (
-    AzureOpenAIEmbedding,
-)  # can be any other Embedding model.
+from splitter_mr.embedding import OpenRouterEmbedding
 from splitter_mr.splitter import SemanticSplitter
 from dotenv import load_dotenv
-import os
 
-load_dotenv
+load_dotenv()
 
-params = {
-    "model_name": os.getenv("AZURE_OPENAI_EMBEDDING"),
-    "api_key": os.getenv("AZURE_OPENAI_API_KEY"),
-    "azure_deployment": os.getenv("AZURE_OPENAI_DEPLOYMENT_EMBEDDING"),
-    "api_version": os.getenv("AZURE_OPENAI_API_VERSION"),
-}
-
-embedding = AzureOpenAIEmbedding(**params)  # can be any other Embedding model.
+embedding = (
+    OpenRouterEmbedding()
+)  # OPENROUTER_API_KEY; optional OPENROUTER_EMBEDDING_MODEL
 
 splitter = SemanticSplitter(embedding)
 splitter_output = splitter.split(reader_output)
@@ -163,38 +155,21 @@ Alternatively, you can also directly control the **number of chunks** by setting
 
 
 ```python
-from splitter_mr.embedding import AzureOpenAIEmbedding
-from splitter_mr.reader import VanillaReader
+from splitter_mr.embedding import OpenRouterEmbedding
 from splitter_mr.splitter import SemanticSplitter
-import os
 from dotenv import load_dotenv
 
 load_dotenv()
 
-FILE_PATH = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/pinocchio_example.md"
-
-params = {
-    "model_name": os.getenv("AZURE_OPENAI_EMBEDDING"),
-    "api_key": os.getenv("AZURE_OPENAI_API_KEY"),
-    "azure_deployment": os.getenv("AZURE_OPENAI_DEPLOYMENT_EMBEDDING"),
-    "api_version": os.getenv("AZURE_OPENAI_API_VERSION"),
-}
-
-embedding = AzureOpenAIEmbedding(**params)  # can be any other Embedding model.
-reader = VanillaReader()
-reader_output = reader.read(file_path=FILE_PATH)
-
-print("*" * 40 + "\n Output from Reader: \n" + "*" * 40)
-print(reader_output.model_dump_json(indent=4))
+embedding = (
+    OpenRouterEmbedding()
+)  # OPENROUTER_API_KEY; optional OPENROUTER_EMBEDDING_MODEL
 
 splitter = SemanticSplitter(embedding)
 splitter_output = splitter.split(reader_output)
 
-print("*" * 40 + "\n Output from Splitter: \n" + "*" * 40)
-print(splitter_output.model_dump_json(indent=4))
-
 for idx, chunk in enumerate(splitter_output.chunks):
-    print("=" * 40 + f" Chunk {idx + 1} " + "=" * 40)
+    print("\n" + "*" * 80 + f" Chunk {idx} " + "*" * 80 + "\n")
     print(chunk)
 ```
 

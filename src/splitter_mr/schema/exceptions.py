@@ -61,6 +61,16 @@ class DoclingReaderException(ReaderException, RuntimeError):
     """
 
 
+# ---- Textract Exceptions ---- #
+
+
+class TextractReaderException(ReaderException, RuntimeError):
+    """
+    Raised when AWS Textract–based document conversion fails in TextractReader.
+    Wraps boto3/botocore errors and local conversion failures.
+    """
+
+
 # ---------------------------------- #
 # ------------ Splitter ------------ #
 # ---------------------------------- #

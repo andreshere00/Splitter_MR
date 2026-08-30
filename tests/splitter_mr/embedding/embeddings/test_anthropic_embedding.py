@@ -34,7 +34,7 @@ def mock_voyage_client_class(mock_client):
 def test_init_with_api_key(mock_voyage_client_class):
     embed = AnthropicEmbedding(api_key="abc123")
     assert embed.client is mock_voyage_client_class
-    assert embed.model_name == "voyage-3.5"
+    assert embed.model_name == "voyage-4-large"
     assert embed.default_input_type == "document"
 
 
@@ -140,7 +140,7 @@ def test_embed_documents_success(mock_voyage_client_class):
     embed.client.embed.return_value = mock_result
     vecs = embed.embed_documents(texts)
     embed.client.embed.assert_called_once_with(
-        texts, model="voyage-3.5", input_type="document"
+        texts, model="voyage-4-large", input_type="document"
     )
     assert vecs == [[1, 2], [3, 4]]
 

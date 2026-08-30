@@ -4,7 +4,11 @@ from typing import Any, List, Optional
 import tiktoken
 from openai import OpenAI
 
-from ...schema import OPENAI_EMBEDDING_MAX_TOKENS, OPENAI_EMBEDDING_MODEL_FALLBACK
+from ...schema import (
+    DEFAULT_OPENAI_EMBEDDING_MODEL,
+    OPENAI_EMBEDDING_MAX_TOKENS,
+    OPENAI_EMBEDDING_MODEL_FALLBACK,
+)
 from ..base_embedding import BaseEmbedding
 
 
@@ -28,7 +32,9 @@ class OpenAIEmbedding(BaseEmbedding):
 
     def __init__(
         self,
-        model_name: str = "text-embedding-3-large",
+        model_name: str = os.getenv(
+            "OPENAI_EMBEDDING_MODEL", DEFAULT_OPENAI_EMBEDDING_MODEL
+        ),
         api_key: Optional[str] = None,
         tokenizer_name: Optional[str] = None,
     ) -> None:

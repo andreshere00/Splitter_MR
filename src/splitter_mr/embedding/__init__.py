@@ -9,12 +9,14 @@ if TYPE_CHECKING:
         GeminiEmbedding,
         HuggingFaceEmbedding,
         OpenAIEmbedding,
+        OpenRouterEmbedding,
     )
 
 __all__ = [
     "BaseEmbedding",
     "AzureOpenAIEmbedding",
     "OpenAIEmbedding",
+    "OpenRouterEmbedding",
     "HuggingFaceEmbedding",
     "GeminiEmbedding",
     "AnthropicEmbedding",

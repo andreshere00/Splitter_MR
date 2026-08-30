@@ -37,7 +37,7 @@ class OpenAIVisionModel(BaseVisionModel):
         Args:
             api_key (str, optional): OpenAI API key. If not provided, uses the
                 ``OPENAI_API_KEY`` environment variable.
-            model_name (str): Vision-capable model name (e.g., ``"gpt-4o"``).
+            model_name (str): Vision-capable model name (e.g., ``"gpt-5.6-luna"``).
 
         Raises:
             ValueError: If no API key is provided or ``OPENAI_API_KEY`` is not set.

@@ -14,17 +14,34 @@ These embeddings can be used in a variety of tasks, such as:
 
 **SplitterMR** takes advantage of these models in [**`SemanticSplitter`**](./splitter.md#semanticsplitter). These representations are used to break text into chunks based on *meaning*, not just size. Sentences with similar context end up together, regardless of length or position.
 
+## Using `embed_text` and `embed_documents`
+
+**`embed_text`** returns one embedding vector (`List[float]`) for a single string. **`embed_documents`** embeds many strings in one call when the backend supports batching (recommended for [`SemanticSplitter`](./splitter.md#semanticsplitter)).
+
+```python
+from splitter_mr.embedding import OpenRouterEmbedding
+
+embedder = OpenRouterEmbedding()  # OPENROUTER_API_KEY; optional OPENROUTER_EMBEDDING_MODEL
+
+vector = embedder.embed_text("SplitterMR chunks documents for LLM apps.")
+vectors = embedder.embed_documents(["First sentence.", "Second sentence."])
+print(len(vector), len(vectors))
+```
+
+Token limits are validated on OpenAI-compatible embedders (including OpenRouter) using the same rules as [**OpenAIEmbedding**](#openaiembedding).
+
 ## Which embedder should I use?
 
-All embedders inherit from [**BaseEmbedding**](#baseembedding) and expose the same interface for generating embeddings. Choose based on your cloud provider, credentials, and compliance needs.
+All embedders inherit from [**BaseEmbedding**](#baseembedding) and expose **`embed_text`** and **`embed_documents`** for generating embeddings. Choose based on your cloud provider, credentials, and compliance needs.
 
 | Model                                             | When to use                                                                 | Requirements                                                                                                        | Features                                                                                                            |
 | ------------------------------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| [**OpenAIEmbedding**](#openaiembedding)           | You have an OpenAI API key and want to use OpenAI’s hosted embeddings       | `OPENAI_API_KEY`                                                                                                    | Production-ready text embeddings; simple setup; broad ecosystem/tooling support.                                    |
-| [**AzureOpenAIEmbedding**](#azureopenaiembedding) | Your organization uses Azure OpenAI Services                                | `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_DEPLOYMENT`                                          | Enterprise controls, Azure compliance & data residency; integrates with Azure identity.                             |
-| [**GeminiEmbedding**](#geminiembedding)           | You want Google’s Gemini text embeddings                                    | `GEMINI_API_KEY` + **Multimodal extra**: `pip install 'splitter-mr[multimodal]'`                                      | Google Gemini API; modern, high-quality text embeddings.                                                            |
-| [**AnthropicEmbeddings**](#anthropicembedding)   | You want embeddings aligned with Anthropic guidance (via Voyage AI)         | `VOYAGE_API_KEY` + **Multimodal extra**: `pip install 'splitter-mr[multimodal]'`                                      | Voyage AI embeddings (general, code, finance, law, multimodal); supports `input_type` for query/document asymmetry. |
-| [**HuggingFaceEmbedding**](#huggingfaceembedding) | Prefer local/open-source models (Sentence-Transformers); offline capability | **Multimodal extra**: `pip install 'splitter-mr[multimodal]'` (optional: `HF_ACCESS_TOKEN`, only for required models) | No API key; huge model zoo; CPU/GPU/MPS; optional L2 normalization for cosine similarity.                           |
+| [**OpenRouterEmbedding**](#openrouterembedding) | **Recommended:** many embedding models via one OpenRouter API key           | `OPENROUTER_API_KEY` (optional: `OPENROUTER_EMBEDDING_MODEL`, defaults to `"openai/text-embedding-3-large"`)          | OpenAI SDK with OpenRouter base URL; any embedding model slug; tiktoken length validation.                            |
+| [**OpenAIEmbedding**](#openaiembedding)           | You have an OpenAI API key and want to use OpenAI’s hosted embeddings       | `OPENAI_API_KEY` (optional: `OPENAI_EMBEDDING_MODEL`, defaults to `"text-embedding-3-large"`)                                                                                                    | Production-ready text embeddings; simple setup; broad ecosystem/tooling support.                                    |
+| [**AzureOpenAIEmbedding**](#azureopenaiembedding) | Your organization uses Azure OpenAI Services                                | `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_DEPLOYMENT` (default deployment name: `text-embedding-3-large`)                                          | Enterprise controls, Azure compliance & data residency; integrates with Azure identity.                             |
+| [**GeminiEmbedding**](#geminiembedding)           | You want Google’s Gemini text embeddings                                    | `GEMINI_API_KEY` + **Multimodal extra**: `pip install 'splitter-mr[multimodal]'` (optional: `GEMINI_EMBEDDING_MODEL`, defaults to `"gemini-embedding-001"`)                                      | Google Gemini API; modern, high-quality text embeddings.                                                            |
+| [**AnthropicEmbeddings**](#anthropicembedding)   | You want embeddings aligned with Anthropic guidance (via Voyage AI)         | `VOYAGE_API_KEY` + **Multimodal extra**: `pip install 'splitter-mr[multimodal]'` (optional: `VOYAGE_MODEL`, defaults to `"voyage-4-large"`)                                      | Voyage AI embeddings (general, code, finance, law, multimodal); supports `input_type` for query/document asymmetry. |
+| [**HuggingFaceEmbedding**](#huggingfaceembedding) | Prefer local/open-source models (Sentence-Transformers); offline capability | **Multimodal extra**: `pip install 'splitter-mr[multimodal]'` (default model: `ibm-granite/granite-embedding-english-r2`; optional: `HF_ACCESS_TOKEN`) | No API key; huge model zoo; CPU/GPU/MPS; optional L2 normalization for cosine similarity.                           |
 | [**BaseEmbedding**](#baseembedding)               | Abstract base, not used directly                                            | –                                                                                                                   | Implement to plug in a custom or self-hosted embedder.                                                              |
 
 !!! note
@@ -76,6 +93,16 @@ All embedders inherit from [**BaseEmbedding**](#baseembedding) and expose the sa
 ![AnthropicEmbedding logo](../assets/anthropic_embedding_model_button_white.svg#gh-dark-mode-only)
 
 ::: src.splitter_mr.embedding.embeddings.anthropic_embedding
+    handler: python
+    options:
+      members_order: source
+
+### OpenRouterEmbedding
+
+![OpenRouterEmbedding logo](../assets/openrouter_embedding_model_button.svg#gh-light-mode-only)
+![OpenRouterEmbedding logo](../assets/openrouter_embedding_model_button_white.svg#gh-dark-mode-only)
+
+::: src.splitter_mr.embedding.embeddings.openrouter_embedding
     handler: python
     options:
       members_order: source

@@ -5,6 +5,7 @@ from typing import Any, Optional
 from openai import AzureOpenAI
 
 from ...schema import (
+    DEFAULT_AZURE_OPENAI_VISION_DEPLOYMENT,
     DEFAULT_IMAGE_CAPTION_PROMPT,
     DEFAULT_IMAGE_EXTENSION,
     OPENAI_MIME_BY_EXTENSION,
@@ -62,7 +63,9 @@ class AzureOpenAIVisionModel(BaseVisionModel):
                     "Azure endpoint not provided or 'AZURE_OPENAI_ENDPOINT' env var is not set."
                 )
         if azure_deployment is None:
-            azure_deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT")
+            azure_deployment = os.getenv(
+                "AZURE_OPENAI_DEPLOYMENT", DEFAULT_AZURE_OPENAI_VISION_DEPLOYMENT
+            )
             if not azure_deployment:
                 raise ValueError(
                     "Azure deployment name not provided or 'AZURE_OPENAI_DEPLOYMENT' env var is not set."

@@ -35,7 +35,8 @@ Hierarchy
 ├── `ReaderConfigException` (also `ValueError`)
 ├── `VanillaReaderException` (also `RuntimeError`)
 ├── `MarkItDownReaderException` (also `RuntimeError`)
-└── `DoclingReaderException` (also `RuntimeError`)
+├── `DoclingReaderException` (also `RuntimeError`)
+└── `TextractReaderException` (also `RuntimeError`)
 ```
 
 ### General
@@ -119,6 +120,18 @@ Hierarchy
 
 - Docling pipeline errors while parsing PDFs or documents
 - Model/runtime errors in the Docling stack
+
+#### TextractReaderException
+
+::: src.splitter_mr.schema.exceptions.TextractReaderException
+    handler: python
+    options:
+      members_order: source
+
+**Typical cases**:
+
+- AWS Textract API failures (throttling, unsupported document, size limits)
+- Local conversion failures (LibreOffice, rasterization, image normalization)
 
 ## Splitter exceptions
 
@@ -228,6 +241,7 @@ Hierarchy
 | Reader   | `VanillaReaderException` | `RuntimeError` | Vanilla conversion failed (wrapped) |
 | Reader   | `MarkItDownReaderException` | `RuntimeError` | MarkItDown conversion failed (wrapped) |
 | Reader   | `DoclingReaderException` | `RuntimeError` | Docling conversion failed (wrapped) |
+| Reader   | `TextractReaderException` | `RuntimeError` | Textract conversion failed (wrapped) |
 | Splitter | `SplitterException` | `Exception` | Base splitter error |
 | Splitter | `InvalidChunkException` | `ValueError` | Chunks cannot be constructed |
 | Splitter | `SplitterConfigException` | `ValueError` | Invalid splitter configuration |

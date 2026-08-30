@@ -57,7 +57,7 @@ logger.handlers = []
 
 
 ```python
-from splitter_mr.model import AzureOpenAIVisionModel
+from splitter_mr.model import OpenRouterVisionModel
 from splitter_mr.reader import DoclingReader
 
 from dotenv import load_dotenv
@@ -68,7 +68,7 @@ load_dotenv(
 
 FILE_PATH = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/attention.pdf"
 
-model = AzureOpenAIVisionModel()
+model = OpenRouterVisionModel()
 
 reader = DoclingReader(model=model)
 reader_output = reader.read(file_path=FILE_PATH)
@@ -180,7 +180,7 @@ Thank you for reading! :)
 
 ```python
 from splitter_mr.reader import DoclingReader #, VanillaReader, MarkItDownReader
-from splitter_mr.model import AzureOpenAIVisionModel
+from splitter_mr.model import OpenRouterVisionModel
 from splitter_mr.splitter import PagedSplitter
 from dotenv import load_dotenv
 
@@ -188,7 +188,7 @@ load_dotenv()
 
 FILE_PATH = "https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/data/attention.pdf"
 
-model = AzureOpenAIVisionModel()
+model = OpenRouterVisionModel()
 reader = DoclingReader(model = model)
 reader_output = reader.read(file_path=FILE_PATH)
 

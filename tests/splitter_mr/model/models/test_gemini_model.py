@@ -100,7 +100,7 @@ def test_analyze_content_success(mock_sdk):
         data=image_bytes, mime_type="image/png"
     )
     mock_models.generate_content.assert_called_once_with(
-        model="gemini-2.5-flash",
+        model="gemini-3-flash-preview",
         contents=["IMAGE_PART", "Describe this image"],
         temperature=0.5,
     )

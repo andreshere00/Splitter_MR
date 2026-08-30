@@ -7,8 +7,8 @@ In this example, we will see a use case for creating a GenAI application using *
 ## Requirements
 
 1. A **Vector** **Database** => In this case, we will use [Qdrant](), but other options are available.
-2. A **generative** **Model** => In this case, we will use [Azure OpenAI](https://azure.microsoft.com/es-es/products/ai-foundry/models/openai/), but other models can be used.
-3. An **encoder** **Model** => It should encode text with the same tokenizer as the generative model. So, we will use [Azure OpenAI](ttps://azure.microsoft.com/es-es/products/ai-foundry/models/openai/).
+2. A **generative** **Model** => In this case, we will use [OpenRouter](https://openrouter.ai/), but other models can be used.
+3. An **encoder** **Model** => It should encode text with the same tokenizer as the generative model. So, we will use [OpenRouter](https://openrouter.ai/).
 4. The [**SplitterMR**](https://andreshere00.github.io/Splitter_MR/) library (obviously).
 5. [**Docker**](https://www.docker.com/) installed. 
 6. A set of **data**. In this case, the dataset is provided via the [**Gutenberg project**](https://www.gutenberg.org/ebooks/16865).
@@ -25,7 +25,13 @@ from itertools import batched
 import re
 
 from qdrant_client import QdrantClient, models
-from openai import AzureOpenAI
+from openai import OpenAI
+
+from splitter_mr.schema import (
+    DEFAULT_OPENROUTER_EMBEDDING_MODEL,
+    DEFAULT_OPENROUTER_ENTRYPOINT,
+    DEFAULT_OPENROUTER_MODEL,
+)
 
 from splitter_mr.reader import VanillaReader
 from splitter_mr.splitter import KeywordSplitter
@@ -41,15 +47,13 @@ load_dotenv(dotenv_path=find_dotenv())
 
 # => Generative model
 
-AZURE_OPENAI_API_KEY: str = os.getenv("AZURE_OPENAI_API_KEY")
-AZURE_OPENAI_ENDPOINT: str = os.getenv("AZURE_OPENAI_ENDPOINT")
-AZURE_OPENAI_CHAT_DEPLOYMENT: str = os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT")
-
-# => Embedding model
-
-AZURE_OPENAI_EMBEDDING: str = os.getenv("AZURE_OPENAI_EMBEDDING")
-AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT: str = os.getenv(
-    "AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT"
+OPENROUTER_API_KEY: str = os.getenv("OPENROUTER_API_KEY")
+OPENROUTER_MODEL: str = os.getenv("OPENROUTER_MODEL", DEFAULT_OPENROUTER_MODEL)
+OPENROUTER_EMBEDDING_MODEL: str = os.getenv(
+    "OPENROUTER_EMBEDDING_MODEL", DEFAULT_OPENROUTER_EMBEDDING_MODEL
+)
+OPENROUTER_BASE_URL: str = os.getenv(
+    "OPENROUTER_BASE_URL", DEFAULT_OPENROUTER_ENTRYPOINT
 )
 
 # ---- Vector Database connection ---- #
@@ -165,15 +169,13 @@ As we can see, we have created 37 chunks (which matches with the number of Pinoc
 
 ## Third step: Set up the vector database and upload the content
 
-To build the RAG, it is necessary to embed the documents that we will use. Firstly, we will instantiate our AzureOpenAI class and check for the embedding dimension to ensure that the encoder model is working properly:
+To build the RAG, it is necessary to embed the documents that we will use. Firstly, we will instantiate our OpenRouter OpenAI-compatible client and check for the embedding dimension to ensure that the encoder model is working properly:
 
 
 ```python
-client = AzureOpenAI(
-    api_key=AZURE_OPENAI_API_KEY,
-    azure_endpoint=AZURE_OPENAI_ENDPOINT,
-    azure_deployment=AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT,
-    api_version="2025-03-01-preview",
+client = OpenAI(
+    api_key=OPENROUTER_API_KEY,
+    base_url=OPENROUTER_BASE_URL,
 )
 
 # Helper to get embedding dimension from a probe call
@@ -188,7 +190,7 @@ def _embedding_dimension(model_name: str) -> int:
     return len(vec)
 
 
-EMBEDDING_DIM = _embedding_dimension(AZURE_OPENAI_EMBEDDING)
+EMBEDDING_DIM = _embedding_dimension(OPENROUTER_EMBEDDING_MODEL)
 print(f"Embedding dim: {EMBEDDING_DIM}")
 ```
 
@@ -291,9 +293,7 @@ for pack in batched(all_points, 64):
     inputs = [txt for _, txt, _ in pack]
     payloads = [pl for _, _, pl in pack]
 
-    emb = client.embeddings.create(
-        model=AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT, input=inputs
-    )
+    emb = client.embeddings.create(model=OPENROUTER_EMBEDDING_MODEL, input=inputs)
     vectors = [d.embedding for d in emb.data]
     assert len(vectors) == len(ids), "Embedding count != ids count"
 
@@ -321,9 +321,7 @@ Once all the documents have been upserted, we need to create a retrieval functio
 def retrieve(query: str, k: int = 5) -> list[dict[str, any]]:
     """Use Qdrant's query_points for flexible retrieval capabilities."""
     q_vec = (
-        client.embeddings.create(
-            model=AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT, input=[query]
-        )
+        client.embeddings.create(model=OPENROUTER_EMBEDDING_MODEL, input=[query])
         .data[0]
         .embedding
     )
@@ -373,11 +371,9 @@ def answer_with_rag(query: str, k: int = 5) -> dict[str, any]:
 
     context: str = "\n\n".join(context_blocks)
 
-    client = AzureOpenAI(
-        azure_deployment=AZURE_OPENAI_CHAT_DEPLOYMENT,
-        api_key=AZURE_OPENAI_API_KEY,
-        api_version="2025-03-01-preview",
-        azure_endpoint=AZURE_OPENAI_ENDPOINT,
+    client = OpenAI(
+        api_key=OPENROUTER_API_KEY,
+        base_url=OPENROUTER_BASE_URL,
     )
 
     messages: list[dict[str, any]] = [
@@ -386,7 +382,7 @@ def answer_with_rag(query: str, k: int = 5) -> dict[str, any]:
     ]
 
     resp = client.chat.completions.create(
-        model=AZURE_OPENAI_CHAT_DEPLOYMENT,
+        model=OPENROUTER_MODEL,
         messages=messages,
         temperature=0.2,
     )

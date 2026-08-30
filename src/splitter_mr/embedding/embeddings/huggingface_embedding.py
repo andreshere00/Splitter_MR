@@ -6,6 +6,7 @@ if TYPE_CHECKING:
 import numpy as np
 import torch
 
+from ...schema import DEFAULT_HUGGINGFACE_EMBEDDING_MODEL
 from ..base_embedding import BaseEmbedding
 
 
@@ -38,7 +39,7 @@ class HuggingFaceEmbedding(BaseEmbedding):
 
     def __init__(
         self,
-        model_name: str = "sentence-transformers/all-MiniLM-L6-v2",
+        model_name: str = DEFAULT_HUGGINGFACE_EMBEDDING_MODEL,
         device: Optional[str] = "cpu",
         normalize: bool = True,
         enforce_max_length: bool = False,
@@ -49,8 +50,8 @@ class HuggingFaceEmbedding(BaseEmbedding):
         Args:
             model_name:
                 SentenceTransformer model id or local path. Examples:
-                - `"ibm-granite/granite-embedding-english-r2"`
-                - `"sentence-transformers/all-MiniLM-L6-v2"`
+                - `"ibm-granite/granite-embedding-english-r2"` (default)
+                - `"sentence-transformers/all-mpnet-base-v2"`
                 - `"/path/to/local/model"`
             device:
                 Optional device spec (e.g., `"cpu"`, `"cuda"`, `"mps"` or a

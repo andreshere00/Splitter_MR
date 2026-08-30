@@ -41,6 +41,11 @@ markitdown = [
 docling = [
     "docling>=2.36.0"
 ]
+# AWS Textract dependencies
+textract = [
+    "boto3>=1.35.0",
+    "pillow>=11.2.1",
+]
 # Computer vision + OCR + audio stack
 multimodal = [
     "easyocr>=1.7.2",
@@ -69,6 +74,8 @@ multimodal = [
 all = [
     "markitdown[all]==0.1.2",
     "docling>=2.36.0",
+    "boto3>=1.35.0",
+    "pillow>=11.2.1",
     "easyocr>=1.7.2",
     "torch>=2.7.1,<3.0",
     "torchvision>=0.22.1,<0.23",
@@ -118,7 +125,7 @@ install = { shell = "uv pip install -U uv || pip install uv || true && uv add --
 
 shell = { shell = "uv run shell", help = "Run a uv shell." }
 
-test = { shell = "uv sync --dev --extra markitdown --extra docling --extra multimodal && uv run coverage run --source=src -m pytest && uv run coverage report && uv run coverage report --fail-under=70", help = "Run tests with coverage ≥70% (installs markitdown+docling extras first)" }
+test = { shell = "uv sync --dev --extra markitdown --extra docling --extra multimodal --extra textract && uv run coverage run --source=src -m pytest && uv run coverage report && uv run coverage report --fail-under=70", help = "Run tests with coverage ≥70% (installs markitdown+docling extras first)" }
 
 clean = { shell = "echo 'Clean all the cache and temporary files.' && find . -type d -name '__pycache__' -exec rm -rf {} + && find . -type d -name '.pytest_cache' -exec rm -rf {} + && find . -type f -name '*.pyc' -delete && find . -type f -name '*.pyo' -delete && find . -type f -name '*.pyd' -delete && find . -type d -name '*.egg-info' -exec rm -rf {} + && find . -type f -name '*.egg' -delete", help = "Clean cache and temporary files." }
 

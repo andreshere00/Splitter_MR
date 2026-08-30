@@ -8,10 +8,12 @@ if TYPE_CHECKING:
     from .grok_model import GrokVisionModel  # noqa: F401
     from .huggingface_model import HuggingFaceVisionModel  # noqa: F401
     from .openai_model import OpenAIVisionModel  # noqa: F401
+    from .openrouter_model import OpenRouterVisionModel  # noqa: F401
 
 REGISTRY: Dict[str, Tuple[str, str]] = {
     "AzureOpenAIVisionModel": (".azure_openai_model", "AzureOpenAIVisionModel"),
     "OpenAIVisionModel": (".openai_model", "OpenAIVisionModel"),
+    "OpenRouterVisionModel": (".openrouter_model", "OpenRouterVisionModel"),
     "HuggingFaceVisionModel": (".huggingface_model", "HuggingFaceVisionModel"),
     "GrokVisionModel": (".grok_model", "GrokVisionModel"),
     "GeminiVisionModel": (".gemini_model", "GeminiVisionModel"),

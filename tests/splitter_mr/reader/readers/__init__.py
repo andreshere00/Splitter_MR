@@ -40,6 +40,16 @@ def test___getattr__modulenotfounderror_with_extra(monkeypatch):
         assert "pip install 'splitter-mr[markitdown]'" in str(e.value)
 
 
+def test___getattr__modulenotfounderror_with_textract_extra(monkeypatch):
+    with mock.patch(
+        "importlib.import_module", side_effect=ModuleNotFoundError("No module")
+    ):
+        with pytest.raises(ModuleNotFoundError) as e:
+            readers.__getattr__("TextractReader")
+        assert "requires the 'textract' extra" in str(e.value)
+        assert "pip install 'splitter-mr[textract]'" in str(e.value)
+
+
 def test___getattr__modulenotfounderror_without_extra(monkeypatch):
     # e.g., VanillaReader does not require an extra
     with mock.patch(
