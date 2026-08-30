@@ -1,0 +1,31 @@
+.md-header {
+    background-color: #00074D !important;
+  }
+
+  @font-face {
+    font-family: "Source Sans 3";
+    src: "docs/assets/SourceSans3-VariableFont_wght.ttf";
+  }
+
+.table-badge-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.table-badge {
+  display: inline-block;
+  height: 24px;
+  width: auto;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+[data-md-color-scheme="default"] .table-badge-dark {
+  display: none;
+}
+
+[data-md-color-scheme="slate"] .table-badge-light {
+  display: none;
+}
