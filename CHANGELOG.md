@@ -4,6 +4,15 @@
 
 ## Unreleased
 
+### Documentation
+
+- Limit MkDocs page table of contents to headings through level 3 (`###`).
+- Add compact provider badges to comparison tables in the Reader, Vision Model, and
+  Embedding API reference pages.
+- Add [SKILL.md](https://github.com/andreshere00/Splitter_MR/blob/main/SKILL.md) with
+  installation guidance and complete workflow examples for reading, splitting,
+  multimodal PDF processing, and RAG ingestion.
+
 ### Developer features
 
 - Add a GitHub pull request template under `.github/pull_request_template.md`.

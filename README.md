@@ -228,6 +228,12 @@ These VLMs can be used for captioning, annotation or text extraction. In fact, y
 > [!NOTE]
 > To see more details, consult documentation [here](https://andreshere00.github.io/Splitter_MR/api_reference/model/).
 
+### Complete workflows
+
+For end-to-end examples covering fixed-size splitting, semantic chunking, multimodal
+PDF reading, and RAG ingestion, see
+[SKILL.md](https://github.com/andreshere00/Splitter_MR/blob/main/SKILL.md).
+
 ## Updates
 
 ### Next features
