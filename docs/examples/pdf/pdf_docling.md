@@ -168,8 +168,14 @@ model = HuggingFaceVisionModel()
 ```python
 from splitter_mr.model import OpenRouterVisionModel
 from splitter_mr.reader import DoclingReader
+from dotenv import load_dotenv
+import os
 
-file = "data/sample_pdf.pdf"
+load_dotenv()
+
+ROOT_PATH: str = os.getenv("ROOT_PATH") or "."
+load_dotenv(os.path.join(ROOT_PATH, ".env"))
+FILE_PATH: str = f"{ROOT_PATH}/data/sample_pdf.pdf"
 
 model = OpenRouterVisionModel()
 ```
@@ -183,23 +189,67 @@ Then, use the `read` method of this object and read a file as always. Once detec
 
 print("=" * 80 + " DoclingReader with VLM " + "=" * 80)
 docling_reader = DoclingReader(model=model)
-docling_output = docling_reader.read(file)
+docling_output = docling_reader.read(FILE_PATH)
 
 # Get Docling ReaderOutput
 print(docling_output.model_dump_json(indent=4))
 ```
 
+    2026-08-30 18:58:35,615 - INFO - detected formats: [<InputFormat.PDF: 'pdf'>]
+
+
     ================================================================================ DoclingReader with VLM ================================================================================
+
+
+    2026-08-30 18:58:37,043 - INFO - Going to convert document batch...
+
+
+    2026-08-30 18:58:37,044 - INFO - Initializing pipeline for StandardPdfPipeline with options hash 4086a820d51c119ab30bfe51e86a0aeb
+
+
+    2026-08-30 18:58:37,077 - INFO - Loading plugin 'docling_defaults'
+
+
+    2026-08-30 18:58:37,096 - INFO - Registered ocr engines: ['easyocr', 'ocrmac', 'rapidocr', 'tesserocr', 'tesseract']
+
+
+    2026-08-30 18:58:38,013 - INFO - Accelerator device: 'mps'
+
+
+    2026-08-30 18:58:41,133 - INFO - Accelerator device: 'mps'
+
+
+    2026-08-30 18:58:42,708 - INFO - Accelerator device: 'mps'
+
+
+    2026-08-30 18:58:43,329 - INFO - Loading plugin 'docling_defaults'
+
+
+    2026-08-30 18:58:43,346 - INFO - Registered picture descriptions: ['vlm', 'api']
+
+
+    2026-08-30 18:58:43,347 - INFO - Processing document sample_pdf.pdf
+
+
+    2026-08-30 18:58:54,078 - INFO - Finished converting document sample_pdf.pdf in 18.46 sec.
+
+
+    2026-08-30 18:58:55,153 - INFO - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+
+
+    2026-08-30 18:58:57,443 - INFO - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+
+
     {
-        "text": "## A sample PDF\n\nConverting PDF files to other formats, such as Markdown, is a surprisingly complex task due to the nature of the PDF format itself . PDF (Portable Document Format) was designed primarily for preserving the visual layout of documents, making them look the same across different devi
+        "text": "## A sample PDF\n\nConverting PDF files to other formats, such as Markdown, is a surprisingly complex task due to the nature of the PDF format itself . PDF (Portable Document Format) was designed primarily for preserving the visual layout of documents, making them look the same across different devices and platforms. However, this design goal introduces several challenges when trying to extract and convert the underlying content into a more flexible, structured format like Markdow
     ...
-    !-- image -->\n*Caption: A vibrant hummingbird hovers gracefully in front of a bright orange flower, showcasing the beauty of nature and the delicate balance between pollinators and plants.*",
+    lice@example.com |\n| Bob Johnson | Designer     | bob@example.com   |\n| Carol White | Project Lead | carol@example.com |",
         "document_name": "sample_pdf.pdf",
-        "document_path": "data/sample_pdf.pdf",
-        "document_id": "69de2a09-2477-4b34-a6a9-c955a44d5f15",
+        "document_path": "/Users/aherencia/Documents/Projects/Professional/Splitter_MR/data/sample_pdf.pdf",
+        "document_id": "322fe0a8-abec-4a73-aef9-c0063f84cc83",
         "conversion_method": "markdown",
         "reader_method": "docling",
-        "ocr_method": "gpt-5.6-luna",
+        "ocr_method": "openai/gpt-5.6-luna",
         "page_placeholder": "<!-- page -->",
         "metadata": {}
     }
@@ -218,12 +268,18 @@ print(docling_output.text)
     
     Converting PDF files to other formats, such as Markdown, is a surprisingly complex task due to the nature of the PDF format itself . PDF (Portable Document Format) was designed primarily for preserving the visual layout of documents, making them look the same across different devices and platforms. However, this design goal introduces several challenges when trying to extract and convert the underlying content into a more flexible, structured format like Markdown.
     
-    Ilustración 1
+    <!-- image --
     ...
-    e conversion tools must blend text extraction, document analysis, and sometimes machine learning techniques (such as OCR or structure recognition) to produce usable, readable, and faithful Markdown output. As a result, perfect conversion is rarely possible, and manual review and cleanup are often required.
+    nversion is rarely possible, and manual review and cleanup are often required.
     
     <!-- image -->
-    *Caption: A vibrant hummingbird hovers gracefully in front of a bright orange flower, showcasing the beauty of nature and the delicate balance between pollinators and plants.*
+    *Caption: A vibrant hummingbird hovers beside delicate orange flowers, its iridescent turquoise feathers and outstretched wings captured in motion.*
+    
+    | Name        | Role         | Email             |
+    |-------------|--------------|-------------------|
+    | Alice Smith | Developer    | alice@example.com |
+    | Bob Johnson | Designer     | bob@example.com   |
+    | Carol White | Project Lead | carol@example.com |
 
 
 
@@ -236,22 +292,58 @@ In case that you have additional requirements to describe these images, you can 
 
 ```python
 docling_output = docling_reader.read(
-    file, prompt="Describe the image briefly in Spanish."
+    FILE_PATH, prompt="Describe the image briefly in Spanish."
 )
 
 print(docling_output.text)
 ```
 
+    2026-08-30 18:58:57,960 - INFO - detected formats: [<InputFormat.PDF: 'pdf'>]
+
+
+    2026-08-30 18:58:57,963 - INFO - Going to convert document batch...
+
+
+    2026-08-30 18:58:57,963 - INFO - Initializing pipeline for StandardPdfPipeline with options hash 4086a820d51c119ab30bfe51e86a0aeb
+
+
+    2026-08-30 18:58:57,963 - INFO - Accelerator device: 'mps'
+
+
+    2026-08-30 18:59:00,226 - INFO - Accelerator device: 'mps'
+
+
+    2026-08-30 18:59:01,416 - INFO - Accelerator device: 'mps'
+
+
+    2026-08-30 18:59:01,977 - INFO - Processing document sample_pdf.pdf
+
+
+    2026-08-30 18:59:03,684 - INFO - Finished converting document sample_pdf.pdf in 5.73 sec.
+
+
+    2026-08-30 18:59:04,407 - INFO - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+
+
+    2026-08-30 18:59:05,595 - INFO - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+
+
     ## A sample PDF
     
     Converting PDF files to other formats, such as Markdown, is a surprisingly complex task due to the nature of the PDF format itself . PDF (Portable Document Format) was designed primarily for preserving the visual layout of documents, making them look the same across different devices and platforms. However, this design goal introduces several challenges when trying to extract and convert the underlying content into a more flexible, structured format like Markdown.
     
-    Ilustración 1
+    <!-- image --
     ...
-    chine learning techniques (such as OCR or structure recognition) to produce usable, readable, and faithful Markdown output. As a result, perfect conversion is rarely possible, and manual review and cleanup are often required.
+    , and faithful Markdown output. As a result, perfect conversion is rarely possible, and manual review and cleanup are often required.
     
     <!-- image -->
-    La imagen muestra un colibrí de plumaje brillante en tonos verdes, suspendido en el aire mientras se alimenta de flores amarillas. Sus alas están en movimiento, lo que resalta su agilidad, y el fondo es difuso, lo que enfoca la atención en el ave y la flor.
+    Un colibrí de colores brillantes vuela junto a unas flores naranjas, con las alas extendidas.
+    
+    | Name        | Role         | Email             |
+    |-------------|--------------|-------------------|
+    | Alice Smith | Developer    | alice@example.com |
+    | Bob Johnson | Designer     | bob@example.com   |
+    | Carol White | Project Lead | carol@example.com |
 
 
 
@@ -262,18 +354,48 @@ Finally, it could be interesting extract the markdown text with the images as em
 
 ```python
 docling_reader = DoclingReader()
-docling_output = docling_reader.read(file, show_base64_images=True)
+docling_output = docling_reader.read(FILE_PATH, show_base64_images=True)
 
 print(docling_output.text)
 ```
+
+    2026-08-30 18:59:06,500 - INFO - detected formats: [<InputFormat.PDF: 'pdf'>]
+
+
+    2026-08-30 18:59:06,504 - INFO - Going to convert document batch...
+
+
+    2026-08-30 18:59:06,504 - INFO - Initializing pipeline for StandardPdfPipeline with options hash e3309ea8218dc3b978b4932281c99b2a
+
+
+    2026-08-30 18:59:06,505 - INFO - Accelerator device: 'mps'
+
+
+    2026-08-30 18:59:08,706 - INFO - Accelerator device: 'mps'
+
+
+    2026-08-30 18:59:09,671 - INFO - Accelerator device: 'mps'
+
+
+    2026-08-30 18:59:09,917 - INFO - Processing document sample_pdf.pdf
+
+
+    2026-08-30 18:59:11,399 - INFO - Finished converting document sample_pdf.pdf in 4.90 sec.
+
 
     ## A sample PDF
     
     Converting PDF files to other formats, such as Markdown, is a surprisingly complex task due to the nature of the PDF format itself . PDF (Portable Document Format) was designed primarily for preserving the visual layout of documents, making them look the same across different devices and platforms. However, this design goal introduces several challenges when trying to extract and convert the underlying content into a more flexible, structured format like Markdown.
     
-    Ilustración 1
+    ![Image](data
     ...
-    DdJ3Yad2DXUmreusBTxAgDg4pSvJVgmVNZRuDOYBAg9zJJNOPl0Mx2KYpGYWNYRGJY1TRjRmiFapHMYfKtKIGJnSiq2cE9AxhIkdM3w5jQz4Ik0hAwCfg5T0k6yQasCjrhQPgT1/m5/GQRICaaxsx+SuIDo1v2F9UJwJlAAsKHIEonjBJVqNov4oihBRGuWFhy5jPRIQgQK3eYZI6Ggo2hw0tTZvGk5ASudyZMGdl9hS4F2NHJ6ymBpgkn0Ggctuo5F5pHhZzqnNQpXjAXjplkBwijcLoGqjyExIO8zEMvB/54P4AYSZlJgyds3AzQO1fLUoKeHIaq4sWAYEOVi/KIbhpTuQDOwQ7QIjmcDI5pN64iXwP64HUh+wng9VxugUJFaZGUHVEg8wh3rEW1hsx5RCNOlebOE2U0ivY8B4shaBqEQSY5aih5dDUVlVGyLIc3yB3PM8iyJk29XC7yIvv/AFi0ru7UxlyZAAAAAElFTkSuQmCC)
+    VmVpiJZTp+1FIM0Uj2JxZpUwxbOP3ZfuHh0YI7cx7xtQDKvKiAXbMIavwfuiik4LgTqaLMqHYx1YHJk6k9LmH4vC7CemDpsDy27Z29RwpQOi7w2JF1gkqMOWWH8LHq0ChPIsQzgKjXKO3JnLu49DQD1e2HGdS49mKyOq/W+W/sVFF/OISV+PBnUgGhCAC2SmpXYyJZ6KFKv7gsXW7v3P7/AOfCIRvcDUjcAAAAAElFTkSuQmCC)
+    
+    | Name        | Role         | Email             |
+    |-------------|--------------|-------------------|
+    | Alice Smith | Developer    | alice@example.com |
+    | Bob Johnson | Designer     | bob@example.com   |
+    | Carol White | Project Lead | carol@example.com |
 
 
 
@@ -284,35 +406,40 @@ Of course, remember that the use of a VLM is not mandatory, and you can read the
 ```python
 from splitter_mr.model import AzureOpenAIVisionModel
 from splitter_mr.reader import DoclingReader
+import os
+
 from dotenv import load_dotenv
 
 load_dotenv()
 
-file = "data/sample_pdf.pdf"
+ROOT_PATH: str = os.getenv("ROOT_PATH") or "."
+load_dotenv(os.path.join(ROOT_PATH, ".env"))
+FILE_PATH: str = f"{ROOT_PATH}/data/sample_pdf.pdf"
+
 
 model = OpenRouterVisionModel()
 docling_reader = DoclingReader(model = model)
 
 # 1. Read PDF using a Visual Language Model
 
-docling_output = docling_reader.read(file)
+docling_output = docling_reader.read(FILE_PATH)
 print(docling_output.model_dump_json(indent=4))  # Get Docling ReaderOutput
 print(docling_output.text)  # Get text attribute from Docling Reader
 
 # 2. Describe the images using a custom prompt
 
-docling_output = docling_reader.read(file, prompt = "Describe the image briefly in Spanish.")
+docling_output = docling_reader.read(FILE_PATH, prompt = "Describe the image briefly in Spanish.")
 print(docling_output.text)
 
 # 3. Scan PDF pages 
 
-docling_output = docling_reader.read(file, scan_pdf_pages = True)
+docling_output = docling_reader.read(FILE_PATH, scan_pdf_pages = True)
 print(docling_output.text)
 
 # 4. Extract images as embedded content
 
 docling_reader = DoclingReader()
-docling_output = docling_reader.read(file, show_base64_images = True)
+docling_output = docling_reader.read(FILE_PATH, show_base64_images = True)
 print(docling_output.text)
 ```
 
