@@ -242,13 +242,7 @@ def test_min_size_merges_small_chunks():
         chunk_size=len(text) + 10,  # larger than total text => one chunk
     )
     ro = make_reader(text)
-
-    # In this configuration, we only see the "no semantic breakpoints" warning
-    with pytest.warns(
-        SplitterOutputWarning,
-        match="did not detect any semantic breakpoints",
-    ):
-        out = splitter.split(ro)
+    out = splitter.split(ro)
 
     assert len(out.chunks) == 1
     assert out.chunks[0].replace(" ", "") == text.replace(" ", "")

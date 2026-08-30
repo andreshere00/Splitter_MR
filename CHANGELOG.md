@@ -2,6 +2,12 @@
 
 > **Version 1.0.0: First stable release with full Reader, Splitter, Embedding and Vision model support.**
 
+## Unreleased
+
+### Developer features
+
+- Add a GitHub pull request template under `.github/pull_request_template.md`.
+
 ## v1.3.0
 
 > **Version 1.3.0:**
