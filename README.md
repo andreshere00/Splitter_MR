@@ -56,9 +56,6 @@ SplitterMR can read data from multiples sources and files. To read the files, it
 
 Currently, there are supported four readers: `VanillaReader`, `MarkItDownReader`, `DoclingReader`, and `TextractReader`. These are the differences between each Reader component:
 
-<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/textract_reader_button.svg#gh-light-mode-only" alt="TextractReader logo"/>
-<img src="https://raw.githubusercontent.com/andreshere00/Splitter_MR/refs/heads/main/docs/assets/textract_reader_button_white.svg#gh-dark-mode-only" alt="TextractReader logo"/>
-
 | **Reader**             | **Unstructured files & PDFs** | **MS Office suite files** | **Tabular data** | **Files with hierarchical schema** | **Image files** | **Markdown conversion** |
 |------------------------|-------------------------------|---------------------------|------------------|------------------------------------|-----------------|-------------------------|
 | [**`VanillaReader`**](https://andreshere00.github.io/Splitter_MR/api_reference/reader/#vanillareader)    | `txt`, `md`, `pdf` | `xlsx`, `docx`, `pptx` | `csv`, `tsv`, `parquet` | `json`, `yaml`, `html`, `xml` | `jpg`, `png`, `webp`, `gif` | Yes                     |
@@ -333,18 +330,17 @@ for environment variables, tool contracts, and security defaults.
 ### Next features
 
 - [ ] Add support to read Latex files using `VanillaReader`.
-- [ ] Persist chunked documents and answer queries over them via MCP.
 - [ ] Add a new `BaseVisionModel` class to support generic API-provided models.
-- [ ] Add asynchronous methods for Splitters and Readers.
 - [ ] Add batch methods to process several documents at once.
-- [ ] Add support to read formulas.
+- [ ] Add support to read formulas in all the Readers.
 - [ ] Add classic **OCR** models: `easyocr` and `pytesseract`.
 - [ ] Add support to generate output in `markdown` for all data types in VanillaReader.
-- [ ] Add methods to support Markdown, JSON and XML data types when returning output.
+- [ ] Add methods to support Markdown, JSON and XML data types when returning output in all the readers.
 
 ### Previously implemented (`^v1.0.0`)
 
 - [X] Provide an MCP server (and FastAPI REST wrappers) for read, split, and read-and-split.
+- [X] Add asynchronous methods for Splitters and Readers.
 - [X] Add examples on how to implement SplitterMR in RAGs, MCPs and Agentic RAGs.
 - [x] Add a method to read PDFs using Textract.
 - [X] Add OpenRouter support for vision and embedding models.
